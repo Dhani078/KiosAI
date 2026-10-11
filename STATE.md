@@ -40,5 +40,6 @@
     - `app/page.tsx` (1032 baris) dipecah jadi shell 30 baris + `app/hooks/` (useKiosData, useKiosActions, KiosContext) + `app/components/` (Header, Nav, KeysTab, PackagesTab, PlaygroundTab, AnalyticsTab, DocsTab, AuthModal).
     - Helper proxy dipindah ke `lib/proxy-http.ts`.
     - Upstream key: `NINEROUTER_API_KEY_2` (prioritas) dengan fallback `NINEROUTER_API_KEY`. Key lama tidak dihapus.
+    - Default model demo diganti ke `tokenharbor/deepseek-v4.1-flash:free` (playground, docs, `/v1/models`). Alasan: `ag/*` pakai akun OAuth pribadi, tidak aman untuk pelanggan publik. Lihat PRD.md §7.
     - Verifikasi: `tsc --noEmit` exit 0, `npm run build` exit 0, `/`, `/v1/models`, `/v1/chat/completions` 200.
   - E2E tests verified: Registration, Login, Key Creation, OpenAI Proxy call, Rate Limit headers, QRIS top-up, Tier gating, Model discovery, Webhook idempotency, and Order list.

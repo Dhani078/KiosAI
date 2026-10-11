@@ -34,7 +34,7 @@ export function PlaygroundTab() {
                   ))
                 ) : (
                   <>
-                    <option value="ag/gemini-3.8-flash-high">ag/gemini-3.8-flash-high [BRONZE]</option>
+                    <option value="tokenharbor/deepseek-v4.1-flash:free">tokenharbor/deepseek-v4.1-flash:free [BRONZE]</option>
                     <option value="kr/claude-sonnet-4.5">kr/claude-sonnet-4.5 [SILVER]</option>
                     <option value="combomaut">combomaut [GOLD]</option>
                   </>

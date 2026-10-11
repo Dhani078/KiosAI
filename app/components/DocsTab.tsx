@@ -19,7 +19,7 @@ export function DocsTab() {
   -H "Content-Type: application/json" \\
   -H "Authorization: Bearer kios-your-api-key" \\
   -d '{
-    "model": "ag/gemini-3.8-flash-high",
+    "model": "tokenharbor/deepseek-v4.1-flash:free",
     "messages": [{"role": "user", "content": "Halo KiosAI"}],
     "stream": true
   }'`}
@@ -37,7 +37,7 @@ client = OpenAI(
 )
 
 response = client.chat.completions.create(
-    model="ag/gemini-3.8-flash-high",
+    model="tokenharbor/deepseek-v4.1-flash:free",
     messages=[{"role": "user", "content": "Halo!"}]
 )
 print(response.choices[0].message.content)`}
@@ -55,7 +55,7 @@ const openai = new OpenAI({
 });
 
 const completion = await openai.chat.completions.create({
-  model: "ag/gemini-3.8-flash-high",
+  model: "tokenharbor/deepseek-v4.1-flash:free",
   messages: [{ role: "user", content: "Halo!" }],
 });
 console.log(completion.choices[0].message.content);`}

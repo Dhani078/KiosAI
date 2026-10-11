@@ -27,7 +27,7 @@ export function useKiosData() {
 
   // Playground State
   const [playgroundKey, setPlaygroundKey] = useState("");
-  const [playgroundModel, setPlaygroundModel] = useState("ag/gemini-3.8-flash-high");
+  const [playgroundModel, setPlaygroundModel] = useState("tokenharbor/deepseek-v4.1-flash:free");
   const [playgroundPrompt, setPlaygroundPrompt] = useState("Halo KiosAI, ceritakan secara singkat apa kelebihanmu!");
   const [playgroundResponse, setPlaygroundResponse] = useState("");
   const [playgroundLoading, setPlaygroundLoading] = useState(false);

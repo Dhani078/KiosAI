@@ -134,3 +134,10 @@ CREATE TABLE IF NOT EXISTS usage_logs (
 - Komponen UI dipisah per tab di `app/components/`. State & fetch di `app/hooks/`. Konteks dibagi lewat `app/hooks/KiosContext.tsx`.
 - Helper HTTP proxy di `lib/proxy-http.ts` (konstanta upstream, `errorResponse`).
 - Upstream 9Router memakai key `NINEROUTER_API_KEY_2` (prioritas), fallback ke `NINEROUTER_API_KEY`. Keduanya dibiarkan di `.env`.
+
+## 7. Model Policy & Risiko Upstream
+
+- Model `ag/*` (Antigravity/Gemini) memakai akun OAuth pribadi di 9Router. Hanya untuk test internal, jangan dijual atau dibagikan.
+- Default demo: `tokenharbor/deepseek-v4.1-flash:free` (pool gratis pihak ketiga, kuota bisa habis atau dicabut).
+- Sebelum launch publik, pilih upstream yang secara eksplisit mengizinkan reseller. Baca ToS provider dulu.
+- Overhead prompt upstream ~2.600–2.900 token per request (belum dipastikan sumbernya). Billing saat ini memakai total token. Keputusan billing tertunda.
