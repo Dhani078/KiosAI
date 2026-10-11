@@ -91,7 +91,7 @@ curl http://localhost:3000/v1/chat/completions \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer kios-your-api-key" \
   -d '{
-    "model": "ag/gemini-3.8-flash-high",
+    "model": "tokenharbor/deepseek-v4.1-flash:free",
     "messages": [{"role": "user", "content": "Halo KiosAI"}],
     "stream": true
   }'
@@ -107,7 +107,7 @@ client = OpenAI(
 )
 
 response = client.chat.completions.create(
-    model="ag/gemini-3.8-flash-high",
+    model="tokenharbor/deepseek-v4.1-flash:free",
     messages=[{"role": "user", "content": "Halo KiosAI!"}]
 )
 print(response.choices[0].message.content)
