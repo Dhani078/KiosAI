@@ -63,6 +63,7 @@
     - Skrip audit kesiapan produksi (`scripts/verify-deployment.mjs` via `npm run verify`) yang memvalidasi env, database TiDB, upstream 9Router, dan aturan batasan baris kode secara otomatis.
     - Suite dokumentasi produksi lengkap: `API.md` (spesifikasi endpoint & error codes), `DEPLOYMENT.md` (arsitektur Vercel Tokyo + Cloudflare Tunnel 24 jam), dan `SECURITY.md` (kebijakan SHA-256, scrypt, sliding-window rate limit, dan mitigasi risiko).
     - Test runner E2E otomatis (`scripts/test-e2e.mjs` via `npm run test:e2e`) yang menguji 10 alur gateway secara berurutan: health probe, model catalog, user auth register, key creation, non-stream completion, stream SSE completion, tier gating 403, QRIS order creation, payment fulfillment & tier upgrade, serta analytics logs.
+    - Pipeline CI GitHub Actions (`.github/workflows/ci.yml`) untuk verifikasi otomatis tipe TypeScript, audit kepatuhan batas 200 baris kode, dan build Next.js pada setiap push/PR.
     - Aturan maks 200 baris per file diverifikasi ketat (54 file `.ts`/`.tsx`/`.mjs` semuanya <= 200 baris).
     - Playwright browser audit di 390px (mobile) & 1366px (desktop): 5 tab x 2 viewport = 100% OK (0 overflow, 0 console error).
   - E2E tests verified: Registration, Login, Key Creation, OpenAI Proxy call, Rate Limit headers, QRIS top-up, Tier gating, Model discovery, Webhook idempotency, and Order list.

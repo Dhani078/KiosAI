@@ -1,5 +1,11 @@
 # KiosAI ⚡
 
+[![CI](https://github.com/Dhani078/KiosAI/actions/workflows/ci.yml/badge.svg)](https://github.com/Dhani078/KiosAI/actions)
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![Next.js](https://img.shields.io/badge/Next.js-15-black)
+![React](https://img.shields.io/badge/React-19-blue)
+![TiDB](https://img.shields.io/badge/TiDB-Serverless-orange)
+
 > **Gateway API & Pasar Token AI Lokal** — Beli kuota model AI via QRIS, dapatkan API key OpenAI-compatible, dan gunakan di Cursor, Cline, Claude Code, Python, atau REST API.
 
 ---

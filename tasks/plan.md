@@ -23,4 +23,10 @@
   - Warm anti-slop orange design system (`#F28C38` primary, `#120F0C` canvas)
   - 100% database & live gateway data binding (no mock data)
   - Strict compliance: all 45 `.ts`/`.tsx`/`.mjs` files <= 200 lines
+- [x] Phase 12: Production Observability, E2E Testing & CI/CD Pipeline
+  - Automated 10-point E2E integration test suite (`npm run test:e2e`)
+  - Verification & readiness auditor CLI (`npm run verify`)
+  - Complete Markdown documentation suite (`API.md`, `DEPLOYMENT.md`, `SECURITY.md`)
+  - GitHub Actions CI workflow (`.github/workflows/ci.yml`) with automated type check, line limit audit, and build
+
 

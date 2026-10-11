@@ -64,6 +64,8 @@
 - [x] Task 6.13: Production deployment verification CLI script (`scripts/verify-deployment.mjs` / `npm run verify`)
 - [x] Task 6.14: Complete Production Markdown Suite (`API.md`, `DEPLOYMENT.md`, `SECURITY.md`) and sync with `README.md`
 - [x] Task 6.15: Automated End-to-End Integration Test Suite (`scripts/test-e2e.mjs` / `npm run test:e2e`) covering 10 core pathways
+- [x] Task 6.16: GitHub Actions CI workflow (`.github/workflows/ci.yml`) for automated type check, line limits check, and build
+
 
 
 

@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type check (TypeScript)
+        run: npx tsc --noEmit -p tsconfig.json
+
+      - name: Check file line limits (<= 200 LOC per file)
+        run: |
+          node -e '
+            const fs = require("fs");
+            const path = require("path");
+            let violations = 0;
+            function check(dir) {
+              for (const f of fs.readdirSync(dir)) {
+                const full = path.join(dir, f);
+                if (f === "node_modules" || f === ".next" || f === ".git" || f.includes("Design")) continue;
+                if (fs.statSync(full).isDirectory()) check(full);
+                else if (/\.(ts|tsx|mjs)$/.test(f)) {
+                  const lines = fs.readFileSync(full, "utf8").split("\n").length;
+                  if (lines > 200) {
+                    console.error("Exceeds 200 lines:", full, lines);
+                    violations++;
+                  }
+                }
+              }
+            }
+            check(process.cwd());
+            if (violations > 0) process.exit(1);
+            console.log("All files verified <= 200 lines.");
+          '
+
+      - name: Next.js Production Build
+        run: npm run build
+        env:
+          NEXT_TELEMETRY_DISABLED: 1
