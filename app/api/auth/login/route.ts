@@ -14,11 +14,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Email/username dan password wajib diisi" }, { status: 400 });
     }
 
-    const searchEmail = identifier === "adminfordhani" ? "adminfordhani@kiosai.id" : identifier;
-
+    // Admin logs in with username; regular users with email. username is NULL for regular users.
     const user = await db.queryOne<any>(
-      `SELECT id, email, password_hash, full_name, tier, balance_tokens FROM kiosai.users WHERE email = ?`,
-      [searchEmail]
+      `SELECT id, email, username, password_hash, full_name, tier, balance_tokens FROM kiosai.users
+       WHERE LOWER(email) = ? OR LOWER(username) = ? LIMIT 1`,
+      [identifier, identifier]
     );
 
     if (!user) {
@@ -37,6 +37,7 @@ export async function POST(req: NextRequest) {
       user: {
         id: user.id,
         email: user.email,
+        username: user.username,
         full_name: user.full_name,
         tier: user.tier,
         balance_tokens: user.balance_tokens,

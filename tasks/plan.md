@@ -34,5 +34,13 @@
   - Admin login via username (`adminfordhani`), user biasa via email
   - Login endpoint `identifier` field (email OR username lookup)
   - Admin seed script (`scripts/seed-admin.mjs`)
+- [x] Phase 14: Auth Guard & Session Hardening
+  - `AuthGuard` component gates `/dashboard` (redirect `/?login=1` when anonymous)
+  - `LandingAuthWatcher` auto-opens AuthModal on `?login=1`
+  - Demo-user fallback removed from `useKiosData` + `DashboardApp`
+  - `username` column added to `kiosai.users` + unique index
+  - Logout clears session and hard-navigates to `/`
+  - Register payload key fixed (`fullName`)
+  - Playwright verified: anon blocked, login (email/username), reload persists, logout→landing, wrong password error, 0 console errors, 0 overflow mobile+desktop
 
 

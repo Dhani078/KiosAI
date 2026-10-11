@@ -12,10 +12,10 @@ export function useKiosActions(d: ReturnType<typeof useKiosData>) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email: authEmail,
-          password: authPassword,
-          fullName: authName,
-        }),
+                  identifier: authEmail,
+                  password: authPassword,
+                  fullName: authName,
+                }),
       });
       const data = await res.json();
       if (!res.ok) {

@@ -1,10 +1,17 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import Logo from "@/app/components/Logo";
-import { ArrowRight, LayoutDashboard } from "lucide-react";
+import { ArrowRight, LayoutDashboard, LogIn } from "lucide-react";
 
 export function LandingNavbar() {
+  const [loggedIn, setLoggedIn] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    setLoggedIn(!!localStorage.getItem("kiosai_user_id"));
+  }, []);
+
   return (
     <header
       style={{
@@ -51,9 +58,28 @@ export function LandingNavbar() {
         </a>
       </nav>
 
-      <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+        {loggedIn === false && (
+          <Link
+            href="/?login=1"
+            className="button ghost"
+            style={{
+              fontSize: "13px",
+              height: "38px",
+              padding: "0 14px",
+              textDecoration: "none",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "7px",
+            }}
+          >
+            <LogIn size={15} />
+            Masuk
+          </Link>
+        )}
+
         <Link
-          href="/dashboard"
+          href={loggedIn ? "/dashboard" : "/?login=1"}
           className="button primary"
           style={{
             fontSize: "13px",
@@ -66,7 +92,7 @@ export function LandingNavbar() {
           }}
         >
           <LayoutDashboard size={15} />
-          Buka Dashboard
+          {loggedIn ? "Dashboard" : "Mulai Gratis"}
           <ArrowRight size={14} />
         </Link>
       </div>

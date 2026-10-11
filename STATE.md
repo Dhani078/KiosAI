@@ -68,6 +68,15 @@
     - Routing baru: `/` = Landing Page publik, `/dashboard` = workspace pengguna. Semua link CTA mengarah ke `/dashboard`.
     - Sistem login admin via username (bukan email): akun `adminfordhani` dengan saldo 100M token, tier Gold. User biasa tetap pakai email + password.
     - Login endpoint `/api/auth/login` mendukung field `identifier` (email ATAU username) selain field `email` lama.
+    - Phase 14: Auth Guard & Session Hardening:
+      - `AuthGuard` (client) memblokir `/dashboard` untuk pengguna anonim → redirect `/?login=1`. Re-check pada event `focus`/`pageshow`.
+      - `LandingAuthWatcher` membuka `AuthModal` otomatis dari query `?login=1`, lalu hard-nav ke `/dashboard` setelah sukses.
+      - Fallback demo user dihapus dari `useKiosData` + `DashboardApp`; dashboard hanya render setelah user terautentikasi.
+      - Kolom `username VARCHAR(64)` + unique index ditambahkan ke `kiosai.users`. Admin login pakai username, user biasa pakai email (lookup tunggal: `LOWER(email) = ? OR LOWER(username) = ?`).
+      - Logout menghapus `localStorage.kiosai_user_id` dan hard-nav ke `/`.
+      - Bug fix: payload register mengirim `fullName` (sebelumnya `name` sehingga nama selalu default).
+      - Verifikasi Playwright: anonim diblokir, login email & username, reload persist, logout → landing, password salah ditolak, 0 console error, 0 overflow (390px & 1366px).
+      - Upload foto profil + `avatar_url` belum diimplementasi.
     - Aturan maks 200 baris per file diverifikasi ketat (62 file `.ts`/`.tsx`/`.mjs` semuanya <= 200 baris).
     - Playwright browser audit di 390px (mobile) & 1366px (desktop): 5 tab x 2 viewport = 100% OK (0 overflow, 0 console error).
   - E2E tests verified: Registration, Login, Key Creation, OpenAI Proxy call, Rate Limit headers, QRIS top-up, Tier gating, Model discovery, Webhook idempotency, and Order list.

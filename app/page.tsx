@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import LandingNavbar from "./landing/components/LandingNavbar";
 import HeroSection from "./landing/components/HeroSection";
 import FeaturesSection from "./landing/components/FeaturesSection";
@@ -6,6 +7,7 @@ import PricingSection from "./landing/components/PricingSection";
 import CodeSection from "./landing/components/CodeSection";
 import LandingFaq from "./landing/components/LandingFaq";
 import LandingFooter from "./landing/components/LandingFooter";
+import LandingAuthWatcher from "./landing/components/LandingAuthWatcher";
 
 export const metadata: Metadata = {
   title: "KiosAI — Gateway API & Pasar Token AI Indonesia",
@@ -24,6 +26,9 @@ export default function Home() {
       }}
     >
       <LandingNavbar />
+      <Suspense fallback={null}>
+        <LandingAuthWatcher />
+      </Suspense>
       <main id="main-content">
         <HeroSection />
         <FeaturesSection />

@@ -69,6 +69,12 @@
 - [x] Task 6.18: Route restructure — `/` = Landing Page, `/dashboard` = Dashboard workspace
 - [x] Task 6.19: Admin login by username (`adminfordhani`), login endpoint supports `identifier` field (email OR username)
 - [x] Task 6.20: Admin seed script (`scripts/seed-admin.mjs`) — Gold tier, 100M token balance
+- [x] Task 6.21: `AuthGuard` component — `/dashboard` blocked for anonymous users, redirects to `/?login=1`
+- [x] Task 6.22: `LandingAuthWatcher` — auto-opens AuthModal on `?login=1` query from landing page
+- [x] Task 6.23: Removed demo-user fallback from `useKiosData` and `DashboardApp`; user must be authenticated
+- [x] Task 6.24: `username` column on `kiosai.users` + unique index; admin logs in by username, users by email
+- [x] Task 6.25: Logout hard-navigates to `/` and clears session; AuthGuard re-checks on `focus`/`pageshow`
+- [x] Task 6.26: Fixed register payload key (`fullName` not `name`); `identifier` field for login lookups
 
 
 

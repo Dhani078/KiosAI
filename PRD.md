@@ -197,5 +197,15 @@ Desain prototype dari `KiosAI Token Marketplace Design` diterapkan sepenuhnya pa
 - **Route `/landing`**: Redirect 301 ke `/` (backward compatibility).
 - **Admin Login**: Admin menggunakan username (bukan email) saat login. Field `identifier` pada `POST /api/auth/login` menerima email ATAU username. Lookup: cek `email` dulu, jika tidak ditemukan cek `full_name` case-insensitive.
 - **Admin Seed**: `scripts/seed-admin.mjs` membuat akun admin `adminfordhani` (Gold, 100M token). Password di-hash scrypt.
+- **Kolom `username`**: `kiosai.users.username VARCHAR(64)` NULL + unique index. Admin login pakai username; user biasa NULL dan login pakai email. Lookup tunggal: `LOWER(email) = ? OR LOWER(username) = ?`.
+
+## 13. Auth Guard & Session
+
+- **Guard `/dashboard`**: Komponen `AuthGuard` (client) memblokir akses jika `localStorage.kiosai_user_id` kosong → redirect `/?login=1`.
+- **Modal otomatis**: `LandingAuthWatcher` membaca query `?login=1` dan membuka `AuthModal` di landing page.
+- **Handoff**: Sukses auth → `window.location.assign("/dashboard")` (hard nav, menghindari race dengan reset query).
+- **Logout**: `AuthModal` hapus localStorage lalu hard-nav ke `/`. Tidak ada fallback demo user.
+- **Re-check**: `AuthGuard` mendengarkan event `focus` + `pageshow` untuk menangkap logout dari tab lain.
+- **CTA Landing**: Navbar menampilkan "Masuk" + "Mulai Gratis" sebelum login, "Dashboard" setelah login.
 
 

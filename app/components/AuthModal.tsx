@@ -26,10 +26,10 @@ export function AuthModal({
   const isCustomUser = currentUser && currentUser.id !== "usr_kiosai_demo";
 
   const handleLogout = () => {
-    localStorage.removeItem("kiosai_user_id");
-    if (onLogout) onLogout();
-    onClose();
-  };
+      localStorage.removeItem("kiosai_user_id");
+      if (onLogout) onLogout();
+      window.location.href = "/";
+    };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,7 +38,7 @@ export function AuthModal({
 
     try {
       const endpoint = tab === "login" ? "/api/auth/login" : "/api/auth/register";
-      const payload = tab === "login" ? { email, password } : { email, password, name };
+      const payload = tab === "login" ? { identifier: email, password } : { email, password, fullName: name };
 
       const res = await fetch(endpoint, {
         method: "POST",
@@ -50,10 +50,9 @@ export function AuthModal({
       if (!res.ok) throw new Error(data.error || "Gagal autentikasi");
 
       if (data.user) {
-        localStorage.setItem("kiosai_user_id", data.user.id);
-        onAuthSuccess(data.user);
-        onClose();
-      }
+              localStorage.setItem("kiosai_user_id", data.user.id);
+              onAuthSuccess(data.user);
+            }
     } catch (err: any) {
       setError(err.message || "Terjadi kesalahan");
     } finally {

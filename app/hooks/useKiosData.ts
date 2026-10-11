@@ -45,18 +45,16 @@ export function useKiosData() {
   // Orders History State
   const [orders, setOrders] = useState<any[]>([]);
 
-  // Load saved user from localStorage or fallback to demo
+  // Active user id — set by AuthModal on login. No demo fallback: AuthGuard gates /dashboard.
   const getActiveUserId = () => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("kiosai_user_id");
-      if (saved) return saved;
-    }
-    return "usr_kiosai_demo";
+    if (typeof window === "undefined") return "";
+    return localStorage.getItem("kiosai_user_id") || "";
   };
 
   const fetchUserData = async () => {
     try {
       const uid = getActiveUserId();
+      if (!uid) return;
       const res = await fetch(`/api/user?id=${uid}`);
       const data = await res.json();
       if (data.user) setCurrentUser(data.user);
@@ -68,11 +66,10 @@ export function useKiosData() {
   const fetchKeys = async () => {
     try {
       const uid = getActiveUserId();
+      if (!uid) return;
       const res = await fetch(`/api/keys?userId=${uid}`);
       const data = await res.json();
-      if (data.keys) {
-        setKeys(data.keys);
-      }
+      if (data.keys) setKeys(data.keys);
     } catch (e) {
       console.error(e);
     }
@@ -81,6 +78,7 @@ export function useKiosData() {
   const fetchAnalytics = async () => {
     try {
       const uid = getActiveUserId();
+      if (!uid) return;
       const res = await fetch(`/api/analytics?userId=${uid}`);
       const data = await res.json();
       setAnalytics(data);
@@ -93,9 +91,7 @@ export function useKiosData() {
     try {
       const res = await fetch("/v1/models");
       const data = await res.json();
-      if (Array.isArray(data.data)) {
-        setAvailableModels(data.data);
-      }
+      if (Array.isArray(data.data)) setAvailableModels(data.data);
     } catch (e) {
       console.error(e);
     }
@@ -104,11 +100,10 @@ export function useKiosData() {
   const fetchOrders = async () => {
     try {
       const uid = getActiveUserId();
+      if (!uid) return;
       const res = await fetch(`/api/orders?userId=${uid}`);
       const data = await res.json();
-      if (Array.isArray(data.orders)) {
-        setOrders(data.orders);
-      }
+      if (Array.isArray(data.orders)) setOrders(data.orders);
     } catch (e) {
       console.error(e);
     }
