@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Plus, AlertTriangle, Send } from "lucide-react";
-import { Badge, Button } from "./ui";
+import { AlertTriangle, Send, SlidersHorizontal } from "lucide-react";
+import { Button } from "./ui";
+import PlaygroundToolbar from "./PlaygroundToolbar";
 import PlaygroundChat, { ChatMessage } from "./PlaygroundChat";
 import PlaygroundLocked from "./PlaygroundLocked";
 
@@ -22,6 +23,8 @@ export function PlaygroundTab({
   onRefreshUserData: () => void;
 }) {
   const [selectedModel, setSelectedModel] = useState("tokenharbor/deepseek-v4.1-flash:free");
+  const [systemPrompt, setSystemPrompt] = useState("");
+  const [showSystem, setShowSystem] = useState(false);
   const [prompt, setPrompt] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [replying, setReplying] = useState(false);
@@ -56,23 +59,22 @@ export function PlaygroundTab({
     try {
       const storedKey = typeof window !== "undefined" ? sessionStorage.getItem("kios_last_raw_key") : null;
       const apiKeyToUse = activeKey || storedKey || "kios-d085fc5f9fbfe35ff534433b531edfb0";
+      const payloadMessages = [
+        ...(systemPrompt.trim() ? [{ role: "system", content: systemPrompt.trim() }] : []),
+        { role: "user", content: userText },
+      ];
+
       const res = await fetch("/v1/chat/completions", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${apiKeyToUse}`,
         },
-        body: JSON.stringify({
-          model: selectedModel,
-          messages: [{ role: "user", content: userText }],
-          stream: false,
-        }),
+        body: JSON.stringify({ model: selectedModel, messages: payloadMessages, stream: false }),
       });
 
       const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error?.message || `HTTP ${res.status}`);
-      }
+      if (!res.ok) throw new Error(data.error?.message || `HTTP ${res.status}`);
 
       const replyContent = data.choices?.[0]?.message?.content || "(Tidak ada balasan)";
       const tokensUsed = data.usage?.total_tokens || 0;
@@ -98,89 +100,72 @@ export function PlaygroundTab({
 
   return (
     <section className="panel playground">
-      <div className="playground-toolbar">
-        <div>
-          <label htmlFor="model">MODEL</label>
-          <select
-            id="model"
-            value={selectedModel}
-            onChange={(e) => {
-              setMessages([]);
-              setErrorBanner(null);
-              setSelectedModel(e.target.value);
-            }}
-          >
-            {models.map((m) => (
-              <option key={m.id} value={m.id}>
-                {m.name || m.id} [{(m.required_tier || "bronze").toUpperCase()}]
-                {!m.accessible ? " — terkunci" : ""}
-              </option>
-            ))}
-          </select>
-        </div>
-        <Badge tier={requiredTier.toUpperCase()} />
-        <Button kind="ghost" onClick={() => setMessages([])}>
-          Chat baru <Plus size={16} />
-        </Button>
-      </div>
+      <PlaygroundToolbar
+        models={models}
+        selectedModel={selectedModel}
+        requiredTier={requiredTier}
+        onSelectModel={(m) => { setMessages([]); setErrorBanner(null); setSelectedModel(m); }}
+        onResetChat={() => setMessages([])}
+      />
 
       <div className="playground-context">
         <span>Koneksi Live TiDB & 9Router</span>
-        <code>
-          Saldo {balance.toLocaleString("id-ID")} token · {multiplier.toFixed(1)}×
-        </code>
+        <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+          <button
+            className="text-link"
+            onClick={() => setShowSystem(!showSystem)}
+            style={{ fontSize: "11px", gap: "4px" }}
+          >
+            <SlidersHorizontal size={12} /> {showSystem ? "Tutup System Prompt" : "Atur System Prompt"}
+          </button>
+          <code>Saldo {balance.toLocaleString("id-ID")} token · {multiplier.toFixed(1)}×</code>
+        </div>
       </div>
 
+      {showSystem && (
+        <div style={{ padding: "12px 24px", background: "var(--canvas)", borderBottom: "1px solid var(--border)" }}>
+          <label htmlFor="sys-prompt" className="small-label" style={{ marginBottom: "6px" }}>
+            SYSTEM PROMPT (INSTRUKSI SISTEM)
+          </label>
+          <input
+            id="sys-prompt"
+            value={systemPrompt}
+            onChange={(e) => setSystemPrompt(e.target.value)}
+            placeholder="Contoh: Jawab selalu dalam bahasa Indonesia singkat dan to the point."
+            style={{
+              width: "100%",
+              padding: "8px 12px",
+              borderRadius: "var(--radius-input)",
+              background: "var(--surface)",
+              border: "1px solid var(--border)",
+              color: "var(--text)",
+              fontSize: "13px",
+            }}
+          />
+        </div>
+      )}
+
       {isLocked ? (
-        <PlaygroundLocked
-          model={selectedModel}
-          requiredTier={requiredTier}
-          onNavigatePackages={onNavigatePackages}
-        />
+        <PlaygroundLocked model={selectedModel} requiredTier={requiredTier} onNavigatePackages={onNavigatePackages} />
       ) : (
         <>
           {errorBanner && (
             <div role="alert" className="warning-banner rate-banner">
               <AlertTriangle size={18} />
-              <div>
-                <strong>Peringatan Gateway</strong>
-                <p>{errorBanner}</p>
-              </div>
+              <div><strong>Peringatan Gateway</strong><p>{errorBanner}</p></div>
             </div>
           )}
-          <PlaygroundChat
-            messages={messages}
-            replying={replying}
-            chatRef={chatRef}
-            onPickPrompt={(p) => setPrompt(p)}
-          />
-          <form
-            className="chat-input"
-            onSubmit={(e) => {
-              e.preventDefault();
-              send();
-            }}
-          >
+          <PlaygroundChat messages={messages} replying={replying} chatRef={chatRef} onPickPrompt={(p) => setPrompt(p)} />
+          <form className="chat-input" onSubmit={(e) => { e.preventDefault(); send(); }}>
             <textarea
               aria-label="Prompt"
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               placeholder="Tulis pesan Anda untuk model AI..."
               maxLength={4000}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  send();
-                }
-              }}
+              onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } }}
             />
-            <Button
-              type="submit"
-              kind="primary"
-              aria-label="Kirim pesan"
-              loading={replying}
-              disabled={!prompt.trim() || replying}
-            >
+            <Button type="submit" kind="primary" aria-label="Kirim pesan" loading={replying} disabled={!prompt.trim() || replying}>
               {!replying && <Send size={18} />}
             </Button>
           </form>

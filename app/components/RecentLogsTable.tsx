@@ -1,14 +1,44 @@
 "use client";
 
-import { Activity } from "lucide-react";
+import { Activity, Download } from "lucide-react";
 import { TableRow } from "./ui";
+import { exportToCsv } from "@/lib/export-csv";
 
 export function RecentLogsTable({ logs }: { logs: any[] }) {
+  const handleExport = () => {
+    const headers = ["ID", "Waktu", "Model", "Prompt Tokens", "Completion Tokens", "Total Tokens", "Latency ms", "Status"];
+    const rows = logs.map((l) => [
+      l.id,
+      l.created_at ? new Date(l.created_at).toISOString() : "",
+      l.model,
+      l.prompt_tokens ?? 0,
+      l.completion_tokens ?? 0,
+      l.total_tokens ?? 0,
+      l.latency_ms ?? 0,
+      l.status_code ?? 200,
+    ]);
+    exportToCsv("kiosai-log-permintaan.csv", headers, rows);
+  };
+
   return (
     <section className="panel" style={{ marginTop: "24px" }}>
-      <div className="panel-heading">
-        <h2>Log Permintaan Terakhir</h2>
-        <span>20 riwayat request API dari database TiDB</span>
+      <div
+        className="panel-heading"
+        style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
+      >
+        <div>
+          <h2>Log Permintaan Terakhir</h2>
+          <span>20 riwayat request API dari database TiDB</span>
+        </div>
+        {logs && logs.length > 0 && (
+          <button
+            className="text-link"
+            onClick={handleExport}
+            style={{ fontSize: "12px", display: "inline-flex", alignItems: "center", gap: "6px" }}
+          >
+            <Download size={14} /> Ekspor CSV
+          </button>
+        )}
       </div>
       <div
         className="table-scroll"

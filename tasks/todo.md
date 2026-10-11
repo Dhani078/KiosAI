@@ -58,6 +58,9 @@
 - [x] Task 6.7: Automatic raw key handoff from `KeyModal` to `PlaygroundTab` via `sessionStorage`
 - [x] Task 6.8: System health diagnostics API (`GET /api/health`) with latency metrics & dynamic Header tooltip
 - [x] Task 6.9: Granular rate limit selector in `KeyModal` (30/60/120 req/min) saved to `api_keys.rate_limit_per_min`
+- [x] Task 6.10: Client-side CSV export utility (`lib/export-csv.ts`) for transaction history and recent request logs
+- [x] Task 6.11: Interactive System Prompt configuration in Playground tab with live system message injection
+
 
 
 

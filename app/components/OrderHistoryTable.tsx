@@ -1,14 +1,46 @@
 "use client";
 
-import { Check } from "lucide-react";
+import { Check, Download } from "lucide-react";
 import { Badge, TableRow } from "./ui";
+import { exportToCsv } from "@/lib/export-csv";
 
 export function OrderHistoryTable({ orders }: { orders: any[] }) {
+  const handleExport = () => {
+    const headers = ["Order ID", "Tanggal", "Paket Tier", "Total IDR", "Tokens", "Status"];
+    const rows = orders.map((o) => [
+      o.id,
+      o.created_at ? new Date(o.created_at).toISOString() : "",
+      o.package_tier || "bronze",
+      o.amount_idr || 0,
+      o.tokens_purchased || 0,
+      o.status || "pending",
+    ]);
+    exportToCsv("kiosai-riwayat-transaksi.csv", headers, rows);
+  };
+
   return (
     <section className="panel">
-      <div className="panel-heading">
-        <h2>Riwayat pembelian</h2>
-        <span>Semua transaksi dari database TiDB</span>
+      <div
+        className="panel-heading"
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <div>
+          <h2>Riwayat pembelian</h2>
+          <span>Semua transaksi dari database TiDB</span>
+        </div>
+        {orders.length > 0 && (
+          <button
+            className="text-link"
+            onClick={handleExport}
+            style={{ fontSize: "12px", display: "inline-flex", alignItems: "center", gap: "6px" }}
+          >
+            <Download size={14} /> Ekspor CSV
+          </button>
+        )}
       </div>
       <div
         className="table-scroll"
