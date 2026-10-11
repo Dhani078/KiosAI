@@ -56,5 +56,8 @@
 - [x] Task 6.5: Sync all markdown docs (`PRD.md`, `STATE.md`, `tasks/todo.md`, `tasks/plan.md`, `README.md`)
 - [x] Task 6.6: Add Recent API Request Logs table (`RecentLogsTable`) in Statistik tab from TiDB `usage_logs`
 - [x] Task 6.7: Automatic raw key handoff from `KeyModal` to `PlaygroundTab` via `sessionStorage`
+- [x] Task 6.8: System health diagnostics API (`GET /api/health`) with latency metrics & dynamic Header tooltip
+- [x] Task 6.9: Granular rate limit selector in `KeyModal` (30/60/120 req/min) saved to `api_keys.rate_limit_per_min`
+
 
 

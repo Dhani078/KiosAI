@@ -182,3 +182,10 @@ Desain prototype dari `KiosAI Token Marketplace Design` diterapkan sepenuhnya pa
   - **Models**: Live discovery dari endpoint `GET /v1/models`.
 - **Engineering Constraint**: 100% file `.ts`, `.tsx`, `.mjs` berukuran <= 200 baris. Modul dipecah menjadi komponen mandiri di `app/components/`.
 
+## 11. Health Diagnostics & Key Rate Limit Customization
+
+- **Health Endpoint (`GET /api/health`)**: Memeriksa konektivitas dan latensi real-time database TiDB (`SELECT 1`) dan upstream 9Router (`/v1/models`). Mengembalikan status `healthy` (HTTP 200) atau `degraded` jika ada latensi/kegagalan.
+- **Status Indicator UI**: Header status dot menampilkan status live beserta tooltip latensi ms untuk TiDB dan 9Router yang diperbarui otomatis setiap 30 detik.
+- **Konfigurasi Rate Limit per Key**: Form pembuatan API key (`KeyModal`) mendukung pemilihan rate limit per menit (30 testing, 60 standar, 120 production) yang tersimpan di kolom `kiosai.api_keys.rate_limit_per_min`.
+
+

@@ -22,6 +22,7 @@ export function KeyModal({
   onCopy: (t: string) => void;
 }) {
   const [keyName, setKeyName] = useState("");
+  const [rateLimit, setRateLimit] = useState(60);
   const [createdSecret, setCreatedSecret] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -33,7 +34,7 @@ export function KeyModal({
       const res = await fetch("/api/keys", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId, name: keyName.trim() }),
+        body: JSON.stringify({ userId, name: keyName.trim(), rateLimit }),
       });
       const data = await res.json();
       if (res.ok && data.apiKey) {
@@ -54,9 +55,7 @@ export function KeyModal({
     if (!keyToRevoke?.id || loading) return;
     setLoading(true);
     try {
-      const res = await fetch(`/api/keys/${keyToRevoke.id}`, {
-        method: "DELETE",
-      });
+      const res = await fetch(`/api/keys/${keyToRevoke.id}`, { method: "DELETE" });
       if (res.ok) {
         onKeyRevoked();
         onClose();
@@ -72,12 +71,7 @@ export function KeyModal({
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <section
-        role="dialog"
-        aria-modal="true"
-        className="modal"
-        onClick={(e) => e.stopPropagation()}
-      >
+      <section role="dialog" aria-modal="true" className="modal" onClick={(e) => e.stopPropagation()}>
         <button aria-label="Tutup" className="modal-close" onClick={onClose}>
           <X size={20} />
         </button>
@@ -117,7 +111,7 @@ export function KeyModal({
           <form onSubmit={handleCreateKey}>
             <span className="eyebrow">API KEYS</span>
             <h2>Buat kunci baru</h2>
-            <p>Beri nama agar kunci Anda mudah dikenali di aplikasi Anda.</p>
+            <p>Beri nama dan tentukan batas limit permintaan per menit.</p>
             <label htmlFor="key-name">Nama API key</label>
             <Input
               autoFocus
@@ -128,12 +122,32 @@ export function KeyModal({
               placeholder="Contoh: Production App / Bot Telegram"
               maxLength={60}
             />
+            <label htmlFor="key-limit" style={{ marginTop: "12px" }}>Batas Rate Limit</label>
+            <select
+              id="key-limit"
+              value={rateLimit}
+              onChange={(e) => setRateLimit(Number(e.target.value))}
+              style={{
+                width: "100%",
+                padding: "8px 12px",
+                borderRadius: "var(--radius-input)",
+                background: "var(--surface)",
+                border: "1px solid var(--border)",
+                color: "var(--text)",
+                fontSize: "13px",
+                marginTop: "4px",
+              }}
+            >
+              <option value={30}>30 req / menit (Testing)</option>
+              <option value={60}>60 req / menit (Standar)</option>
+              <option value={120}>120 req / menit (Production Tinggi)</option>
+            </select>
             <Button
               kind="primary"
               type="submit"
               loading={loading}
               disabled={!keyName.trim()}
-              style={{ marginTop: "16px", width: "100%" }}
+              style={{ marginTop: "20px", width: "100%" }}
             >
               Buat API key <Plus size={16} />
             </Button>

@@ -77,7 +77,12 @@ export function KeysTab({
 
                   return (
                     <TableRow key={k.id}>
-                      <td>{k.name || "Default Key"}</td>
+                      <td>
+                        <strong>{k.name || "Default Key"}</strong>
+                        <small className="muted" style={{ display: "block" }}>
+                          {k.rate_limit_per_min || 60} req / menit
+                        </small>
+                      </td>
                       <td>
                         <code>{displayKey}</code>
                       </td>
