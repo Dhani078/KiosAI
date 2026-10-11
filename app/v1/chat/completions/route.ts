@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { validateApiKey, deductTokens, logUsage } from "@/lib/keys";
+import { validateApiKey, deductTokens, logUsage, isModelAllowedForTier } from "@/lib/keys";
 import { checkRateLimit } from "@/lib/ratelimit";
 
 export const runtime = "nodejs";
@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
     return errorResponse("Field 'model' is required", 400, "missing_model");
   }
 
-  // 2. Validate Allowed Models
+  // 2. Validate Allowed Models (on Key)
   if (auth.key.allowed_models) {
     try {
       const allowed: string[] = JSON.parse(auth.key.allowed_models);
@@ -78,6 +78,15 @@ export async function POST(req: NextRequest) {
     } catch {
       // Ignore parse error, allow fallback
     }
+  }
+
+  // 3. Validate Tier Access (Bronze vs Silver vs Gold)
+  if (!isModelAllowedForTier(auth.user.tier, requestedModel)) {
+    return errorResponse(
+      `Model '${requestedModel}' memerlukan paket yang lebih tinggi (Paket Anda saat ini: ${auth.user.tier.toUpperCase()}). Silakan upgrade ke Silver atau Gold di KiosAI.`,
+      403,
+      "tier_restricted"
+    );
   }
 
   const isStream = Boolean(body.stream);
@@ -113,8 +122,11 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    const contentType = upstreamRes.headers.get("content-type") || "";
+    const isEventStream = isStream || contentType.includes("event-stream");
+
     // 3. Handle Streaming Response
-    if (isStream && upstreamRes.body) {
+    if (isEventStream && upstreamRes.body) {
       const reader = upstreamRes.body.getReader();
       const decoder = new TextDecoder();
       let streamedTokensEst = 0;

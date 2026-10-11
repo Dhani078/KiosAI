@@ -21,9 +21,9 @@
 | `core-db` | Schema DDL, HTTP connection pool TiDB, seed data | Selesai |
 | `auth` | Registrasi user (`/api/auth/register`), login (`/api/auth/login`), trial token | Selesai |
 | `key-mgmt` | Generate key (`kios-xxxx`), SHA256 hash, validasi izin model & tier | Selesai |
-| `proxy-engine` | Endpoint `/v1/chat/completions`, SSE streaming, rate limiting, potong token otomatis | Selesai |
+| `proxy-engine` | Endpoint `/v1/chat/completions`, SSE streaming, rate limiting, tier gating, potong token otomatis | Selesai |
 | `analytics` | Agregasi metrik penggunaan per model, latensi, dan log request (`/api/analytics`) | Selesai |
-| `billing` | Paket token (Bronze/Silver/Gold), order flow, simulasi/webhook QRIS | Selesai |
+| `billing` | Paket token (Bronze/Silver/Gold), order flow, webhook pembayaran & idempotensi | Selesai |
 | `dashboard-ui` | UI toko, panel saldo, generator key, analytics charts, live API playground | Selesai |
 
 ## 4. Database Schema (TiDB DDL)
@@ -98,6 +98,7 @@ CREATE TABLE IF NOT EXISTS usage_logs (
   2. Rate limit sliding window (maks per menit) -> Return 429 jika overload
   3. Cek `is_active == true` & `balance_tokens > 0`
   4. Cek `allowed_models` cocok dengan `body.model`
+  5. Cek Tier Gating: Bronze dibatasi model standar, Silver mencakup GPT/Claude, Gold unmetered
 - **Forwarding**:
   - URL: `${NINEROUTER_URL}/v1/chat/completions`
   - Auth: Master `NINEROUTER_KEY`
@@ -113,6 +114,7 @@ CREATE TABLE IF NOT EXISTS usage_logs (
 - Bronze: Rp 50.000 -> 1.000.000 Token
 - Silver: Rp 150.000 -> 3.500.000 Token
 - Gold: Rp 400.000 -> 10.000.000 Token
+- `POST /api/payment/webhook`: Webhook callback dengan validasi idempotensi & HMAC signature.
 
 ### 5.4 Analytics:
 - `GET /api/analytics?userId=...`: Ringkasan total request, total token, rata-rata latensi, breakdown per model, riwayat request log.

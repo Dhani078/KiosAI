@@ -22,6 +22,33 @@ export interface UserRecord {
   balance_tokens: number;
 }
 
+export const TIER_MODELS: Record<string, string[]> = {
+  bronze: [
+    "ag/gemini-3.8-flash-high",
+    "gemini-3.8-flash-n",
+    "atria/Atria-Dawn-Preview",
+    "tokenharbor/deepseek-v4.1-flash:free",
+    "openrouter/auto",
+  ],
+  silver: [
+    "ag/gemini-3.8-flash-high",
+    "gemini-3.8-flash-n",
+    "atria/Atria-Dawn-Preview",
+    "tokenharbor/deepseek-v4.1-flash:free",
+    "openrouter/auto",
+    "openai/gpt-5",
+    "claude-3-5-sonnet",
+    "cx/gpt-5.4",
+  ],
+  gold: ["*"],
+};
+
+export function isModelAllowedForTier(tier: string, model: string): boolean {
+  if (tier === "gold") return true;
+  const list = TIER_MODELS[tier] || TIER_MODELS.bronze;
+  return list.includes(model);
+}
+
 export function hashKey(rawKey: string): string {
   return crypto.createHash("sha256").update(rawKey).digest("hex");
 }

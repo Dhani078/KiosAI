@@ -8,9 +8,11 @@
 
 - **OpenAI-Compatible Proxy (`/v1/chat/completions`)**: Mendukung streaming (SSE) dan JSON completion. Kompatibel dengan semua official OpenAI SDKs.
 - **TiDB Cloud Serverless**: Database MySQL-compatible berbasis HTTP fetch via `@tidbcloud/serverless`. Skalabel tanpa limit koneksi pool di serverless/Vercel.
+- **Model Gating Per Tier**: Pembatasan model otomatis berdasarkan level paket (Bronze untuk model cepat/gratis, Silver untuk GPT/Sonnet, Gold untuk seluruh model).
 - **Manajemen API Key Aman**: Kunci format `kios-<hash32>` di-hash dengan SHA-256. Mendukung pembatasan model dan rate limiting per kunci.
 - **Rate Limiting Engine**: Menggunakan algoritma sliding-window per menit, mengembalikan header standar `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`.
 - **Autentikasi Pengguna**: Registrasi & login mandiri dengan keamanan `scrypt` hashing dan bonus uji coba 100.000 token otomatis.
+- **Payment Webhook & Idempotensi**: Menerima callback QRIS/VA dari payment gateway dengan pencegahan double-spending secara otomatis.
 - **Statistik & Log Penggunaan**: Visualisasi riwayat pemakaian token, total request, rata-rata latensi, dan breakdown per model AI.
 - **Pemotongan Saldo Otomatis**: Setiap request AI otomatis memotong saldo token pengguna di database TiDB secara real-time.
 - **Top-Up Token (QRIS)**: Sistem paket token (Bronze, Silver, Gold) dengan simulasi pembayaran instan.
@@ -28,7 +30,8 @@
 [KiosAI Gateway (Next.js 15)]
   ├── 1. Validasi API Key (SHA-256)
   ├── 2. Cek Rate Limit & Quota (TiDB Serverless)
-  ├── 3. Forward Request ke Upstream
+  ├── 3. Validasi Hak Akses Model Tier
+  ├── 4. Forward Request ke Upstream
              ▼
 [9Router Engine (localhost:20128 / Cloudflare Tunnel)]
   ├── Auto-fallback & Combo routing
@@ -110,11 +113,11 @@ print(response.choices[0].message.content)
 
 ## 📦 Paket Token
 
-| Paket | Harga | Jumlah Token | Rate Limit |
-|---|---|---|---|
-| **Bronze Starter** | Rp 50.000 | 1.000.000 Token | 60 req/min |
-| **Silver Pro** | Rp 150.000 | 3.500.000 Token | 300 req/min |
-| **Gold Enterprise** | Rp 400.000 | 10.000.000 Token | 1.000 req/min |
+| Paket | Harga | Jumlah Token | Rate Limit | Akses Model |
+|---|---|---|---|---|
+| **Bronze Starter** | Rp 50.000 | 1.000.000 Token | 60 req/min | Model Cepat & Standard (Gemini Flash, DeepSeek Flash) |
+| **Silver Pro** | Rp 150.000 | 3.500.000 Token | 300 req/min | Termasuk GPT-4o, GPT-5, Claude Sonnet 3.5 |
+| **Gold Enterprise** | Rp 400.000 | 10.000.000 Token | 1.000 req/min | Seluruh Model AI tanpa batas |
 
 ---
 

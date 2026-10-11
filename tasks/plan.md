@@ -14,4 +14,5 @@
 - [x] Phase 4: Order & Top-Up QRIS Simulation API (`billing`)
 - [x] Phase 5: Dashboard UI (Key generator, balance gauge, test playground) (`dashboard-ui`)
 - [x] Phase 6: User Authentication, Rate Limiting & Usage Analytics (`analytics-and-auth`)
-- [x] Phase 7: E2E Verification & Git Push (`https://github.com/Dhani078/KiosAI.git`)
+- [x] Phase 7: Payment Webhook, Tier Gating & Idempotency (`security-and-hardening`)
+- [x] Phase 8: E2E Verification & Git Push (`https://github.com/Dhani078/KiosAI.git`)
