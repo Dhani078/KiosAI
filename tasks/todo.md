@@ -62,6 +62,8 @@
 - [x] Task 6.11: Interactive System Prompt configuration in Playground tab with live system message injection
 - [x] Task 6.12: Interactive model sync in Docs tab (clicking any model live-updates cURL/Python/Node code examples)
 - [x] Task 6.13: Production deployment verification CLI script (`scripts/verify-deployment.mjs` / `npm run verify`)
+- [x] Task 6.14: Complete Production Markdown Suite (`API.md`, `DEPLOYMENT.md`, `SECURITY.md`) and sync with `README.md`
+
 
 
 

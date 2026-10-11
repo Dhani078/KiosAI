@@ -61,6 +61,7 @@
     - Konfigurasi System Prompt dinamis di Playground untuk pengujian instruksi model AI tingkat lanjut.
     - Sinkronisasi kode interaktif di tab Dokumentasi (klik model mana saja langsung memperbarui snippet cURL, Python OpenAI, dan Node.js).
     - Skrip audit kesiapan produksi (`scripts/verify-deployment.mjs` via `npm run verify`) yang memvalidasi env, database TiDB, upstream 9Router, dan aturan batasan baris kode secara otomatis.
+    - Suite dokumentasi produksi lengkap: `API.md` (spesifikasi endpoint & error codes), `DEPLOYMENT.md` (arsitektur Vercel Tokyo + Cloudflare Tunnel 24 jam), dan `SECURITY.md` (kebijakan SHA-256, scrypt, sliding-window rate limit, dan mitigasi risiko).
     - Aturan maks 200 baris per file diverifikasi ketat (50 file `.ts`/`.tsx`/`.mjs` semuanya <= 200 baris).
     - Playwright browser audit di 390px (mobile) & 1366px (desktop): 5 tab x 2 viewport = 100% OK (0 overflow, 0 console error).
   - E2E tests verified: Registration, Login, Key Creation, OpenAI Proxy call, Rate Limit headers, QRIS top-up, Tier gating, Model discovery, Webhook idempotency, and Order list.
