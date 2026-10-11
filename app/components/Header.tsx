@@ -4,15 +4,15 @@ import { useKios } from "../hooks/KiosContext";
 export function Header() {
   const { currentUser, loading, setShowAuthModal, setAuthMode, refreshAll } = useKios();
   return (
-      <header className="flex flex-col md:flex-row md:items-center justify-between pb-6 border-b border-white/[0.07] gap-4">
+      <header className="flex flex-col md:flex-row md:items-center justify-between pb-6 border-b border-slate-800 gap-4">
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl bg-[#3D68C9] flex items-center justify-center shadow-lg shadow-blue-500/20">
+          <div className="h-10 w-10 rounded-xl bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
             <Zap className="h-6 w-6 text-white" />
           </div>
           <div>
             <div className="flex items-center gap-2">
               <h1 className="text-xl font-bold tracking-tight text-white">KiosAI</h1>
-              <span className="text-xs px-2 py-0.5 rounded-full bg-blue-900/60 text-[#4F7FE8] border border-blue-700/50 font-mono">
+              <span className="text-xs px-2 py-0.5 rounded-full bg-blue-900/60 text-blue-400 border border-blue-700/50 font-mono">
                 TiDB Serverless
               </span>
             </div>
@@ -22,7 +22,7 @@ export function Header() {
 
         {/* User Account & Balance */}
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-3 bg-[#161619]/80 border border-white/[0.07] p-2.5 px-4 rounded-xl">
+          <div className="flex items-center gap-3 bg-slate-900/80 border border-slate-800 p-2.5 px-4 rounded-xl">
             <Coins className="h-5 w-5 text-emerald-400 shrink-0" />
             <div>
               <div className="text-[11px] text-slate-400 uppercase tracking-wider font-semibold">Saldo Token</div>
@@ -40,7 +40,7 @@ export function Header() {
           </div>
 
           {/* Account Profile Button */}
-          <div className="flex items-center gap-2 bg-[#161619] border border-white/[0.07] p-2 px-3 rounded-xl">
+          <div className="flex items-center gap-2 bg-slate-900 border border-slate-800 p-2 px-3 rounded-xl">
             <User className="h-4 w-4 text-slate-400" />
             <div className="text-xs text-slate-300 max-w-[120px] truncate">
               {currentUser ? currentUser.full_name : "Demo User"}

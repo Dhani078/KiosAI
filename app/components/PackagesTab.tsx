@@ -15,12 +15,12 @@ export function PackagesTab() {
           )}
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-[#161619]/60 border border-white/[0.07] rounded-2xl p-6 flex flex-col justify-between hover:border-blue-500/50 transition-all">
+            <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between hover:border-blue-500/50 transition-all">
               <div>
                 <div className="text-xs font-bold text-amber-500 uppercase tracking-wider mb-2">Paket Bronze</div>
                 <div className="text-2xl font-extrabold text-white">Rp 50.000</div>
                 <div className="text-sm font-semibold text-emerald-400 mt-1">1.000.000 Token</div>
-                <ul className="text-xs text-slate-400 mt-4 space-y-2 border-t border-white/[0.07] pt-4">
+                <ul className="text-xs text-slate-400 mt-4 space-y-2 border-t border-slate-800 pt-4">
                   <li>• Akses semua model standar</li>
                   <li>• Rate limit 60 req/min</li>
                   <li>• Masa aktif selamanya (no expiry)</li>
@@ -28,19 +28,19 @@ export function PackagesTab() {
               </div>
               <button
                 onClick={() => handleBuyPackage("bronze")}
-                className="mt-6 w-full py-2.5 rounded-xl bg-slate-800 hover:bg-[#3D68C9] text-white font-medium text-sm transition-colors"
+                className="mt-6 w-full py-2.5 rounded-xl bg-slate-800 hover:bg-blue-600 text-white font-medium text-sm transition-colors"
               >
                 Beli via QRIS
               </button>
             </div>
 
-            <div className="bg-[#161619]/60 border border-blue-500/40 rounded-2xl p-6 flex flex-col justify-between shadow-lg shadow-blue-900/20 relative">
-              <span className="absolute -top-3 right-4 bg-[#3D68C9] text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Paling Laris</span>
+            <div className="bg-slate-900/60 border border-blue-500/40 rounded-2xl p-6 flex flex-col justify-between shadow-lg shadow-blue-900/20 relative">
+              <span className="absolute -top-3 right-4 bg-blue-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Paling Laris</span>
               <div>
-                <div className="text-xs font-bold text-[#4F7FE8] uppercase tracking-wider mb-2">Paket Silver</div>
+                <div className="text-xs font-bold text-blue-400 uppercase tracking-wider mb-2">Paket Silver</div>
                 <div className="text-2xl font-extrabold text-white">Rp 150.000</div>
                 <div className="text-sm font-semibold text-emerald-400 mt-1">3.500.000 Token (+500k Bonus)</div>
-                <ul className="text-xs text-slate-400 mt-4 space-y-2 border-t border-white/[0.07] pt-4">
+                <ul className="text-xs text-slate-400 mt-4 space-y-2 border-t border-slate-800 pt-4">
                   <li>• Akses Claude, GPT, Gemini</li>
                   <li>• Rate limit 300 req/min</li>
                   <li>• Masa aktif selamanya</li>
@@ -48,18 +48,18 @@ export function PackagesTab() {
               </div>
               <button
                 onClick={() => handleBuyPackage("silver")}
-                className="mt-6 w-full py-2.5 rounded-xl bg-[#3D68C9] hover:bg-[#4F7FE8] text-white font-semibold text-sm transition-colors"
+                className="mt-6 w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm transition-colors"
               >
                 Beli via QRIS
               </button>
             </div>
 
-            <div className="bg-[#161619]/60 border border-white/[0.07] rounded-2xl p-6 flex flex-col justify-between hover:border-amber-500/50 transition-all">
+            <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between hover:border-amber-500/50 transition-all">
               <div>
                 <div className="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2">Paket Gold</div>
                 <div className="text-2xl font-extrabold text-white">Rp 400.000</div>
                 <div className="text-sm font-semibold text-emerald-400 mt-1">10.000.000 Token (+2M Bonus)</div>
-                <ul className="text-xs text-slate-400 mt-4 space-y-2 border-t border-white/[0.07] pt-4">
+                <ul className="text-xs text-slate-400 mt-4 space-y-2 border-t border-slate-800 pt-4">
                   <li>• Akses unmetered model</li>
                   <li>• Rate limit 1000 req/min</li>
                   <li>• Masa aktif selamanya</li>
@@ -76,7 +76,7 @@ export function PackagesTab() {
 
           {selectedOrder && (
             <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
-              <div className="bg-[#161619] border border-white/[0.07] rounded-2xl max-w-sm w-full p-6 text-center space-y-4">
+              <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-sm w-full p-6 text-center space-y-4">
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-bold text-white">Pembayaran QRIS</span>
                   <button onClick={() => setSelectedOrder(null)} className="text-slate-400 hover:text-white">✕</button>
@@ -104,8 +104,8 @@ export function PackagesTab() {
           )}
 
           {/* Riwayat Transaksi */}
-          <div className="bg-[#161619]/60 border border-white/[0.07] rounded-xl overflow-hidden mt-8">
-            <div className="px-5 py-4 border-b border-white/[0.07] flex items-center justify-between">
+          <div className="bg-slate-900/60 border border-slate-800 rounded-xl overflow-hidden mt-8">
+            <div className="px-5 py-4 border-b border-slate-800 flex items-center justify-between">
               <h3 className="text-sm font-bold text-white">Riwayat Transaksi & Invoice ({orders.length})</h3>
             </div>
             {orders.length === 0 ? (
@@ -115,7 +115,7 @@ export function PackagesTab() {
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs font-mono">
-                  <thead className="bg-[#0D0D0F] text-slate-400 border-b border-white/[0.07]">
+                  <thead className="bg-slate-950 text-slate-400 border-b border-slate-800">
                     <tr>
                       <th className="p-3">Order ID</th>
                       <th className="p-3">Paket</th>

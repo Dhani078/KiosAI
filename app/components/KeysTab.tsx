@@ -13,7 +13,7 @@ export function KeysTab() {
                 </span>
                 <span className="text-xs text-amber-300">Simpan sekarang! Kunci tidak akan ditampilkan lagi.</span>
               </div>
-              <div className="flex items-center gap-2 bg-[#0D0D0F] p-2.5 rounded-lg border border-emerald-900/80 font-mono text-sm text-emerald-300">
+              <div className="flex items-center gap-2 bg-slate-950 p-2.5 rounded-lg border border-emerald-900/80 font-mono text-sm text-emerald-300">
                 <span className="flex-1 select-all">{generatedKey}</span>
                 <button
                   onClick={() => {
@@ -30,9 +30,9 @@ export function KeysTab() {
             </div>
           )}
 
-          <div className="bg-[#161619]/60 border border-white/[0.07] rounded-xl p-5">
+          <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-5">
             <h2 className="text-base font-bold text-white mb-3 flex items-center gap-2">
-              <Sparkles className="h-4 w-4 text-[#4F7FE8]" /> Buat API Key Baru
+              <Sparkles className="h-4 w-4 text-blue-400" /> Buat API Key Baru
             </h2>
             <form onSubmit={handleCreateKey} className="grid grid-cols-1 md:grid-cols-4 gap-3">
               <div>
@@ -42,7 +42,7 @@ export function KeysTab() {
                   placeholder="Misal: Cursor IDE"
                   value={newKeyName}
                   onChange={(e) => setNewKeyName(e.target.value)}
-                  className="w-full bg-[#0D0D0F] border border-white/[0.07] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#4F7FE8]"
+                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500"
                 />
               </div>
               <div>
@@ -51,7 +51,7 @@ export function KeysTab() {
                   type="number"
                   value={newKeyRateLimit}
                   onChange={(e) => setNewKeyRateLimit(Number(e.target.value))}
-                  className="w-full bg-[#0D0D0F] border border-white/[0.07] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#4F7FE8]"
+                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500"
                 />
               </div>
               <div>
@@ -61,13 +61,13 @@ export function KeysTab() {
                   placeholder="Kosongkan untuk semua"
                   value={newKeyAllowedModels}
                   onChange={(e) => setNewKeyAllowedModels(e.target.value)}
-                  className="w-full bg-[#0D0D0F] border border-white/[0.07] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#4F7FE8]"
+                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500"
                 />
               </div>
               <div className="flex items-end">
                 <button
                   type="submit"
-                  className="w-full bg-[#3D68C9] hover:bg-[#4F7FE8] text-white font-medium py-2 rounded-lg text-sm transition-colors"
+                  className="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-2 rounded-lg text-sm transition-colors"
                 >
                   Generate Key
                 </button>
@@ -75,8 +75,8 @@ export function KeysTab() {
             </form>
           </div>
 
-          <div className="bg-[#161619]/60 border border-white/[0.07] rounded-xl overflow-hidden">
-            <div className="px-5 py-4 border-b border-white/[0.07]">
+          <div className="bg-slate-900/60 border border-slate-800 rounded-xl overflow-hidden">
+            <div className="px-5 py-4 border-b border-slate-800">
               <h2 className="text-sm font-bold text-white">Daftar Kunci Aktif ({keys.length})</h2>
             </div>
             {keys.length === 0 ? (
@@ -90,7 +90,7 @@ export function KeysTab() {
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
                         <span className="font-semibold text-white text-sm">{k.name}</span>
-                        <span className="font-mono text-xs px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-white/[0.12]">
+                        <span className="font-mono text-xs px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
                           {k.key_prefix}...
                         </span>
                         {Boolean(k.is_active) ? (

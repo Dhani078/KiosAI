@@ -163,18 +163,3 @@ Keputusan: tagih total token upstream (`prompt_tokens + completion_tokens`) x mu
 - Overhead prompt upstream (~2.300–2.900 token per request) tetap ditagih. Tercatat di dokumen sebagai harga.
 
 Tes (2026-10-11, key demo, model deepseek): non-stream ditagih 2.329, stream ditagih 851, keduanya HTTP 200.
-
-## 10. Design System: Samakan dengan KasDesk
-
-Palet diambil dari `KasDesk/app/globals.css` supaya dua produk PT/ KasDesk punya identitas visual sama.
-
-| Token | Nilai |
-|---|---|
-| canvas (background) | `#0D0D0F` |
-| surface (card) | `#161619` |
-| text primary | `#F0F0F3` |
-| accent | `#4F7FE8` (solid `#3D68C9`) |
-| success | `#5EBA7D` |
-| border | `rgba(255,255,255,0.07)` |
-
-Catatan: sisa kelas `slate-*` di komponen (62 tempat) belum diganti semua. Verifikasi: body `rgb(13,13,15)`, tidak ada horizontal overflow di tab Beli Token (1366px).
