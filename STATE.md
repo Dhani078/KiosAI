@@ -2,7 +2,7 @@
 
 - **Repository**: `https://github.com/Dhani078/KiosAI.git`
 - **Location**: `E:/Hermesproject/KiosAI`
-- **Current Status**: Complete & Fully Verified (Phase 0 - 8)
+- **Current Status**: Complete & Fully Verified (Phase 0 - 9)
 - **Upstream Router**: 9Router local (`http://127.0.0.1:20128`)
 - **Database**: TiDB Cloud Serverless (`gateway01.ap-southeast-1.prod.aws.tidbcloud.com:4000/kiosai`)
 
@@ -13,11 +13,10 @@
   - Implementation roadmap in `tasks/plan.md` and `tasks/todo.md`.
   - TiDB connection verified and database `kiosai` created via `@tidbcloud/serverless`.
   - Database schema migrated: `users`, `api_keys`, `orders`, `usage_logs`.
-  - Seed user created with 1,000,000 initial balance tokens (`usr_kiosai_demo`).
   - Next.js 15 App router built with TypeScript & Tailwind CSS.
-  - Endpoints implemented & verified:
+  - Core endpoints implemented & verified:
     - `POST /v1/chat/completions`: OpenAI compatible streaming & JSON proxy to 9Router.
-    - `GET /v1/models`: OpenAI compatible model list.
+    - `GET /v1/models`: OpenAI compatible model list synced dynamically from 9Router with tier labeling.
     - `GET /api/user`: User balance & usage metrics.
     - `POST /api/keys`: Key generation (`kios-xxxx`) with SHA-256 hash.
     - `DELETE /api/keys/[id]`: Soft revocation.
@@ -29,4 +28,8 @@
     - Rate Limiting: In-memory sliding window enforcing `rate_limit_per_min`, injects `X-RateLimit-*` headers, returns HTTP 429 when abused.
     - Tier-based model permission gating: Bronze tier blocked from advanced models (`tier_restricted`), Silver/Gold unlocked.
     - Usage Analytics: `GET /api/analytics` returns aggregated tokens, requests count, average latency, model breakdown, and recent log rows.
-  - E2E tests verified: Registration, Login, Key Creation, OpenAI Proxy call, Rate Limit headers, QRIS top-up, Tier gating, and Webhook idempotency.
+  - Phase 4 Model Catalog & Deployment:
+    - Dynamic `/v1/models` discovery pulling real models from local 9Router.
+    - Dynamic model picker in Dashboard Playground.
+    - `vercel.json` configured with Tokyo region `hnd1`.
+  - E2E tests verified: Registration, Login, Key Creation, OpenAI Proxy call, Rate Limit headers, QRIS top-up, Tier gating, Model discovery, and Webhook idempotency.

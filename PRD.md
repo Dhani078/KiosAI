@@ -11,7 +11,7 @@
 - **Styling**: Tailwind CSS, shadcn/ui style components
 - **Database**: TiDB Serverless (MySQL-compatible, region Tokyo/Singapore, driver `@tidbcloud/serverless`)
 - **Upstream Router**: 9Router (`http://127.0.0.1:20128` dev, Cloudflare Tunnel prod)
-- **Deployment**: Vercel / Cloudflare Pages
+- **Deployment**: Vercel (`hnd1` Tokyo) / Cloudflare Pages
 - **Repository**: `https://github.com/Dhani078/KiosAI`
 
 ## 3. Capability Map & Modules
@@ -22,9 +22,10 @@
 | `auth` | Registrasi user (`/api/auth/register`), login (`/api/auth/login`), trial token | Selesai |
 | `key-mgmt` | Generate key (`kios-xxxx`), SHA256 hash, validasi izin model & tier | Selesai |
 | `proxy-engine` | Endpoint `/v1/chat/completions`, SSE streaming, rate limiting, tier gating, potong token otomatis | Selesai |
+| `catalog-sync` | Dynamic model discovery `/v1/models` sinkron dengan upstream 9Router dan anotasi tier | Selesai |
 | `analytics` | Agregasi metrik penggunaan per model, latensi, dan log request (`/api/analytics`) | Selesai |
 | `billing` | Paket token (Bronze/Silver/Gold), order flow, webhook pembayaran & idempotensi | Selesai |
-| `dashboard-ui` | UI toko, panel saldo, generator key, analytics charts, live API playground | Selesai |
+| `dashboard-ui` | UI toko, panel saldo, generator key, analytics charts, dynamic model picker, live playground | Selesai |
 
 ## 4. Database Schema (TiDB DDL)
 
@@ -105,16 +106,19 @@ CREATE TABLE IF NOT EXISTS usage_logs (
 - **Stream**: SSE passthrough ke client
 - **Token Deduction**: Potong `balance_tokens` dan rekam ke `usage_logs`.
 
-### 5.2 Key Management:
+### 5.2 Model Discovery: `GET /v1/models`
+- Mengembalikan daftar model aktif dari 9Router, dianotasi dengan `required_tier` ("bronze", "silver", "gold") dan ketersediaan akses sesuai tier pengguna.
+
+### 5.3 Key Management:
 - `POST /api/keys`: Buat key baru, return plaintext key sekali saja.
 - `GET /api/keys`: List key user (prefix saja terungkap).
 - `DELETE /api/keys/:id`: Revoke key.
 
-### 5.3 Billing & Packages:
+### 5.4 Billing & Packages:
 - Bronze: Rp 50.000 -> 1.000.000 Token
 - Silver: Rp 150.000 -> 3.500.000 Token
 - Gold: Rp 400.000 -> 10.000.000 Token
 - `POST /api/payment/webhook`: Webhook callback dengan validasi idempotensi & HMAC signature.
 
-### 5.4 Analytics:
+### 5.5 Analytics:
 - `GET /api/analytics?userId=...`: Ringkasan total request, total token, rata-rata latensi, breakdown per model, riwayat request log.

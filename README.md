@@ -7,6 +7,7 @@
 ## 🌟 Fitur Utama
 
 - **OpenAI-Compatible Proxy (`/v1/chat/completions`)**: Mendukung streaming (SSE) dan JSON completion. Kompatibel dengan semua official OpenAI SDKs.
+- **Dynamic Model Discovery (`/v1/models`)**: Sinkronisasi otomatis dengan upstream 9Router dan anotasi tier akses model.
 - **TiDB Cloud Serverless**: Database MySQL-compatible berbasis HTTP fetch via `@tidbcloud/serverless`. Skalabel tanpa limit koneksi pool di serverless/Vercel.
 - **Model Gating Per Tier**: Pembatasan model otomatis berdasarkan level paket (Bronze untuk model cepat/gratis, Silver untuk GPT/Sonnet, Gold untuk seluruh model).
 - **Manajemen API Key Aman**: Kunci format `kios-<hash32>` di-hash dengan SHA-256. Mendukung pembatasan model dan rate limiting per kunci.
@@ -115,9 +116,20 @@ print(response.choices[0].message.content)
 
 | Paket | Harga | Jumlah Token | Rate Limit | Akses Model |
 |---|---|---|---|---|
-| **Bronze Starter** | Rp 50.000 | 1.000.000 Token | 60 req/min | Model Cepat & Standard (Gemini Flash, DeepSeek Flash) |
-| **Silver Pro** | Rp 150.000 | 3.500.000 Token | 300 req/min | Termasuk GPT-4o, GPT-5, Claude Sonnet 3.5 |
-| **Gold Enterprise** | Rp 400.000 | 10.000.000 Token | 1.000 req/min | Seluruh Model AI tanpa batas |
+| **Bronze Starter** | Rp 50.000 | 1.000.000 Token | 60 req/min | Model Cepat & Standard (Gemini Flash, DeepSeek Flash, Haiku) |
+| **Silver Pro** | Rp 150.000 | 3.500.000 Token | 300 req/min | Termasuk GPT-4o, GPT-5, Claude Sonnet 4.5 |
+| **Gold Enterprise** | Rp 400.000 | 10.000.000 Token | 1.000 req/min | Seluruh Model AI & Custom Combos tanpa batas |
+
+---
+
+## 🌐 Deploy ke Vercel
+
+1. Buka [Vercel Dashboard](https://vercel.com) dan impor repository `Dhani078/KiosAI`.
+2. Masukkan Environment Variables di Vercel:
+   - `DATABASE_URL`: Connection string TiDB Cloud Serverless
+   - `NINEROUTER_URL`: Cloudflare Tunnel URL 9Router Anda (misal `https://xxx.trycloudflare.com`)
+   - `NINEROUTER_API_KEY`: Key 9Router Anda
+3. Klik **Deploy**. KiosAI akan otomatis berjalan di region Tokyo (`hnd1`).
 
 ---
 

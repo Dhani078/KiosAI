@@ -61,6 +61,9 @@ export default function Home() {
     recentLogs: any[];
   } | null>(null);
 
+  // Available Models State
+  const [availableModels, setAvailableModels] = useState<any[]>([]);
+
   // Load saved user from localStorage or fallback to demo
   const getActiveUserId = () => {
     if (typeof window !== "undefined") {
@@ -105,9 +108,21 @@ export default function Home() {
     }
   };
 
+  const fetchModels = async () => {
+    try {
+      const res = await fetch("/v1/models");
+      const data = await res.json();
+      if (Array.isArray(data.data)) {
+        setAvailableModels(data.data);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const refreshAll = async () => {
     setLoading(true);
-    await Promise.all([fetchUserData(), fetchKeys(), fetchAnalytics()]);
+    await Promise.all([fetchUserData(), fetchKeys(), fetchAnalytics(), fetchModels()]);
     setLoading(false);
   };
 
@@ -644,9 +659,19 @@ export default function Home() {
                 onChange={(e) => setPlaygroundModel(e.target.value)}
                 className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white font-mono focus:outline-none focus:border-blue-500"
               >
-                <option value="ag/gemini-3.8-flash-high">ag/gemini-3.8-flash-high</option>
-                <option value="openai/gpt-5">openai/gpt-5</option>
-                <option value="claude-3-5-sonnet">claude-3-5-sonnet</option>
+                {availableModels.length > 0 ? (
+                  availableModels.map((m) => (
+                    <option key={m.id} value={m.id}>
+                      {m.id} [{m.required_tier.toUpperCase()}]
+                    </option>
+                  ))
+                ) : (
+                  <>
+                    <option value="ag/gemini-3.8-flash-high">ag/gemini-3.8-flash-high [BRONZE]</option>
+                    <option value="kr/claude-sonnet-4.5">kr/claude-sonnet-4.5 [SILVER]</option>
+                    <option value="combomaut">combomaut [GOLD]</option>
+                  </>
+                )}
               </select>
             </div>
             <div>
