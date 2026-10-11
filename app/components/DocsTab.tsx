@@ -3,7 +3,7 @@ import { useKios } from "../hooks/KiosContext";
 
 export function DocsTab() {
   return (
-        <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-6 space-y-6">
+        <div className="bg-[#161619]/60 border border-white/[0.07] rounded-xl p-6 space-y-6">
           <div>
             <h2 className="text-base font-bold text-white mb-1">Panduan Integrasi OpenAI SDK</h2>
             <p className="text-xs text-slate-400">
@@ -14,7 +14,7 @@ export function DocsTab() {
           <div className="space-y-4">
             <div>
               <div className="text-xs font-semibold text-slate-300 mb-1">cURL (Terminal):</div>
-              <pre className="bg-slate-950 p-4 rounded-xl border border-slate-800 text-xs text-blue-300 font-mono overflow-x-auto">
+              <pre className="bg-[#0D0D0F] p-4 rounded-xl border border-white/[0.07] text-xs text-blue-300 font-mono overflow-x-auto">
 {`curl http://localhost:3000/v1/chat/completions \\
   -H "Content-Type: application/json" \\
   -H "Authorization: Bearer kios-your-api-key" \\
@@ -28,7 +28,7 @@ export function DocsTab() {
 
             <div>
               <div className="text-xs font-semibold text-slate-300 mb-1">Python (openai package):</div>
-              <pre className="bg-slate-950 p-4 rounded-xl border border-slate-800 text-xs text-emerald-300 font-mono overflow-x-auto">
+              <pre className="bg-[#0D0D0F] p-4 rounded-xl border border-white/[0.07] text-xs text-emerald-300 font-mono overflow-x-auto">
 {`from openai import OpenAI
 
 client = OpenAI(
@@ -46,7 +46,7 @@ print(response.choices[0].message.content)`}
 
             <div>
               <div className="text-xs font-semibold text-slate-300 mb-1">Node.js (openai npm):</div>
-              <pre className="bg-slate-950 p-4 rounded-xl border border-slate-800 text-xs text-amber-300 font-mono overflow-x-auto">
+              <pre className="bg-[#0D0D0F] p-4 rounded-xl border border-white/[0.07] text-xs text-amber-300 font-mono overflow-x-auto">
 {`import OpenAI from "openai";
 
 const openai = new OpenAI({

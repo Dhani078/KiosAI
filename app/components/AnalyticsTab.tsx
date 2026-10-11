@@ -7,17 +7,17 @@ export function AnalyticsTab() {
         <div className="space-y-6">
           {/* Summary Metric Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-slate-900/60 border border-slate-800 p-5 rounded-xl">
+            <div className="bg-[#161619]/60 border border-white/[0.07] p-5 rounded-xl">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-xs text-slate-400 uppercase font-semibold">Total Permintaan</span>
-                <Activity className="h-4 w-4 text-blue-400" />
+                <Activity className="h-4 w-4 text-[#4F7FE8]" />
               </div>
               <div className="text-2xl font-bold text-white font-mono">
                 {analytics?.summary.totalRequests || 0}
               </div>
             </div>
 
-            <div className="bg-slate-900/60 border border-slate-800 p-5 rounded-xl">
+            <div className="bg-[#161619]/60 border border-white/[0.07] p-5 rounded-xl">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-xs text-slate-400 uppercase font-semibold">Token Terpakai</span>
                 <Coins className="h-4 w-4 text-emerald-400" />
@@ -27,7 +27,7 @@ export function AnalyticsTab() {
               </div>
             </div>
 
-            <div className="bg-slate-900/60 border border-slate-800 p-5 rounded-xl">
+            <div className="bg-[#161619]/60 border border-white/[0.07] p-5 rounded-xl">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-xs text-slate-400 uppercase font-semibold">Rata-rata Latensi</span>
                 <Zap className="h-4 w-4 text-amber-400" />
@@ -40,13 +40,13 @@ export function AnalyticsTab() {
 
           {/* Model Breakdown */}
           {analytics?.perModel && analytics.perModel.length > 0 && (
-            <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-5">
+            <div className="bg-[#161619]/60 border border-white/[0.07] rounded-xl p-5">
               <h3 className="text-sm font-bold text-white mb-3 flex items-center gap-2">
-                <Layers className="h-4 w-4 text-blue-400" /> Penggunaan Per Model
+                <Layers className="h-4 w-4 text-[#4F7FE8]" /> Penggunaan Per Model
               </h3>
               <div className="space-y-2">
                 {analytics.perModel.map((m: any, i: number) => (
-                  <div key={i} className="flex items-center justify-between p-3 bg-slate-950/60 border border-slate-800/80 rounded-lg">
+                  <div key={i} className="flex items-center justify-between p-3 bg-[#0D0D0F]/60 border border-white/[0.07]/80 rounded-lg">
                     <span className="font-mono text-sm text-slate-200">{m.model}</span>
                     <div className="flex items-center gap-4 text-xs font-mono">
                       <span className="text-slate-400">{m.requests} req</span>
@@ -60,8 +60,8 @@ export function AnalyticsTab() {
           )}
 
           {/* Recent Logs Table */}
-          <div className="bg-slate-900/60 border border-slate-800 rounded-xl overflow-hidden">
-            <div className="px-5 py-4 border-b border-slate-800">
+          <div className="bg-[#161619]/60 border border-white/[0.07] rounded-xl overflow-hidden">
+            <div className="px-5 py-4 border-b border-white/[0.07]">
               <h3 className="text-sm font-bold text-white">Log Permintaan Terakhir</h3>
             </div>
             {(!analytics?.recentLogs || analytics.recentLogs.length === 0) ? (
@@ -71,7 +71,7 @@ export function AnalyticsTab() {
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs font-mono">
-                  <thead className="bg-slate-950 text-slate-400 border-b border-slate-800">
+                  <thead className="bg-[#0D0D0F] text-slate-400 border-b border-white/[0.07]">
                     <tr>
                       <th className="p-3">Status</th>
                       <th className="p-3">Model</th>
