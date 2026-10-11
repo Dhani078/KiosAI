@@ -10,6 +10,26 @@ const PACKAGES = {
   gold: { amountIdr: 400000, tokens: 10000000, name: "Gold Enterprise" },
 };
 
+export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const userId = searchParams.get("userId") || "usr_kiosai_demo";
+
+  try {
+    const orders = await db.query(
+      `SELECT id, user_id, amount_idr, tokens_purchased, package_tier, payment_method, status, paid_at, created_at
+       FROM kiosai.orders
+       WHERE user_id = ?
+       ORDER BY created_at DESC
+       LIMIT 50`,
+      [userId]
+    );
+
+    return NextResponse.json({ orders });
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message }, { status: 500 });
+  }
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();

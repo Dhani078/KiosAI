@@ -64,6 +64,9 @@ export default function Home() {
   // Available Models State
   const [availableModels, setAvailableModels] = useState<any[]>([]);
 
+  // Orders History State
+  const [orders, setOrders] = useState<any[]>([]);
+
   // Load saved user from localStorage or fallback to demo
   const getActiveUserId = () => {
     if (typeof window !== "undefined") {
@@ -120,9 +123,22 @@ export default function Home() {
     }
   };
 
+  const fetchOrders = async () => {
+    try {
+      const uid = getActiveUserId();
+      const res = await fetch(`/api/orders?userId=${uid}`);
+      const data = await res.json();
+      if (Array.isArray(data.orders)) {
+        setOrders(data.orders);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const refreshAll = async () => {
     setLoading(true);
-    await Promise.all([fetchUserData(), fetchKeys(), fetchAnalytics(), fetchModels()]);
+    await Promise.all([fetchUserData(), fetchKeys(), fetchAnalytics(), fetchModels(), fetchOrders()]);
     setLoading(false);
   };
 
@@ -544,6 +560,15 @@ export default function Home() {
       {/* TAB 2: PACKAGES */}
       {activeTab === "packages" && (
         <div className="space-y-6">
+          {currentUser && currentUser.balance_tokens < 20000 && (
+            <div className="p-4 rounded-xl bg-amber-950/40 border border-amber-600/40 text-amber-200 flex items-center gap-3">
+              <Zap className="h-5 w-5 text-amber-400 shrink-0" />
+              <div className="text-xs">
+                <span className="font-bold">Peringatan Kuota:</span> Saldo token Anda tersisa kurang dari 20.000 token ({currentUser.balance_tokens.toLocaleString("id-ID")}). Silakan beli paket tambahan agar request API AI Anda tidak terhenti.
+              </div>
+            </div>
+          )}
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between hover:border-blue-500/50 transition-all">
               <div>
@@ -632,6 +657,53 @@ export default function Home() {
               </div>
             </div>
           )}
+
+          {/* Riwayat Transaksi */}
+          <div className="bg-slate-900/60 border border-slate-800 rounded-xl overflow-hidden mt-8">
+            <div className="px-5 py-4 border-b border-slate-800 flex items-center justify-between">
+              <h3 className="text-sm font-bold text-white">Riwayat Transaksi & Invoice ({orders.length})</h3>
+            </div>
+            {orders.length === 0 ? (
+              <div className="p-8 text-center text-slate-500 text-sm">
+                Belum ada riwayat transaksi pembelian token.
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs font-mono">
+                  <thead className="bg-slate-950 text-slate-400 border-b border-slate-800">
+                    <tr>
+                      <th className="p-3">Order ID</th>
+                      <th className="p-3">Paket</th>
+                      <th className="p-3">Total Biaya</th>
+                      <th className="p-3">Token Didapat</th>
+                      <th className="p-3">Status</th>
+                      <th className="p-3">Waktu</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-800/80">
+                    {orders.map((o) => (
+                      <tr key={o.id} className="hover:bg-slate-800/20">
+                        <td className="p-3 text-slate-400 font-mono text-[11px]">{o.id.substring(0, 18)}...</td>
+                        <td className="p-3 text-slate-200 capitalize">{o.package_tier}</td>
+                        <td className="p-3 text-white font-semibold">Rp {Number(o.amount_idr).toLocaleString("id-ID")}</td>
+                        <td className="p-3 text-emerald-400">+{Number(o.tokens_purchased).toLocaleString("id-ID")}</td>
+                        <td className="p-3">
+                          <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                            o.status === "paid"
+                              ? "bg-emerald-950 text-emerald-400 border border-emerald-800"
+                              : "bg-amber-950 text-amber-400 border border-amber-800"
+                          }`}>
+                            {o.status === "paid" ? "LUNAS" : "PENDING"}
+                          </span>
+                        </td>
+                        <td className="p-3 text-slate-400">{new Date(o.created_at).toLocaleDateString("id-ID")}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
         </div>
       )}
 

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { validateApiKey, deductTokens, logUsage, isModelAllowedForTier } from "@/lib/keys";
+import { validateApiKey, deductTokens, logUsage, isModelAllowedForTier, getModelMultiplier } from "@/lib/keys";
 import { checkRateLimit } from "@/lib/ratelimit";
 
 export const runtime = "nodejs";
@@ -137,15 +137,16 @@ export async function POST(req: NextRequest) {
           if (done) {
             controller.close();
             const latency = Date.now() - startTime;
+            const multiplier = getModelMultiplier(requestedModel);
             // Deduct estimated tokens (approx 1 token per chunk)
-            const finalTokens = Math.max(20, streamedTokensEst);
-            await deductTokens(auth.user!.id, finalTokens);
+            const rawTokens = Math.max(20, streamedTokensEst);
+            const deducted = await deductTokens(auth.user!.id, rawTokens, multiplier);
             await logUsage({
               apiKeyId: auth.key!.id,
               userId: auth.user!.id,
               model: requestedModel,
               promptTokens: 10,
-              completionTokens: finalTokens,
+              completionTokens: rawTokens,
               latencyMs: latency,
               statusCode: 200,
             });
@@ -178,7 +179,8 @@ export async function POST(req: NextRequest) {
     const totalTokens = data.usage?.total_tokens || promptTokens + completionTokens;
 
     const latency = Date.now() - startTime;
-    await deductTokens(auth.user.id, totalTokens);
+    const multiplier = getModelMultiplier(requestedModel);
+    const deducted = await deductTokens(auth.user.id, totalTokens, multiplier);
     await logUsage({
       apiKeyId: auth.key.id,
       userId: auth.user.id,
@@ -189,7 +191,13 @@ export async function POST(req: NextRequest) {
       statusCode: 200,
     });
 
-    return NextResponse.json(data, { headers: rateHeaders });
+    const isLowBalance = Number(auth.user.balance_tokens) - deducted < 20000;
+    const finalHeaders = {
+      ...rateHeaders,
+      ...(isLowBalance ? { "X-Quota-Warning": "low_balance" } : {}),
+    };
+
+    return NextResponse.json(data, { headers: finalHeaders });
   } catch (err: any) {
     return errorResponse(`Upstream error: ${err.message}`, 502, "bad_gateway");
   }

@@ -2,7 +2,7 @@
 
 - **Repository**: `https://github.com/Dhani078/KiosAI.git`
 - **Location**: `E:/Hermesproject/KiosAI`
-- **Current Status**: Complete & Fully Verified (Phase 0 - 9)
+- **Current Status**: Complete & Fully Verified (Phase 0 - 10)
 - **Upstream Router**: 9Router local (`http://127.0.0.1:20128`)
 - **Database**: TiDB Cloud Serverless (`gateway01.ap-southeast-1.prod.aws.tidbcloud.com:4000/kiosai`)
 
@@ -21,15 +21,19 @@
     - `POST /api/keys`: Key generation (`kios-xxxx`) with SHA-256 hash.
     - `DELETE /api/keys/[id]`: Soft revocation.
     - `POST /api/orders`: QRIS checkout order creation.
+    - `GET /api/orders`: Order history & invoice status retrieval.
     - `POST /api/orders/pay`: Order confirmation & instant token credit.
     - `POST /api/payment/webhook`: Webhook handler with idempotency check, auto-upgrade tier, and token credit.
   - Hardening & Security (OWASP standard):
     - User Authentication: `POST /api/auth/register` (auto-credits 100k trial token) and `POST /api/auth/login` (scrypt password verification).
     - Rate Limiting: In-memory sliding window enforcing `rate_limit_per_min`, injects `X-RateLimit-*` headers, returns HTTP 429 when abused.
     - Tier-based model permission gating: Bronze tier blocked from advanced models (`tier_restricted`), Silver/Gold unlocked.
+    - Model Multiplier Pricing: 1.0x Bronze/Flash, 2.0x Silver/Sonnet, 4.0x Gold/Opus.
+    - Low-Balance Quota Warning: Injects `X-Quota-Warning: low_balance` header when tokens < 20,000.
     - Usage Analytics: `GET /api/analytics` returns aggregated tokens, requests count, average latency, model breakdown, and recent log rows.
-  - Phase 4 Model Catalog & Deployment:
+  - Phase 4 & 5 Enhancements:
     - Dynamic `/v1/models` discovery pulling real models from local 9Router.
     - Dynamic model picker in Dashboard Playground.
+    - Order history table & low-balance warning banner in frontend.
     - `vercel.json` configured with Tokyo region `hnd1`.
-  - E2E tests verified: Registration, Login, Key Creation, OpenAI Proxy call, Rate Limit headers, QRIS top-up, Tier gating, Model discovery, and Webhook idempotency.
+  - E2E tests verified: Registration, Login, Key Creation, OpenAI Proxy call, Rate Limit headers, QRIS top-up, Tier gating, Model discovery, Webhook idempotency, and Order list.

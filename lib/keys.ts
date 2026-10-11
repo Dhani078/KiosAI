@@ -39,6 +39,13 @@ export function getRequiredTierForModel(modelId: string): "bronze" | "silver" | 
   return "bronze";
 }
 
+export function getModelMultiplier(modelId: string): number {
+  const tier = getRequiredTierForModel(modelId);
+  if (tier === "gold") return 4.0;
+  if (tier === "silver") return 2.0;
+  return 1.0;
+}
+
 export function isModelAllowedForTier(tier: string, model: string): boolean {
   if (tier === "gold") return true;
   const required = getRequiredTierForModel(model);
@@ -128,12 +135,13 @@ export async function validateApiKey(rawKey: string): Promise<{
   return { valid: true, user, key };
 }
 
-export async function deductTokens(userId: string, tokens: number) {
-  const safeTokens = Math.max(1, Math.round(tokens));
+export async function deductTokens(userId: string, tokens: number, multiplier: number = 1.0): Promise<number> {
+  const safeTokens = Math.max(1, Math.round(tokens * multiplier));
   await db.execute(
     `UPDATE kiosai.users SET balance_tokens = GREATEST(0, balance_tokens - ?) WHERE id = ?`,
     [safeTokens, userId]
   );
+  return safeTokens;
 }
 
 export async function logUsage(params: {
