@@ -36,4 +36,9 @@
     - Dynamic model picker in Dashboard Playground.
     - Order history table & low-balance warning banner in frontend.
     - `vercel.json` configured with Tokyo region `hnd1`.
+  - Refactor modularity (aturan maks 200 baris, lihat PRD.md §6):
+    - `app/page.tsx` (1032 baris) dipecah jadi shell 30 baris + `app/hooks/` (useKiosData, useKiosActions, KiosContext) + `app/components/` (Header, Nav, KeysTab, PackagesTab, PlaygroundTab, AnalyticsTab, DocsTab, AuthModal).
+    - Helper proxy dipindah ke `lib/proxy-http.ts`.
+    - Upstream key: `NINEROUTER_API_KEY_2` (prioritas) dengan fallback `NINEROUTER_API_KEY`. Key lama tidak dihapus.
+    - Verifikasi: `tsc --noEmit` exit 0, `npm run build` exit 0, `/`, `/v1/models`, `/v1/chat/completions` 200.
   - E2E tests verified: Registration, Login, Key Creation, OpenAI Proxy call, Rate Limit headers, QRIS top-up, Tier gating, Model discovery, Webhook idempotency, and Order list.

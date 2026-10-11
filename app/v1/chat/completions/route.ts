@@ -1,24 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { validateApiKey, deductTokens, logUsage, isModelAllowedForTier, getModelMultiplier } from "@/lib/keys";
 import { checkRateLimit } from "@/lib/ratelimit";
+import { errorResponse, UPSTREAM_URL, UPSTREAM_KEY } from "@/lib/proxy-http";
 
 export const runtime = "nodejs";
-
-const UPSTREAM_URL = process.env.NINEROUTER_URL || "http://127.0.0.1:20128";
-const UPSTREAM_KEY = process.env.NINEROUTER_API_KEY || "";
-
-function errorResponse(message: string, status: number, code: string = "kiosai_error", headers?: Record<string, string>) {
-  return NextResponse.json(
-    {
-      error: {
-        message,
-        type: status === 401 ? "authentication_error" : status === 429 ? "rate_limit_error" : "invalid_request_error",
-        code,
-      },
-    },
-    { status, headers }
-  );
-}
 
 export async function POST(req: NextRequest) {
   const startTime = Date.now();

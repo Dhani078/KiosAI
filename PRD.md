@@ -127,3 +127,10 @@ CREATE TABLE IF NOT EXISTS usage_logs (
 
 ### 5.5 Analytics:
 - `GET /api/analytics?userId=...`: Ringkasan total request, total token, rata-rata latensi, breakdown per model, riwayat request log.
+
+## 6. Engineering Constraints
+
+- **Batas ukuran file: maks 200 baris per file** (`.ts`, `.tsx`, `.mjs`). Jika lebih, pecah ke modul terpisah (hooks, komponen per tab, helper `lib/`) sebelum commit.
+- Komponen UI dipisah per tab di `app/components/`. State & fetch di `app/hooks/`. Konteks dibagi lewat `app/hooks/KiosContext.tsx`.
+- Helper HTTP proxy di `lib/proxy-http.ts` (konstanta upstream, `errorResponse`).
+- Upstream 9Router memakai key `NINEROUTER_API_KEY_2` (prioritas), fallback ke `NINEROUTER_API_KEY`. Keduanya dibiarkan di `.env`.
