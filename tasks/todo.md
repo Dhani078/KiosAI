@@ -65,6 +65,8 @@
 - [x] Task 6.14: Complete Production Markdown Suite (`API.md`, `DEPLOYMENT.md`, `SECURITY.md`) and sync with `README.md`
 - [x] Task 6.15: Automated End-to-End Integration Test Suite (`scripts/test-e2e.mjs` / `npm run test:e2e`) covering 10 core pathways
 - [x] Task 6.16: GitHub Actions CI workflow (`.github/workflows/ci.yml`) for automated type check, line limits check, and build
+- [x] Task 6.17: Public Marketing Landing Page (`/landing`) with Hero, Features, Pricing, Code Sandbox, and FAQ
+
 
 
 

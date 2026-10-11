@@ -11,7 +11,9 @@ import {
   HelpCircle,
   LogOut,
   ChevronDown,
+  Sparkles,
 } from "lucide-react";
+import Link from "next/link";
 import Logo from "./Logo";
 
 export interface NavItem {
@@ -86,6 +88,15 @@ export function Sidebar({
             Mulai integrasi <ArrowUpRight size={15} />
           </button>
         </div>
+        <Link
+          href="/landing"
+          className="support-link"
+          style={{ textDecoration: "none" }}
+        >
+          <Sparkles size={17} />
+          Landing Page Publik
+          <ArrowUpRight size={14} />
+        </Link>
         <button
           className="support-link"
           onClick={() => setPage("Dokumentasi")}
