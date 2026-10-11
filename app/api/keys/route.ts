@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
   try {
     const keys = await db.query<ApiKeyRecord>(
       `SELECT id, user_id, key_prefix, name, rate_limit_per_min, allowed_models, is_active, last_used_at, created_at
-       FROM kiosai.api_keys WHERE user_id = ? ORDER BY created_at DESC`,
+       FROM kiosai.api_keys WHERE user_id = ? AND is_active = TRUE ORDER BY created_at DESC`,
       [userId]
     );
 

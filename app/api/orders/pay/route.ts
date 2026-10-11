@@ -31,10 +31,17 @@ export async function POST(req: NextRequest) {
       [orderId]
     );
 
-    // Add tokens to user
+    // Add tokens to user and upgrade tier if higher
     await db.execute(
-      `UPDATE kiosai.users SET balance_tokens = balance_tokens + ? WHERE id = ?`,
-      [order.tokens_purchased, order.user_id]
+      `UPDATE kiosai.users 
+       SET balance_tokens = balance_tokens + ?,
+           tier = CASE 
+             WHEN ? = 'gold' THEN 'gold'
+             WHEN ? = 'silver' AND tier != 'gold' THEN 'silver'
+             ELSE tier
+           END
+       WHERE id = ?`,
+      [order.tokens_purchased, order.package_tier, order.package_tier, order.user_id]
     );
 
     return NextResponse.json({

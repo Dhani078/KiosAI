@@ -163,3 +163,22 @@ Keputusan: tagih total token upstream (`prompt_tokens + completion_tokens`) x mu
 - Overhead prompt upstream (~2.300–2.900 token per request) tetap ditagih. Tercatat di dokumen sebagai harga.
 
 Tes (2026-10-11, key demo, model deepseek): non-stream ditagih 2.329, stream ditagih 851, keduanya HTTP 200.
+
+## 10. Desain & Zero Dummy Data Integration (KiosAI Token Marketplace Design)
+
+Desain prototype dari `KiosAI Token Marketplace Design` diterapkan sepenuhnya pada aplikasi live:
+- **Palette (Warm Anti-Slop Orange)**:
+  - Canvas: `#120F0C`, Surface: `#1C1714`, Border: `#2E2722`
+  - Text Primary: `#F5EFEA`, Text Muted: `#A29487`
+  - Primary / CTA: `#F28C38`, Primary Hover: `#D9742A`
+  - Tiers: Bronze `#C08A5B`, Silver `#B9C4CC`, Gold `#E6C36A`
+  - Warning: `#F5C542`, Error: `#E5533D`, Success: `#4FBF7A`
+- **Zero Dummy Data (Semua Live Database & Gateway)**:
+  - **Saldo & Akun**: Live dari tabel TiDB `kiosai.users` (`balance_tokens`, `tier`, `full_name`, `email`).
+  - **API Keys**: Live dari tabel TiDB `kiosai.api_keys` via `POST /api/keys` & `DELETE /api/keys/:id`.
+  - **Orders & QRIS**: Live dari tabel TiDB `kiosai.orders` via `POST /api/orders` & pembayaran live `POST /api/orders/pay`.
+  - **Playground**: Panggilan live `POST /v1/chat/completions` ke 9Router dengan pemotongan saldo nyata di TiDB.
+  - **Statistik**: Log konsumsi live dari tabel TiDB `kiosai.usage_logs`.
+  - **Models**: Live discovery dari endpoint `GET /v1/models`.
+- **Engineering Constraint**: 100% file `.ts`, `.tsx`, `.mjs` berukuran <= 200 baris. Modul dipecah menjadi komponen mandiri di `app/components/`.
+

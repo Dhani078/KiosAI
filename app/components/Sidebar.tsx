@@ -1,0 +1,109 @@
+"use client";
+
+import {
+  KeyRound,
+  CreditCard,
+  MessageSquare,
+  BarChart3,
+  BookOpen,
+  Terminal,
+  ArrowUpRight,
+  HelpCircle,
+  LogOut,
+  ChevronDown,
+} from "lucide-react";
+import Logo from "./Logo";
+
+export interface NavItem {
+  name: string;
+  short: string;
+  icon: any;
+}
+
+export const navigation: NavItem[] = [
+  { name: "API Keys", short: "Keys", icon: KeyRound },
+  { name: "Beli Token", short: "Beli", icon: CreditCard },
+  { name: "Playground", short: "Playground", icon: MessageSquare },
+  { name: "Statistik", short: "Statistik", icon: BarChart3 },
+  { name: "Dokumentasi", short: "Docs", icon: BookOpen },
+];
+
+export function Sidebar({
+  page,
+  setPage,
+  user,
+  onOpenAuth,
+}: {
+  page: string;
+  setPage: (p: string) => void;
+  user: any;
+  onOpenAuth: () => void;
+}) {
+  const userName = user?.full_name || user?.name || "Demo User";
+  const userEmail = user?.email || "demo@kiosai.id";
+  const initials = userName
+    .split(" ")
+    .map((w: string) => w[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+
+  return (
+    <aside className="sidebar">
+      <Logo />
+      <div className="workspace">
+        <div className="workspace-avatar">{initials[0] || "K"}</div>
+        <div>
+          <strong>{userName}</strong>
+          <small>{userEmail}</small>
+        </div>
+        <ChevronDown size={15} />
+      </div>
+      <div className="nav-label">WORKSPACE</div>
+      <nav aria-label="Navigasi workspace">
+        {navigation.map((n) => (
+          <button
+            key={n.name}
+            aria-label={n.name}
+            aria-current={page === n.name ? "page" : undefined}
+            className={`nav-item ${page === n.name ? "active" : ""}`}
+            onClick={() => setPage(n.name)}
+          >
+            <n.icon size={19} />
+            <span>{n.name}</span>
+            {n.name === "Beli Token" && <span className="nav-new">TOP UP</span>}
+          </button>
+        ))}
+      </nav>
+      <div className="sidebar-bottom">
+        <div className="help-box">
+          <div className="help-title">
+            <Terminal size={18} />
+            Dibuat untuk developer.
+          </div>
+          <p>Satu API. Banyak kemungkinan.</p>
+          <button onClick={() => setPage("Dokumentasi")}>
+            Mulai integrasi <ArrowUpRight size={15} />
+          </button>
+        </div>
+        <button
+          className="support-link"
+          onClick={() => setPage("Dokumentasi")}
+        >
+          <HelpCircle size={18} />
+          Pusat bantuan
+          <ArrowUpRight size={14} />
+        </button>
+        <button className="profile" onClick={onOpenAuth}>
+          <div className="avatar">{initials}</div>
+          <div>
+            <strong>{userName}</strong>
+            <small>{userEmail}</small>
+          </div>
+          <LogOut size={16} />
+        </button>
+      </div>
+    </aside>
+  );
+}
+export default Sidebar;

@@ -19,3 +19,8 @@
 - [x] Phase 8: Dynamic Model Discovery & Live Catalog Sync (`catalog-sync`)
 - [x] Phase 9: Model Multipliers, Order Invoices & Low-Balance Alert (`pricing-and-invoices`)
 - [x] Phase 10: Vercel Deploy Spec, E2E Verification & Git Push (`https://github.com/Dhani078/KiosAI.git`)
+- [x] Phase 11: KiosAI Token Marketplace Design & Zero Dummy Data Architecture
+  - Warm anti-slop orange design system (`#F28C38` primary, `#120F0C` canvas)
+  - 100% database & live gateway data binding (no mock data)
+  - Strict compliance: all 45 `.ts`/`.tsx`/`.mjs` files <= 200 lines
+

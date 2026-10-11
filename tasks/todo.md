@@ -47,3 +47,11 @@
 - [x] Task 5.5: Stream billing via `stream_options.include_usage` (tagih total, PRD §9)
 - [x] Task 5.6: Sync docs STATE/README/plan/todo untuk billing
   - Acceptance: Update `PRD.md`, `tasks/plan.md`, `tasks/todo.md`, `STATE.md`, `README.md` and push to GitHub
+
+## Phase 6 (Design System Integration & Zero Dummy Data - Completed)
+- [x] Task 6.1: Adopt KiosAI Token Marketplace Design system (`#F28C38` orange, `#120F0C` canvas, `#1C1714` surface)
+- [x] Task 6.2: Eliminate all dummy/mock data; wire 100% components to real TiDB tables (`users`, `api_keys`, `orders`, `usage_logs`)
+- [x] Task 6.3: Refactor codebase so 100% files are <= 200 lines (PRD §6 enforcement)
+- [x] Task 6.4: Playwright E2E browser audit (390px mobile, 1366px desktop, 0 overflow, 0 console error)
+- [x] Task 6.5: Sync all markdown docs (`PRD.md`, `STATE.md`, `tasks/todo.md`, `tasks/plan.md`, `README.md`)
+

@@ -43,4 +43,15 @@
     - Billing: tagih total `prompt+completion` x multiplier, non-stream & stream (stream pakai `stream_options.include_usage`). Detail: PRD §9.
     - Default model demo diganti ke `tokenharbor/deepseek-v4.1-flash:free` (playground, docs, `/v1/models`). Alasan: `ag/*` pakai akun OAuth pribadi, tidak aman untuk pelanggan publik. Lihat PRD.md §7.
     - Verifikasi: `tsc --noEmit` exit 0, `npm run build` exit 0, `/`, `/v1/models`, `/v1/chat/completions` 200.
+  - Phase 11: Full Design System Integration & Zero Dummy Data (KiosAI Token Marketplace Design):
+    - Menerapkan arsitektur desain baru: warm anti-slop orange palette (`#F28C38` primary, `#120F0C` canvas, `#1C1714` surface).
+    - Menghilangkan semua dummy data:
+      - Saldo & profil live dari `kiosai.users`
+      - API keys real CRUD dari `kiosai.api_keys`
+      - QRIS checkout & order history real dari `kiosai.orders`
+      - AI Playground real live stream & non-stream calling `/v1/chat/completions` (potong saldo di TiDB)
+      - Statistik penggunaan live dari `kiosai.usage_logs`
+      - Model discovery live dari `GET /v1/models`
+    - Aturan maks 200 baris per file diverifikasi ketat (45 file `.ts`/`.tsx`/`.mjs` semuanya <= 200 baris).
+    - Playwright browser audit di 390px (mobile) & 1366px (desktop): 5 tab x 2 viewport = 100% OK (0 overflow, 0 console error).
   - E2E tests verified: Registration, Login, Key Creation, OpenAI Proxy call, Rate Limit headers, QRIS top-up, Tier gating, Model discovery, Webhook idempotency, and Order list.

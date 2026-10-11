@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { validateApiKey, deductTokens, logUsage, isModelAllowedForTier, getModelMultiplier } from "@/lib/keys";
 import { checkRateLimit } from "@/lib/ratelimit";
-import { errorResponse, UPSTREAM_URL, UPSTREAM_KEY } from "@/lib/proxy-http";
+import { UPSTREAM_URL, UPSTREAM_KEY, errorResponse, parseUpstreamJson } from "@/lib/proxy-http";
 
 export const runtime = "nodejs";
 
@@ -107,11 +107,8 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    const contentType = upstreamRes.headers.get("content-type") || "";
-    const isEventStream = isStream || contentType.includes("event-stream");
-
     // 3. Handle Streaming Response
-    if (isEventStream && upstreamRes.body) {
+    if (isStream && upstreamRes.body) {
       const reader = upstreamRes.body.getReader();
       const decoder = new TextDecoder();
       let buf = "";
@@ -167,7 +164,8 @@ export async function POST(req: NextRequest) {
     }
 
     // 4. Handle Non-Streaming JSON Response
-    const data = await upstreamRes.json();
+    const rawText = await upstreamRes.text();
+    const data = parseUpstreamJson(rawText);
     const promptTokens = data.usage?.prompt_tokens || 15;
     const completionTokens = data.usage?.completion_tokens || 35;
     const totalTokens = data.usage?.total_tokens || promptTokens + completionTokens;

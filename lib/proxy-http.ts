@@ -16,3 +16,12 @@ export function errorResponse(message: string, status: number, code: string = "k
     { status, headers }
   );
 }
+
+export function parseUpstreamJson(rawText: string): any {
+  let cleaned = rawText.replace(/data:\s*\[DONE\].*$/s, "").trim();
+  if (cleaned.startsWith("data: ")) {
+    cleaned = cleaned.slice(6).trim();
+  }
+  return JSON.parse(cleaned);
+}
+

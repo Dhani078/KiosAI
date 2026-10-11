@@ -1,79 +1,153 @@
-import { useKios } from "../hooks/KiosContext";
+"use client";
 
-export function AuthModal() {
-  const { setShowAuthModal, authMode, setAuthMode, authEmail, setAuthEmail, authPassword, setAuthPassword, authName, setAuthName, authError, setAuthError, handleAuthSubmit } = useKios();
+import { useState } from "react";
+import { X, ArrowRight } from "lucide-react";
+import Logo from "./Logo";
+import { Button, Input } from "./ui";
+
+export function AuthModal({
+  onClose,
+  onAuthSuccess,
+}: {
+  onClose: () => void;
+  onAuthSuccess: (user: any) => void;
+}) {
+  const [tab, setTab] = useState<"login" | "register">("login");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+
+    try {
+      const endpoint = tab === "login" ? "/api/auth/login" : "/api/auth/register";
+      const payload = tab === "login" ? { email, password } : { email, password, name };
+
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Gagal autentikasi");
+      }
+
+      if (data.user) {
+        localStorage.setItem("kios_user_id", data.user.id);
+        onAuthSuccess(data.user);
+        onClose();
+      }
+    } catch (err: any) {
+      setError(err.message || "Terjadi kesalahan");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-        <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-sm w-full p-6 space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-bold text-white">
-                {authMode === "login" ? "Masuk ke KiosAI" : "Daftar Akun Baru"}
-              </span>
-              <button onClick={() => setShowAuthModal(false)} className="text-slate-400 hover:text-white">✕</button>
-            </div>
+    <div className="modal-overlay" onClick={onClose}>
+      <section
+        role="dialog"
+        aria-modal="true"
+        className="modal"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button aria-label="Tutup" className="modal-close" onClick={onClose}>
+          <X size={20} />
+        </button>
 
-            {authError && (
-              <div className="p-2.5 rounded-lg bg-red-950/60 border border-red-800/80 text-xs text-red-300">
-                {authError}
-              </div>
-            )}
+        <form onSubmit={handleSubmit}>
+          <Logo />
+          <h2>{tab === "login" ? "Selamat datang kembali." : "Daftar akun KiosAI."}</h2>
+          <p>
+            {tab === "login"
+              ? "Masuk untuk mengelola saldo token dan API key Anda."
+              : "Daftar sekarang dan dapatkan bonus 100.000 token gratis!"}
+          </p>
 
-            <form onSubmit={handleAuthSubmit} className="space-y-3">
-              {authMode === "register" && (
-                <div>
-                  <label className="text-xs text-slate-400 block mb-1">Nama Lengkap</label>
-                  <input
-                    type="text"
-                    required
-                    value={authName}
-                    onChange={(e) => setAuthName(e.target.value)}
-                    placeholder="Nama Anda"
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500"
-                  />
-                </div>
-              )}
-              <div>
-                <label className="text-xs text-slate-400 block mb-1">Email</label>
-                <input
-                  type="email"
-                  required
-                  value={authEmail}
-                  onChange={(e) => setAuthEmail(e.target.value)}
-                  placeholder="anda@email.com"
-                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500"
-                />
-              </div>
-              <div>
-                <label className="text-xs text-slate-400 block mb-1">Password</label>
-                <input
-                  type="password"
-                  required
-                  value={authPassword}
-                  onChange={(e) => setAuthPassword(e.target.value)}
-                  placeholder="Minimal 6 karakter"
-                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500"
-                />
-              </div>
-              <button
-                type="submit"
-                className="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-xl text-sm transition-colors"
-              >
-                {authMode === "login" ? "Masuk" : "Daftar & Dapatkan 100k Token"}
-              </button>
-            </form>
-
-            <div className="text-center pt-2 border-t border-slate-800">
-              <button
-                onClick={() => {
-                  setAuthMode(authMode === "login" ? "register" : "login");
-                  setAuthError("");
-                }}
-                className="text-xs text-blue-400 hover:underline"
-              >
-                {authMode === "login" ? "Belum punya akun? Daftar gratis" : "Sudah punya akun? Masuk"}
-              </button>
-            </div>
+          <div style={{ display: "flex", gap: "8px", margin: "16px 0 20px" }}>
+            <button
+              type="button"
+              className={`button ${tab === "login" ? "primary" : "ghost"}`}
+              style={{ flex: 1, height: "36px" }}
+              onClick={() => { setTab("login"); setError(null); }}
+            >
+              Masuk
+            </button>
+            <button
+              type="button"
+              className={`button ${tab === "register" ? "primary" : "ghost"}`}
+              style={{ flex: 1, height: "36px" }}
+              onClick={() => { setTab("register"); setError(null); }}
+            >
+              Daftar Baru
+            </button>
           </div>
-        </div>
+
+          {tab === "register" && (
+            <>
+              <label htmlFor="auth-name">Nama Lengkap</label>
+              <Input
+                id="auth-name"
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Nama Anda"
+              />
+            </>
+          )}
+
+          <label htmlFor="auth-email">Email</label>
+          <Input
+            id="auth-email"
+            type="email"
+            required
+            autoFocus
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="nama@email.com"
+            autoComplete="email"
+          />
+
+          <label htmlFor="auth-password">Password</label>
+          <Input
+            id="auth-password"
+            type="password"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Masukkan password"
+            autoComplete={tab === "login" ? "current-password" : "new-password"}
+          />
+
+          {error && (
+            <p className="field-error" role="alert">
+              {error}
+            </p>
+          )}
+
+          <Button
+            kind="primary"
+            type="submit"
+            loading={loading}
+            style={{ width: "100%", marginTop: "20px" }}
+          >
+            {tab === "login" ? "Masuk ke Akun" : "Daftar & Ambil 100k Token"}
+            <ArrowRight size={16} />
+          </Button>
+          <small className="modal-note">
+            Akun langsung tersimpan di TiDB. Bonus token instan untuk pendaftaran baru.
+          </small>
+        </form>
+      </section>
+    </div>
   );
 }
+export default AuthModal;
