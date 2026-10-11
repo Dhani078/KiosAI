@@ -38,11 +38,13 @@ USE kiosai;
 CREATE TABLE IF NOT EXISTS users (
   id VARCHAR(64) PRIMARY KEY,
   email VARCHAR(255) UNIQUE NOT NULL,
+  username VARCHAR(64) NULL, -- NULL untuk user biasa; diisi untuk admin (login pakai username)
   password_hash VARCHAR(255) NULL,
   full_name VARCHAR(100),
   tier ENUM('bronze', 'silver', 'gold') DEFAULT 'bronze',
   balance_tokens BIGINT DEFAULT 100000, -- Free 100k trial
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE INDEX idx_username (username),
   INDEX idx_email (email)
 );
 
@@ -195,7 +197,7 @@ Desain prototype dari `KiosAI Token Marketplace Design` diterapkan sepenuhnya pa
 - **Route `/`**: Landing Page publik (SEO, hero, pricing, code sandbox, FAQ). Server Component (metadata export).
 - **Route `/dashboard`**: Dashboard workspace pengguna (client component, session-based).
 - **Route `/landing`**: Redirect 301 ke `/` (backward compatibility).
-- **Admin Login**: Admin menggunakan username (bukan email) saat login. Field `identifier` pada `POST /api/auth/login` menerima email ATAU username. Lookup: cek `email` dulu, jika tidak ditemukan cek `full_name` case-insensitive.
+- **Admin Login**: Admin menggunakan username (bukan email) saat login. Field `identifier` pada `POST /api/auth/login` menerima email ATAU username. Lookup tunggal: `LOWER(email) = ? OR LOWER(username) = ?`.
 - **Admin Seed**: `scripts/seed-admin.mjs` membuat akun admin `adminfordhani` (Gold, 100M token). Password di-hash scrypt.
 - **Kolom `username`**: `kiosai.users.username VARCHAR(64)` NULL + unique index. Admin login pakai username; user biasa NULL dan login pakai email. Lookup tunggal: `LOWER(email) = ? OR LOWER(username) = ?`.
 

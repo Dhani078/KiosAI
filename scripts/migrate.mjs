@@ -18,12 +18,15 @@ async function runMigration() {
   // Switch to kiosai or qualify tables
   await conn.execute(`
     CREATE TABLE IF NOT EXISTS kiosai.users (
-      id VARCHAR(36) PRIMARY KEY,
+      id VARCHAR(64) PRIMARY KEY,
       email VARCHAR(255) UNIQUE NOT NULL,
+      username VARCHAR(64) NULL,
+      password_hash VARCHAR(255) NULL,
       full_name VARCHAR(100),
       tier VARCHAR(20) DEFAULT 'bronze',
       balance_tokens BIGINT DEFAULT 100000,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      UNIQUE INDEX idx_username (username),
       INDEX idx_email (email)
     )
   `);

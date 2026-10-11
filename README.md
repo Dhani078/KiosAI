@@ -22,6 +22,7 @@
 - **Manajemen API Key Aman**: Kunci format `kios-<hash32>` di-hash dengan SHA-256. Mendukung pembatasan model dan rate limiting per kunci.
 - **Rate Limiting Engine**: Menggunakan algoritma sliding-window per menit, mengembalikan header standar `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`.
 - **Autentikasi Pengguna**: Registrasi & login mandiri dengan keamanan `scrypt` hashing dan bonus uji coba 100.000 token otomatis.
+- **Gerbang Dashboard (`/dashboard`)**: Halaman dashboard dilindungi `AuthGuard` — pengguna anonim otomatis diarahkan ke landing page dan diminta login. Login mendukung email (user biasa) maupun username (admin).
 - **Payment Webhook & Idempotensi**: Menerima callback QRIS/VA dari payment gateway dengan pencegahan double-spending secara otomatis.
 - **Statistik & Log Penggunaan**: Visualisasi riwayat pemakaian token, total request, rata-rata latensi, dan breakdown per model AI.
 - **Pemotongan Saldo Otomatis**: Setiap request AI otomatis memotong saldo token pengguna di database TiDB secara real-time.
