@@ -21,6 +21,7 @@
 - **Pemotongan Saldo Otomatis**: Setiap request AI otomatis memotong saldo token pengguna di database TiDB secara real-time.
 - **Top-Up Token (QRIS)**: Sistem paket token (Bronze, Silver, Gold) dengan simulasi pembayaran instan.
 - **Live AI Playground**: Antarmuka dashboard untuk menguji endpoint dan streaming model AI secara langsung.
+- **Billing Total**: Token ditagih dari `usage` upstream (prompt + completion) x multiplier, baik stream maupun non-stream. Overhead prompt upstream ikut ditagih (lihat PRD §9).
 
 ---
 

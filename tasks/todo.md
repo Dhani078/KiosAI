@@ -44,4 +44,6 @@
   - Files: `app/page.tsx`
 
 - [x] Task 5.4: Sync Documentation & Git Push
+- [x] Task 5.5: Stream billing via `stream_options.include_usage` (tagih total, PRD §9)
+- [x] Task 5.6: Sync docs STATE/README/plan/todo untuk billing
   - Acceptance: Update `PRD.md`, `tasks/plan.md`, `tasks/todo.md`, `STATE.md`, `README.md` and push to GitHub

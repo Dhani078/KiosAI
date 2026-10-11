@@ -12,6 +12,7 @@
 - [x] Phase 2: Key Management API & Hash Generator (`key-mgmt`)
 - [x] Phase 3: OpenAI Proxy Endpoint `/v1/chat/completions` + Token Deduction (`proxy-engine`)
 - [x] Phase 4: Order & Top-Up QRIS Simulation API (`billing`)
+- [x] Phase 5b: Billing total untuk stream (`include_usage`), keputusan di PRD §9
 - [x] Phase 5: Dashboard UI (Key generator, balance gauge, test playground) (`dashboard-ui`)
 - [x] Phase 6: User Authentication, Rate Limiting & Usage Analytics (`analytics-and-auth`)
 - [x] Phase 7: Payment Webhook, Tier Gating & Idempotency (`security-and-hardening`)
