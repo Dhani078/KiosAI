@@ -32,7 +32,7 @@ export async function GET() {
   try {
     const res = await fetch(`${UPSTREAM_URL}/v1/models`, {
       headers: UPSTREAM_KEY ? { Authorization: `Bearer ${UPSTREAM_KEY}` } : {},
-      signal: AbortSignal.timeout(5000),
+      signal: AbortSignal.timeout(12000),
     });
     result.upstream = {
       status: res.ok ? "connected" : `http_${res.status}`,

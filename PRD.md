@@ -11,7 +11,7 @@
 - **Styling**: Tailwind CSS, shadcn/ui style components
 - **Database**: TiDB Serverless (MySQL-compatible, region Tokyo/Singapore, driver `@tidbcloud/serverless`)
 - **Upstream Router**: 9Router (`http://127.0.0.1:20128` dev, Cloudflare Tunnel prod)
-- **Deployment**: Vercel (`hnd1` Tokyo) / Cloudflare Pages
+- **Deployment**: Cloudflare Workers (`kiosai.dhanisepeda.workers.dev`, OpenNext adapter) + Cloudflare Tunnel ke 9Router
 - **Repository**: `https://github.com/Dhani078/KiosAI`
 
 ## 3. Capability Map & Modules

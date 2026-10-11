@@ -36,9 +36,10 @@
 
 ## 📚 Dokumentasi Lengkap
 - 📖 [**API Reference (API.md)**](./API.md) — Spesifikasi lengkap seluruh endpoint REST, OpenAI Proxy, status codes, dan format error.
-- 🚀 [**Deployment Guide (DEPLOYMENT.md)**](./DEPLOYMENT.md) — Panduan deploy produksi Vercel (Tokyo `hnd1`) + Cloudflare Tunnel 24 jam + TiDB.
+- 🚀 [**Deployment Guide (DEPLOYMENT.md)**](./DEPLOYMENT.md) — Panduan deploy produksi Cloudflare Workers + Cloudflare Tunnel ke 9Router + TiDB.
 - 🛡️ [**Security Architecture (SECURITY.md)**](./SECURITY.md) — Standar enkripsi API key SHA-256, scrypt password hashing, sliding-window rate limit, dan mitigasi risiko.
 - 📋 [**Product Requirements Document (PRD.md)**](./PRD.md) — Spesifikasi teknis, arsitektur database, dan aturan engineering KiosAI.
+- 🔧 [**Troubleshooting Worker (docs/TROUBLESHOOTING-WORKER.md)**](./docs/TROUBLESHOOTING-WORKER.md) — Diagnosis env Worker kosong, error 1003, dan sinkronisasi tunnel 9Router.
 - 📊 [**Project State Log (STATE.md)**](./STATE.md) — Catatan riwayat implementasi, pengujian, dan status siklus pengembangan.
 
 ---
