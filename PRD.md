@@ -141,3 +141,14 @@ CREATE TABLE IF NOT EXISTS usage_logs (
 - Default demo: `tokenharbor/deepseek-v4.1-flash:free` (pool gratis pihak ketiga, kuota bisa habis atau dicabut).
 - Sebelum launch publik, pilih upstream yang secara eksplisit mengizinkan reseller. Baca ToS provider dulu.
 - Overhead prompt upstream ~2.600–2.900 token per request (belum dipastikan sumbernya). Billing saat ini memakai total token. Keputusan billing tertunda.
+
+## 8. QA Log: Browser Audit
+
+Diuji Playwright (Chromium headless) di `http://127.0.0.1:3000/`.
+
+| Viewport | Tab | scrollWidth vs clientWidth | Konten tab |
+|---|---|---|---|
+| 390x844 (mobile) | 5 tab | OK (no overflow) | OK |
+| 1366x768 (desktop) | 5 tab | OK (no overflow) | OK |
+
+Console error: 0. Belum dicek: Safari iOS, Android Chrome, tampilan QRIS pada layar kecil.
