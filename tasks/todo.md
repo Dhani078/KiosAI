@@ -1,35 +1,34 @@
 # Tasks: KiosAI Implementation
 
+## Phase 1 (Core Foundation - Completed)
 - [x] Task 1.1: Init Next.js 15 app with TypeScript & Tailwind CSS in `E:/Hermesproject/KiosAI`
-  - Acceptance: `package.json`, `tsconfig.json`, `next.config.ts`, Tailwind working
-  - Verify: `npm run build` passed with 0 errors
-  - Files: `package.json`, `tsconfig.json`, `next.config.ts`, `app/globals.css`
-
 - [x] Task 1.2: Setup TiDB Serverless client & DDL migration script
-  - Acceptance: Connection established to TiDB Cloud, database `kiosai` and tables created
-  - Verify: Run test migration script, created tables `users`, `api_keys`, `orders`, `usage_logs`
-  - Files: `lib/db.ts`, `scripts/migrate.mjs`
-
 - [x] Task 2.1: Key Management Engine (`lib/keys.ts`) & API `/api/keys`
-  - Acceptance: Generate key `kios-xxx`, sha256 hash, DB insertion, list keys
-  - Verify: Test curl create key, returned active `kios-d5ad28...`
-  - Files: `lib/keys.ts`, `app/api/keys/route.ts`, `app/api/keys/[id]/route.ts`
-
 - [x] Task 3.1: OpenAI Proxy Endpoint `app/v1/chat/completions/route.ts`
-  - Acceptance: Accept Bearer `kios-xxx`, check quota, forward to 9Router, stream response, deduct balance
-  - Verify: Real request through proxy to 9Router returned AI response and balance in TiDB decreased automatically
-  - Files: `app/v1/chat/completions/route.ts`, `app/v1/models/route.ts`
-
 - [x] Task 4.1: Orders & Top-Up API
-  - Acceptance: Create QRIS mock order, mark paid, add balance tokens to user
-  - Verify: Call `/api/orders` and `/api/orders/pay`, +3,500,000 tokens credited
-  - Files: `app/api/orders/route.ts`, `app/api/orders/pay/route.ts`
-
 - [x] Task 5.1: Web Dashboard UI
-  - Acceptance: Clean dashboard, view balance, generate API key, packages cards, live chat tester
-  - Verify: Next.js 15 App router page compiled, 9 routes static/dynamic ready
-  - Files: `app/page.tsx`, `app/layout.tsx`
+- [x] Task 6.1: Initial commit and push to GitHub
 
-- [ ] Task 6.1: End-to-end verification and Git commit/push
-  - Acceptance: Push to `https://github.com/Dhani078/KiosAI.git`, build passes
-  - Verify: `git push origin master`
+## Phase 2 (Production Hardening & Features - Completed)
+- [x] Task 2.1: User Auth System (`/api/auth/register`, `/api/auth/login`) with 100k trial token
+  - Acceptance: Can register with email & password, login returns user token & profile
+  - Verify: Curl register & login tested with `tester@kiosai.id` -> 200 OK + 100k token credited
+  - Files: `app/api/auth/register/route.ts`, `app/api/auth/login/route.ts`, `lib/auth.ts`
+
+- [x] Task 2.2: Rate Limiting Enforcement in Proxy (`app/v1/chat/completions/route.ts`)
+  - Acceptance: Injects `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset` and rejects abuse with HTTP 429
+  - Verify: Tested curl returned `x-ratelimit-limit: 120`, `x-ratelimit-remaining: 119`
+  - Files: `lib/ratelimit.ts`, `app/v1/chat/completions/route.ts`
+
+- [x] Task 2.3: Usage Analytics API (`/api/analytics`)
+  - Acceptance: Aggregates usage by model, total tokens, average latency, request count
+  - Verify: Tested curl `/api/analytics` returned real statistics and log rows
+  - Files: `app/api/analytics/route.ts`
+
+- [x] Task 2.4: Enhanced Dashboard UI with Auth, Analytics Charts & Multi-user support
+  - Acceptance: Login/Register modal, analytics tab with metrics & logs table
+  - Verify: Build passed (13 routes compiled), tested in browser
+  - Files: `app/page.tsx`
+
+- [x] Task 2.5: Commit, Push & Document Updates
+  - Acceptance: Push to GitHub, update `PRD.md`, `STATE.md`, `README.md`

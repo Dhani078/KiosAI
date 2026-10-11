@@ -1,21 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import { validateApiKey, deductTokens, logUsage } from "@/lib/keys";
+import { checkRateLimit } from "@/lib/ratelimit";
 
 export const runtime = "nodejs";
 
 const UPSTREAM_URL = process.env.NINEROUTER_URL || "http://127.0.0.1:20128";
 const UPSTREAM_KEY = process.env.NINEROUTER_API_KEY || "";
 
-function errorResponse(message: string, status: number, code: string = "kiosai_error") {
+function errorResponse(message: string, status: number, code: string = "kiosai_error", headers?: Record<string, string>) {
   return NextResponse.json(
     {
       error: {
         message,
-        type: status === 401 ? "authentication_error" : "invalid_request_error",
+        type: status === 401 ? "authentication_error" : status === 429 ? "rate_limit_error" : "invalid_request_error",
         code,
       },
     },
-    { status }
+    { status, headers }
   );
 }
 
@@ -32,6 +33,23 @@ export async function POST(req: NextRequest) {
   const auth = await validateApiKey(rawKey);
   if (!auth.valid || !auth.user || !auth.key) {
     return errorResponse(auth.error || "Unauthorized", 401, "invalid_key");
+  }
+
+  // 2. Check Rate Limit
+  const rateLimit = checkRateLimit(auth.key.id, auth.key.rate_limit_per_min || 60);
+  const rateHeaders = {
+    "X-RateLimit-Limit": String(auth.key.rate_limit_per_min || 60),
+    "X-RateLimit-Remaining": String(rateLimit.remaining),
+    "X-RateLimit-Reset": String(rateLimit.resetSeconds),
+  };
+
+  if (!rateLimit.allowed) {
+    return errorResponse(
+      `Rate limit exceeded. Maksimal ${auth.key.rate_limit_per_min} request per menit. Coba lagi dalam ${rateLimit.resetSeconds} detik.`,
+      429,
+      "rate_limit_exceeded",
+      { ...rateHeaders, "Retry-After": String(rateLimit.resetSeconds) }
+    );
   }
 
   let body: any;
@@ -136,6 +154,7 @@ export async function POST(req: NextRequest) {
           "Content-Type": "text/event-stream; charset=utf-8",
           "Cache-Control": "no-cache, no-transform",
           Connection: "keep-alive",
+          ...rateHeaders,
         },
       });
     }
@@ -158,7 +177,7 @@ export async function POST(req: NextRequest) {
       statusCode: 200,
     });
 
-    return NextResponse.json(data);
+    return NextResponse.json(data, { headers: rateHeaders });
   } catch (err: any) {
     return errorResponse(`Upstream error: ${err.message}`, 502, "bad_gateway");
   }

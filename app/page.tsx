@@ -11,19 +11,31 @@ import {
   Trash2, 
   Sparkles, 
   Code2, 
-  QrCode, 
   RefreshCw,
   Terminal,
   Zap,
-  Bot
+  Bot,
+  BarChart3,
+  User,
+  LogOut,
+  Activity,
+  Layers
 } from "lucide-react";
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<"keys" | "packages" | "playground" | "docs">("keys");
-  const [user, setUser] = useState<{ id: string; full_name: string; balance_tokens: number; tier: string } | null>(null);
+  const [activeTab, setActiveTab] = useState<"keys" | "packages" | "playground" | "analytics" | "docs">("keys");
+  const [currentUser, setCurrentUser] = useState<{ id: string; email: string; full_name: string; balance_tokens: number; tier: string } | null>(null);
   const [keys, setKeys] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  
+
+  // Auth modal state
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authMode, setAuthMode] = useState<"login" | "register">("login");
+  const [authEmail, setAuthEmail] = useState("");
+  const [authPassword, setAuthPassword] = useState("");
+  const [authName, setAuthName] = useState("");
+  const [authError, setAuthError] = useState("");
+
   // New Key Form State
   const [newKeyName, setNewKeyName] = useState("");
   const [newKeyRateLimit, setNewKeyRateLimit] = useState(60);
@@ -42,11 +54,28 @@ export default function Home() {
   const [playgroundResponse, setPlaygroundResponse] = useState("");
   const [playgroundLoading, setPlaygroundLoading] = useState(false);
 
+  // Analytics State
+  const [analytics, setAnalytics] = useState<{
+    summary: { totalRequests: number; totalTokens: number; avgLatencyMs: number };
+    perModel: any[];
+    recentLogs: any[];
+  } | null>(null);
+
+  // Load saved user from localStorage or fallback to demo
+  const getActiveUserId = () => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("kiosai_user_id");
+      if (saved) return saved;
+    }
+    return "usr_kiosai_demo";
+  };
+
   const fetchUserData = async () => {
     try {
-      const res = await fetch("/api/user?id=usr_kiosai_demo");
+      const uid = getActiveUserId();
+      const res = await fetch(`/api/user?id=${uid}`);
       const data = await res.json();
-      if (data.user) setUser(data.user);
+      if (data.user) setCurrentUser(data.user);
     } catch (e) {
       console.error(e);
     }
@@ -54,14 +83,23 @@ export default function Home() {
 
   const fetchKeys = async () => {
     try {
-      const res = await fetch("/api/keys?userId=usr_kiosai_demo");
+      const uid = getActiveUserId();
+      const res = await fetch(`/api/keys?userId=${uid}`);
       const data = await res.json();
       if (data.keys) {
         setKeys(data.keys);
-        if (data.keys.length > 0 && !playgroundKey) {
-          // Default placeholder
-        }
       }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const fetchAnalytics = async () => {
+    try {
+      const uid = getActiveUserId();
+      const res = await fetch(`/api/analytics?userId=${uid}`);
+      const data = await res.json();
+      setAnalytics(data);
     } catch (e) {
       console.error(e);
     }
@@ -69,13 +107,53 @@ export default function Home() {
 
   const refreshAll = async () => {
     setLoading(true);
-    await Promise.all([fetchUserData(), fetchKeys()]);
+    await Promise.all([fetchUserData(), fetchKeys(), fetchAnalytics()]);
     setLoading(false);
   };
 
   useEffect(() => {
     refreshAll();
   }, []);
+
+  const handleAuthSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setAuthError("");
+    const endpoint = authMode === "login" ? "/api/auth/login" : "/api/auth/register";
+    try {
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: authEmail,
+          password: authPassword,
+          fullName: authName,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setAuthError(data.error || "Gagal melakukan autentikasi");
+        return;
+      }
+      if (data.user) {
+        localStorage.setItem("kiosai_user_id", data.user.id);
+        setCurrentUser(data.user);
+        setShowAuthModal(false);
+        setAuthEmail("");
+        setAuthPassword("");
+        setAuthName("");
+        await refreshAll();
+      }
+    } catch (e: any) {
+      setAuthError(e.message);
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("kiosai_user_id");
+    // Switch to demo user
+    fetchUserData();
+    fetchKeys();
+  };
 
   const handleCreateKey = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -88,7 +166,7 @@ export default function Home() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          userId: "usr_kiosai_demo",
+          userId: currentUser?.id || "usr_kiosai_demo",
           name: newKeyName || "My Key",
           rateLimit: newKeyRateLimit,
           allowedModels: models,
@@ -123,7 +201,7 @@ export default function Home() {
       const res = await fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: "usr_kiosai_demo", tier }),
+        body: JSON.stringify({ userId: currentUser?.id || "usr_kiosai_demo", tier }),
       });
       const data = await res.json();
       if (data.orderId) {
@@ -147,7 +225,7 @@ export default function Home() {
       if (data.success) {
         alert(data.message);
         setSelectedOrder(null);
-        await fetchUserData();
+        await refreshAll();
       }
     } catch (e) {
       alert("Gagal memproses pembayaran");
@@ -158,7 +236,7 @@ export default function Home() {
 
   const handleRunPlayground = async () => {
     if (!playgroundKey) {
-      alert("Masukkan API Key terlebih dahulu (bisa generate di tab API Keys).");
+      alert("Masukkan API Key terlebih dahulu.");
       return;
     }
 
@@ -209,7 +287,7 @@ export default function Home() {
         }
       }
 
-      await fetchUserData();
+      await refreshAll();
     } catch (e: any) {
       setPlaygroundResponse(`Network error: ${e.message}`);
     } finally {
@@ -236,22 +314,41 @@ export default function Home() {
           </div>
         </div>
 
-        {/* User Status / Balance Card */}
-        <div className="flex items-center gap-3 bg-slate-900/80 border border-slate-800 p-2.5 px-4 rounded-xl">
-          <Coins className="h-5 w-5 text-emerald-400 shrink-0" />
-          <div>
-            <div className="text-[11px] text-slate-400 uppercase tracking-wider font-semibold">Saldo Token</div>
-            <div className="text-base font-bold text-emerald-400 font-mono">
-              {user ? user.balance_tokens.toLocaleString("id-ID") : "..."} <span className="text-xs text-slate-400 font-normal">Token</span>
+        {/* User Account & Balance */}
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 bg-slate-900/80 border border-slate-800 p-2.5 px-4 rounded-xl">
+            <Coins className="h-5 w-5 text-emerald-400 shrink-0" />
+            <div>
+              <div className="text-[11px] text-slate-400 uppercase tracking-wider font-semibold">Saldo Token</div>
+              <div className="text-base font-bold text-emerald-400 font-mono">
+                {currentUser ? currentUser.balance_tokens.toLocaleString("id-ID") : "..."} <span className="text-xs text-slate-400 font-normal">Token</span>
+              </div>
             </div>
+            <button 
+              onClick={refreshAll}
+              className="p-1.5 ml-2 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-white transition-colors"
+              title="Refresh Data"
+            >
+              <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
+            </button>
           </div>
-          <button 
-            onClick={refreshAll}
-            className="p-1.5 ml-2 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-white transition-colors"
-            title="Refresh Saldo"
-          >
-            <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
-          </button>
+
+          {/* Account Profile Button */}
+          <div className="flex items-center gap-2 bg-slate-900 border border-slate-800 p-2 px-3 rounded-xl">
+            <User className="h-4 w-4 text-slate-400" />
+            <div className="text-xs text-slate-300 max-w-[120px] truncate">
+              {currentUser ? currentUser.full_name : "Demo User"}
+            </div>
+            <button
+              onClick={() => {
+                setShowAuthModal(true);
+                setAuthMode("login");
+              }}
+              className="text-xs px-2 py-1 bg-slate-800 hover:bg-slate-700 text-white rounded transition-colors ml-1"
+            >
+              Ganti Akun
+            </button>
+          </div>
         </div>
       </header>
 
@@ -288,6 +385,16 @@ export default function Home() {
           <Bot className="h-4 w-4" /> Live AI Playground
         </button>
         <button
+          onClick={() => setActiveTab("analytics")}
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+            activeTab === "analytics"
+              ? "bg-blue-600 text-white"
+              : "text-slate-400 hover:text-white hover:bg-slate-900"
+          }`}
+        >
+          <BarChart3 className="h-4 w-4" /> Statistik & Log Penggunaan
+        </button>
+        <button
           onClick={() => setActiveTab("docs")}
           className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
             activeTab === "docs"
@@ -302,14 +409,13 @@ export default function Home() {
       {/* TAB 1: API KEYS */}
       {activeTab === "keys" && (
         <div className="space-y-6">
-          {/* New Key Alert */}
           {generatedKey && (
             <div className="p-4 rounded-xl bg-emerald-950/50 border border-emerald-600/40 text-emerald-200">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-bold flex items-center gap-1.5">
                   <ShieldCheck className="h-4 w-4 text-emerald-400" /> API Key Baru Berhasil Dibuat
                 </span>
-                <span className="text-xs text-amber-300">Simpan sekarang! Kunci ini tidak akan ditampilkan lagi.</span>
+                <span className="text-xs text-amber-300">Simpan sekarang! Kunci tidak akan ditampilkan lagi.</span>
               </div>
               <div className="flex items-center gap-2 bg-slate-950 p-2.5 rounded-lg border border-emerald-900/80 font-mono text-sm text-emerald-300">
                 <span className="flex-1 select-all">{generatedKey}</span>
@@ -328,7 +434,6 @@ export default function Home() {
             </div>
           )}
 
-          {/* Form Buat Key Baru */}
           <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-5">
             <h2 className="text-base font-bold text-white mb-3 flex items-center gap-2">
               <Sparkles className="h-4 w-4 text-blue-400" /> Buat API Key Baru
@@ -338,7 +443,7 @@ export default function Home() {
                 <label className="text-xs text-slate-400 block mb-1">Nama Kunci</label>
                 <input
                   type="text"
-                  placeholder="Misal: Chatbot WA"
+                  placeholder="Misal: Cursor IDE"
                   value={newKeyName}
                   onChange={(e) => setNewKeyName(e.target.value)}
                   className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500"
@@ -374,7 +479,6 @@ export default function Home() {
             </form>
           </div>
 
-          {/* Tabel Key Aktif */}
           <div className="bg-slate-900/60 border border-slate-800 rounded-xl overflow-hidden">
             <div className="px-5 py-4 border-b border-slate-800">
               <h2 className="text-sm font-bold text-white">Daftar Kunci Aktif ({keys.length})</h2>
@@ -422,11 +526,10 @@ export default function Home() {
         </div>
       )}
 
-      {/* TAB 2: BELI PAKET TOKEN */}
+      {/* TAB 2: PACKAGES */}
       {activeTab === "packages" && (
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Bronze */}
             <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between hover:border-blue-500/50 transition-all">
               <div>
                 <div className="text-xs font-bold text-amber-500 uppercase tracking-wider mb-2">Paket Bronze</div>
@@ -436,7 +539,6 @@ export default function Home() {
                   <li>• Akses semua model standar</li>
                   <li>• Rate limit 60 req/min</li>
                   <li>• Masa aktif selamanya (no expiry)</li>
-                  <li>• Dukungan bot/chat dev</li>
                 </ul>
               </div>
               <button
@@ -447,7 +549,6 @@ export default function Home() {
               </button>
             </div>
 
-            {/* Silver */}
             <div className="bg-slate-900/60 border border-blue-500/40 rounded-2xl p-6 flex flex-col justify-between shadow-lg shadow-blue-900/20 relative">
               <span className="absolute -top-3 right-4 bg-blue-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Paling Laris</span>
               <div>
@@ -457,7 +558,6 @@ export default function Home() {
                 <ul className="text-xs text-slate-400 mt-4 space-y-2 border-t border-slate-800 pt-4">
                   <li>• Akses Claude, GPT, Gemini</li>
                   <li>• Rate limit 300 req/min</li>
-                  <li>• Prioritas jalur throughput</li>
                   <li>• Masa aktif selamanya</li>
                 </ul>
               </div>
@@ -469,7 +569,6 @@ export default function Home() {
               </button>
             </div>
 
-            {/* Gold */}
             <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between hover:border-amber-500/50 transition-all">
               <div>
                 <div className="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2">Paket Gold</div>
@@ -478,7 +577,6 @@ export default function Home() {
                 <ul className="text-xs text-slate-400 mt-4 space-y-2 border-t border-slate-800 pt-4">
                   <li>• Akses unmetered model</li>
                   <li>• Rate limit 1000 req/min</li>
-                  <li>• Jalur latensi ultra-cepat</li>
                   <li>• Masa aktif selamanya</li>
                 </ul>
               </div>
@@ -491,7 +589,6 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Modal Checkout QRIS */}
           {selectedOrder && (
             <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
               <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-sm w-full p-6 text-center space-y-4">
@@ -584,13 +681,117 @@ export default function Home() {
             </div>
             <div className="text-[11px] text-slate-500 mt-4 border-t border-slate-800/80 pt-2 flex items-center justify-between font-mono">
               <span>Endpoint: /v1/chat/completions</span>
-              <span>Deduction: Otomatis ke TiDB</span>
+              <span>Rate Limit Protected</span>
             </div>
           </div>
         </div>
       )}
 
-      {/* TAB 4: SDK DOCS */}
+      {/* TAB 4: ANALYTICS & LOGS */}
+      {activeTab === "analytics" && (
+        <div className="space-y-6">
+          {/* Summary Metric Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-slate-900/60 border border-slate-800 p-5 rounded-xl">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs text-slate-400 uppercase font-semibold">Total Permintaan</span>
+                <Activity className="h-4 w-4 text-blue-400" />
+              </div>
+              <div className="text-2xl font-bold text-white font-mono">
+                {analytics?.summary.totalRequests || 0}
+              </div>
+            </div>
+
+            <div className="bg-slate-900/60 border border-slate-800 p-5 rounded-xl">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs text-slate-400 uppercase font-semibold">Token Terpakai</span>
+                <Coins className="h-4 w-4 text-emerald-400" />
+              </div>
+              <div className="text-2xl font-bold text-emerald-400 font-mono">
+                {(analytics?.summary.totalTokens || 0).toLocaleString("id-ID")}
+              </div>
+            </div>
+
+            <div className="bg-slate-900/60 border border-slate-800 p-5 rounded-xl">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs text-slate-400 uppercase font-semibold">Rata-rata Latensi</span>
+                <Zap className="h-4 w-4 text-amber-400" />
+              </div>
+              <div className="text-2xl font-bold text-amber-400 font-mono">
+                {analytics?.summary.avgLatencyMs || 0} <span className="text-xs font-normal text-slate-400">ms</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Model Breakdown */}
+          {analytics?.perModel && analytics.perModel.length > 0 && (
+            <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-5">
+              <h3 className="text-sm font-bold text-white mb-3 flex items-center gap-2">
+                <Layers className="h-4 w-4 text-blue-400" /> Penggunaan Per Model
+              </h3>
+              <div className="space-y-2">
+                {analytics.perModel.map((m: any, i: number) => (
+                  <div key={i} className="flex items-center justify-between p-3 bg-slate-950/60 border border-slate-800/80 rounded-lg">
+                    <span className="font-mono text-sm text-slate-200">{m.model}</span>
+                    <div className="flex items-center gap-4 text-xs font-mono">
+                      <span className="text-slate-400">{m.requests} req</span>
+                      <span className="text-emerald-400 font-semibold">{Number(m.tokens).toLocaleString("id-ID")} tokens</span>
+                      <span className="text-amber-400">{m.avg_latency} ms</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Recent Logs Table */}
+          <div className="bg-slate-900/60 border border-slate-800 rounded-xl overflow-hidden">
+            <div className="px-5 py-4 border-b border-slate-800">
+              <h3 className="text-sm font-bold text-white">Log Permintaan Terakhir</h3>
+            </div>
+            {(!analytics?.recentLogs || analytics.recentLogs.length === 0) ? (
+              <div className="p-8 text-center text-slate-500 text-sm">
+                Belum ada aktivitas request API.
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs font-mono">
+                  <thead className="bg-slate-950 text-slate-400 border-b border-slate-800">
+                    <tr>
+                      <th className="p-3">Status</th>
+                      <th className="p-3">Model</th>
+                      <th className="p-3">Total Token</th>
+                      <th className="p-3">Latensi</th>
+                      <th className="p-3">Waktu</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-800/80">
+                    {analytics.recentLogs.map((log: any) => (
+                      <tr key={log.id} className="hover:bg-slate-800/20">
+                        <td className="p-3">
+                          <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${
+                            log.status_code === 200 
+                              ? "bg-emerald-950 text-emerald-400 border border-emerald-800"
+                              : "bg-red-950 text-red-400 border border-red-800"
+                          }`}>
+                            {log.status_code}
+                          </span>
+                        </td>
+                        <td className="p-3 text-slate-200">{log.model}</td>
+                        <td className="p-3 text-emerald-400">{log.total_tokens}</td>
+                        <td className="p-3 text-amber-400">{log.latency_ms} ms</td>
+                        <td className="p-3 text-slate-400">{new Date(log.created_at).toLocaleTimeString("id-ID")}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* TAB 5: SDK DOCS */}
       {activeTab === "docs" && (
         <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-6 space-y-6">
           <div>
@@ -621,7 +822,7 @@ export default function Home() {
 {`from openai import OpenAI
 
 client = OpenAI(
-    base_url="http://localhost:3000/v1",  # atau URL produksi KiosAI
+    base_url="http://localhost:3000/v1",
     api_key="kios-your-api-key"
 )
 
@@ -649,6 +850,82 @@ const completion = await openai.chat.completions.create({
 });
 console.log(completion.choices[0].message.content);`}
               </pre>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* AUTH MODAL */}
+      {showAuthModal && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-sm w-full p-6 space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-bold text-white">
+                {authMode === "login" ? "Masuk ke KiosAI" : "Daftar Akun Baru"}
+              </span>
+              <button onClick={() => setShowAuthModal(false)} className="text-slate-400 hover:text-white">✕</button>
+            </div>
+
+            {authError && (
+              <div className="p-2.5 rounded-lg bg-red-950/60 border border-red-800/80 text-xs text-red-300">
+                {authError}
+              </div>
+            )}
+
+            <form onSubmit={handleAuthSubmit} className="space-y-3">
+              {authMode === "register" && (
+                <div>
+                  <label className="text-xs text-slate-400 block mb-1">Nama Lengkap</label>
+                  <input
+                    type="text"
+                    required
+                    value={authName}
+                    onChange={(e) => setAuthName(e.target.value)}
+                    placeholder="Nama Anda"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+              )}
+              <div>
+                <label className="text-xs text-slate-400 block mb-1">Email</label>
+                <input
+                  type="email"
+                  required
+                  value={authEmail}
+                  onChange={(e) => setAuthEmail(e.target.value)}
+                  placeholder="anda@email.com"
+                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500"
+                />
+              </div>
+              <div>
+                <label className="text-xs text-slate-400 block mb-1">Password</label>
+                <input
+                  type="password"
+                  required
+                  value={authPassword}
+                  onChange={(e) => setAuthPassword(e.target.value)}
+                  placeholder="Minimal 6 karakter"
+                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500"
+                />
+              </div>
+              <button
+                type="submit"
+                className="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-xl text-sm transition-colors"
+              >
+                {authMode === "login" ? "Masuk" : "Daftar & Dapatkan 100k Token"}
+              </button>
+            </form>
+
+            <div className="text-center pt-2 border-t border-slate-800">
+              <button
+                onClick={() => {
+                  setAuthMode(authMode === "login" ? "register" : "login");
+                  setAuthError("");
+                }}
+                className="text-xs text-blue-400 hover:underline"
+              >
+                {authMode === "login" ? "Belum punya akun? Daftar gratis" : "Sudah punya akun? Masuk"}
+              </button>
             </div>
           </div>
         </div>

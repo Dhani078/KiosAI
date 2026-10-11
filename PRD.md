@@ -16,15 +16,15 @@
 
 ## 3. Capability Map & Modules
 
-| Module ID | Tanggung Jawab | Dependensi |
+| Module ID | Tanggung Jawab | Status |
 |---|---|---|
-| `core-db` | Schema DDL, HTTP connection pool TiDB, seed data | — |
-| `key-mgmt` | Generate key (`kios-xxxx`), SHA256 hash, validasi izin model & tier | `core-db` |
-| `proxy-engine` | Endpoint `/v1/chat/completions`, SSE streaming, potong token otomatis | `core-db`, `key-mgmt` |
-| `billing` | Paket token (Bronze/Silver/Gold), order flow, simulasi/webhook QRIS | `core-db`, `key-mgmt` |
-| `dashboard-ui` | UI toko, panel saldo, generator key, live API playground | `core-db`, `key-mgmt`, `proxy-engine`, `billing` |
-
-Build order: `core-db` → `key-mgmt` → `proxy-engine` → `billing` → `dashboard-ui`.
+| `core-db` | Schema DDL, HTTP connection pool TiDB, seed data | Selesai |
+| `auth` | Registrasi user (`/api/auth/register`), login (`/api/auth/login`), trial token | Selesai |
+| `key-mgmt` | Generate key (`kios-xxxx`), SHA256 hash, validasi izin model & tier | Selesai |
+| `proxy-engine` | Endpoint `/v1/chat/completions`, SSE streaming, rate limiting, potong token otomatis | Selesai |
+| `analytics` | Agregasi metrik penggunaan per model, latensi, dan log request (`/api/analytics`) | Selesai |
+| `billing` | Paket token (Bronze/Silver/Gold), order flow, simulasi/webhook QRIS | Selesai |
+| `dashboard-ui` | UI toko, panel saldo, generator key, analytics charts, live API playground | Selesai |
 
 ## 4. Database Schema (TiDB DDL)
 
@@ -33,8 +33,9 @@ CREATE DATABASE IF NOT EXISTS kiosai;
 USE kiosai;
 
 CREATE TABLE IF NOT EXISTS users (
-  id VARCHAR(36) PRIMARY KEY,
+  id VARCHAR(64) PRIMARY KEY,
   email VARCHAR(255) UNIQUE NOT NULL,
+  password_hash VARCHAR(255) NULL,
   full_name VARCHAR(100),
   tier ENUM('bronze', 'silver', 'gold') DEFAULT 'bronze',
   balance_tokens BIGINT DEFAULT 100000, -- Free 100k trial
@@ -43,8 +44,8 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 CREATE TABLE IF NOT EXISTS api_keys (
-  id VARCHAR(36) PRIMARY KEY,
-  user_id VARCHAR(36) NOT NULL,
+  id VARCHAR(64) PRIMARY KEY,
+  user_id VARCHAR(64) NOT NULL,
   key_hash VARCHAR(64) UNIQUE NOT NULL,
   key_prefix VARCHAR(16) NOT NULL, -- kios-xxxx
   name VARCHAR(100) DEFAULT 'Default Key',
@@ -59,8 +60,8 @@ CREATE TABLE IF NOT EXISTS api_keys (
 );
 
 CREATE TABLE IF NOT EXISTS orders (
-  id VARCHAR(36) PRIMARY KEY,
-  user_id VARCHAR(36) NOT NULL,
+  id VARCHAR(64) PRIMARY KEY,
+  user_id VARCHAR(64) NOT NULL,
   amount_idr INT NOT NULL,
   tokens_purchased BIGINT NOT NULL,
   package_tier ENUM('bronze', 'silver', 'gold') NOT NULL,
@@ -74,8 +75,8 @@ CREATE TABLE IF NOT EXISTS orders (
 
 CREATE TABLE IF NOT EXISTS usage_logs (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  api_key_id VARCHAR(36) NOT NULL,
-  user_id VARCHAR(36) NOT NULL,
+  api_key_id VARCHAR(64) NOT NULL,
+  user_id VARCHAR(64) NOT NULL,
   model VARCHAR(100) NOT NULL,
   prompt_tokens INT DEFAULT 0,
   completion_tokens INT DEFAULT 0,
@@ -91,11 +92,12 @@ CREATE TABLE IF NOT EXISTS usage_logs (
 
 ### 5.1 Main AI Proxy: `POST /v1/chat/completions`
 - **Auth**: `Authorization: Bearer kios-<token>`
-- **Header**: Standard OpenAI client headers
+- **Header**: Standard OpenAI client headers + Rate Limit Headers (`X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`)
 - **Validasi**:
   1. Hash key -> cek `api_keys` & `users`
-  2. Cek `is_active == true` & `balance_tokens > 0`
-  3. Cek `allowed_models` cocok dengan `body.model`
+  2. Rate limit sliding window (maks per menit) -> Return 429 jika overload
+  3. Cek `is_active == true` & `balance_tokens > 0`
+  4. Cek `allowed_models` cocok dengan `body.model`
 - **Forwarding**:
   - URL: `${NINEROUTER_URL}/v1/chat/completions`
   - Auth: Master `NINEROUTER_KEY`
@@ -112,9 +114,5 @@ CREATE TABLE IF NOT EXISTS usage_logs (
 - Silver: Rp 150.000 -> 3.500.000 Token
 - Gold: Rp 400.000 -> 10.000.000 Token
 
-## 6. Implementation Phasing
-- **Tahap 1**: Setup project Next.js 15, koneksi TiDB Serverless, database migration script.
-- **Tahap 2**: Service layer: Auth & Key Management engine (`kios-xxxx`, hashing, DB store).
-- **Tahap 3**: Core Proxy Engine `/v1/chat/completions` (OpenAI format, token tracking, 9Router forwarder).
-- **Tahap 4**: Web Frontend Dashboard (Beli paket, generate key, status saldo, live playground).
-- **Tahap 5**: Build, verifikasi end-to-end, commit & push ke GitHub.
+### 5.4 Analytics:
+- `GET /api/analytics?userId=...`: Ringkasan total request, total token, rata-rata latensi, breakdown per model, riwayat request log.

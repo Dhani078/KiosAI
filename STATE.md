@@ -2,7 +2,7 @@
 
 - **Repository**: `https://github.com/Dhani078/KiosAI.git`
 - **Location**: `E:/Hermesproject/KiosAI`
-- **Current Status**: Complete & Verified (Phase 0 - 6)
+- **Current Status**: Complete & Fully Verified (Phase 0 - 7)
 - **Upstream Router**: 9Router local (`http://127.0.0.1:20128`)
 - **Database**: TiDB Cloud Serverless (`gateway01.ap-southeast-1.prod.aws.tidbcloud.com:4000/kiosai`)
 
@@ -23,5 +23,9 @@
     - `DELETE /api/keys/[id]`: Soft revocation.
     - `POST /api/orders`: QRIS checkout order creation.
     - `POST /api/orders/pay`: Order confirmation & instant token credit.
-  - Interactive Web Dashboard implemented in `app/page.tsx` with Live AI Playground.
-  - E2E curl tests passed: Real AI response from upstream `ag/gemini-3.8-flash-high`, automatic token deduction recorded in TiDB, Silver package +3,500,000 tokens credited.
+  - Added Phase 2 Enhancements:
+    - User Authentication: `POST /api/auth/register` (auto-credits 100k trial token) and `POST /api/auth/login` (scrypt password verification).
+    - Rate Limiting: In-memory sliding window enforcing `rate_limit_per_min`, injects `X-RateLimit-*` headers, returns HTTP 429 when abused.
+    - Usage Analytics: `GET /api/analytics` returns aggregated tokens, requests count, average latency, model breakdown, and recent log rows.
+    - Dashboard UI upgraded with Auth switch modal and Analytics & Logs viewer tab.
+  - E2E tests verified: Registration, Login, Key Creation, OpenAI Proxy call, Rate Limit headers, and QRIS top-up.

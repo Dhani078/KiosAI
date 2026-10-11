@@ -9,6 +9,9 @@
 - **OpenAI-Compatible Proxy (`/v1/chat/completions`)**: Mendukung streaming (SSE) dan JSON completion. Kompatibel dengan semua official OpenAI SDKs.
 - **TiDB Cloud Serverless**: Database MySQL-compatible berbasis HTTP fetch via `@tidbcloud/serverless`. Skalabel tanpa limit koneksi pool di serverless/Vercel.
 - **Manajemen API Key Aman**: Kunci format `kios-<hash32>` di-hash dengan SHA-256. Mendukung pembatasan model dan rate limiting per kunci.
+- **Rate Limiting Engine**: Menggunakan algoritma sliding-window per menit, mengembalikan header standar `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`.
+- **Autentikasi Pengguna**: Registrasi & login mandiri dengan keamanan `scrypt` hashing dan bonus uji coba 100.000 token otomatis.
+- **Statistik & Log Penggunaan**: Visualisasi riwayat pemakaian token, total request, rata-rata latensi, dan breakdown per model AI.
 - **Pemotongan Saldo Otomatis**: Setiap request AI otomatis memotong saldo token pengguna di database TiDB secara real-time.
 - **Top-Up Token (QRIS)**: Sistem paket token (Bronze, Silver, Gold) dengan simulasi pembayaran instan.
 - **Live AI Playground**: Antarmuka dashboard untuk menguji endpoint dan streaming model AI secara langsung.
@@ -24,7 +27,7 @@
              ▼
 [KiosAI Gateway (Next.js 15)]
   ├── 1. Validasi API Key (SHA-256)
-  ├── 2. Cek Saldo & Izin Model (TiDB Serverless)
+  ├── 2. Cek Rate Limit & Quota (TiDB Serverless)
   ├── 3. Forward Request ke Upstream
              ▼
 [9Router Engine (localhost:20128 / Cloudflare Tunnel)]
