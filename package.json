@@ -6,7 +6,8 @@
     "dev": "next dev -p 3000",
     "build": "next build",
     "start": "next start -p 3000",
-    "migrate": "node --env-file=.env scripts/migrate.mjs"
+    "migrate": "node --env-file=.env scripts/migrate.mjs",
+    "verify": "node --env-file=.env scripts/verify-deployment.mjs"
   },
   "dependencies": {
     "@tidbcloud/serverless": "^0.3.0",

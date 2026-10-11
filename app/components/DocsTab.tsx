@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Terminal, Copy } from "lucide-react";
+import { Terminal, Copy, Check } from "lucide-react";
 import { Badge, Button } from "./ui";
 
 export function DocsTab({
@@ -14,15 +14,16 @@ export function DocsTab({
   onCopy: (t: string) => void;
 }) {
   const [codeTab, setCodeTab] = useState<"cURL" | "Python" | "Node.js">("cURL");
+  const [selectedDocModel, setSelectedDocModel] = useState("tokenharbor/deepseek-v4.1-flash:free");
   const displayKey = activeKey || "kios-YOUR_API_KEY";
-  const baseUrl = "http://localhost:3000/v1";
+  const baseUrl = typeof window !== "undefined" ? `${window.location.origin}/v1` : "http://localhost:3000/v1";
 
   const codeSnippets = {
     cURL: `curl ${baseUrl}/chat/completions \\
   -H "Authorization: Bearer ${displayKey}" \\
   -H "Content-Type: application/json" \\
   -d '{
-    "model": "tokenharbor/deepseek-v4.1-flash:free",
+    "model": "${selectedDocModel}",
     "messages": [{"role": "user", "content": "Halo KiosAI!"}]
   }'`,
     Python: `from openai import OpenAI
@@ -33,7 +34,7 @@ client = OpenAI(
 )
 
 response = client.chat.completions.create(
-    model="tokenharbor/deepseek-v4.1-flash:free",
+    model="${selectedDocModel}",
     messages=[{"role": "user", "content": "Halo KiosAI!"}]
 )
 
@@ -46,7 +47,7 @@ const client = new OpenAI({
 });
 
 const response = await client.chat.completions.create({
-  model: "tokenharbor/deepseek-v4.1-flash:free",
+  model: "${selectedDocModel}",
   messages: [{ role: "user", content: "Halo KiosAI!" }]
 });
 
@@ -62,7 +63,7 @@ console.log(response.choices[0].message.content);`,
           <span className="eyebrow">OPENAI-COMPATIBLE</span>
           <h2>API yang sudah Anda kenal.</h2>
           <p>
-            Gunakan SDK OpenAI resmi di bahasa pemrograman apa saja. Cukup ganti base URL dan API key.
+            Gunakan SDK OpenAI resmi di bahasa apa saja. Cukup ganti base URL dan API key.
           </p>
         </div>
         <Terminal size={44} />
@@ -71,11 +72,7 @@ console.log(response.choices[0].message.content);`,
       <div className="base-url">
         <span>BASE URL</span>
         <code>{baseUrl}</code>
-        <Button
-          kind="ghost"
-          onClick={() => onCopy(baseUrl)}
-          aria-label="Salin base URL"
-        >
+        <Button kind="ghost" onClick={() => onCopy(baseUrl)} aria-label="Salin base URL">
           <Copy size={16} />
         </Button>
       </div>
@@ -96,8 +93,7 @@ console.log(response.choices[0].message.content);`,
             ))}
           </div>
           <Button kind="ghost" onClick={() => onCopy(currentCode)}>
-            <Copy size={15} />
-            Salin kode
+            <Copy size={15} /> Salin kode
           </Button>
         </div>
         <pre id="code-example" tabIndex={0}>
@@ -106,13 +102,37 @@ console.log(response.choices[0].message.content);`,
       </section>
 
       <section className="panel docs-models">
-        <h2>Model aktif dari gateway</h2>
-        {models.map((m) => (
-          <div className="doc-model" key={m.id}>
-            <code>{m.id}</code>
-            <Badge tier={(m.required_tier || "bronze").toUpperCase()} />
-          </div>
-        ))}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+          <h2>Model aktif dari gateway</h2>
+          <span className="muted" style={{ fontSize: "12px" }}>Klik model untuk memperbarui contoh kode</span>
+        </div>
+        {models.map((m) => {
+          const isSelected = m.id === selectedDocModel;
+          const tier = (m.required_tier || "bronze").toUpperCase();
+          const mult = tier === "GOLD" ? "4.0x" : tier === "SILVER" ? "2.0x" : "1.0x";
+          return (
+            <div
+              className="doc-model"
+              key={m.id}
+              onClick={() => setSelectedDocModel(m.id)}
+              style={{
+                cursor: "pointer",
+                border: isSelected ? "1px solid var(--primary)" : undefined,
+                background: isSelected ? "rgba(242, 140, 56, 0.08)" : undefined,
+                transition: "all 0.15s ease",
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                {isSelected && <Check size={14} style={{ color: "var(--primary)" }} />}
+                <code>{m.id}</code>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <span className="muted" style={{ fontSize: "11px" }}>{mult} multiplier</span>
+                <Badge tier={tier} />
+              </div>
+            </div>
+          );
+        })}
       </section>
 
       <div className="error-docs">

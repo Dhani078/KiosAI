@@ -60,6 +60,9 @@
 - [x] Task 6.9: Granular rate limit selector in `KeyModal` (30/60/120 req/min) saved to `api_keys.rate_limit_per_min`
 - [x] Task 6.10: Client-side CSV export utility (`lib/export-csv.ts`) for transaction history and recent request logs
 - [x] Task 6.11: Interactive System Prompt configuration in Playground tab with live system message injection
+- [x] Task 6.12: Interactive model sync in Docs tab (clicking any model live-updates cURL/Python/Node code examples)
+- [x] Task 6.13: Production deployment verification CLI script (`scripts/verify-deployment.mjs` / `npm run verify`)
+
 
 
 
