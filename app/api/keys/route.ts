@@ -1,0 +1,47 @@
+import { NextRequest, NextResponse } from "next/server";
+import { db } from "@/lib/db";
+import { createApiKey, ApiKeyRecord } from "@/lib/keys";
+
+export const runtime = "nodejs";
+
+export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const userId = searchParams.get("userId") || "usr_kiosai_demo";
+
+  try {
+    const keys = await db.query<ApiKeyRecord>(
+      `SELECT id, user_id, key_prefix, name, rate_limit_per_min, allowed_models, is_active, last_used_at, created_at
+       FROM kiosai.api_keys WHERE user_id = ? ORDER BY created_at DESC`,
+      [userId]
+    );
+
+    return NextResponse.json({ keys });
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message }, { status: 500 });
+  }
+}
+
+export async function POST(req: NextRequest) {
+  try {
+    const body = await req.json();
+    const userId = body.userId || "usr_kiosai_demo";
+    const name = body.name || "Default Key";
+    const allowedModels = body.allowedModels || null;
+    const rateLimit = Number(body.rateLimit) || 60;
+
+    const { rawKey, keyRecord } = await createApiKey({
+      userId,
+      name,
+      allowedModels,
+      rateLimit,
+    });
+
+    return NextResponse.json({
+      apiKey: rawKey,
+      key: keyRecord,
+      message: "Simpan API Key ini sekarang. Kunci tidak akan ditampilkan lagi secara lengkap.",
+    });
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message }, { status: 500 });
+  }
+}

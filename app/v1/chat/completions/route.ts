@@ -1,0 +1,165 @@
+import { NextRequest, NextResponse } from "next/server";
+import { validateApiKey, deductTokens, logUsage } from "@/lib/keys";
+
+export const runtime = "nodejs";
+
+const UPSTREAM_URL = process.env.NINEROUTER_URL || "http://127.0.0.1:20128";
+const UPSTREAM_KEY = process.env.NINEROUTER_API_KEY || "";
+
+function errorResponse(message: string, status: number, code: string = "kiosai_error") {
+  return NextResponse.json(
+    {
+      error: {
+        message,
+        type: status === 401 ? "authentication_error" : "invalid_request_error",
+        code,
+      },
+    },
+    { status }
+  );
+}
+
+export async function POST(req: NextRequest) {
+  const startTime = Date.now();
+  const authHeader = req.headers.get("authorization") || "";
+  const rawKey = authHeader.replace(/^Bearer\s+/i, "").trim();
+
+  if (!rawKey) {
+    return errorResponse("Missing Authorization header. Use Bearer kios-...", 401, "missing_key");
+  }
+
+  // 1. Validate API Key
+  const auth = await validateApiKey(rawKey);
+  if (!auth.valid || !auth.user || !auth.key) {
+    return errorResponse(auth.error || "Unauthorized", 401, "invalid_key");
+  }
+
+  let body: any;
+  try {
+    body = await req.json();
+  } catch {
+    return errorResponse("Invalid JSON payload", 400, "invalid_json");
+  }
+
+  const requestedModel = body.model;
+  if (!requestedModel) {
+    return errorResponse("Field 'model' is required", 400, "missing_model");
+  }
+
+  // 2. Validate Allowed Models
+  if (auth.key.allowed_models) {
+    try {
+      const allowed: string[] = JSON.parse(auth.key.allowed_models);
+      if (Array.isArray(allowed) && allowed.length > 0 && !allowed.includes(requestedModel)) {
+        return errorResponse(
+          `Model '${requestedModel}' is not allowed for this API key. Allowed: ${allowed.join(", ")}`,
+          403,
+          "model_forbidden"
+        );
+      }
+    } catch {
+      // Ignore parse error, allow fallback
+    }
+  }
+
+  const isStream = Boolean(body.stream);
+  const targetUrl = `${UPSTREAM_URL}/v1/chat/completions`;
+
+  try {
+    const upstreamHeaders: Record<string, string> = {
+      "Content-Type": "application/json",
+      ...(UPSTREAM_KEY ? { Authorization: `Bearer ${UPSTREAM_KEY}` } : {}),
+    };
+
+    const upstreamRes = await fetch(targetUrl, {
+      method: "POST",
+      headers: upstreamHeaders,
+      body: JSON.stringify(body),
+    });
+
+    if (!upstreamRes.ok) {
+      const errText = await upstreamRes.text();
+      const latency = Date.now() - startTime;
+      await logUsage({
+        apiKeyId: auth.key.id,
+        userId: auth.user.id,
+        model: requestedModel,
+        promptTokens: 0,
+        completionTokens: 0,
+        latencyMs: latency,
+        statusCode: upstreamRes.status,
+      });
+      return new NextResponse(errText, {
+        status: upstreamRes.status,
+        headers: { "Content-Type": upstreamRes.headers.get("content-Type") || "application/json" },
+      });
+    }
+
+    // 3. Handle Streaming Response
+    if (isStream && upstreamRes.body) {
+      const reader = upstreamRes.body.getReader();
+      const decoder = new TextDecoder();
+      let streamedTokensEst = 0;
+
+      const stream = new ReadableStream({
+        async pull(controller) {
+          const { done, value } = await reader.read();
+          if (done) {
+            controller.close();
+            const latency = Date.now() - startTime;
+            // Deduct estimated tokens (approx 1 token per chunk)
+            const finalTokens = Math.max(20, streamedTokensEst);
+            await deductTokens(auth.user!.id, finalTokens);
+            await logUsage({
+              apiKeyId: auth.key!.id,
+              userId: auth.user!.id,
+              model: requestedModel,
+              promptTokens: 10,
+              completionTokens: finalTokens,
+              latencyMs: latency,
+              statusCode: 200,
+            });
+            return;
+          }
+
+          const chunkText = decoder.decode(value, { stream: true });
+          // Count chunks roughly as completion progress
+          const matches = (chunkText.match(/"delta"/g) || []).length;
+          streamedTokensEst += matches || 1;
+
+          controller.enqueue(value);
+        },
+      });
+
+      return new NextResponse(stream, {
+        headers: {
+          "Content-Type": "text/event-stream; charset=utf-8",
+          "Cache-Control": "no-cache, no-transform",
+          Connection: "keep-alive",
+        },
+      });
+    }
+
+    // 4. Handle Non-Streaming JSON Response
+    const data = await upstreamRes.json();
+    const promptTokens = data.usage?.prompt_tokens || 15;
+    const completionTokens = data.usage?.completion_tokens || 35;
+    const totalTokens = data.usage?.total_tokens || promptTokens + completionTokens;
+
+    const latency = Date.now() - startTime;
+    await deductTokens(auth.user.id, totalTokens);
+    await logUsage({
+      apiKeyId: auth.key.id,
+      userId: auth.user.id,
+      model: requestedModel,
+      promptTokens,
+      completionTokens,
+      latencyMs: latency,
+      statusCode: 200,
+    });
+
+    return NextResponse.json(data);
+  } catch (err: any) {
+    return errorResponse(`Upstream error: ${err.message}`, 502, "bad_gateway");
+  }
+}
