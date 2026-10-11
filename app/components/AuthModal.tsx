@@ -1,16 +1,20 @@
 "use client";
 
 import { useState } from "react";
-import { X, ArrowRight } from "lucide-react";
+import { X, ArrowRight, LogOut } from "lucide-react";
 import Logo from "./Logo";
 import { Button, Input } from "./ui";
 
 export function AuthModal({
+  currentUser,
   onClose,
   onAuthSuccess,
+  onLogout,
 }: {
+  currentUser?: any;
   onClose: () => void;
   onAuthSuccess: (user: any) => void;
+  onLogout?: () => void;
 }) {
   const [tab, setTab] = useState<"login" | "register">("login");
   const [email, setEmail] = useState("");
@@ -18,6 +22,14 @@ export function AuthModal({
   const [name, setName] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  const isCustomUser = currentUser && currentUser.id !== "usr_kiosai_demo";
+
+  const handleLogout = () => {
+    localStorage.removeItem("kiosai_user_id");
+    if (onLogout) onLogout();
+    onClose();
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,12 +47,10 @@ export function AuthModal({
       });
 
       const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error || "Gagal autentikasi");
-      }
+      if (!res.ok) throw new Error(data.error || "Gagal autentikasi");
 
       if (data.user) {
-        localStorage.setItem("kios_user_id", data.user.id);
+        localStorage.setItem("kiosai_user_id", data.user.id);
         onAuthSuccess(data.user);
         onClose();
       }
@@ -53,99 +63,111 @@ export function AuthModal({
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <section
-        role="dialog"
-        aria-modal="true"
-        className="modal"
-        onClick={(e) => e.stopPropagation()}
-      >
+      <section role="dialog" aria-modal="true" className="modal" onClick={(e) => e.stopPropagation()}>
         <button aria-label="Tutup" className="modal-close" onClick={onClose}>
           <X size={20} />
         </button>
 
-        <form onSubmit={handleSubmit}>
-          <Logo />
-          <h2>{tab === "login" ? "Selamat datang kembali." : "Daftar akun KiosAI."}</h2>
-          <p>
-            {tab === "login"
-              ? "Masuk untuk mengelola saldo token dan API key Anda."
-              : "Daftar sekarang dan dapatkan bonus 100.000 token gratis!"}
-          </p>
-
-          <div style={{ display: "flex", gap: "8px", margin: "16px 0 20px" }}>
-            <button
-              type="button"
-              className={`button ${tab === "login" ? "primary" : "ghost"}`}
-              style={{ flex: 1, height: "36px" }}
-              onClick={() => { setTab("login"); setError(null); }}
-            >
-              Masuk
-            </button>
-            <button
-              type="button"
-              className={`button ${tab === "register" ? "primary" : "ghost"}`}
-              style={{ flex: 1, height: "36px" }}
-              onClick={() => { setTab("register"); setError(null); }}
-            >
-              Daftar Baru
-            </button>
+        {isCustomUser ? (
+          <div>
+            <Logo />
+            <h2>Akun Anda</h2>
+            <p>Anda saat ini masuk sebagai <strong>{currentUser.email}</strong>.</p>
+            <div className="new-key-secret" style={{ margin: "16px 0" }}>
+              <code>ID: {currentUser.id}</code>
+            </div>
+            <div style={{ display: "flex", gap: "10px", marginTop: "20px" }}>
+              <Button kind="secondary" onClick={onClose} style={{ flex: 1 }}>
+                Tutup
+              </Button>
+              <Button className="danger" onClick={handleLogout} style={{ flex: 1 }}>
+                <LogOut size={16} /> Keluar
+              </Button>
+            </div>
           </div>
-
-          {tab === "register" && (
-            <>
-              <label htmlFor="auth-name">Nama Lengkap</label>
-              <Input
-                id="auth-name"
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Nama Anda"
-              />
-            </>
-          )}
-
-          <label htmlFor="auth-email">Email</label>
-          <Input
-            id="auth-email"
-            type="email"
-            required
-            autoFocus
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="nama@email.com"
-            autoComplete="email"
-          />
-
-          <label htmlFor="auth-password">Password</label>
-          <Input
-            id="auth-password"
-            type="password"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Masukkan password"
-            autoComplete={tab === "login" ? "current-password" : "new-password"}
-          />
-
-          {error && (
-            <p className="field-error" role="alert">
-              {error}
+        ) : (
+          <form onSubmit={handleSubmit}>
+            <Logo />
+            <h2>{tab === "login" ? "Selamat datang kembali." : "Daftar akun KiosAI."}</h2>
+            <p>
+              {tab === "login"
+                ? "Masuk untuk mengelola saldo token dan API key Anda."
+                : "Daftar sekarang dan dapatkan bonus 100.000 token gratis!"}
             </p>
-          )}
 
-          <Button
-            kind="primary"
-            type="submit"
-            loading={loading}
-            style={{ width: "100%", marginTop: "20px" }}
-          >
-            {tab === "login" ? "Masuk ke Akun" : "Daftar & Ambil 100k Token"}
-            <ArrowRight size={16} />
-          </Button>
-          <small className="modal-note">
-            Akun langsung tersimpan di TiDB. Bonus token instan untuk pendaftaran baru.
-          </small>
-        </form>
+            <div style={{ display: "flex", gap: "8px", margin: "16px 0 20px" }}>
+              <button
+                type="button"
+                className={`button ${tab === "login" ? "primary" : "ghost"}`}
+                style={{ flex: 1, height: "36px" }}
+                onClick={() => { setTab("login"); setError(null); }}
+              >
+                Masuk
+              </button>
+              <button
+                type="button"
+                className={`button ${tab === "register" ? "primary" : "ghost"}`}
+                style={{ flex: 1, height: "36px" }}
+                onClick={() => { setTab("register"); setError(null); }}
+              >
+                Daftar Baru
+              </button>
+            </div>
+
+            {tab === "register" && (
+              <>
+                <label htmlFor="auth-name">Nama Lengkap</label>
+                <Input
+                  id="auth-name"
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Nama Anda"
+                />
+              </>
+            )}
+
+            <label htmlFor="auth-email">Email</label>
+            <Input
+              id="auth-email"
+              type="email"
+              required
+              autoFocus
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="nama@email.com"
+              autoComplete="email"
+            />
+
+            <label htmlFor="auth-password">Password</label>
+            <Input
+              id="auth-password"
+              type="password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Masukkan password"
+              autoComplete={tab === "login" ? "current-password" : "new-password"}
+            />
+
+            {error && (
+              <p className="field-error" role="alert">{error}</p>
+            )}
+
+            <Button
+              kind="primary"
+              type="submit"
+              loading={loading}
+              style={{ width: "100%", marginTop: "20px" }}
+            >
+              {tab === "login" ? "Masuk ke Akun" : "Daftar & Ambil 100k Token"}
+              <ArrowRight size={16} />
+            </Button>
+            <small className="modal-note">
+              Akun langsung tersimpan di TiDB. Bonus token instan untuk pendaftaran baru.
+            </small>
+          </form>
+        )}
       </section>
     </div>
   );

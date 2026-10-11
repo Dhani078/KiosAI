@@ -52,6 +52,7 @@
       - AI Playground real live stream & non-stream calling `/v1/chat/completions` (potong saldo di TiDB)
       - Statistik penggunaan live dari `kiosai.usage_logs`
       - Model discovery live dari `GET /v1/models`
+    - Perbaikan session persistence key (`kiosai_user_id`), dukungan logout di modal profil, dan pengujian registrasi user baru end-to-end (register 100k bonus -> create API key `kios-...` -> panggil chat completions -> saldo terpotong real di TiDB).
     - Aturan maks 200 baris per file diverifikasi ketat (45 file `.ts`/`.tsx`/`.mjs` semuanya <= 200 baris).
     - Playwright browser audit di 390px (mobile) & 1366px (desktop): 5 tab x 2 viewport = 100% OK (0 overflow, 0 console error).
   - E2E tests verified: Registration, Login, Key Creation, OpenAI Proxy call, Rate Limit headers, QRIS top-up, Tier gating, Model discovery, Webhook idempotency, and Order list.

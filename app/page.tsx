@@ -33,9 +33,9 @@ export default function Home() {
     balance_tokens: 1000000,
   };
 
-  const copy = async (text: string) => {
+  const copy = async (t: string) => {
     try {
-      await navigator.clipboard.writeText(text);
+      await navigator.clipboard.writeText(t);
       setToast("Berhasil disalin ke clipboard");
     } catch {
       setToast("Gagal menyalin text");
@@ -47,12 +47,7 @@ export default function Home() {
   return (
     <div className="app-shell">
       <a href="#main-content" className="skip-link">Langsung ke konten</a>
-      <Sidebar
-        page={page}
-        setPage={setPage}
-        user={user}
-        onOpenAuth={() => setModal("auth")}
-      />
+      <Sidebar page={page} setPage={setPage} user={user} onOpenAuth={() => setModal("auth")} />
 
       <div className="main-shell">
         <Header page={page} user={user} onOpenAuth={() => setModal("auth")} />
@@ -72,10 +67,7 @@ export default function Home() {
             <PackagesTab
               balance={user.balance_tokens}
               activeTier={user.tier}
-              onSelectPackage={(idx) => {
-                setSelectedPkgIndex(idx);
-                setModal("payment");
-              }}
+              onSelectPackage={(idx) => { setSelectedPkgIndex(idx); setModal("payment"); }}
               onNavigateStatistik={() => setPage("Statistik")}
               onNavigateDocs={() => setPage("Dokumentasi")}
             />
@@ -86,10 +78,7 @@ export default function Home() {
               keys={data.keys}
               loadingKeys={data.loading}
               onOpenCreateKey={() => setModal("create_key")}
-              onOpenRevokeKey={(k) => {
-                setRevokeKeyTarget(k);
-                setModal("revoke_key");
-              }}
+              onOpenRevokeKey={(k) => { setRevokeKeyTarget(k); setModal("revoke_key"); }}
               onCopy={copy}
               onNavigateDocs={() => setPage("Dokumentasi")}
             />
@@ -125,9 +114,7 @@ export default function Home() {
 
           <footer>
             <span>© 2026 KiosAI. Dibangun untuk ide Anda.</span>
-            <div>
-              <span className="status-dot" /> Live TiDB Serverless
-            </div>
+            <div><span className="status-dot" /> Live TiDB Serverless</div>
           </footer>
         </main>
       </div>
@@ -140,19 +127,13 @@ export default function Home() {
           userId={user.id}
           userBalance={user.balance_tokens}
           onClose={() => setModal(null)}
-          onPaymentSuccess={(newBal) => {
+          onPaymentSuccess={() => {
             data.fetchUserData();
             data.fetchOrders();
             setToast("Pembayaran berhasil! Token telah ditambahkan ke database.");
           }}
-          onNavigateKeys={() => {
-            setModal(null);
-            setPage("API Keys");
-          }}
-          onNavigateStatistik={() => {
-            setModal(null);
-            setPage("Statistik");
-          }}
+          onNavigateKeys={() => { setModal(null); setPage("API Keys"); }}
+          onNavigateStatistik={() => { setModal(null); setPage("Statistik"); }}
         />
       )}
 
@@ -161,29 +142,26 @@ export default function Home() {
           mode={modal === "create_key" ? "create" : "revoke"}
           keyToRevoke={revokeKeyTarget}
           userId={user.id}
-          onClose={() => {
-            setModal(null);
-            setRevokeKeyTarget(null);
-          }}
-          onKeyCreated={() => {
-            data.fetchKeys();
-            setToast("API key baru berhasil dibuat di database TiDB.");
-          }}
-          onKeyRevoked={() => {
-            data.fetchKeys();
-            setToast("API key berhasil dinonaktifkan di TiDB.");
-          }}
+          onClose={() => { setModal(null); setRevokeKeyTarget(null); }}
+          onKeyCreated={() => { data.fetchKeys(); setToast("API key berhasil dibuat di TiDB."); }}
+          onKeyRevoked={() => { data.fetchKeys(); setToast("API key berhasil dinonaktifkan di TiDB."); }}
           onCopy={copy}
         />
       )}
 
       {modal === "auth" && (
         <AuthModal
+          currentUser={data.currentUser}
           onClose={() => setModal(null)}
           onAuthSuccess={(u) => {
             data.setCurrentUser(u);
             data.refreshAll();
             setToast(`Selamat datang, ${u.full_name || u.name}!`);
+          }}
+          onLogout={() => {
+            data.setCurrentUser(null);
+            data.refreshAll();
+            setToast("Anda telah keluar dari akun.");
           }}
         />
       )}
