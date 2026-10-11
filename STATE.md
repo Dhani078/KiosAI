@@ -64,7 +64,10 @@
     - Suite dokumentasi produksi lengkap: `API.md` (spesifikasi endpoint & error codes), `DEPLOYMENT.md` (arsitektur Vercel Tokyo + Cloudflare Tunnel 24 jam), dan `SECURITY.md` (kebijakan SHA-256, scrypt, sliding-window rate limit, dan mitigasi risiko).
     - Test runner E2E otomatis (`scripts/test-e2e.mjs` via `npm run test:e2e`) yang menguji 10 alur gateway secara berurutan: health probe, model catalog, user auth register, key creation, non-stream completion, stream SSE completion, tier gating 403, QRIS order creation, payment fulfillment & tier upgrade, serta analytics logs.
     - Pipeline CI GitHub Actions (`.github/workflows/ci.yml`) untuk verifikasi otomatis tipe TypeScript, audit kepatuhan batas 200 baris kode, dan build Next.js pada setiap push/PR.
-    - Landing Page publik interaktif (`/landing`) dengan 6 komponen moduler: Navbar, Hero, Fitur Utama, Pilihan Paket, Contoh Integrasi SDK multi-bahasa, FAQ, dan Footer. Tautan publik disematkan di Sidebar dashboard.
+    - Landing Page publik interaktif sebagai beranda utama (`/`) dengan 6 komponen moduler: Navbar, Hero, Fitur Utama, Pilihan Paket, Contoh Integrasi SDK multi-bahasa, FAQ, dan Footer. Dashboard dipindahkan ke `/dashboard`.
+    - Routing baru: `/` = Landing Page publik, `/dashboard` = workspace pengguna. Semua link CTA mengarah ke `/dashboard`.
+    - Sistem login admin via username (bukan email): akun `adminfordhani` dengan saldo 100M token, tier Gold. User biasa tetap pakai email + password.
+    - Login endpoint `/api/auth/login` mendukung field `identifier` (email ATAU username) selain field `email` lama.
     - Aturan maks 200 baris per file diverifikasi ketat (62 file `.ts`/`.tsx`/`.mjs` semuanya <= 200 baris).
     - Playwright browser audit di 390px (mobile) & 1366px (desktop): 5 tab x 2 viewport = 100% OK (0 overflow, 0 console error).
   - E2E tests verified: Registration, Login, Key Creation, OpenAI Proxy call, Rate Limit headers, QRIS top-up, Tier gating, Model discovery, Webhook idempotency, and Order list.

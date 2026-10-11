@@ -89,12 +89,12 @@ export function Sidebar({
           </button>
         </div>
         <Link
-          href="/landing"
+          href="/"
           className="support-link"
           style={{ textDecoration: "none" }}
         >
           <Sparkles size={17} />
-          Landing Page Publik
+          Beranda Publik
           <ArrowUpRight size={14} />
         </Link>
         <button

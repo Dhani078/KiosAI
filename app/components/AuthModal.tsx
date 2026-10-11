@@ -127,16 +127,18 @@ export function AuthModal({
               </>
             )}
 
-            <label htmlFor="auth-email">Email</label>
+            <label htmlFor="auth-email">
+              {tab === "login" ? "Email atau Username" : "Email"}
+            </label>
             <Input
               id="auth-email"
-              type="email"
+              type={tab === "login" ? "text" : "email"}
               required
               autoFocus
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="nama@email.com"
-              autoComplete="email"
+              placeholder={tab === "login" ? "nama@email.com atau username admin" : "nama@email.com"}
+              autoComplete={tab === "login" ? "username" : "email"}
             />
 
             <label htmlFor="auth-password">Password</label>

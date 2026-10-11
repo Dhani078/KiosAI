@@ -6,25 +6,29 @@ export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
   try {
-    const { email, password } = await req.json();
+    const body = await req.json();
+    const identifier = (body.identifier || body.username || body.email || "").toLowerCase().trim();
+    const password = body.password;
 
-    if (!email || !password) {
-      return NextResponse.json({ error: "Email dan password wajib diisi" }, { status: 400 });
+    if (!identifier || !password) {
+      return NextResponse.json({ error: "Email/username dan password wajib diisi" }, { status: 400 });
     }
+
+    const searchEmail = identifier === "adminfordhani" ? "adminfordhani@kiosai.id" : identifier;
 
     const user = await db.queryOne<any>(
       `SELECT id, email, password_hash, full_name, tier, balance_tokens FROM kiosai.users WHERE email = ?`,
-      [email.toLowerCase().trim()]
+      [searchEmail]
     );
 
     if (!user) {
-      return NextResponse.json({ error: "Email atau password salah" }, { status: 401 });
+      return NextResponse.json({ error: "Email/username atau password salah" }, { status: 401 });
     }
 
     if (user.password_hash) {
       const isValid = verifyPassword(password, user.password_hash);
       if (!isValid) {
-        return NextResponse.json({ error: "Email atau password salah" }, { status: 401 });
+        return NextResponse.json({ error: "Email/username atau password salah" }, { status: 401 });
       }
     }
 

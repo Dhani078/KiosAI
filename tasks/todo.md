@@ -65,7 +65,10 @@
 - [x] Task 6.14: Complete Production Markdown Suite (`API.md`, `DEPLOYMENT.md`, `SECURITY.md`) and sync with `README.md`
 - [x] Task 6.15: Automated End-to-End Integration Test Suite (`scripts/test-e2e.mjs` / `npm run test:e2e`) covering 10 core pathways
 - [x] Task 6.16: GitHub Actions CI workflow (`.github/workflows/ci.yml`) for automated type check, line limits check, and build
-- [x] Task 6.17: Public Marketing Landing Page (`/landing`) with Hero, Features, Pricing, Code Sandbox, and FAQ
+- [x] Task 6.17: Public Marketing Landing Page (`/`) as homepage with Hero, Features, Pricing, Code Sandbox, and FAQ
+- [x] Task 6.18: Route restructure — `/` = Landing Page, `/dashboard` = Dashboard workspace
+- [x] Task 6.19: Admin login by username (`adminfordhani`), login endpoint supports `identifier` field (email OR username)
+- [x] Task 6.20: Admin seed script (`scripts/seed-admin.mjs`) — Gold tier, 100M token balance
 
 
 

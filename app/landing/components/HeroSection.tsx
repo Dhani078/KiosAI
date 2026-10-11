@@ -66,7 +66,7 @@ export function HeroSection() {
         }}
       >
         <Link
-          href="/"
+          href="/dashboard"
           className="button primary"
           style={{
             fontSize: "15px",

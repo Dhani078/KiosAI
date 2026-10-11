@@ -97,7 +97,8 @@ npm run migrate
 ```bash
 npm run dev
 ```
-Buka dashboard di [http://localhost:3000](http://localhost:3000).
+Buka dashboard di [http://localhost:3000/dashboard](http://localhost:3000/dashboard).
+Landing page publik di [http://localhost:3000](http://localhost:3000).
 
 ---
 

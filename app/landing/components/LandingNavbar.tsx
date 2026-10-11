@@ -24,7 +24,7 @@ export function LandingNavbar() {
         width: "100%",
       }}
     >
-      <Link href="/landing" style={{ textDecoration: "none", color: "inherit" }}>
+      <Link href="/" style={{ textDecoration: "none", color: "inherit" }}>
         <Logo />
       </Link>
 
@@ -53,7 +53,7 @@ export function LandingNavbar() {
 
       <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
         <Link
-          href="/"
+          href="/dashboard"
           className="button primary"
           style={{
             fontSize: "13px",

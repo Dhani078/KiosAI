@@ -28,5 +28,11 @@
   - Verification & readiness auditor CLI (`npm run verify`)
   - Complete Markdown documentation suite (`API.md`, `DEPLOYMENT.md`, `SECURITY.md`)
   - GitHub Actions CI workflow (`.github/workflows/ci.yml`) with automated type check, line limit audit, and build
+- [x] Phase 13: Route Restructure, Admin Auth & Landing Page as Homepage
+  - `/` = Landing Page publik (SEO, hero, pricing, code sandbox, FAQ)
+  - `/dashboard` = Dashboard workspace pengguna
+  - Admin login via username (`adminfordhani`), user biasa via email
+  - Login endpoint `identifier` field (email OR username lookup)
+  - Admin seed script (`scripts/seed-admin.mjs`)
 
 

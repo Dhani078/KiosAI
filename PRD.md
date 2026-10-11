@@ -26,6 +26,8 @@
 | `analytics` | Agregasi metrik penggunaan per model, latensi, dan log request (`/api/analytics`) | Selesai |
 | `billing` | Paket token (Bronze/Silver/Gold), order flow, order history (`/api/orders`), webhook pembayaran & idempotensi | Selesai |
 | `dashboard-ui` | UI toko, panel saldo, generator key, analytics charts, dynamic model picker, riwayat order, live playground | Selesai |
+| `landing` | Landing page publik (`/`) dengan hero, fitur, pricing, code sandbox, FAQ | Selesai |
+| `admin-auth` | Admin login via username, user biasa via email, seed script | Selesai |
 
 ## 4. Database Schema (TiDB DDL)
 
@@ -187,5 +189,13 @@ Desain prototype dari `KiosAI Token Marketplace Design` diterapkan sepenuhnya pa
 - **Health Endpoint (`GET /api/health`)**: Memeriksa konektivitas dan latensi real-time database TiDB (`SELECT 1`) dan upstream 9Router (`/v1/models`). Mengembalikan status `healthy` (HTTP 200) atau `degraded` jika ada latensi/kegagalan.
 - **Status Indicator UI**: Header status dot menampilkan status live beserta tooltip latensi ms untuk TiDB dan 9Router yang diperbarui otomatis setiap 30 detik.
 - **Konfigurasi Rate Limit per Key**: Form pembuatan API key (`KeyModal`) mendukung pemilihan rate limit per menit (30 testing, 60 standar, 120 production) yang tersimpan di kolom `kiosai.api_keys.rate_limit_per_min`.
+
+## 12. Routing & Admin Auth
+
+- **Route `/`**: Landing Page publik (SEO, hero, pricing, code sandbox, FAQ). Server Component (metadata export).
+- **Route `/dashboard`**: Dashboard workspace pengguna (client component, session-based).
+- **Route `/landing`**: Redirect 301 ke `/` (backward compatibility).
+- **Admin Login**: Admin menggunakan username (bukan email) saat login. Field `identifier` pada `POST /api/auth/login` menerima email ATAU username. Lookup: cek `email` dulu, jika tidak ditemukan cek `full_name` case-insensitive.
+- **Admin Seed**: `scripts/seed-admin.mjs` membuat akun admin `adminfordhani` (Gold, 100M token). Password di-hash scrypt.
 
 

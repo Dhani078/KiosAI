@@ -52,7 +52,7 @@ export function PricingSection() {
               ))}
             </ul>
             <Link
-              href="/"
+              href="/dashboard"
               className={`button ${i === 1 ? "primary" : "secondary"}`}
               style={{
                 textDecoration: "none",

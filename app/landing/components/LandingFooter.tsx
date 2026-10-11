@@ -32,7 +32,7 @@ export function LandingFooter() {
         </div>
 
         <div style={{ display: "flex", gap: "24px", fontSize: "13px" }}>
-          <Link href="/" className="text-link">Dashboard</Link>
+          <Link href="/dashboard" className="text-link">Dashboard</Link>
           <a href="#fitur" className="text-link">Fitur</a>
           <a href="#paket" className="text-link">Paket Harga</a>
           <a href="#faq" className="text-link">FAQ</a>
