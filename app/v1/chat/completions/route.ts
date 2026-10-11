@@ -86,7 +86,7 @@ export async function POST(req: NextRequest) {
     const upstreamRes = await fetch(targetUrl, {
       method: "POST",
       headers: upstreamHeaders,
-      body: JSON.stringify(body),
+      body: JSON.stringify(isStream ? { ...body, stream_options: { ...(body.stream_options || {}), include_usage: true } } : body),
     });
 
     if (!upstreamRes.ok) {
@@ -114,35 +114,44 @@ export async function POST(req: NextRequest) {
     if (isEventStream && upstreamRes.body) {
       const reader = upstreamRes.body.getReader();
       const decoder = new TextDecoder();
-      let streamedTokensEst = 0;
+      let buf = "";
+      let usage: { prompt_tokens?: number; completion_tokens?: number; total_tokens?: number } | null = null;
+      let deltas = 0;
 
       const stream = new ReadableStream({
         async pull(controller) {
           const { done, value } = await reader.read();
           if (done) {
             controller.close();
-            const latency = Date.now() - startTime;
-            const multiplier = getModelMultiplier(requestedModel);
-            // Deduct estimated tokens (approx 1 token per chunk)
-            const rawTokens = Math.max(20, streamedTokensEst);
-            const deducted = await deductTokens(auth.user!.id, rawTokens, multiplier);
+            // Bill real upstream usage (requested via stream_options.include_usage).
+            // ponytail: fallback to chunk count when upstream sends no usage; add tokenizer when that happens often.
+            const promptTokens = usage?.prompt_tokens ?? 15;
+            const completionTokens = usage?.completion_tokens ?? Math.max(1, deltas);
+            const totalTokens = usage?.total_tokens ?? promptTokens + completionTokens;
+            await deductTokens(auth.user!.id, totalTokens, getModelMultiplier(requestedModel));
             await logUsage({
               apiKeyId: auth.key!.id,
               userId: auth.user!.id,
               model: requestedModel,
-              promptTokens: 10,
-              completionTokens: rawTokens,
-              latencyMs: latency,
+              promptTokens,
+              completionTokens,
+              latencyMs: Date.now() - startTime,
               statusCode: 200,
             });
             return;
           }
 
-          const chunkText = decoder.decode(value, { stream: true });
-          // Count chunks roughly as completion progress
-          const matches = (chunkText.match(/"delta"/g) || []).length;
-          streamedTokensEst += matches || 1;
-
+          buf += decoder.decode(value, { stream: true });
+          const lines = buf.split("\n");
+          buf = lines.pop() || "";
+          for (const line of lines) {
+            if (!line.startsWith("data: ") || line === "data: [DONE]") continue;
+            try {
+              const j = JSON.parse(line.slice(6));
+              if (j.usage) usage = j.usage;
+              if (j.choices?.[0]?.delta) deltas++;
+            } catch {}
+          }
           controller.enqueue(value);
         },
       });

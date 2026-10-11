@@ -152,3 +152,14 @@ Diuji Playwright (Chromium headless) di `http://127.0.0.1:3000/`.
 | 1366x768 (desktop) | 5 tab | OK (no overflow) | OK |
 
 Console error: 0. Belum dicek: Safari iOS, Android Chrome, tampilan QRIS pada layar kecil.
+
+## 9. Billing: Tagih Total (Final)
+
+Keputusan: tagih total token upstream (`prompt_tokens + completion_tokens`) x multiplier model. Paling umum, sama dengan OpenAI/OpenRouter.
+
+- Non-stream: pakai `usage` dari response upstream.
+- Stream: request ke upstream dengan `stream_options.include_usage = true`, baca `usage` dari chunk terakhir, tagih sama dengan non-stream.
+- Fallback jika upstream tidak kirim usage: `prompt=15`, `completion=jumlah delta`. ponytail: tokenizer belum dipakai.
+- Overhead prompt upstream (~2.300–2.900 token per request) tetap ditagih. Tercatat di dokumen sebagai harga.
+
+Tes (2026-10-11, key demo, model deepseek): non-stream ditagih 2.329, stream ditagih 851, keduanya HTTP 200.
