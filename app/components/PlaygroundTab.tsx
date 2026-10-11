@@ -54,7 +54,8 @@ export function PlaygroundTab({
 
     const startTime = Date.now();
     try {
-      const apiKeyToUse = activeKey || "kios-d085fc5f9fbfe35ff534433b531edfb0";
+      const storedKey = typeof window !== "undefined" ? sessionStorage.getItem("kios_last_raw_key") : null;
+      const apiKeyToUse = activeKey || storedKey || "kios-d085fc5f9fbfe35ff534433b531edfb0";
       const res = await fetch("/v1/chat/completions", {
         method: "POST",
         headers: {

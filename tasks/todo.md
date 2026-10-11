@@ -54,4 +54,7 @@
 - [x] Task 6.3: Refactor codebase so 100% files are <= 200 lines (PRD §6 enforcement)
 - [x] Task 6.4: Playwright E2E browser audit (390px mobile, 1366px desktop, 0 overflow, 0 console error)
 - [x] Task 6.5: Sync all markdown docs (`PRD.md`, `STATE.md`, `tasks/todo.md`, `tasks/plan.md`, `README.md`)
+- [x] Task 6.6: Add Recent API Request Logs table (`RecentLogsTable`) in Statistik tab from TiDB `usage_logs`
+- [x] Task 6.7: Automatic raw key handoff from `KeyModal` to `PlaygroundTab` via `sessionStorage`
+
 

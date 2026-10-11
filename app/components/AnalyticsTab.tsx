@@ -3,6 +3,7 @@
 import { AlertTriangle, Plus, ArrowRight } from "lucide-react";
 import { Button } from "./ui";
 import OrderHistoryTable from "./OrderHistoryTable";
+import RecentLogsTable from "./RecentLogsTable";
 
 export function AnalyticsTab({
   balance,
@@ -17,6 +18,7 @@ export function AnalyticsTab({
 }) {
   const summary = analytics?.summary || { totalRequests: 0, totalTokens: 0, avgLatencyMs: 0 };
   const perModel: any[] = analytics?.perModel || [];
+  const recentLogs: any[] = analytics?.recentLogs || [];
   const totalTokensUsed = summary.totalTokens || 0;
 
   return (
@@ -95,6 +97,8 @@ export function AnalyticsTab({
           </p>
         )}
       </section>
+
+      <RecentLogsTable logs={recentLogs} />
 
       <OrderHistoryTable orders={orders} />
     </>

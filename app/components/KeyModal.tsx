@@ -37,6 +37,7 @@ export function KeyModal({
       });
       const data = await res.json();
       if (res.ok && data.apiKey) {
+        sessionStorage.setItem("kios_last_raw_key", data.apiKey);
         setCreatedSecret(data.apiKey);
         onKeyCreated();
       } else {
