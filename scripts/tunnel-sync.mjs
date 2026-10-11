@@ -1,0 +1,110 @@
+#!/usr/bin/env node
+/**
+ * tunnel-sync.mjs — jalankan Cloudflare Tunnel ke 9Router, lalu push URL-nya
+ * ke secret NINEROUTER_URL milik Worker `kiosai` secara otomatis.
+ *
+ * Kenapa perlu: Quick Tunnel menghasilkan URL acak baru setiap restart.
+ * Kalau URL tidak di-sync, Worker akan balas http_403 (loopback ditolak edge).
+ *
+ * Pakai: npm run tunnel
+ * Butuh: cloudflared di PATH + sudah `npx wrangler login`.
+ */
+import { spawn } from "node:child_process";
+import { readFileSync, writeFileSync, existsSync } from "node:fs";
+import { homedir, tmpdir } from "node:os";
+import { join } from "node:path";
+
+const ACCOUNT_ID = process.env.CF_ACCOUNT_ID || "c734e9afeed67d74624f8dcf9de3c6f8";
+const WORKER = process.env.CF_WORKER_NAME || "kiosai";
+const LOCAL_ROUTER = process.env.NINEROUTER_LOCAL || "http://localhost:20128";
+const LOG = join(tmpdir(), "cf_tunnel.log");
+
+function wranglerOauthToken() {
+  const paths = [
+    join(homedir(), "AppData", "Roaming", "xdg.config", ".wrangler", "config", "default.toml"),
+    join(homedir(), ".wrangler", "config", "default.toml"),
+    join(homedir(), "Library", "Preferences", ".wrangler", "config", "default.toml"),
+  ];
+  for (const p of paths) {
+    if (!existsSync(p)) continue;
+    const m = readFileSync(p, "utf8").match(/oauth_token = "([^"]+)"/);
+    if (m) return m[1];
+  }
+  throw new Error("OAuth token wrangler tidak ditemukan. Jalankan: npx wrangler login");
+}
+
+async function pushSecret(name, value) {
+  const res = await fetch(
+    `https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/workers/scripts/${WORKER}/secrets`,
+    {
+      method: "PUT",
+      headers: { Authorization: `Bearer ${wranglerOauthToken()}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ name, text: value, type: "secret_text" }),
+    }
+  );
+  const body = await res.json();
+  if (!body.success) throw new Error(`Gagal set ${name}: ${JSON.stringify(body.errors)}`);
+  return res.status;
+}
+
+function startTunnel() {
+  writeFileSync(LOG, "");
+  const out = require("node:fs").createWriteStream(LOG, { flags: "a" });
+  const proc = spawn("cloudflared", ["tunnel", "--url", LOCAL_ROUTER, "--no-autoupdate"], {
+    stdio: ["ignore", "pipe", "pipe"],
+  });
+  proc.stdout.pipe(out);
+  proc.stderr.pipe(out);
+  return proc;
+}
+
+function waitForUrl(proc, timeoutMs = 90_000) {
+  return new Promise((resolve, reject) => {
+    const started = Date.now();
+    const tick = setInterval(() => {
+      const log = existsSync(LOG) ? readFileSync(LOG, "utf8") : "";
+      const m = log.match(/https:\/\/[a-z0-9-]+\.trycloudflare\.com/);
+      if (m) {
+        clearInterval(tick);
+        resolve(m[0]);
+      } else if (Date.now() - started > timeoutMs) {
+        clearInterval(tick);
+        reject(new Error("Timeout menunggu URL tunnel. Cek " + LOG));
+      }
+    }, 1000);
+    proc.on("exit", (code) => {
+      clearInterval(tick);
+      reject(new Error(`cloudflared keluar dengan kode ${code}`));
+    });
+  });
+}
+
+async function verify(tunnelUrl) {
+  const res = await fetch(`${tunnelUrl}/v1/models`, { signal: AbortSignal.timeout(30_000) });
+  // 401 = tunnel tembus ke 9Router (butuh key untuk akses remote) — itu tanda sehat.
+  if (res.status === 401 || res.ok) return `HTTP ${res.status}`;
+  throw new Error(`Tunnel balas HTTP ${res.status}`);
+}
+
+const proc = startTunnel();
+
+try {
+  const url = await waitForUrl(proc);
+  console.log(`\nTunnel aktif: ${url}`);
+  const check = await verify(url);
+  console.log(`Verifikasi tunnel -> 9Router: ${check}`);
+  const status = await pushSecret("NINEROUTER_URL", url);
+  console.log(`NINEROUTER_URL terpasang di Worker "${WORKER}" (HTTP ${status})`);
+  console.log(`\nWorker live: https://${WORKER}.<subdomain>.workers.dev`);
+  console.log("Tunnel berjalan di depan. Tekan Ctrl+C untuk berhenti.\n");
+} catch (err) {
+  console.error("Gagal:", err.message);
+  proc.kill();
+  process.exit(1);
+}
+
+process.on("SIGINT", () => {
+  console.log("\nMenghentikan tunnel...");
+  proc.kill();
+  process.exit(0);
+});

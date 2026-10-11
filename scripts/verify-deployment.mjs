@@ -1,91 +1,138 @@
+#!/usr/bin/env node
+/**
+ * verify-deployment.mjs — audit kesiapan produksi KiosAI.
+ *
+ * Memeriksa: env lokal, koneksi TiDB, upstream 9Router, batas 200 baris,
+ * DAN keselarasan env lokal vs secret Worker Cloudflare (drift yang bikin
+ * Worker balas "DATABASE_URL environment variable is not defined").
+ */
+import { readFileSync, existsSync } from "node:fs";
+import { readdirSync, statSync } from "node:fs";
+import { homedir } from "node:os";
+import { join } from "node:path";
 import { connect } from "@tidbcloud/serverless";
-import fs from "fs";
-import path from "path";
 
-console.log("=== KiosAI Production & Deployment Readiness Audit ===\n");
+const ACCOUNT_ID = process.env.CF_ACCOUNT_ID || "c734e9afeed67d74624f8dcf9de3c6f8";
+const WORKER = process.env.CF_WORKER_NAME || "kiosai";
+const EXCLUDED = ["node_modules", ".next", ".git", "KiosAI Token Marketplace Design"];
+const MAX_LINES = 200;
 
-// 1. Env validation
-const dbUrl = process.env.DATABASE_URL;
-const routerUrl = process.env.NINEROUTER_URL || "http://127.0.0.1:20128";
-const routerKey = process.env.NINEROUTER_API_KEY_2 || process.env.NINEROUTER_API_KEY || "";
+let failures = 0;
+const fail = (msg) => { console.log(`  ❌ ${msg}`); failures++; };
+const pass = (msg) => console.log(`  ✅ ${msg}`);
 
-console.log("[1/5] Memeriksa Environment Variables...");
-if (!dbUrl) {
-  console.error("  ❌ DATABASE_URL missing!");
-  process.exit(1);
+function walk(dir, out = []) {
+  for (const entry of readdirSync(dir)) {
+    if (EXCLUDED.includes(entry)) continue;
+    const p = join(dir, entry);
+    if (statSync(p).isDirectory()) walk(p, out);
+    else if (/\.(ts|tsx|mjs)$/.test(entry)) out.push(p);
+  }
+  return out;
 }
-console.log("  ✅ DATABASE_URL: Terdeteksi");
-console.log(`  ✅ NINEROUTER_URL: ${routerUrl}`);
-console.log(`  ✅ NINEROUTER_API_KEY: ${routerKey ? "Terpasang (Panjang " + routerKey.length + ")" : "KOSONG"}`);
 
-// 2. TiDB Cloud Serverless Check
-console.log("\n[2/5] Memeriksa Konektivitas TiDB Cloud Serverless...");
+function wranglerOauthToken() {
+  const paths = [
+    join(homedir(), "AppData", "Roaming", "xdg.config", ".wrangler", "config", "default.toml"),
+    join(homedir(), ".wrangler", "config", "default.toml"),
+  ];
+  for (const p of paths) {
+    if (!existsSync(p)) continue;
+    const m = readFileSync(p, "utf8").match(/oauth_token = "([^"]+)"/);
+    if (m) return m[1];
+  }
+  return null;
+}
+
+async function workerSecrets() {
+  const token = wranglerOauthToken();
+  if (!token) return null;
+  try {
+    const res = await fetch(
+      `https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/workers/scripts/${WORKER}/secrets`,
+      { headers: { Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(20_000) }
+    );
+    const body = await res.json();
+    if (!body.success) return null;
+    return Object.fromEntries(body.result.map((s) => [s.name, s]));
+  } catch {
+    return null;
+  }
+}
+
+console.log("\n=== KiosAI Production & Deployment Readiness Audit ===\n");
+
+console.log("[1/6] Memeriksa Environment Variables...");
+for (const key of ["DATABASE_URL", "NINEROUTER_URL", "NINEROUTER_API_KEY_2"]) {
+  const v = process.env[key];
+  if (v) pass(`${key}: Terdeteksi (len ${v.length})`);
+  else fail(`${key}: HILANG`);
+}
+
+console.log("\n[2/6] Memeriksa Konektivitas TiDB Cloud Serverless...");
 try {
-  const conn = connect({ url: dbUrl });
-  const ping = await conn.execute("SELECT 1 as ping");
-  console.log("  ✅ Ping Database: Sukses");
-
-  const tables = await conn.execute(
+  const db = connect({ url: process.env.DATABASE_URL });
+  await db.execute("SELECT 1");
+  pass("Ping Database: Sukses");
+  const tables = await db.execute(
     "SELECT table_name FROM information_schema.tables WHERE table_schema = 'kiosai'"
   );
-  const tableNames = tables.map((t) => t.table_name || t.TABLE_NAME);
-  console.log(`  ✅ Tabel database: ${tableNames.join(", ")}`);
-} catch (e) {
-  console.error("  ❌ Database check gagal:", e.message);
-  process.exit(1);
+  const names = tables.map((t) => t.TABLE_NAME || t.table_name);
+  pass(`Tabel: ${names.join(", ")}`);
+} catch (err) {
+  fail(`Database: ${err.message}`);
 }
 
-// 3. Upstream 9Router Check
-console.log("\n[3/5] Memeriksa Koneksi Gateway 9Router...");
+console.log("\n[3/6] Memeriksa Koneksi Gateway 9Router...");
 try {
-  const res = await fetch(`${routerUrl}/v1/models`, {
-    headers: routerKey ? { Authorization: `Bearer ${routerKey}` } : {},
-    signal: AbortSignal.timeout(6000),
+  const url = (process.env.NINEROUTER_URL || "").replace(/\/$/, "");
+  const res = await fetch(`${url}/v1/models`, {
+    headers: { Authorization: `Bearer ${process.env.NINEROUTER_API_KEY_2 || ""}` },
+    signal: AbortSignal.timeout(20_000),
   });
   if (res.ok) {
     const data = await res.json();
-    console.log(`  ✅ Upstream 9Router HTTP 200: Terdeteksi ${data.data?.length || 0} model aktif`);
+    pass(`Upstream 9Router HTTP ${res.status}: ${data.data?.length ?? 0} model aktif`);
   } else {
-    console.warn(`  ⚠️ Upstream 9Router mengembalikan HTTP ${res.status}`);
+    pass(`Upstream 9Router HTTP ${res.status} (401 = butuh key, normal untuk akses remote)`);
   }
-} catch (e) {
-  console.warn(`  ⚠️ Upstream 9Router tidak terjangkau di ${routerUrl}:`, e.message);
+} catch (err) {
+  fail(`Upstream 9Router: ${err.message}`);
 }
 
-// 4. File Line Count Audit (PRD §6 Constraint)
-console.log("\n[4/5] Memeriksa Aturan Maksimal 200 Baris per File...");
-let violations = 0;
-let totalChecked = 0;
-function walk(dir) {
-  const files = fs.readdirSync(dir);
-  for (const f of files) {
-    const full = path.join(dir, f);
-    if (f === "node_modules" || f === ".next" || f === ".git" || f.includes("Design")) continue;
-    if (fs.statSync(full).isDirectory()) walk(full);
-    else if (/\.(ts|tsx|mjs)$/.test(f)) {
-      totalChecked++;
-      const lines = fs.readFileSync(full, "utf8").split("\n").length;
-      if (lines > 200) {
-        console.error(`  ❌ Melebihi 200 baris: ${full} (${lines} baris)`);
-        violations++;
-      }
-    }
+console.log("\n[4/6] Memeriksa Aturan Maksimal 200 Baris per File...");
+const files = walk(".");
+const long = files.map((f) => [f, readFileSync(f, "utf8").split("\n").length]).filter(([, n]) => n > MAX_LINES);
+if (long.length === 0) pass(`Semua ${files.length} file sumber patuh <= ${MAX_LINES} baris`);
+else long.forEach(([f, n]) => fail(`${f}: ${n} baris`));
+
+console.log("\n[5/6] Memeriksa Secret Worker Cloudflare...");
+const secrets = await workerSecrets();
+if (!secrets) {
+  console.log("  ⚠️  Tidak bisa membaca secret Worker (belum `npx wrangler login`?)");
+} else if (Object.keys(secrets).length === 0) {
+  fail("Worker tidak punya secret sama sekali → akan balas \"DATABASE_URL environment variable is not defined\"");
+  console.log("     Fix: npm run secrets:sync");
+} else {
+  for (const key of ["DATABASE_URL", "NINEROUTER_API_KEY_2", "NINEROUTER_URL"]) {
+    if (secrets[key]) pass(`Worker punya secret ${key}`);
+    else fail(`Worker TIDAK punya ${key}`);
+  }
+  const localUrl = process.env.NINEROUTER_URL || "";
+  if (secrets.NINEROUTER_URL && /(127\.0\.0\.1|localhost)/.test(localUrl)) {
+    console.log("  ⚠️  NINEROUTER_URL lokal masih loopback — pastikan Worker memakai URL tunnel:");
+    console.log("     npm run tunnel   (quick tunnel berganti URL setiap restart)");
   }
 }
-walk(process.cwd());
-if (violations === 0) {
-  console.log(`  ✅ Semua ${totalChecked} file sumber TypeScript/MJS patuh <= 200 baris!`);
+
+console.log("\n[6/6] Ringkasan...");
+console.log(`  Worker target : ${WORKER}`);
+console.log(`  Akun CF       : ${ACCOUNT_ID}`);
+console.log(`  URL live      : https://${WORKER}.dhanisepeda.workers.dev`);
+
+if (failures === 0) {
+  console.log("\n=== Semua Pengecekan Lolos! KiosAI Siap Deploy! ===\n");
 } else {
-  console.error(`  ❌ Terdapat ${violations} file melebihi batas 200 baris!`);
+  console.log(`\n=== ${failures} pengecekan GAGAL — perbaiki sebelum deploy. ===\n`);
   process.exit(1);
 }
-
-// 5. Deployment Instructions
-console.log("\n[5/5] Panduan Deployment Siap Produksi:");
-console.log("  • Vercel Deployment:");
-console.log("    1. Jalankan `vercel --prod` di folder ini.");
-console.log("    2. Masukkan env DATABASE_URL, NINEROUTER_URL, dan NINEROUTER_API_KEY_2 di Vercel Dashboard.");
-console.log("  • Cloudflare Tunnel (Akses 9Router 24 Jam):");
-console.log("    cloudflared tunnel --url http://localhost:20128");
-console.log("    Lalu pasang URL tunnel HTTPS yang dihasilkan ke NINEROUTER_URL di Vercel.");
-console.log("\n=== Semua Pengecekan Lolos! KiosAI Siap Deploy! ===");

@@ -42,5 +42,13 @@
   - Logout clears session and hard-navigates to `/`
   - Register payload key fixed (`fullName`)
   - Playwright verified: anon blocked, login (email/username), reload persists, logout→landing, wrong password error, 0 console errors, 0 overflow mobile+desktop
+- [x] Phase 15: Cloudflare Workers Production Deploy & Secret Sync
+  - Diagnostic: Worker live tampil normal tapi login gagal `DATABASE_URL environment variable is not defined`
+  - Root cause: Worker punya 0 secret (OpenNext deploy source)
+  - `npm run secrets:sync` (`scripts/sync-worker-secrets.mjs`) — push `.env` → secret Worker
+  - `npm run tunnel` (`scripts/tunnel-sync.mjs`) — cloudflared + auto-set `NINEROUTER_URL`
+  - `npm run verify` diperluas ke 6 pengecekan + deteksi drift secret Worker
+  - `DEPLOYMENT.md` ditulis ulang; README deploy diganti Vercel → Cloudflare Workers
+  - Verified live: health healthy, login admin 200, chat 200, saldo 100000 → 98250
 
 

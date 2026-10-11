@@ -145,14 +145,47 @@ print(response.choices[0].message.content)
 
 ---
 
-## 🌐 Deploy ke Vercel
+## 🌐 Deploy ke Cloudflare Workers
 
-1. Buka [Vercel Dashboard](https://vercel.com) dan impor repository `Dhani078/KiosAI`.
-2. Masukkan Environment Variables di Vercel:
-   - `DATABASE_URL`: Connection string TiDB Cloud Serverless
-   - `NINEROUTER_URL`: Cloudflare Tunnel URL 9Router Anda (misal `https://xxx.trycloudflare.com`)
-   - `NINEROUTER_API_KEY`: Key 9Router Anda
-3. Klik **Deploy**. KiosAI akan otomatis berjalan di region Tokyo (`hnd1`).
+KiosAI dideploy sebagai Cloudflare Worker (`kiosai.dhanisepeda.workers.dev`), bukan Vercel.
+
+### 1. Secret Worker (wajib)
+
+Worker **tidak** membaca `.env`. Kalau secret kosong, login akan gagal dengan
+`DATABASE_URL environment variable is not defined`.
+
+```bash
+npm run secrets:sync     # dorong DATABASE_URL, NINEROUTER_URL, NINEROUTER_API_KEY_2
+npx wrangler secret list --name kiosai   # verifikasi
+```
+
+### 2. Tunnel ke 9Router (wajib)
+
+Worker berjalan di edge Cloudflare, jadi `http://127.0.0.1:20128` tidak bisa dijangkau
+(Cloudflare balas **error 1003**). Jalankan:
+
+```bash
+npm run tunnel           # start cloudflared + set NINEROUTER_URL di Worker otomatis
+```
+
+> Quick tunnel berganti URL setiap restart — jalankan `npm run tunnel` lagi setelah reboot.
+> Untuk URL permanen pakai Named Tunnel + domain sendiri (lihat `DEPLOYMENT.md`).
+
+### 3. Deploy
+
+```bash
+npm run build
+npx wrangler deploy --name kiosai
+```
+
+### 4. Verifikasi
+
+```bash
+npm run verify           # env, TiDB, 9Router, batas baris, secret Worker
+curl https://kiosai.dhanisepeda.workers.dev/api/health
+```
+
+Panduan lengkap + troubleshooting: [**DEPLOYMENT.md**](./DEPLOYMENT.md)
 
 ---
 

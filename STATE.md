@@ -77,6 +77,16 @@
       - Bug fix: payload register mengirim `fullName` (sebelumnya `name` sehingga nama selalu default).
       - Verifikasi Playwright: anonim diblokir, login email & username, reload persist, logout → landing, password salah ditolak, 0 console error, 0 overflow (390px & 1366px).
       - Upload foto profil + `avatar_url` belum diimplementasi.
+    - Phase 15: Deploy Cloudflare Workers & Perbaikan Secret:
+      - Diagnosa: Worker `kiosai` (`https://kiosai.dhanisepeda.workers.dev`) tampil normal tapi login gagal dengan `DATABASE_URL environment variable is not defined`.
+      - Akar masalah: Worker memakai sumber deploy OpenNext (`last_deployed_from: wrangler`, named handlers `BucketCachePurge`/`DOQueueHandler`/`DOShardedTagCache`) dan sama sekali **tidak punya secret** (`wrangler secret list` → `[]`). Bukan salah konfigurasi Cloudflare.
+      - Fix 1: `scripts/sync-worker-secrets.mjs` (`npm run secrets:sync`) mendorong `DATABASE_URL`, `NINEROUTER_URL`, `NINEROUTER_API_KEY_2`, `NINEROUTER_API_KEY` dari `.env` ke secret Worker via Cloudflare API. Nilai loopback untuk `NINEROUTER_URL` otomatis dilewati.
+      - Fix 2: `scripts/tunnel-sync.mjs` (`npm run tunnel`) menjalankan `cloudflared tunnel --url http://localhost:20128`, menunggu URL `trycloudflare.com`, memverifikasi tunnel, lalu memasang secret `NINEROUTER_URL` otomatis.
+      - Fix 3: `scripts/verify-deployment.mjs` diperluas menjadi 6 pengecekan — env lokal, TiDB, 9Router, batas 200 baris, **secret Worker**, dan ringkasan. Mendeteksi drift (Worker kosong / `NINEROUTER_URL` loopback).
+      - Akar masalah upstream: Worker berjalan di edge Cloudflare; `http://127.0.0.1:20128` menunjuk mesin edge → **error 1003**. Wajib tunnel HTTPS.
+      - Subdomain akun dikonfirmasi `dhanisepeda` (pakai `e`); `dhanispeda` tidak resolve.
+      - Hasil verifikasi live: `/api/health` → `{"status":"healthy","database":{"status":"connected"},"upstream":{"status":"connected"}}`; login admin `adminfordhani` HTTP 200; chat completion HTTP 200 (`content: "OK"`, usage 888 token); saldo terpotong real 100.000 → 98.250.
+      - Dokumentasi: `DEPLOYMENT.md` ditulis ulang (arsitektur Worker + tunnel + troubleshooting), `README.md` bagian deploy diganti dari Vercel ke Cloudflare Workers, `PRD.md` §14–§16 ditambahkan.
     - Aturan maks 200 baris per file diverifikasi ketat (62 file `.ts`/`.tsx`/`.mjs` semuanya <= 200 baris).
     - Playwright browser audit di 390px (mobile) & 1366px (desktop): 5 tab x 2 viewport = 100% OK (0 overflow, 0 console error).
   - E2E tests verified: Registration, Login, Key Creation, OpenAI Proxy call, Rate Limit headers, QRIS top-up, Tier gating, Model discovery, Webhook idempotency, and Order list.

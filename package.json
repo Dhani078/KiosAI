@@ -8,7 +8,9 @@
     "start": "next start -p 3000",
     "migrate": "node --env-file=.env scripts/migrate.mjs",
     "verify": "node --env-file=.env scripts/verify-deployment.mjs",
-    "test:e2e": "node --env-file=.env scripts/test-e2e.mjs"
+    "secrets:sync": "node --env-file=.env scripts/sync-worker-secrets.mjs",
+    "test:e2e": "node --env-file=.env scripts/test-e2e.mjs",
+    "tunnel": "node scripts/tunnel-sync.mjs"
   },
   "dependencies": {
     "@tidbcloud/serverless": "^0.3.0",

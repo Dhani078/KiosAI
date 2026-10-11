@@ -76,6 +76,15 @@
 - [x] Task 6.25: Logout hard-navigates to `/` and clears session; AuthGuard re-checks on `focus`/`pageshow`
 - [x] Task 6.26: Fixed register payload key (`fullName` not `name`); `identifier` field for login lookups
 
+## Phase 7 (Cloudflare Workers Production Deploy - Completed)
+- [x] Task 7.1: Diagnosed `DATABASE_URL environment variable is not defined` on live Worker `kiosai.dhanisepeda.workers.dev`
+- [x] Task 7.2: Root cause — Worker had 0 secrets (`wrangler secret list` → `[]`), OpenNext deploy source
+- [x] Task 7.3: `scripts/sync-worker-secrets.mjs` / `npm run secrets:sync` — push `.env` → Worker secrets via Cloudflare API
+- [x] Task 7.4: `scripts/tunnel-sync.mjs` / `npm run tunnel` — cloudflared + auto-set `NINEROUTER_URL` secret
+- [x] Task 7.5: Extended `scripts/verify-deployment.mjs` to 6 checks incl. Worker secret drift detection
+- [x] Task 7.6: Rewrote `DEPLOYMENT.md` (Worker arch + tunnel + troubleshooting), README deploy section Vercel → Cloudflare Workers
+- [x] Task 7.7: Verified live end-to-end: health healthy, admin login 200, chat 200, balance deducted 100000 → 98250
+
 
 
 

@@ -210,4 +210,33 @@ Desain prototype dari `KiosAI Token Marketplace Design` diterapkan sepenuhnya pa
 - **Re-check**: `AuthGuard` mendengarkan event `focus` + `pageshow` untuk menangkap logout dari tab lain.
 - **CTA Landing**: Navbar menampilkan "Masuk" + "Mulai Gratis" sebelum login, "Dashboard" setelah login.
 
+## 14. Deploy Cloudflare Workers & Secret Sync
 
+- **Target produksi**: Worker `kiosai` di `https://kiosai.dhanisepeda.workers.dev` (Next.js 15 via `@opennextjs/cloudflare`, handler `fetch` + named handlers `BucketCachePurge`/`DOQueueHandler`/`DOShardedTagCache`).
+- **Penyebab error `DATABASE_URL environment variable is not defined`**: Worker tidak membaca `.env`; env harus dipasang sebagai secret. Worker ini pernah punya **0 secret**, sehingga login gagal walau halaman tampil normal.
+- **`npm run secrets:sync`** (`scripts/sync-worker-secrets.mjs`): dorong `DATABASE_URL`, `NINEROUTER_URL`, `NINEROUTER_API_KEY_2`, `NINEROUTER_API_KEY` dari `.env` ke secret Worker. Nilai loopback untuk `NINEROUTER_URL` otomatis dilewati.
+- **`npm run tunnel`** (`scripts/tunnel-sync.mjs`): jalankan `cloudflared tunnel --url http://localhost:20128`, tunggu URL `trycloudflare.com`, verifikasi tunnel, lalu set secret `NINEROUTER_URL` otomatis. Wajib karena quick tunnel berganti URL setiap restart.
+- **Kenapa tunnel wajib**: Worker berjalan di edge Cloudflare. `http://127.0.0.1:20128` di dalam Worker menunjuk mesin edge → Cloudflare balas **error 1003**. Pola error: `/api/health` melaporkan `upstream: http_403`.
+- **`npm run verify`** kini juga memeriksa keberadaan secret Worker dan mendeteksi drift (Worker kosong / `NINEROUTER_URL` masih loopback).
+- **Subdomain akun**: `dhanisepeda` (pakai `e`).
+- **Verifikasi live**: `/api/health` → `{"status":"healthy"}` (TiDB connected, upstream connected); login admin `adminfordhani` 200; chat completion 200 dengan pemotongan saldo real (100.000 → 98.250).
+
+## 15. Troubleshooting Produksi
+
+| Gejala | Penyebab | Fix |
+|---|---|---|
+| `DATABASE_URL environment variable is not defined` | Secret Worker kosong | `npm run secrets:sync` |
+| Health `upstream: http_403`, chat `error code: 1003` | `NINEROUTER_URL` loopback | `npm run tunnel` |
+| `{"error":"API key required for remote API access"}` | Key 9Router belum di Worker | `npm run secrets:sync` |
+| URL `*.workers.dev` tidak resolve | Salah ejaan subdomain | Benar: `kiosai.dhanisepeda.workers.dev` (pakai `e`) |
+
+## 16. Referensi File & Perintah Produksi
+
+| Perintah | Script | Fungsi |
+|---|---|---|
+| `npm run secrets:sync` | `scripts/sync-worker-secrets.mjs` | Dorong env `.env` → secret Worker |
+| `npm run tunnel` | `scripts/tunnel-sync.mjs` | Tunnel 9Router + set `NINEROUTER_URL` otomatis |
+| `npm run verify` | `scripts/verify-deployment.mjs` | Audit env, TiDB, 9Router, batas baris, secret Worker |
+| `npm run migrate` | `scripts/migrate.mjs` | DDL tabel TiDB |
+| `npm run test:e2e` | `scripts/test-e2e.mjs` | 10 alur gateway E2E |
+| — | `scripts/seed-admin.mjs` | Seed akun admin `adminfordhani` |
