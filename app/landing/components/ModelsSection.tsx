@@ -7,7 +7,7 @@ import { MODELS, TIER_COLORS } from "./modelCatalogData";
 
 export function ModelsSection() {
   const [filter, setFilter] = useState<string>("Semua");
-  const providers = ["Semua", "DeepSeek", "Anthropic", "OpenAI", "Google", "Meta"];
+  const providers = ["Semua", "Atria", "DeepSeek", "Anthropic", "OpenAI", "Google", "Meta"];
   const filtered = filter === "Semua" ? MODELS : MODELS.filter((m) => m.provider === filter);
 
   return (

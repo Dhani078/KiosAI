@@ -76,13 +76,14 @@ export function PackagesTab({
           >
             <div className="package-top">
               <Badge tier={p.name} />
-              {i === 1 && <span className="popular">PALING POPULER</span>}
+              {p.tierKey === "bronze" && <span className="popular">PALING HEMAT</span>}
+              {p.tierKey === "free" && <span className="popular">BANSOS GRATIS</span>}
             </div>
             <p className="package-desc">{p.desc}</p>
             <div className="price">
               <span>Rp</span> {p.price}
             </div>
-            <div className="one-time">sekali bayar</div>
+            <div className="one-time">{p.price === "0" ? "gratis uji coba" : "sekali bayar"}</div>
             <div className="token-box">
               <div>
                 <span className="small-label">Token yang didapat</span>
@@ -104,12 +105,12 @@ export function PackagesTab({
               kind={selected === i ? "primary" : "secondary"}
               onClick={() => onSelectPackage(i)}
             >
-              Beli {p.name}
+              {p.price === "0" ? "Klaim" : "Beli"} {p.name}
               <ArrowRight size={16} />
             </Button>
             <div className="package-foot">
               <CreditCard size={13} />
-              Bayar dengan QRIS
+              {p.price === "0" ? "Langsung aktif ke TiDB" : "Bayar dengan QRIS"}
             </div>
           </article>
         ))}

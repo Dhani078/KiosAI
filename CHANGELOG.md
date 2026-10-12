@@ -13,6 +13,19 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## 2026-10-12
 
+### `3f9549b` — feat(ui): refine free plan claim modal, add Atria to landing catalog, clean docs error handling
+**Ditambahkan / Diubah**
+- **Modal Klaim Free Plan (`PaymentModal.tsx`)**:
+  - Untuk paket Free Bansos (Rp 0), UI scan QRIS digantikan dengan tombol "Klaim 5 Juta Token Gratis" langsung.
+  - Sekali klik langsung terkonfirmasi dan menambah 5.000.000 token ke user login di TiDB.
+- **Katalog Landing Page (`ModelsSection.tsx` & `modelCatalogData.ts`)**:
+  - Ditambahkan provider `Atria` dan kartu model `Atria Dawn Preview (Bansos)`.
+- **Perbandingan Paket & Dokumentasi (`PackageComparison.tsx` & `DocsTab.tsx`)**:
+  - Tabel perbandingan model diupdate: seluruh tier memiliki tanda centang akses universal.
+  - Dokumentasi error diupdate dari `tier_restricted` menjadi panduan penanganan `invalid_key / balance_exhausted`.
+- **Tunnel & Health Live**:
+  - Cloudflare Tunnel aktif menghubungkan Worker `kiosai.dhanisepeda.workers.dev` ke 9Router lokal. Status `/api/health` kembali `healthy`.
+
 ### `2368424` — feat(plans): add Free Plan 5M tokens and atria/Atria-Dawn-Preview bansos model
 **Ditambahkan / Diubah**
 - **Free Plan 5 Juta Token**:

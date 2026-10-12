@@ -27,13 +27,14 @@ export function PricingSection() {
           >
             <div className="package-top">
               <Badge tier={p.name} />
-              {i === 1 && <span className="popular">PALING POPULER</span>}
+              {p.tierKey === "bronze" && <span className="popular">PALING HEMAT</span>}
+              {p.tierKey === "free" && <span className="popular">BANSOS GRATIS</span>}
             </div>
             <p className="package-desc">{p.desc}</p>
             <div className="price">
               <span>Rp</span> {p.price}
             </div>
-            <div className="one-time">sekali bayar</div>
+            <div className="one-time">{p.price === "0" ? "gratis uji coba" : "sekali bayar"}</div>
             <div className="token-box">
               <div>
                 <span className="small-label">Token yang didapat</span>
@@ -53,7 +54,7 @@ export function PricingSection() {
             </ul>
             <Link
               href="/dashboard"
-              className={`button ${i === 1 ? "primary" : "secondary"}`}
+              className={`button ${p.tierKey === "bronze" ? "primary" : "secondary"}`}
               style={{
                 textDecoration: "none",
                 display: "inline-flex",
@@ -64,12 +65,12 @@ export function PricingSection() {
                 height: "44px",
               }}
             >
-              Beli {p.name}
+              {p.price === "0" ? "Klaim" : "Beli"} {p.name}
               <ArrowRight size={16} />
             </Link>
             <div className="package-foot">
               <CreditCard size={13} />
-              Bayar instan via QRIS
+              {p.price === "0" ? "Aktivasi instan" : "Bayar instan via QRIS"}
             </div>
           </article>
         ))}

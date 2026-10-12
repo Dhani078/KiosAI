@@ -107,7 +107,7 @@ console.log(response.choices[0].message.content);`,
           <h2>Model aktif dari gateway</h2>
           <span className="muted" style={{ fontSize: "12px" }}>Klik model untuk memperbarui contoh kode</span>
         </div>
-        {models.map((m) => {
+        {models.filter((m) => m.id !== "combomaut").map((m) => {
           const cleanId = formatModelName(m.id);
           const isSelected = m.id === selectedDocModel;
           const tier = (m.required_tier || "bronze").toUpperCase();
@@ -146,9 +146,9 @@ console.log(response.choices[0].message.content);`,
           </p>
         </div>
         <div>
-          <code>403 · tier_restricted</code>
+          <code>401 / 402 · invalid_key / balance_exhausted</code>
           <p>
-            Model memerlukan paket lebih tinggi. Upgrade paket di menu Beli Token untuk membuka akses.
+            API Key salah atau saldo token habis. Top up paket di menu Beli Token untuk melanjutkan pemakaian.
           </p>
         </div>
       </div>

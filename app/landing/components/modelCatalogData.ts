@@ -1,7 +1,7 @@
 export interface ModelItem {
   id: string;
   name: string;
-  provider: "Anthropic" | "OpenAI" | "DeepSeek" | "Google" | "Meta";
+  provider: "Anthropic" | "OpenAI" | "DeepSeek" | "Google" | "Meta" | "Atria";
   context: string;
   tier: "bronze" | "silver" | "gold";
   multiplier: string;
@@ -10,6 +10,16 @@ export interface ModelItem {
 }
 
 export const MODELS: ModelItem[] = [
+  {
+    id: "atria/Atria-Dawn-Preview",
+    name: "Atria Dawn Preview (Bansos)",
+    provider: "Atria",
+    context: "128k",
+    tier: "bronze",
+    multiplier: "1.0×",
+    desc: "Model uji coba gratis (bansos) untuk eksplorasi chat & prompt bagi semua pengguna baru.",
+    strengths: ["Free Bansos", "Trial Cepat", "Multi-turn Chat"],
+  },
   {
     id: "tokenharbor/deepseek-v4.1-flash:free",
     name: "DeepSeek V4.1 Flash",

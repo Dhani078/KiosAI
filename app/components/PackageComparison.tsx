@@ -9,6 +9,12 @@ export function PackageComparison({
 }) {
   const comparisonModels = [
     {
+      name: "Atria Dawn Preview (Bansos)",
+      sub: "Atria / Community",
+      use: "Uji coba gratis, eksperimen prompt & bot",
+      tier: 0,
+    },
+    {
       name: "Gemini Flash / DeepSeek",
       sub: "Google / DeepSeek",
       use: "Chatbot & tugas cepat sehari-hari",
@@ -84,11 +90,7 @@ export function PackageComparison({
                 <td className="muted">{m.use}</td>
                 {[0, 1, 2].map((t) => (
                   <td className="check-cell" key={t}>
-                    {t >= m.tier ? (
-                      <Check size={17} />
-                    ) : (
-                      <span className="dash">—</span>
-                    )}
+                    <Check size={17} />
                   </td>
                 ))}
               </tr>
