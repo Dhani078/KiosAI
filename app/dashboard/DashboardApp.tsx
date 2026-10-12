@@ -11,6 +11,7 @@ import BottomNav from "../components/BottomNav";
 import Toast from "../components/Toast";
 import KeysTab from "../components/KeysTab";
 import PackagesTab from "../components/PackagesTab";
+import ModelsTab from "../components/ModelsTab";
 import PlaygroundTab from "../components/PlaygroundTab";
 import AnalyticsTab from "../components/AnalyticsTab";
 import DocsTab from "../components/DocsTab";
@@ -30,12 +31,8 @@ export default function Dashboard() {
   const user = data.currentUser;
 
   const copy = async (t: string) => {
-    try {
-      await navigator.clipboard.writeText(t);
-      setToast("Berhasil disalin ke clipboard");
-    } catch {
-      setToast("Gagal menyalin text");
-    }
+    try { await navigator.clipboard.writeText(t); setToast("Berhasil disalin ke clipboard"); }
+    catch { setToast("Gagal menyalin text"); }
   };
 
   const heading = PAGE_HEADINGS[page] || PAGE_HEADINGS["Beli Token"];
@@ -94,14 +91,31 @@ export default function Dashboard() {
             />
           )}
 
+          {page === "Model" && (
+            <ModelsTab
+              models={data.availableModels}
+              userTier={user.tier}
+              onNavigatePlayground={(mId) => {
+                if (mId && typeof window !== "undefined") {
+                  sessionStorage.setItem("kios_selected_model", mId);
+                }
+                setPage("Playground");
+              }}
+              onNavigatePackages={() => setPage("Beli Token")}
+            />
+          )}
+
           {page === "Playground" && (
             <PlaygroundTab
               models={data.availableModels}
               userTier={user.tier}
               balance={user.balance_tokens}
-              activeKey={data.keys[0]?.key_prefix ? `${data.keys[0].key_prefix}live` : ""}
+              activeKey={data.playgroundKey}
               onNavigatePackages={() => setPage("Beli Token")}
-              onRefreshUserData={data.fetchUserData}
+              onRefreshUserData={() => {
+                data.fetchUserData();
+                data.fetchAnalytics();
+              }}
             />
           )}
 

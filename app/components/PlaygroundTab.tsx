@@ -22,14 +22,26 @@ export function PlaygroundTab({
   onNavigatePackages: () => void;
   onRefreshUserData: () => void;
 }) {
-  const [selectedModel, setSelectedModel] = useState("tokenharbor/deepseek-v4.1-flash:free");
+  const [selectedModel, setSelectedModel] = useState(() => {
+    if (typeof window !== "undefined") return sessionStorage.getItem("kios_selected_model") || "tokenharbor/deepseek-v4.1-flash:free";
+    return "tokenharbor/deepseek-v4.1-flash:free";
+  });
   const [systemPrompt, setSystemPrompt] = useState("");
   const [showSystem, setShowSystem] = useState(false);
   const [prompt, setPrompt] = useState("");
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [messages, setMessages] = useState<ChatMessage[]>(() => {
+    if (typeof window === "undefined") return [];
+    try { return JSON.parse(sessionStorage.getItem("kios_playground_messages") || "[]"); } catch { return []; }
+  });
   const [replying, setReplying] = useState(false);
   const [errorBanner, setErrorBanner] = useState<string | null>(null);
   const chatRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      try { sessionStorage.setItem("kios_playground_messages", JSON.stringify(messages)); } catch {}
+    }
+  }, [messages]);
 
   const currentModelObj = models.find((m) => m.id === selectedModel);
   const requiredTier = currentModelObj?.required_tier || "bronze";
@@ -58,7 +70,10 @@ export function PlaygroundTab({
     const startTime = Date.now();
     try {
       const storedKey = typeof window !== "undefined" ? sessionStorage.getItem("kios_last_raw_key") : null;
-      const apiKeyToUse = activeKey || storedKey || "kios-d085fc5f9fbfe35ff534433b531edfb0";
+      const apiKeyToUse = storedKey || activeKey;
+      if (!apiKeyToUse) {
+        throw new Error("Sesi API key belum siap. Silakan refresh halaman.");
+      }
       const payloadMessages = [
         ...(systemPrompt.trim() ? [{ role: "system", content: systemPrompt.trim() }] : []),
         { role: "user", content: userText },
@@ -111,7 +126,10 @@ export function PlaygroundTab({
         selectedModel={selectedModel}
         requiredTier={requiredTier}
         onSelectModel={(m) => { setMessages([]); setErrorBanner(null); setSelectedModel(m); }}
-        onResetChat={() => setMessages([])}
+        onResetChat={() => {
+          setMessages([]);
+          if (typeof window !== "undefined") sessionStorage.removeItem("kios_playground_messages");
+        }}
       />
 
       <div className="playground-context">
@@ -129,8 +147,8 @@ export function PlaygroundTab({
       </div>
 
       {showSystem && (
-        <div style={{ padding: "12px 24px", background: "var(--canvas)", borderBottom: "1px solid var(--border)" }}>
-          <label htmlFor="sys-prompt" className="small-label" style={{ marginBottom: "6px" }}>
+        <div style={{ padding: "10px 24px", background: "var(--canvas)", borderBottom: "1px solid var(--border)" }}>
+          <label htmlFor="sys-prompt" className="small-label" style={{ marginBottom: "4px", display: "block" }}>
             SYSTEM PROMPT (INSTRUKSI SISTEM)
           </label>
           <input
@@ -138,15 +156,7 @@ export function PlaygroundTab({
             value={systemPrompt}
             onChange={(e) => setSystemPrompt(e.target.value)}
             placeholder="Contoh: Jawab selalu dalam bahasa Indonesia singkat dan to the point."
-            style={{
-              width: "100%",
-              padding: "8px 12px",
-              borderRadius: "var(--radius-input)",
-              background: "var(--surface)",
-              border: "1px solid var(--border)",
-              color: "var(--text)",
-              fontSize: "13px",
-            }}
+            style={{ width: "100%", padding: "8px 12px", borderRadius: "var(--radius-input)", background: "var(--surface)", border: "1px solid var(--border)", color: "var(--text)", fontSize: "13px" }}
           />
         </div>
       )}

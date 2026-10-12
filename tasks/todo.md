@@ -99,6 +99,13 @@
 - [x] Task 9.4: Protect API keys: confirm zero modifications to `.env` or existing credentials
 - [x] Task 9.5: Verified via Playwright (display shows `deepseek-v4.1-flash [BRONZE]`, value sends system ID) and 10/10 e2e tests pass
 
+## Phase 10 (Playground Session Key, Chat Persistence & Sidebar Model Menu - Completed)
+- [x] Task 10.1: Build `lib/session-key.ts` (`createPlaygroundToken`, `validatePlaygroundToken`) with HMAC signatures
+- [x] Task 10.2: Bind Playground requests to user's real account (`kios-pg-...`), ensuring real TiDB token deduction and `usage_logs` tracking in Statistik
+- [x] Task 10.3: Persist Playground chat messages across tab navigation via `sessionStorage` (`kios_playground_messages`)
+- [x] Task 10.4: Add "Model" item to left dashboard Sidebar (`Sidebar.tsx`), `constants.ts`, and mount `ModelsTab.tsx` in `DashboardApp.tsx`
+- [x] Task 10.5: Zero API keys modified; 100% files <= 200 LOC; verified via Playwright & E2E suite
+
 
 
 

@@ -12,6 +12,11 @@ export const PAGE_HEADINGS: Record<
     title: "API Keys",
     desc: "Satu kunci untuk menghubungkan semua model AI secara instan.",
   },
+  Model: {
+    eyebrow: "WORKSPACE / KATALOG MODEL",
+    title: "Katalog Model AI",
+    desc: "Daftar model AI yang tersedia di gateway KiosAI dengan tier dan multiplier.",
+  },
   Playground: {
     eyebrow: "WORKSPACE / PLAYGROUND",
     title: "Playground",

@@ -12,6 +12,7 @@ import {
   LogOut,
   ChevronDown,
   Sparkles,
+  Cpu,
 } from "lucide-react";
 import Link from "next/link";
 import Logo from "./Logo";
@@ -25,6 +26,7 @@ export interface NavItem {
 export const navigation: NavItem[] = [
   { name: "API Keys", short: "Keys", icon: KeyRound },
   { name: "Beli Token", short: "Beli", icon: CreditCard },
+  { name: "Model", short: "Model", icon: Cpu },
   { name: "Playground", short: "Playground", icon: MessageSquare },
   { name: "Statistik", short: "Statistik", icon: BarChart3 },
   { name: "Dokumentasi", short: "Docs", icon: BookOpen },

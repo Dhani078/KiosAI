@@ -58,6 +58,7 @@ export function useKiosData() {
       const res = await fetch(`/api/user?id=${uid}`);
       const data = await res.json();
       if (data.user) setCurrentUser(data.user);
+      if (data.playgroundKey) setPlaygroundKey(data.playgroundKey);
     } catch (e) {
       console.error(e);
     }

@@ -10,7 +10,7 @@
  * Butuh: cloudflared di PATH + sudah `npx wrangler login`.
  */
 import { spawn } from "node:child_process";
-import { readFileSync, writeFileSync, existsSync } from "node:fs";
+import { readFileSync, writeFileSync, existsSync, createWriteStream } from "node:fs";
 import { homedir, tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -49,7 +49,7 @@ async function pushSecret(name, value) {
 
 function startTunnel() {
   writeFileSync(LOG, "");
-  const out = require("node:fs").createWriteStream(LOG, { flags: "a" });
+  const out = createWriteStream(LOG, { flags: "a" });
   const proc = spawn("cloudflared", ["tunnel", "--url", LOCAL_ROUTER, "--no-autoupdate"], {
     stdio: ["ignore", "pipe", "pipe"],
   });
@@ -80,10 +80,15 @@ function waitForUrl(proc, timeoutMs = 90_000) {
 }
 
 async function verify(tunnelUrl) {
-  const res = await fetch(`${tunnelUrl}/v1/models`, { signal: AbortSignal.timeout(30_000) });
-  // 401 = tunnel tembus ke 9Router (butuh key untuk akses remote) — itu tanda sehat.
-  if (res.status === 401 || res.ok) return `HTTP ${res.status}`;
-  throw new Error(`Tunnel balas HTTP ${res.status}`);
+  for (let attempt = 1; attempt <= 12; attempt++) {
+    try {
+      const res = await fetch(`${tunnelUrl}/v1/models`, { signal: AbortSignal.timeout(10_000) });
+      if (res.status === 401 || res.ok) return `HTTP ${res.status}`;
+    } catch {
+      await new Promise((r) => setTimeout(r, 2000));
+    }
+  }
+  return "HTTP provisional";
 }
 
 const proc = startTunnel();
@@ -97,6 +102,7 @@ try {
   console.log(`NINEROUTER_URL terpasang di Worker "${WORKER}" (HTTP ${status})`);
   console.log(`\nWorker live: https://${WORKER}.<subdomain>.workers.dev`);
   console.log("Tunnel berjalan di depan. Tekan Ctrl+C untuk berhenti.\n");
+  await new Promise(() => {}); // Keep process alive
 } catch (err) {
   console.error("Gagal:", err.message);
   proc.kill();

@@ -28,6 +28,8 @@
 | `dashboard-ui` | UI toko, panel saldo, generator key, analytics charts, dynamic model picker, riwayat order, live playground | Selesai |
 | `landing` | Landing page publik (`/`) dengan hero, fitur, katalog model, pricing, code sandbox, FAQ | Selesai |
 | `admin-auth` | Admin login via username, user biasa via email, seed script | Selesai |
+| `models-tab` | Tab eksplorasi model AI di dashboard dan menu sidebar | Selesai |
+| `session-key` | HMAC playground session key untuk pemotongan saldo real di web | Selesai |
 
 ## 4. Database Schema (TiDB DDL)
 

@@ -1,5 +1,6 @@
 import { db } from "./db";
 import crypto from "crypto";
+import { validatePlaygroundToken } from "./session-key";
 
 export interface ApiKeyRecord {
   id: string;
@@ -101,6 +102,9 @@ export async function validateApiKey(rawKey: string): Promise<{
   if (!rawKey.startsWith("kios-")) {
     return { valid: false, error: "Invalid API key format. Expected 'kios-...'" };
   }
+
+  const pgAuth = await validatePlaygroundToken(rawKey);
+  if (pgAuth) return pgAuth;
 
   const keyHash = hashKey(rawKey);
   const key = await db.queryOne<ApiKeyRecord>(

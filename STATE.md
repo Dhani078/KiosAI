@@ -98,6 +98,11 @@
       - Nilai payload sistem backend tetap utuh menggunakan `tokenharbor/deepseek-v4.1-flash:free` agar kompatibel 100% dengan routing 9Router.
       - Seluruh API keys dan kredensial di `.env` terjaga aman tanpa perubahan apa pun.
       - Pengujian Playwright & E2E (10/10) lolos verifikasi.
-    - Aturan maks 200 baris per file diverifikasi ketat (72 file `.ts`/`.tsx`/`.mjs` semuanya <= 200 baris).
+    - Phase 18: Playground Session Key, Chat Persistence & Sidebar Model Menu:
+      - Memperbaiki pemotongan token & log Statistik di Playground dengan HMAC session key (`lib/session-key.ts`), sehingga token langsung terpotong dari akun asli pengguna di TiDB dan tercatat pada tabel `usage_logs` serta tab Statistik.
+      - Menyimpan histori percakapan Playground di `sessionStorage` (`kios_playground_messages`), sehingga obrolan tidak hilang saat berpindah antar-tab dashboard.
+      - Menambahkan menu navigasi "Model" (`Cpu` icon) pada Sidebar dashboard (`Sidebar.tsx`), `constants.ts`, dan modul `ModelsTab.tsx` (137 baris) untuk menjelajah katalog model dengan tombol "Coba di Playground".
+      - Nol modifikasi pada API key/kredensial apa pun.
+    - Aturan maks 200 baris per file diverifikasi ketat (74 file `.ts`/`.tsx`/`.mjs` semuanya <= 200 baris).
     - Playwright browser audit di 390px (mobile) & 1366px (desktop): 5 tab x 2 viewport = 100% OK (0 overflow, 0 console error).
   - E2E tests verified: Registration, Login, Key Creation, OpenAI Proxy call, Rate Limit headers, QRIS top-up, Tier gating, Model discovery, Webhook idempotency, and Order list.

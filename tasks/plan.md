@@ -60,5 +60,10 @@
   - Nilai value/sistem backend tetap `tokenharbor/deepseek-v4.1-flash:free`
   - Seluruh kredensial & API key di `.env` terjaga aman tanpa perubahan
   - Playwright & 10/10 E2E tests verified pass
+- [x] Phase 18: Playground Session Key, Chat Persistence & Sidebar Model Menu
+  - Token Playground terhubung ke user asli via HMAC session key (`lib/session-key.ts`), saldo terpotong real di TiDB dan tercatat di Statistik
+  - Pesan obrolan Playground persisten saat berpindah tab via `sessionStorage`
+  - Menu "Model" (`Cpu` icon) ditambahkan ke Sidebar dashboard dan `ModelsTab.tsx` terpasang di dashboard
+  - 100% file <= 200 baris, zero API keys modified
 
 

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { UserRecord } from "@/lib/keys";
+import { createPlaygroundToken } from "@/lib/session-key";
 
 export const runtime = "nodejs";
 
@@ -25,7 +26,11 @@ export async function GET(req: NextRequest) {
       [userId]
     );
 
-    return NextResponse.json({ user, recentUsage: usage });
+    return NextResponse.json({
+      user,
+      recentUsage: usage,
+      playgroundKey: createPlaygroundToken(user.id),
+    });
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
