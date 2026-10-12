@@ -8,7 +8,7 @@ export interface ChatMessage {
   user: boolean;
   model?: string;
   tokens?: number;
-  multiplier?: number;
+  rateInfo?: string;
   latencyMs?: number;
 }
 
@@ -68,7 +68,7 @@ export function PlaygroundChat({
             {!m.user && (
               <small>
                 {m.tokens ? `${m.tokens} token` : "Live response"}
-                {m.multiplier ? ` · ${m.multiplier.toFixed(1)}×` : ""}
+                {m.rateInfo ? ` · ${m.rateInfo}` : ""}
                 {m.latencyMs ? ` · ${m.latencyMs}ms` : ""}
               </small>
             )}

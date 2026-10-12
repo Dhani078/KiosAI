@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Terminal, Copy, Check } from "lucide-react";
 import { Badge, Button } from "./ui";
 import { formatModelName } from "@/lib/model-utils";
+import { getModelPricing } from "@/lib/model-pricing";
 
 export function DocsTab({
   models,
@@ -110,8 +111,8 @@ console.log(response.choices[0].message.content);`,
         {models.filter((m) => m.id !== "combomaut").map((m) => {
           const cleanId = formatModelName(m.id);
           const isSelected = m.id === selectedDocModel;
-          const tier = (m.required_tier || "bronze").toUpperCase();
-          const mult = tier === "GOLD" ? "4.0x" : tier === "SILVER" ? "2.0x" : "1.0x";
+          const pricing = getModelPricing(m.id);
+          const tLabel = (m.required_tier === "free" ? "FREE" : "PRO");
           return (
             <div
               className="doc-model"
@@ -129,8 +130,8 @@ console.log(response.choices[0].message.content);`,
                 <code>{cleanId}</code>
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                <span className="muted" style={{ fontSize: "11px" }}>{mult} multiplier</span>
-                <Badge tier={tier} />
+                <span className="muted" style={{ fontSize: "11px" }}>In ${pricing.input} · Out ${pricing.output}</span>
+                <Badge tier={tLabel} />
               </div>
             </div>
           );

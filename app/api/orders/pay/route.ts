@@ -36,13 +36,11 @@ export async function POST(req: NextRequest) {
       `UPDATE kiosai.users 
        SET balance_tokens = balance_tokens + ?,
            tier = CASE 
-             WHEN ? = 'gold' THEN 'gold'
-             WHEN ? = 'silver' AND tier != 'gold' THEN 'silver'
-             WHEN ? = 'bronze' AND tier NOT IN ('silver', 'gold') THEN 'bronze'
+             WHEN ? IN ('pro', 'bronze', 'silver', 'gold') THEN 'pro'
              ELSE tier
            END
        WHERE id = ?`,
-      [order.tokens_purchased, order.package_tier, order.package_tier, order.package_tier, order.user_id]
+      [order.tokens_purchased, order.package_tier, order.user_id]
     );
 
     return NextResponse.json({

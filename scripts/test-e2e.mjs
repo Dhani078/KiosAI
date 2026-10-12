@@ -146,7 +146,7 @@ await test("POST /api/orders (Create QRIS)", async () => {
   const res = await fetch(`${BASE}/api/orders`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ userId: testUser.id, tier: "silver" }),
+    body: JSON.stringify({ userId: testUser.id, tier: "pro_25k" }),
   });
   const data = await res.json();
   assert(res.ok, `HTTP ${res.status}`);
@@ -167,10 +167,10 @@ await test("POST /api/orders/pay (Payment Fulfillment)", async () => {
   assert(res.ok, `HTTP ${res.status}`);
   assert(data.success === true, "Payment not marked success");
 
-  // Verify user balance & tier upgraded to silver
+  // Verify user balance & tier upgraded to pro
   const uRes = await fetch(`${BASE}/api/user?id=${testUser.id}`);
   const uData = await uRes.json();
-  assert(uData.user.tier === "silver", `Expected silver tier, got ${uData.user.tier}`);
+  assert(uData.user.tier === "pro", `Expected pro tier, got ${uData.user.tier}`);
   assert(Number(uData.user.balance_tokens) > 2500000, "Tokens not credited");
 });
 

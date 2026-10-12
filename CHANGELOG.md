@@ -13,6 +13,18 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## 2026-10-12
 
+### `3355979` — feat(tiers): simplify to 2 tiers (Free & Pro), replace multipliers with real $/1M rates
+**Ditambahkan / Diubah**
+- **Penyederhanaan Menjadi 2 Tier (`Free` & `Pro`)**:
+  - Hapus skema lama (starter, bronze, silver, gold) menjadi hanya dua tier murni:
+    1. **Free Tier**: Bawaan pendaftaran baru (2.500.000 token), model: Atria Dawn Preview & DeepSeek Flash.
+    2. **Pro Tier**: Terbuka penuh untuk seluruh katalog model AI (Claude Sonnet/Opus, GPT-4o, Gemini, Grok, dll.). Upgrade otomatis aktif saat top-up paket Pro.
+  - Paket top-up: `Pro 25K` (Rp 25.000 / 100M token), `Pro 100K` (Rp 100.000 / 600M token), `Pro 150K` (Rp 150.000 / 1 Miliar token).
+- **Hapus Teks Pengali `1.0×`, `2.0×`, `4.0×` & Tampilkan Tarif Real ($ / 1M Tokens)**:
+  - Modul baru `lib/model-pricing.ts` menyajikan tarif resmi provider per 1 Juta token: **Input Data**, **Output Data**, dan **Cached Data** (contoh: DeepSeek Flash `In $0.27 · Out $1.10`, Sonnet `In $3.00 · Out $15.00`, Atria Dawn `Gratis`).
+  - Strip kartu model di tab **Model** menampilkan tabel 3 kolom transparan (`INPUT / 1M`, `OUTPUT / 1M`, `CACHED / 1M`) persis data komparasi industri.
+  - Dropdown Playground dan tab Dokumentasi diperbarui menampilkan tarif input/output real.
+
 ### `f9b6461` — feat(ui): strip all router prefixes (cx/, xai/, cl/, etc.) for clean regular user display
 **Ditambahkan / Diubah**
 - **Pembersihan Prefiks Model Menyeluruh untuk Pengguna Biasa (`lib/model-utils.ts`)**:

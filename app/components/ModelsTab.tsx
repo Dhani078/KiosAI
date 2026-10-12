@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Search, Sparkles, CheckCircle2, Lock } from "lucide-react";
 import { Badge, Button } from "./ui";
 import { formatModelName } from "@/lib/model-utils";
+import { getModelPricing } from "@/lib/model-pricing";
 
 export function ModelsTab({
   models,
@@ -34,7 +35,8 @@ export function ModelsTab({
       const clean = formatModelName(m.name || m.id, isAdmin).toLowerCase();
       const raw = (m.id || "").toLowerCase();
       const matchesSearch = !search || clean.includes(search.toLowerCase()) || raw.includes(search.toLowerCase());
-      const matchesTier = tierFilter === "all" || (m.required_tier || "bronze").toLowerCase() === tierFilter;
+      const modelTier = checkAllowed(m.id) ? "free" : "pro";
+      const matchesTier = tierFilter === "all" || modelTier === tierFilter;
       return matchesSearch && matchesTier;
     })
     .sort((a, b) => {
@@ -70,15 +72,19 @@ export function ModelsTab({
           </div>
 
           <div style={{ display: "flex", gap: "6px" }}>
-            {(["all", "bronze", "silver", "gold"] as const).map((t) => (
+            {[
+              { id: "all", label: "Semua Model" },
+              { id: "free", label: "Free Tier" },
+              { id: "pro", label: "Pro Tier" },
+            ].map((t) => (
               <button
-                key={t}
+                key={t.id}
                 type="button"
-                className={`button ${tierFilter === t ? "primary" : "ghost"}`}
-                style={{ height: "32px", padding: "0 12px", fontSize: "12px", textTransform: "uppercase" }}
-                onClick={() => setTierFilter(t)}
+                className={`button ${tierFilter === t.id ? "primary" : "ghost"}`}
+                style={{ height: "32px", padding: "0 12px", fontSize: "12px" }}
+                onClick={() => setTierFilter(t.id)}
               >
-                {t === "all" ? "Semua Model" : t}
+                {t.label}
               </button>
             ))}
           </div>
@@ -87,11 +93,11 @@ export function ModelsTab({
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "16px" }}>
         {filtered.map((m) => {
-          const reqTier = (m.required_tier || "bronze").toLowerCase();
-          const mult = reqTier === "gold" ? "4.0×" : reqTier === "silver" ? "2.0×" : "1.0×";
+          const isAllowed = checkAllowed(m.id);
+          const modelTier = isAllowed ? "free" : "pro";
           const displayName = formatModelName(m.name || m.id, isAdmin);
           const displayId = isAdmin ? m.id : displayName;
-          const isAllowed = checkAllowed(m.id);
+          const pricing = getModelPricing(m.id);
 
           return (
             <article
@@ -112,22 +118,25 @@ export function ModelsTab({
                   <h3 style={{ fontSize: "15px", fontWeight: 600, margin: 0 }}>{displayName}</h3>
                   <code style={{ fontSize: "11px", color: "var(--text-muted)" }}>{displayId}</code>
                 </div>
-                <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
-                  <span style={{ fontSize: "11px", color: "var(--text-muted)" }}>{mult}</span>
-                  <Badge tier={reqTier.toUpperCase()} />
-                </div>
+                <Badge tier={modelTier.toUpperCase()} />
+              </div>
+
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "6px", padding: "8px 10px", background: "var(--canvas)", borderRadius: "var(--radius-input)", border: "1px solid var(--border)", fontSize: "11px", textAlign: "center" }}>
+                <div><span style={{ color: "var(--text-muted)", fontSize: "9px", display: "block" }}>INPUT / 1M</span><strong>${pricing.input}</strong></div>
+                <div><span style={{ color: "var(--text-muted)", fontSize: "9px", display: "block" }}>OUTPUT / 1M</span><strong>${pricing.output}</strong></div>
+                <div><span style={{ color: "var(--text-muted)", fontSize: "9px", display: "block" }}>CACHED / 1M</span><strong>${pricing.cached}</strong></div>
               </div>
 
               <div style={{ display: "flex", gap: "6px", alignItems: "center", fontSize: "12px", color: isAllowed ? "var(--success)" : "var(--warning)" }}>
                 {isAllowed ? (
                   <>
                     <CheckCircle2 size={13} />
-                    <span>Terbuka (potong saldo token {mult})</span>
+                    <span>Terbuka (In: ${pricing.input} · Out: ${pricing.output})</span>
                   </>
                 ) : (
                   <>
                     <Lock size={13} />
-                    <span>Terkunci untuk Free Plan (Beli paket token untuk membuka)</span>
+                    <span>Terkunci untuk Free Plan (Upgrade ke Pro)</span>
                   </>
                 )}
               </div>
@@ -139,7 +148,7 @@ export function ModelsTab({
                   </Button>
                 ) : (
                   <Button kind="secondary" style={{ width: "100%", height: "34px", fontSize: "12px" }} onClick={onNavigatePackages}>
-                    Beli Paket Token
+                    Beli Paket Pro
                   </Button>
                 )}
               </div>

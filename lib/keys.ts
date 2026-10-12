@@ -20,31 +20,22 @@ export interface UserRecord {
   email: string;
   username?: string | null;
   full_name: string;
-  tier: "free" | "bronze" | "silver" | "gold";
+  tier: "free" | "pro" | string;
   balance_tokens: number;
 }
 
-export function getRequiredTierForModel(modelId: string): "bronze" | "silver" | "gold" {
+export function getRequiredTierForModel(modelId: string): "free" | "pro" {
   const m = modelId.toLowerCase();
-  if (m.includes("opus") || m.includes("combo") || m.includes("unmetered")) {
-    return "gold";
+  if (m.includes("atria") || m.includes("tokenharbor/deepseek-v4.1-flash") || m === "deepseek-v4.1-flash") {
+    return "free";
   }
-  if (
-    m.includes("sonnet") ||
-    m.includes("gpt-5") ||
-    m.includes("gpt-4") ||
-    m.includes("claude-4") ||
-    m.includes("pro")
-  ) {
-    return "silver";
-  }
-  return "bronze";
+  return "pro";
 }
 
 export function getModelMultiplier(modelId: string): number {
-  const tier = getRequiredTierForModel(modelId);
-  if (tier === "gold") return 4.0;
-  if (tier === "silver") return 2.0;
+  const m = modelId.toLowerCase();
+  if (m.includes("opus") || m.includes("combo") || m.includes("flagship")) return 4.0;
+  if (m.includes("sonnet") || m.includes("gpt-5") || m.includes("gpt-4") || m.includes("pro")) return 2.0;
   return 1.0;
 }
 

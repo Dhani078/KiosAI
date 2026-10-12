@@ -72,7 +72,7 @@ export function ModelsSection() {
                     textTransform: "uppercase",
                   }}
                 >
-                  {m.tier} • {m.multiplier}
+                  {m.tier} • {m.pricing}
                 </span>
               </div>
 

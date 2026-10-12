@@ -75,9 +75,9 @@ export function PackagesTab({
             onClick={() => setSelected(i)}
           >
             <div className="package-top">
-              <Badge tier={p.name} />
-              {p.tierKey === "bronze" && <span className="popular">PALING HEMAT</span>}
-              {p.tierKey === "free" && <span className="popular">BANSOS GRATIS</span>}
+              <Badge tier={p.tierKey === "free" ? "FREE" : "PRO"} />
+              {p.tierKey === "pro_25k" && <span className="popular">PALING POPULER</span>}
+              {p.tierKey === "free" && <span className="popular">GRATIS</span>}
             </div>
             <p className="package-desc">{p.desc}</p>
             <div className="price">
@@ -91,7 +91,7 @@ export function PackagesTab({
                   {p.tokens} <span>token</span>
                 </div>
               </div>
-              <span className="multiplier">{p.multiplier}×</span>
+              <Badge tier={p.tierKey === "free" ? "FREE" : "PRO"} />
             </div>
             <ul className="package-features">
               {p.features.map((f) => (

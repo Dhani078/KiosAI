@@ -4,12 +4,15 @@ import crypto from "crypto";
 
 export const runtime = "nodejs";
 
-const PACKAGES = {
-  free: { amountIdr: 0, tokens: 2500000, name: "Free Bansos", tier: "free" },
-  starter: { amountIdr: 5000, tokens: 15000000, name: "Starter", tier: "bronze" },
-  bronze: { amountIdr: 25000, tokens: 100000000, name: "Bronze", tier: "bronze" },
-  silver: { amountIdr: 100000, tokens: 600000000, name: "Silver", tier: "silver" },
-  gold: { amountIdr: 150000, tokens: 1000000000, name: "Gold", tier: "gold" },
+const PACKAGES: Record<string, { amountIdr: number; tokens: number; name: string; tier: string }> = {
+  free: { amountIdr: 0, tokens: 2500000, name: "Free", tier: "free" },
+  pro_25k: { amountIdr: 25000, tokens: 100000000, name: "Pro 25K", tier: "pro" },
+  pro_100k: { amountIdr: 100000, tokens: 600000000, name: "Pro 100K", tier: "pro" },
+  pro_150k: { amountIdr: 150000, tokens: 1000000000, name: "Pro 150K", tier: "pro" },
+  // Backward compatibility aliases
+  bronze: { amountIdr: 25000, tokens: 100000000, name: "Pro 25K", tier: "pro" },
+  silver: { amountIdr: 100000, tokens: 600000000, name: "Pro 100K", tier: "pro" },
+  gold: { amountIdr: 150000, tokens: 1000000000, name: "Pro 150K", tier: "pro" },
 };
 
 export async function GET(req: NextRequest) {
@@ -36,21 +39,18 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const userId = body.userId || "usr_kiosai_demo";
-    const tier = (body.tier || "bronze") as keyof typeof PACKAGES;
+    const requestedTier = (body.tier || "pro_25k") as string;
 
-    const pkg = PACKAGES[tier];
-    if (!pkg) {
-      return NextResponse.json({ error: "Invalid tier selected" }, { status: 400 });
-    }
+    const pkg = PACKAGES[requestedTier] || PACKAGES.pro_25k;
 
-    if (tier === "free") {
+    if (requestedTier === "free") {
       const existing = await db.queryOne<any>(
         `SELECT id FROM kiosai.orders WHERE user_id = ? AND package_tier = 'free' AND status = 'paid' LIMIT 1`,
         [userId]
       );
       if (existing) {
         return NextResponse.json(
-          { error: "Paket Free Bansos sudah pernah diklaim pada akun ini. Silakan beli paket Starter, Bronze, Silver, atau Gold." },
+          { error: "Paket Free sudah pernah diklaim pada akun ini. Silakan beli paket Pro." },
           { status: 400 }
         );
       }
@@ -66,7 +66,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       orderId,
-      tier,
+      tier: pkg.tier,
       packageName: pkg.name,
       amountIdr: pkg.amountIdr,
       tokensPurchased: pkg.tokens,

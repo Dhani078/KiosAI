@@ -3,6 +3,7 @@
 import { Plus } from "lucide-react";
 import { Badge, Button } from "./ui";
 import { formatModelName } from "@/lib/model-utils";
+import { getModelPricing } from "@/lib/model-pricing";
 
 export function PlaygroundToolbar({
   models,
@@ -30,6 +31,8 @@ export function PlaygroundToolbar({
       return bP - aP;
     });
 
+  const displayTier = (requiredTier === "free" ? "FREE" : "PRO");
+
   return (
     <div className="playground-toolbar">
       <div>
@@ -41,16 +44,18 @@ export function PlaygroundToolbar({
         >
           {sortedModels.map((m) => {
             const displayName = formatModelName(m.name || m.id, isAdmin);
+            const pricing = getModelPricing(m.id);
             const lockIcon = m.accessible === false ? " 🔒" : "";
+            const tLabel = (m.required_tier === "free" ? "FREE" : "PRO");
             return (
               <option key={m.id} value={m.id}>
-                {displayName} [{(m.required_tier || "bronze").toUpperCase()}]{lockIcon}
+                {displayName} [{tLabel} · In ${pricing.input} / Out ${pricing.output}]{lockIcon}
               </option>
             );
           })}
         </select>
       </div>
-      <Badge tier={requiredTier.toUpperCase()} />
+      <Badge tier={displayTier} />
       <Button kind="ghost" onClick={onResetChat}>
         Chat baru <Plus size={16} />
       </Button>

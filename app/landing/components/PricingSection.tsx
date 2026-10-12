@@ -26,9 +26,9 @@ export function PricingSection() {
             style={{ display: "flex", flexDirection: "column" }}
           >
             <div className="package-top">
-              <Badge tier={p.name} />
-              {p.tierKey === "bronze" && <span className="popular">PALING HEMAT</span>}
-              {p.tierKey === "free" && <span className="popular">BANSOS GRATIS</span>}
+              <Badge tier={p.tierKey === "free" ? "FREE" : "PRO"} />
+              {p.tierKey === "pro_25k" && <span className="popular">PALING POPULER</span>}
+              {p.tierKey === "free" && <span className="popular">GRATIS</span>}
             </div>
             <p className="package-desc">{p.desc}</p>
             <div className="price">
@@ -42,7 +42,7 @@ export function PricingSection() {
                   {p.tokens} <span>token</span>
                 </div>
               </div>
-              <span className="multiplier">{p.multiplier}×</span>
+              <Badge tier={p.tierKey === "free" ? "FREE" : "PRO"} />
             </div>
             <ul className="package-features" style={{ flexGrow: 1 }}>
               {p.features.map((f) => (
@@ -54,7 +54,7 @@ export function PricingSection() {
             </ul>
             <Link
               href="/dashboard"
-              className={`button ${p.tierKey === "bronze" ? "primary" : "secondary"}`}
+              className={`button ${p.tierKey === "pro_25k" ? "primary" : "secondary"}`}
               style={{
                 textDecoration: "none",
                 display: "inline-flex",

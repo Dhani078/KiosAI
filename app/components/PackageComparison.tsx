@@ -68,9 +68,8 @@ export function PackageComparison({
             <tr>
               <th>MODEL</th>
               <th>COCOK UNTUK</th>
-              <th>BRONZE</th>
-              <th>SILVER</th>
-              <th>GOLD</th>
+              <th>FREE</th>
+              <th>PRO</th>
             </tr>
           </thead>
           <tbody>
@@ -88,11 +87,12 @@ export function PackageComparison({
                   </div>
                 </td>
                 <td className="muted">{m.use}</td>
-                {[0, 1, 2].map((t) => (
-                  <td className="check-cell" key={t}>
-                    <Check size={17} />
-                  </td>
-                ))}
+                <td className="check-cell">
+                  {m.tier === 0 ? <Check size={17} /> : <span className="dash">—</span>}
+                </td>
+                <td className="check-cell">
+                  <Check size={17} />
+                </td>
               </tr>
             ))}
           </tbody>

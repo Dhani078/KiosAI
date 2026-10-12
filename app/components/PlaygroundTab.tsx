@@ -6,6 +6,7 @@ import { Button } from "./ui";
 import PlaygroundToolbar from "./PlaygroundToolbar";
 import PlaygroundChat, { ChatMessage } from "./PlaygroundChat";
 import PlaygroundLocked from "./PlaygroundLocked";
+import { getModelPricing } from "@/lib/model-pricing";
 
 export function PlaygroundTab({
   models,
@@ -46,11 +47,11 @@ export function PlaygroundTab({
   }, [messages]);
 
   const currentModelObj = models.find((m) => m.id === selectedModel);
-  const requiredTier = currentModelObj?.required_tier || "bronze";
   const isFreeTier = (userTier || "free").toLowerCase() === "free";
   const isAllowedForFree = selectedModel.toLowerCase().includes("atria") || selectedModel.toLowerCase().includes("tokenharbor/deepseek-v4.1-flash") || selectedModel === "deepseek-v4.1-flash";
   const isLocked = isFreeTier && !isAllowedForFree;
-  const multiplier = requiredTier === "gold" ? 4.0 : requiredTier === "silver" ? 2.0 : 1.0;
+  const requiredTier = isAllowedForFree ? "free" : "pro";
+  const pricing = getModelPricing(selectedModel);
 
   useEffect(() => {
     chatRef.current?.scrollTo({ top: chatRef.current.scrollHeight, behavior: "smooth" });
@@ -108,7 +109,7 @@ export function PlaygroundTab({
           user: false,
           model: selectedModel,
           tokens: tokensUsed,
-          multiplier,
+          rateInfo: `In: $${pricing.input} / Out: $${pricing.output}`,
           latencyMs: Date.now() - startTime,
         },
       ]);
@@ -144,7 +145,7 @@ export function PlaygroundTab({
           >
             <SlidersHorizontal size={12} /> {showSystem ? "Tutup System Prompt" : "Atur System Prompt"}
           </button>
-          <code>Saldo {balance.toLocaleString("id-ID")} token · {multiplier.toFixed(1)}×</code>
+          <code>Saldo {balance.toLocaleString("id-ID")} token · In ${pricing.input} / Out ${pricing.output} (1M)</code>
         </div>
       </div>
 
