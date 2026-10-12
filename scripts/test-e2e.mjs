@@ -56,7 +56,8 @@ await test("POST /api/auth/register", async () => {
   const data = await res.json();
   assert(res.ok, `HTTP ${res.status}`);
   assert(data.user?.id, "No user ID returned");
-  assert(Number(data.user.balance_tokens) === 5000000, "Trial tokens mismatch");
+  assert(Number(data.user.balance_tokens) === 2500000, "Trial tokens mismatch");
+  assert(data.user.tier === "free", "Initial tier should be free");
   testUser = data.user;
 });
 
@@ -119,8 +120,8 @@ await test("POST /v1/chat/completions (Stream SSE)", async () => {
   assert(text.includes('"usage"'), "Stream missing usage chunk");
 });
 
-// 7. Universal Model Access (No tier restriction, token balance based)
-await test("Universal Model Access (No tier restriction)", async () => {
+// 7. Free Tier Gating (Free user blocked from non-free models)
+await test("Free Tier Gating (403 tier_restricted)", async () => {
   assert(testKey, "No test key");
   const res = await fetch(`${BASE}/v1/chat/completions`, {
     method: "POST",
@@ -134,8 +135,9 @@ await test("Universal Model Access (No tier restriction)", async () => {
       max_tokens: 5,
     }),
   });
+  assert(res.status === 403, `Expected 403, got ${res.status}`);
   const data = await res.json();
-  assert(data.error?.code !== "tier_restricted", "Should not be blocked by tier");
+  assert(data.error?.code === "tier_restricted", "Expected tier_restricted code");
 });
 
 // 8. QRIS Order Creation
@@ -169,7 +171,7 @@ await test("POST /api/orders/pay (Payment Fulfillment)", async () => {
   const uRes = await fetch(`${BASE}/api/user?id=${testUser.id}`);
   const uData = await uRes.json();
   assert(uData.user.tier === "silver", `Expected silver tier, got ${uData.user.tier}`);
-  assert(Number(uData.user.balance_tokens) > 5000000, "Tokens not credited");
+  assert(Number(uData.user.balance_tokens) > 2500000, "Tokens not credited");
 });
 
 // 10. Analytics & Usage Logs

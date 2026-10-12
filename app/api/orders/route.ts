@@ -5,7 +5,7 @@ import crypto from "crypto";
 export const runtime = "nodejs";
 
 const PACKAGES = {
-  free: { amountIdr: 0, tokens: 5000000, name: "Free Bansos", tier: "bronze" },
+  free: { amountIdr: 0, tokens: 2500000, name: "Free Bansos", tier: "free" },
   starter: { amountIdr: 5000, tokens: 15000000, name: "Starter", tier: "bronze" },
   bronze: { amountIdr: 25000, tokens: 100000000, name: "Bronze", tier: "bronze" },
   silver: { amountIdr: 100000, tokens: 600000000, name: "Silver", tier: "silver" },
@@ -41,6 +41,19 @@ export async function POST(req: NextRequest) {
     const pkg = PACKAGES[tier];
     if (!pkg) {
       return NextResponse.json({ error: "Invalid tier selected" }, { status: 400 });
+    }
+
+    if (tier === "free") {
+      const existing = await db.queryOne<any>(
+        `SELECT id FROM kiosai.orders WHERE user_id = ? AND package_tier = 'free' AND status = 'paid' LIMIT 1`,
+        [userId]
+      );
+      if (existing) {
+        return NextResponse.json(
+          { error: "Paket Free Bansos sudah pernah diklaim pada akun ini. Silakan beli paket Starter, Bronze, Silver, atau Gold." },
+          { status: 400 }
+        );
+      }
     }
 
     const orderId = crypto.randomUUID();

@@ -139,7 +139,7 @@ Mencabut (soft-delete) API key agar tidak dapat digunakan lagi.
 
 ### `POST /api/orders`
 Membuat tagihan pembelian paket token baru.
-- Paket: `free` (Rp 0 / 5M token trial), `starter` (Rp 5.000 / 15M token), `bronze` (Rp 25.000 / 100M token), `silver` (Rp 100.000 / 600M token), `gold` (Rp 150.000 / 1.000M token).
+- Paket: `free` (Rp 0 / 2.5M token trial), `starter` (Rp 5.000 / 15M token), `bronze` (Rp 25.000 / 100M token), `silver` (Rp 100.000 / 600M token), `gold` (Rp 150.000 / 1.000M token).
 
 ### `POST /api/orders/pay`
 Konfirmasi pembayaran simulasi. Menambah saldo token dan mengupgrade tier pengguna secara real-time di TiDB.

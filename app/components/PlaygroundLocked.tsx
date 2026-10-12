@@ -15,12 +15,12 @@ export function PlaygroundLocked({
   return (
     <div className="empty-state">
       <LockKeyhole size={32} />
-      <h2>Model ini belum terbuka.</h2>
+      <h2>Model ini belum terbuka untuk Free Plan.</h2>
       <p>
-        403 · tier_restricted — Upgrade ke tier {requiredTier.toUpperCase()} untuk membuka {model}.
+        403 · tier_restricted — Paket Free Bansos hanya mendukung Atria Dawn dan DeepSeek Flash. Beli paket token untuk membuka {model} dan seluruh model AI lainnya.
       </p>
       <Button kind="primary" onClick={onNavigatePackages}>
-        Upgrade ke {requiredTier.toUpperCase()} <ArrowRight size={16} />
+        Beli Paket Token <ArrowRight size={16} />
       </Button>
     </div>
   );

@@ -27,26 +27,33 @@ export async function POST(req: NextRequest) {
 
     const userId = `usr_${crypto.randomUUID()}`;
     const passwordHash = hashPassword(password);
-    const initialTokens = 5000000; // 5M trial token (Free Plan Bansos)
+    const initialTokens = 2500000; // 2.5M trial token (Free Plan Bansos)
 
     await db.execute(
       `INSERT INTO kiosai.users (id, email, password_hash, full_name, tier, balance_tokens)
-       VALUES (?, ?, ?, ?, 'bronze', ?)`,
+       VALUES (?, ?, ?, ?, 'free', ?)`,
       [userId, email.toLowerCase().trim(), passwordHash, fullName || "Pengguna KiosAI", initialTokens]
     );
+
+    const orderId = crypto.randomUUID();
+    await db.execute(
+      `INSERT INTO kiosai.orders (id, user_id, amount_idr, tokens_purchased, package_tier, payment_method, status, paid_at)
+       VALUES (?, ?, 0, ?, 'free', 'bonus', 'paid', NOW())`,
+      [orderId, userId, initialTokens]
+    ).catch(() => {});
 
     const user = {
       id: userId,
       email: email.toLowerCase().trim(),
       full_name: fullName || "Pengguna KiosAI",
-      tier: "bronze",
+      tier: "free",
       balance_tokens: initialTokens,
     };
 
     return NextResponse.json({
       success: true,
       user,
-      message: "Pendaftaran berhasil! Anda mendapatkan 5.000.000 token uji coba gratis (Free Plan).",
+      message: "Pendaftaran berhasil! Anda mendapatkan 2.500.000 token uji coba gratis (Free Plan Bansos).",
     });
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });

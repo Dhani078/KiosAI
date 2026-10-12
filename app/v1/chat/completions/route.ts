@@ -31,12 +31,7 @@ export async function POST(req: NextRequest) {
   };
 
   if (!rateLimit.allowed) {
-    return errorResponse(
-      `Rate limit exceeded. Maksimal ${auth.key.rate_limit_per_min} request per menit. Coba lagi dalam ${rateLimit.resetSeconds} detik.`,
-      429,
-      "rate_limit_exceeded",
-      { ...rateHeaders, "Retry-After": String(rateLimit.resetSeconds) }
-    );
+    return errorResponse(`Rate limit exceeded (${auth.key.rate_limit_per_min}/min). Tunggu ${rateLimit.resetSeconds}s.`, 429, "rate_limit_exceeded", { ...rateHeaders, "Retry-After": String(rateLimit.resetSeconds) });
   }
 
   let body: any;
@@ -71,7 +66,11 @@ export async function POST(req: NextRequest) {
 
   // 3. Validate Model Access
   if (!isModelAllowedForTier(auth.user.tier, requestedModel)) {
-    return errorResponse(`Model '${requestedModel}' tidak diizinkan.`, 403, "tier_restricted");
+    return errorResponse(
+      `Model '${rawModel}' tidak tersedia di paket FREE. Paket Free Bansos hanya mendukung Atria Dawn dan DeepSeek Flash. Silakan beli paket token untuk membuka seluruh model.`,
+      403,
+      "tier_restricted"
+    );
   }
 
   const isStream = Boolean(body.stream);

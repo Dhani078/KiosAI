@@ -3,12 +3,12 @@ export const PACKAGES = [
     tierKey: "free",
     name: "Free Bansos",
     price: "0",
-    tokens: "5.000.000",
+    tokens: "2.500.000",
     multiplier: "1.0",
     desc: "Uji coba gratis untuk mencoba langsung tanpa bayar.",
     features: [
-      "5 Juta token gratis akun baru",
-      "Model Atria-Dawn-Preview & DeepSeek",
+      "2.5 Juta token gratis",
+      "Model Atria Dawn & DeepSeek Flash",
       "Langsung aktif di Playground & API",
     ],
   },
@@ -21,7 +21,7 @@ export const PACKAGES = [
     desc: "Uji coba cepat & eksperimen ringan.",
     features: [
       "15 Juta token aktif selamanya",
-      "Model standar (Flash & Haiku)",
+      "Buka seluruh model (1.0x - 4.0x)",
       "Akses penuh API & Playground",
     ],
   },
@@ -34,7 +34,7 @@ export const PACKAGES = [
     desc: "Paling hemat untuk bot & proyek harian.",
     features: [
       "100 Juta token tanpa kedaluwarsa",
-      "Cocok untuk otomasi & agen lokal",
+      "Buka seluruh model AI",
       "Rate limit 60 req/menit (1.0x)",
     ],
   },
@@ -47,7 +47,7 @@ export const PACKAGES = [
     desc: "Kapasitas besar untuk coding & reasoning.",
     features: [
       "600 Juta token tanpa kedaluwarsa",
-      "Model reasoning (GPT-4o, Sonnet)",
+      "Buka seluruh model AI",
       "Rate limit 300 req/menit (2.0x)",
     ],
   },
@@ -60,7 +60,7 @@ export const PACKAGES = [
     desc: "Maksimal 1 Miliar token tanpa batas.",
     features: [
       "1 Miliar token (1.000.000.000)",
-      "Seluruh model AI, Opus & Reasoning",
+      "Buka seluruh model AI, Opus & Reasoning",
       "Prioritas tertinggi 1.000 req/menit (4.0x)",
     ],
   },

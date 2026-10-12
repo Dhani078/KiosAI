@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Search, Sparkles, CheckCircle2 } from "lucide-react";
+import { Search, Sparkles, CheckCircle2, Lock } from "lucide-react";
 import { Badge, Button } from "./ui";
 import { formatModelName } from "@/lib/model-utils";
 
@@ -31,6 +31,8 @@ export function ModelsTab({
       return matchesSearch && matchesTier;
     });
 
+  const isFreeTier = (userTier || "free").toLowerCase() === "free";
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
       <section className="panel" style={{ padding: "18px 24px" }}>
@@ -41,7 +43,7 @@ export function ModelsTab({
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Cari model AI (DeepSeek, Claude, GPT, Gemini...)"
+              placeholder="Cari model AI (Atria, DeepSeek, Claude, GPT, Gemini...)"
               style={{
                 width: "100%",
                 padding: "8px 12px 8px 34px",
@@ -76,6 +78,7 @@ export function ModelsTab({
           const mult = reqTier === "gold" ? "4.0×" : reqTier === "silver" ? "2.0×" : "1.0×";
           const displayName = formatModelName(m.name || m.id, isAdmin);
           const displayId = isAdmin ? m.id : displayName;
+          const isAllowed = !isFreeTier || m.id.toLowerCase().includes("atria") || m.id.toLowerCase().includes("tokenharbor/deepseek-v4.1-flash") || m.id === "deepseek-v4.1-flash";
 
           return (
             <article
@@ -102,15 +105,30 @@ export function ModelsTab({
                 </div>
               </div>
 
-              <div style={{ display: "flex", gap: "6px", alignItems: "center", fontSize: "12px", color: "var(--success)" }}>
-                <CheckCircle2 size={13} />
-                <span>Terbuka (potong saldo token {mult})</span>
+              <div style={{ display: "flex", gap: "6px", alignItems: "center", fontSize: "12px", color: isAllowed ? "var(--success)" : "var(--warning)" }}>
+                {isAllowed ? (
+                  <>
+                    <CheckCircle2 size={13} />
+                    <span>Terbuka (potong saldo token {mult})</span>
+                  </>
+                ) : (
+                  <>
+                    <Lock size={13} />
+                    <span>Terkunci untuk Free Plan (Beli paket token untuk membuka)</span>
+                  </>
+                )}
               </div>
 
               <div style={{ marginTop: "auto", paddingTop: "8px" }}>
-                <Button kind="primary" style={{ width: "100%", height: "34px", fontSize: "12px" }} onClick={() => onNavigatePlayground(m.id)}>
-                  <Sparkles size={14} /> Coba di Playground
-                </Button>
+                {isAllowed ? (
+                  <Button kind="primary" style={{ width: "100%", height: "34px", fontSize: "12px" }} onClick={() => onNavigatePlayground(m.id)}>
+                    <Sparkles size={14} /> Coba di Playground
+                  </Button>
+                ) : (
+                  <Button kind="secondary" style={{ width: "100%", height: "34px", fontSize: "12px" }} onClick={onNavigatePackages}>
+                    Beli Paket Token
+                  </Button>
+                )}
               </div>
             </article>
           );

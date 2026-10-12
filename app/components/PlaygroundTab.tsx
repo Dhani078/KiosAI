@@ -47,7 +47,9 @@ export function PlaygroundTab({
 
   const currentModelObj = models.find((m) => m.id === selectedModel);
   const requiredTier = currentModelObj?.required_tier || "bronze";
-  const isLocked = false;
+  const isFreeTier = (userTier || "free").toLowerCase() === "free";
+  const isAllowedForFree = selectedModel.toLowerCase().includes("atria") || selectedModel.toLowerCase().includes("tokenharbor/deepseek-v4.1-flash") || selectedModel === "deepseek-v4.1-flash";
+  const isLocked = isFreeTier && !isAllowedForFree;
   const multiplier = requiredTier === "gold" ? 4.0 : requiredTier === "silver" ? 2.0 : 1.0;
 
   useEffect(() => {

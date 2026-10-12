@@ -38,10 +38,11 @@ export async function POST(req: NextRequest) {
            tier = CASE 
              WHEN ? = 'gold' THEN 'gold'
              WHEN ? = 'silver' AND tier != 'gold' THEN 'silver'
+             WHEN ? = 'bronze' AND tier NOT IN ('silver', 'gold') THEN 'bronze'
              ELSE tier
            END
        WHERE id = ?`,
-      [order.tokens_purchased, order.package_tier, order.package_tier, order.user_id]
+      [order.tokens_purchased, order.package_tier, order.package_tier, order.package_tier, order.user_id]
     );
 
     return NextResponse.json({

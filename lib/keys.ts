@@ -20,7 +20,7 @@ export interface UserRecord {
   email: string;
   username?: string | null;
   full_name: string;
-  tier: "bronze" | "silver" | "gold";
+  tier: "free" | "bronze" | "silver" | "gold";
   balance_tokens: number;
 }
 
@@ -48,8 +48,14 @@ export function getModelMultiplier(modelId: string): number {
   return 1.0;
 }
 
-export function isModelAllowedForTier(_tier: string, _model: string): boolean {
-  // Semua model dapat diakses oleh semua pengguna; konsumsi dipotong dari saldo token
+export function isModelAllowedForTier(tier: string, model: string): boolean {
+  const t = (tier || "free").toLowerCase();
+  if (t === "free") {
+    const m = model.toLowerCase();
+    const isAtria = m.includes("atria");
+    const isTokenHarborDeepSeek = m.includes("tokenharbor/deepseek-v4.1-flash") || m === "deepseek-v4.1-flash";
+    return isAtria || isTokenHarborDeepSeek;
+  }
   return true;
 }
 

@@ -66,7 +66,7 @@ export function PaymentModal({
       const data = await res.json();
       if (res.ok && data.success) {
         setPaid(true);
-        onPaymentSuccess(userBalance + (data.tokensAdded || tokensGranted));
+        onPaymentSuccess(Number(userBalance) + Number(data.tokensAdded || tokensGranted));
       } else {
         alert(data.error || "Gagal memproses pembayaran");
       }
@@ -88,7 +88,7 @@ export function PaymentModal({
             <span className="eyebrow">PAYMENT / BERHASIL</span>
             <h2>Token sudah masuk ke akun Anda.</h2>
             <p><strong>{tokensGranted.toLocaleString("id-ID")} token</strong> berhasil ditambahkan ke TiDB.</p>
-            <div className="success-summary"><span>Saldo sekarang</span><code>{(userBalance + tokensGranted).toLocaleString("id-ID")} token</code></div>
+            <div className="success-summary"><span>Saldo sekarang</span><code>{(Number(userBalance) + Number(tokensGranted)).toLocaleString("id-ID")} token</code></div>
             <div className="success-summary"><span>Tier aktif</span><Badge tier={pkg.name} /></div>
             <Button kind="primary" onClick={onNavigateKeys}>Lanjut ke API Keys <ArrowRight size={16} /></Button>
             <Button kind="ghost" onClick={onNavigateStatistik}>Lihat riwayat transaksi</Button>
@@ -101,11 +101,11 @@ export function PaymentModal({
             <div className="payment-summary"><Badge tier={pkg.name} /><strong>Gratis (Rp 0)</strong></div>
             <div style={{ textAlign: "center", padding: "24px 16px", background: "var(--canvas)", borderRadius: "var(--radius-card)", border: "1px solid var(--border)", margin: "16px 0" }}>
               <Gift size={34} style={{ color: "var(--primary)", margin: "0 auto 8px" }} />
-              <h3 style={{ fontSize: "15px", margin: "0 0 4px" }}>5.000.000 Token Siap Pakai</h3>
-              <p style={{ fontSize: "12px", color: "var(--text-muted)", margin: 0 }}>Mendukung Atria Dawn Preview (Bansos), DeepSeek, & model lainnya.</p>
+              <h3 style={{ fontSize: "15px", margin: "0 0 4px" }}>{pkg.tokens} Token Siap Pakai</h3>
+              <p style={{ fontSize: "12px", color: "var(--text-muted)", margin: 0 }}>Mendukung Atria Dawn (Bansos) & DeepSeek Flash.</p>
             </div>
             <Button kind="primary" loading={loading} disabled={!orderId} onClick={handleConfirmPay}>
-              Klaim 5 Juta Token Gratis <CheckCheck size={17} />
+              Klaim {pkg.name} <CheckCheck size={17} />
             </Button>
             <small className="modal-note">Token otomatis masuk ke akun Anda di database TiDB.</small>
           </>

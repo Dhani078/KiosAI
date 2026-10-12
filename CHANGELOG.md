@@ -13,6 +13,23 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## 2026-10-12
 
+### `9911c13` — feat(plans): set free bonus to 2.5M, tier free default, lock non-free models, filter unwanted models
+**Ditambahkan / Diubah**
+- **Bonus Akun Baru 2.5 Juta Token & Tier Default Free**:
+  - Pendaftaran baru mendapatkan **2.500.000 token** dengan tier **`free`** (bukan langsung `bronze`).
+  - Paket Free Bansos disesuaikan menjadi 2.500.000 token (Rp 0), dan dicegah klaim ganda jika sudah aktif.
+- **Model Gating untuk Free Plan**:
+  - Akun tier `free` **hanya bisa mengakses**:
+    1. `atria/Atria-Dawn-Preview` (Atria Dawn Preview)
+    2. `tokenharbor/deepseek-v4.1-flash:free` (DeepSeek 4.1 Flash dari Token Harbor)
+  - Model lainnya otomatis terkunci (HTTP 403 `tier_restricted`) dengan tombol ajakan upgrade ke paket berbayar di UI.
+  - Membeli paket Starter/Bronze/Silver/Gold otomatis mengupgrade tier dan membuka seluruh model.
+- **Filter Model Tidak Diinginkan**:
+  - Model `free123`, `tesss`, `auto`, dan `auto-thinking` (termasuk `kr/auto`, `kr/auto-thinking`) disaring dan dibuang dari katalog gateway `/v1/models`.
+- **Perbaikan UI Bug Konkatenasi String**:
+  - Saldo di modal pembayaran dijumlahkan dengan aritmatika numerik `Number(userBalance) + Number(tokensGranted)`, mencegah tampilan angka gabungan (seperti `100000005000000`).
+  - Badge CSS `.badge.free` ditambahkan dengan warna hijau emerald.
+
 ### `30dc297` — docs: sync AGENT, STATE, HANDOFF, tasks for Phase 19 + standard 402 insufficient_quota error
 **Ditambahkan / Diubah**
 - Penanganan error `/v1/chat/completions`: ketika saldo token habis, mengembalikan standar HTTP 402 `insufficient_quota` (sebelumnya generic 401).

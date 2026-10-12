@@ -125,7 +125,7 @@ CREATE TABLE IF NOT EXISTS usage_logs (
 - `DELETE /api/keys/:id`: Revoke key.
 
 ### 5.4 Billing & Orders:
-- Free Bansos: Rp 0 -> 5.000.000 Token (Bonus Akun Baru)
+- Free Bansos: Rp 0 -> 2.500.000 Token (Bonus Akun Baru, Model: Atria Dawn & DeepSeek Flash)
 - Starter: Rp 5.000 -> 15.000.000 Token
 - Bronze: Rp 25.000 -> 100.000.000 Token
 - Silver: Rp 100.000 -> 600.000.000 Token
