@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { validateApiKey, deductTokens, logUsage, isModelAllowedForTier, getModelMultiplier } from "@/lib/keys";
 import { checkRateLimit } from "@/lib/ratelimit";
 import { UPSTREAM_URL, UPSTREAM_KEY, errorResponse, parseUpstreamJson } from "@/lib/proxy-http";
+import { resolveModelAlias } from "@/lib/model-utils";
 
 export const runtime = "nodejs";
 
@@ -44,10 +45,12 @@ export async function POST(req: NextRequest) {
     return errorResponse("Invalid JSON payload", 400, "invalid_json");
   }
 
-  const requestedModel = body.model;
-  if (!requestedModel) {
+  const rawModel = body.model;
+  if (!rawModel) {
     return errorResponse("Field 'model' is required", 400, "missing_model");
   }
+  const requestedModel = resolveModelAlias(rawModel);
+  body.model = requestedModel;
 
   // 2. Validate Allowed Models (on Key)
   if (auth.key.allowed_models) {

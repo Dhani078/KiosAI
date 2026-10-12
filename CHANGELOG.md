@@ -13,6 +13,16 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## 2026-10-12
 
+### `e3d90e9` — feat(models): universal model access, remove combomaut, role-based model names
+**Ditambahkan / Diubah**
+- **Akses Model Universal**: Semua model AI terbuka untuk seluruh pengguna tanpa batas tier (`isModelAllowedForTier` = true). Pemakaian hanya dibatasi oleh saldo token nyata, dengan multiplier potongan (1.0x, 2.0x, 4.0x).
+- **Hapus `combomaut`**: Dihapus permanen dari daftar model dan fallback list.
+- **Tampilan Nama Model Berbasis Role (`lib/model-utils.ts`)**:
+  - Untuk Admin (`adminfordhani`): Menampilkan ID routing teknis 9Router (`kr/claude-haiku-4.5-thinking-agentic`, `kr/claude-sonnet-4.5-thinking-agentic`).
+  - Untuk Pengguna Biasa: Menampilkan nama komersial bersih (`claude-haiku-4.5`, `claude-sonnet-4.5`).
+  - Sistem di belakang layar tetap merouting ke model ID upstream yang tepat (`kr/claude-haiku-4.5-thinking-agentic` & `kr/claude-sonnet-4.5-thinking-agentic`) via `resolveModelAlias`.
+- UI `ModelsTab`, `PlaygroundToolbar`, `PlaygroundChat`, dan endpoint `/v1/models` disesuaikan.
+
 ### `d9c5351` — feat(pricing): update paket token (5rb/15M, 25rb/100M, 100rb/600M, 150rb/1Miliar)
 **Ditambahkan / Diubah**
 - Paket token baru di `app/components/packageData.ts` dan `app/api/orders/route.ts`:

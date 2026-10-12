@@ -8,15 +8,19 @@ export function PlaygroundToolbar({
   models,
   selectedModel,
   requiredTier,
+  isAdmin = false,
   onSelectModel,
   onResetChat,
 }: {
   models: any[];
   selectedModel: string;
   requiredTier: string;
+  isAdmin?: boolean;
   onSelectModel: (m: string) => void;
   onResetChat: () => void;
 }) {
+  const cleanModels = models.filter((m) => m.id !== "combomaut");
+
   return (
     <div className="playground-toolbar">
       <div>
@@ -26,12 +30,11 @@ export function PlaygroundToolbar({
           value={selectedModel}
           onChange={(e) => onSelectModel(e.target.value)}
         >
-          {models.map((m) => {
-            const displayName = formatModelName(m.name || m.id);
+          {cleanModels.map((m) => {
+            const displayName = formatModelName(m.name || m.id, isAdmin);
             return (
               <option key={m.id} value={m.id}>
                 {displayName} [{(m.required_tier || "bronze").toUpperCase()}]
-                {!m.accessible ? " — terkunci" : ""}
               </option>
             );
           })}
@@ -44,4 +47,5 @@ export function PlaygroundToolbar({
     </div>
   );
 }
+
 export default PlaygroundToolbar;

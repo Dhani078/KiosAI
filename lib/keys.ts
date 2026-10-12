@@ -18,6 +18,7 @@ export interface ApiKeyRecord {
 export interface UserRecord {
   id: string;
   email: string;
+  username?: string | null;
   full_name: string;
   tier: "bronze" | "silver" | "gold";
   balance_tokens: number;
@@ -47,16 +48,9 @@ export function getModelMultiplier(modelId: string): number {
   return 1.0;
 }
 
-export function isModelAllowedForTier(tier: string, model: string): boolean {
-  if (tier === "gold") return true;
-  const required = getRequiredTierForModel(model);
-  if (tier === "silver" && (required === "bronze" || required === "silver")) {
-    return true;
-  }
-  if (tier === "bronze" && required === "bronze") {
-    return true;
-  }
-  return false;
+export function isModelAllowedForTier(_tier: string, _model: string): boolean {
+  // Semua model dapat diakses oleh semua pengguna; konsumsi dipotong dari saldo token
+  return true;
 }
 
 export function hashKey(rawKey: string): string {

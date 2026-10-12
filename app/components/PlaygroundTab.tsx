@@ -12,6 +12,7 @@ export function PlaygroundTab({
   userTier,
   balance,
   activeKey,
+  isAdmin = false,
   onNavigatePackages,
   onRefreshUserData,
 }: {
@@ -19,6 +20,7 @@ export function PlaygroundTab({
   userTier: string;
   balance: number;
   activeKey: string;
+  isAdmin?: boolean;
   onNavigatePackages: () => void;
   onRefreshUserData: () => void;
 }) {
@@ -45,10 +47,7 @@ export function PlaygroundTab({
 
   const currentModelObj = models.find((m) => m.id === selectedModel);
   const requiredTier = currentModelObj?.required_tier || "bronze";
-  const tierWeight = { bronze: 0, silver: 1, gold: 2 };
-  const userTierRank = tierWeight[userTier?.toLowerCase() as keyof typeof tierWeight] ?? 0;
-  const reqTierRank = tierWeight[requiredTier?.toLowerCase() as keyof typeof tierWeight] ?? 0;
-  const isLocked = reqTierRank > userTierRank;
+  const isLocked = false;
   const multiplier = requiredTier === "gold" ? 4.0 : requiredTier === "silver" ? 2.0 : 1.0;
 
   useEffect(() => {
@@ -125,6 +124,7 @@ export function PlaygroundTab({
         models={models}
         selectedModel={selectedModel}
         requiredTier={requiredTier}
+        isAdmin={isAdmin}
         onSelectModel={(m) => { setMessages([]); setErrorBanner(null); setSelectedModel(m); }}
         onResetChat={() => {
           setMessages([]);
@@ -171,7 +171,7 @@ export function PlaygroundTab({
               <div><strong>Peringatan Gateway</strong><p>{errorBanner}</p></div>
             </div>
           )}
-          <PlaygroundChat messages={messages} replying={replying} chatRef={chatRef} onPickPrompt={(p) => setPrompt(p)} />
+          <PlaygroundChat messages={messages} replying={replying} chatRef={chatRef} isAdmin={isAdmin} onPickPrompt={(p) => setPrompt(p)} />
           <form className="chat-input" onSubmit={(e) => { e.preventDefault(); send(); }}>
             <textarea
               aria-label="Prompt"

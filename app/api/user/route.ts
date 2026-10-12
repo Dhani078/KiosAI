@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
 
   try {
     const user = await db.queryOne<UserRecord>(
-      `SELECT id, email, full_name, tier, balance_tokens FROM kiosai.users WHERE id = ?`,
+      `SELECT id, email, username, full_name, tier, balance_tokens FROM kiosai.users WHERE id = ?`,
       [userId]
     );
 

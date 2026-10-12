@@ -1,34 +1,35 @@
 "use client";
 
 import { useState } from "react";
-import { Search, Sparkles, ArrowRight, Lock, CheckCircle2 } from "lucide-react";
+import { Search, Sparkles, CheckCircle2 } from "lucide-react";
 import { Badge, Button } from "./ui";
 import { formatModelName } from "@/lib/model-utils";
 
 export function ModelsTab({
   models,
   userTier,
+  isAdmin = false,
   onNavigatePlayground,
   onNavigatePackages,
 }: {
   models: any[];
   userTier: string;
+  isAdmin?: boolean;
   onNavigatePlayground: (modelId?: string) => void;
   onNavigatePackages: () => void;
 }) {
   const [search, setSearch] = useState("");
   const [tierFilter, setTierFilter] = useState<string>("all");
 
-  const tierWeight = { bronze: 0, silver: 1, gold: 2 };
-  const userRank = tierWeight[userTier?.toLowerCase() as keyof typeof tierWeight] ?? 0;
-
-  const filtered = models.filter((m) => {
-    const clean = formatModelName(m.name || m.id).toLowerCase();
-    const raw = (m.id || "").toLowerCase();
-    const matchesSearch = !search || clean.includes(search.toLowerCase()) || raw.includes(search.toLowerCase());
-    const matchesTier = tierFilter === "all" || (m.required_tier || "bronze").toLowerCase() === tierFilter;
-    return matchesSearch && matchesTier;
-  });
+  const filtered = models
+    .filter((m) => m.id !== "combomaut")
+    .filter((m) => {
+      const clean = formatModelName(m.name || m.id, isAdmin).toLowerCase();
+      const raw = (m.id || "").toLowerCase();
+      const matchesSearch = !search || clean.includes(search.toLowerCase()) || raw.includes(search.toLowerCase());
+      const matchesTier = tierFilter === "all" || (m.required_tier || "bronze").toLowerCase() === tierFilter;
+      return matchesSearch && matchesTier;
+    });
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
@@ -62,7 +63,7 @@ export function ModelsTab({
                 style={{ height: "32px", padding: "0 12px", fontSize: "12px", textTransform: "uppercase" }}
                 onClick={() => setTierFilter(t)}
               >
-                {t === "all" ? "Semua Tier" : t}
+                {t === "all" ? "Semua Model" : t}
               </button>
             ))}
           </div>
@@ -72,10 +73,9 @@ export function ModelsTab({
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "16px" }}>
         {filtered.map((m) => {
           const reqTier = (m.required_tier || "bronze").toLowerCase();
-          const reqRank = tierWeight[reqTier as keyof typeof tierWeight] ?? 0;
-          const locked = reqRank > userRank;
           const mult = reqTier === "gold" ? "4.0×" : reqTier === "silver" ? "2.0×" : "1.0×";
-          const displayName = formatModelName(m.name || m.id);
+          const displayName = formatModelName(m.name || m.id, isAdmin);
+          const displayId = isAdmin ? m.id : displayName;
 
           return (
             <article
@@ -94,7 +94,7 @@ export function ModelsTab({
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "8px" }}>
                 <div>
                   <h3 style={{ fontSize: "15px", fontWeight: 600, margin: 0 }}>{displayName}</h3>
-                  <code style={{ fontSize: "11px", color: "var(--text-muted)" }}>{m.id}</code>
+                  <code style={{ fontSize: "11px", color: "var(--text-muted)" }}>{displayId}</code>
                 </div>
                 <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
                   <span style={{ fontSize: "11px", color: "var(--text-muted)" }}>{mult}</span>
@@ -102,30 +102,15 @@ export function ModelsTab({
                 </div>
               </div>
 
-              <div style={{ display: "flex", gap: "6px", alignItems: "center", fontSize: "12px", color: locked ? "var(--warning)" : "var(--success)" }}>
-                {locked ? (
-                  <>
-                    <Lock size={13} />
-                    <span>Perlu paket {reqTier.toUpperCase()} (Akun Anda: {userTier.toUpperCase()})</span>
-                  </>
-                ) : (
-                  <>
-                    <CheckCircle2 size={13} />
-                    <span>Terbuka untuk paket Anda</span>
-                  </>
-                )}
+              <div style={{ display: "flex", gap: "6px", alignItems: "center", fontSize: "12px", color: "var(--success)" }}>
+                <CheckCircle2 size={13} />
+                <span>Terbuka (potong saldo token {mult})</span>
               </div>
 
               <div style={{ marginTop: "auto", paddingTop: "8px" }}>
-                {locked ? (
-                  <Button kind="secondary" style={{ width: "100%", height: "34px", fontSize: "12px" }} onClick={onNavigatePackages}>
-                    Upgrade ke {reqTier.toUpperCase()}
-                  </Button>
-                ) : (
-                  <Button kind="primary" style={{ width: "100%", height: "34px", fontSize: "12px" }} onClick={() => onNavigatePlayground(m.id)}>
-                    <Sparkles size={14} /> Coba di Playground
-                  </Button>
-                )}
+                <Button kind="primary" style={{ width: "100%", height: "34px", fontSize: "12px" }} onClick={() => onNavigatePlayground(m.id)}>
+                  <Sparkles size={14} /> Coba di Playground
+                </Button>
               </div>
             </article>
           );
@@ -134,4 +119,5 @@ export function ModelsTab({
     </div>
   );
 }
+
 export default ModelsTab;

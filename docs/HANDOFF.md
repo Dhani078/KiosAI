@@ -9,7 +9,7 @@ Dokumen ini dirancang agar setiap sesi AI atau pengembang dapat melanjutkan peke
 | Komponen | Status | Keterangan |
 |---|---|---|
 | **Repository** | Clean, Up-to-Date | `https://github.com/Dhani078/KiosAI.git` (Branch `main`) |
-| **Commit Terakhir** | `d9c5351` | Feat: update paket token (5rb/15M, 25rb/100M, 100rb/600M, 150rb/1M) |
+| **Commit Terakhir** | `e3d90e9` | Feat: universal model access, remove combomaut, role-based model names |
 | **Worker Live** | `healthy` | `https://kiosai.dhanisepeda.workers.dev` (Subdomain `dhanisepeda` dengan huruf 'e') |
 | **Database** | `connected` | TiDB Cloud Serverless (AWS Tokyo `ap-southeast-1` / `ap-northeast-1`) |
 | **Upstream 9Router** | `connected` | `http://127.0.0.1:20128` (765 model aktif) |

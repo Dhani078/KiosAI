@@ -119,8 +119,8 @@ await test("POST /v1/chat/completions (Stream SSE)", async () => {
   assert(text.includes('"usage"'), "Stream missing usage chunk");
 });
 
-// 7. Tier Gating Restriction (Bronze trying Gold model)
-await test("Tier Gating (403 tier_restricted)", async () => {
+// 7. Universal Model Access (No tier restriction, token balance based)
+await test("Universal Model Access (No tier restriction)", async () => {
   assert(testKey, "No test key");
   const res = await fetch(`${BASE}/v1/chat/completions`, {
     method: "POST",
@@ -129,13 +129,13 @@ await test("Tier Gating (403 tier_restricted)", async () => {
       Authorization: `Bearer ${testKey}`,
     },
     body: JSON.stringify({
-      model: "claude-3-opus",
-      messages: [{ role: "user", content: "Test" }],
+      model: "claude-haiku-4.5",
+      messages: [{ role: "user", content: "Ping" }],
+      max_tokens: 5,
     }),
   });
-  assert(res.status === 403, `Expected 403, got ${res.status}`);
   const data = await res.json();
-  assert(data.error?.code === "tier_restricted", "Error code mismatch");
+  assert(data.error?.code !== "tier_restricted", "Should not be blocked by tier");
 });
 
 // 8. QRIS Order Creation

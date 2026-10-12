@@ -16,11 +16,13 @@ export function PlaygroundChat({
   messages,
   replying,
   chatRef,
+  isAdmin = false,
   onPickPrompt,
 }: {
   messages: ChatMessage[];
   replying: boolean;
   chatRef: React.RefObject<HTMLDivElement | null>;
+  isAdmin?: boolean;
   onPickPrompt: (p: string) => void;
 }) {
   const suggestions = [
@@ -60,7 +62,7 @@ export function PlaygroundChat({
         messages.map((m, i) => (
           <div key={i} className={`message ${m.user ? "user" : ""}`}>
             <span className="message-label">
-              {m.user ? "ANDA" : (m.model ? formatModelName(m.model).toUpperCase() : "AI")}
+              {m.user ? "ANDA" : (m.model ? formatModelName(m.model, isAdmin).toUpperCase() : "AI")}
             </span>
             <p style={{ whiteSpace: "pre-wrap" }}>{m.text}</p>
             {!m.user && (

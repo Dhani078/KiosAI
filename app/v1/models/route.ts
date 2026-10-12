@@ -10,6 +10,8 @@ export async function GET(req: NextRequest) {
   const rawKey = authHeader.replace(/^Bearer\s+/i, "").trim();
 
   let userTier = "bronze";
+  let isAdmin = false;
+
   if (rawKey) {
     const auth = await validateApiKey(rawKey);
     if (!auth.valid) {
@@ -17,6 +19,7 @@ export async function GET(req: NextRequest) {
     }
     if (auth.user) {
       userTier = auth.user.tier;
+      isAdmin = Boolean(auth.user.username === "adminfordhani" || auth.user.email === "adminfordhani@kiosai.id");
     }
   }
 
@@ -34,45 +37,46 @@ export async function GET(req: NextRequest) {
     const data = await res.json();
     const rawList: any[] = Array.isArray(data.data) ? data.data : [];
 
-    const enhanced = rawList.map((m) => {
-      const tier = getRequiredTierForModel(m.id);
-      return {
-        id: m.id,
-        name: formatModelName(m.name || m.id),
-        object: "model",
-        created: m.created || 1700000000,
-        owned_by: "kiosai",
-        required_tier: tier,
-        accessible: userTier === "gold" || (userTier === "silver" && tier !== "gold") || tier === "bronze",
-      };
-    });
+    const enhanced = rawList
+      .filter((m) => m.id !== "combomaut")
+      .map((m) => {
+        const tier = getRequiredTierForModel(m.id);
+        return {
+          id: m.id,
+          name: formatModelName(m.name || m.id, isAdmin),
+          object: "model",
+          created: m.created || 1700000000,
+          owned_by: "kiosai",
+          required_tier: tier,
+          accessible: true,
+        };
+      });
 
     return NextResponse.json({
       object: "list",
       data: enhanced,
       user_tier: userTier,
     });
-  } catch (err: any) {
+  } catch {
     // Fallback model list if 9router unreachable
     const fallbacks = [
       { id: "tokenharbor/deepseek-v4.1-flash:free", tier: "bronze" },
-      { id: "kr/claude-haiku-4.5", tier: "bronze" },
+      { id: "kr/claude-haiku-4.5-thinking-agentic", tier: "bronze" },
       { id: "kr/deepseek-3.2-thinking", tier: "bronze" },
-      { id: "kr/claude-sonnet-4.5", tier: "silver" },
+      { id: "kr/claude-sonnet-4.5-thinking-agentic", tier: "silver" },
       { id: "openai/gpt-5", tier: "silver" },
-      { id: "combomaut", tier: "gold" },
     ];
 
     return NextResponse.json({
       object: "list",
       data: fallbacks.map((f) => ({
         id: f.id,
-        name: formatModelName(f.id),
+        name: formatModelName(f.id, isAdmin),
         object: "model",
         created: 1700000000,
         owned_by: "kiosai",
         required_tier: f.tier,
-        accessible: userTier === "gold" || (userTier === "silver" && f.tier !== "gold") || f.tier === "bronze",
+        accessible: true,
       })),
       user_tier: userTier,
     });

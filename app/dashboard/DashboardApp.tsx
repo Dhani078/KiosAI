@@ -29,6 +29,7 @@ export default function Dashboard() {
 
   const data = useKiosData();
   const user = data.currentUser;
+  const isAdmin = Boolean(user && (user.username === "adminfordhani" || user.email === "adminfordhani@kiosai.id"));
 
   const copy = async (t: string) => {
     try { await navigator.clipboard.writeText(t); setToast("Berhasil disalin ke clipboard"); }
@@ -95,6 +96,7 @@ export default function Dashboard() {
             <ModelsTab
               models={data.availableModels}
               userTier={user.tier}
+              isAdmin={isAdmin}
               onNavigatePlayground={(mId) => {
                 if (mId && typeof window !== "undefined") {
                   sessionStorage.setItem("kios_selected_model", mId);
@@ -111,6 +113,7 @@ export default function Dashboard() {
               userTier={user.tier}
               balance={user.balance_tokens}
               activeKey={data.playgroundKey}
+              isAdmin={isAdmin}
               onNavigatePackages={() => setPage("Beli Token")}
               onRefreshUserData={() => {
                 data.fetchUserData();
