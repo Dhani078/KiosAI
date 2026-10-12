@@ -50,5 +50,10 @@
   - `npm run verify` diperluas ke 6 pengecekan + deteksi drift secret Worker
   - `DEPLOYMENT.md` ditulis ulang; README deploy diganti Vercel → Cloudflare Workers
   - Verified live: health healthy, login admin 200, chat 200, saldo 100000 → 98250
+- [x] Phase 16: Landing Page Models Catalog & Navbar Navigation
+  - Link "Model" (`#model`) ditambahkan pada `LandingNavbar.tsx` dan `LandingFooter.tsx`
+  - Komponen `ModelsSection.tsx` dan `modelCatalogData.ts` memuat katalog model terpopuler dengan filter provider
+  - Terintegrasi di `app/page.tsx`
+  - Playwright audit: 0 overflow (mobile & desktop), filter interaktif berfungsi, tsc & build pass
 
 

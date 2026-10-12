@@ -47,6 +47,9 @@ export function LandingNavbar() {
         <a href="#fitur" className="text-link" style={{ minHeight: "auto" }}>
           Fitur
         </a>
+        <a href="#model" className="text-link" style={{ minHeight: "auto" }}>
+          Model
+        </a>
         <a href="#paket" className="text-link" style={{ minHeight: "auto" }}>
           Paket Harga
         </a>

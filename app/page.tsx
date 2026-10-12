@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import LandingNavbar from "./landing/components/LandingNavbar";
 import HeroSection from "./landing/components/HeroSection";
 import FeaturesSection from "./landing/components/FeaturesSection";
+import ModelsSection from "./landing/components/ModelsSection";
 import PricingSection from "./landing/components/PricingSection";
 import CodeSection from "./landing/components/CodeSection";
 import LandingFaq from "./landing/components/LandingFaq";
@@ -32,6 +33,7 @@ export default function Home() {
       <main id="main-content">
         <HeroSection />
         <FeaturesSection />
+        <ModelsSection />
         <PricingSection />
         <CodeSection />
         <LandingFaq />

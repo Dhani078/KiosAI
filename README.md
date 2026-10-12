@@ -30,6 +30,7 @@
 - **Live AI Playground**: Antarmuka dashboard untuk menguji endpoint dan streaming model AI secara langsung.
 - **Billing Total**: Token ditagih dari `usage` upstream (prompt + completion) x multiplier, baik stream maupun non-stream. Overhead prompt upstream ikut ditagih (lihat PRD §9).
 - **Desain KiosAI Token Marketplace**: Antarmuka responsif (Desktop Sidebar + Mobile Bottom Nav), tema oranye hangat (`#F28C38`), tanpa komponen dummy — 100% data live dari TiDB & gateway.
+- **Katalog Model Publik**: Halaman muka menampilkan showcase model AI unggulan (DeepSeek, Claude, GPT, Gemini, Llama) dengan informasi tier akses, multiplier, context window, dan filter provider interaktif.
 - **Standar Kode Moduler**: Seluruh modul kode TypeScript/React dibatasi maksimal 200 baris per file demi keterbacaan dan pemeliharaan jangka panjang.
 
 ---

@@ -87,6 +87,12 @@
       - Subdomain akun dikonfirmasi `dhanisepeda` (pakai `e`); `dhanispeda` tidak resolve.
       - Hasil verifikasi live: `/api/health` → `{"status":"healthy","database":{"status":"connected"},"upstream":{"status":"connected"}}`; login admin `adminfordhani` HTTP 200; chat completion HTTP 200 (`content: "OK"`, usage 888 token); saldo terpotong real 100.000 → 98.250.
       - Dokumentasi: `DEPLOYMENT.md` ditulis ulang (arsitektur Worker + tunnel + troubleshooting), `README.md` bagian deploy diganti dari Vercel ke Cloudflare Workers, `PRD.md` §14–§16 ditambahkan.
-    - Aturan maks 200 baris per file diverifikasi ketat (62 file `.ts`/`.tsx`/`.mjs` semuanya <= 200 baris).
+    - Phase 16: Penambahan Navigasi "Model" & Section Katalog Model:
+      - Menambahkan link navigasi `#model` di `LandingNavbar.tsx` dan `LandingFooter.tsx`.
+      - Membangun section `ModelsSection.tsx` (120 baris) dan `modelCatalogData.ts` (79 baris) untuk memamerkan katalog model AI (DeepSeek, Claude, GPT, Gemini, Llama) dengan informasi tier, multiplier, context window, dan filter provider interaktif.
+      - Terintegrasi di `app/page.tsx` di antara Fitur dan Paket Harga.
+      - Verifikasi Playwright: 0 overflow (mobile 390px & desktop 1366px), navigasi anchor `#model` terhubung, filter berfungsi.
+      - Aturan batas 200 baris terpenuhi (71 file total).
+    - Aturan maks 200 baris per file diverifikasi ketat (71 file `.ts`/`.tsx`/`.mjs` semuanya <= 200 baris).
     - Playwright browser audit di 390px (mobile) & 1366px (desktop): 5 tab x 2 viewport = 100% OK (0 overflow, 0 console error).
   - E2E tests verified: Registration, Login, Key Creation, OpenAI Proxy call, Rate Limit headers, QRIS top-up, Tier gating, Model discovery, Webhook idempotency, and Order list.

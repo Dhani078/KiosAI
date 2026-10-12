@@ -85,6 +85,13 @@
 - [x] Task 7.6: Rewrote `DEPLOYMENT.md` (Worker arch + tunnel + troubleshooting), README deploy section Vercel → Cloudflare Workers
 - [x] Task 7.7: Verified live end-to-end: health healthy, admin login 200, chat 200, balance deducted 100000 → 98250
 
+## Phase 8 (Landing Models Showcase & Navigation Integration - Completed)
+- [x] Task 8.1: Add "Model" anchor link to `LandingNavbar.tsx` and `LandingFooter.tsx` pointing to `#model`
+- [x] Task 8.2: Build modular `ModelsSection.tsx` & `modelCatalogData.ts` with tier tags, context size, and provider filters
+- [x] Task 8.3: Mount `<ModelsSection />` in `app/page.tsx`
+- [x] Task 8.4: Playwright audit: verify navigation scroll, card filters, 0 overflow (mobile 390px & desktop 1366px)
+- [x] Task 8.5: Verify 100% files adhere to <= 200 lines limit (71 files checked) and sync documentation
+
 
 
 
