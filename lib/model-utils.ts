@@ -1,28 +1,34 @@
 /**
  * Format model ID for clean display across web UI.
- * - Admin: sees internal routing keys (kr/claude-haiku-4.5-thinking-agentic, etc.)
- * - Regular user: sees clean commercial names (claude-haiku-4.5, claude-sonnet-4.5)
+ * - Admin: sees internal routing keys (kr/claude-haiku-4.5-thinking-agentic, cx/..., etc.)
+ * - Regular user: sees 100% clean commercial names (claude-haiku-4.5, grok-4, etc. NO cx/, cl/, xai/, etc.)
  */
 export function formatModelName(modelId: string, isAdmin: boolean = false): string {
   if (!modelId) return "";
-  if (modelId === "atria/Atria-Dawn-Preview" || modelId.toLowerCase().includes("atria-dawn")) {
-    return isAdmin ? "atria/Atria-Dawn-Preview" : "Atria-Dawn-Preview (Bansos)";
+  if (isAdmin) {
+    return modelId.replace(/^tokenharbor\//, "").replace(/:free$/, "");
   }
-  if (!isAdmin) {
-    if (modelId === "kr/claude-haiku-4.5-thinking-agentic" || modelId === "kr/claude-haiku-4.5") {
-      return "claude-haiku-4.5";
-    }
-    if (modelId === "kr/claude-sonnet-4.5-thinking-agentic" || modelId === "kr/claude-sonnet-4.5") {
-      return "claude-sonnet-4.5";
-    }
-    return modelId
-      .replace(/^tokenharbor\//, "")
-      .replace(/:free$/, "")
-      .replace(/^kr\//, "");
+
+  const lower = modelId.toLowerCase();
+  if (lower.includes("atria-dawn")) {
+    return "Atria-Dawn-Preview (Bansos)";
   }
-  return modelId
-    .replace(/^tokenharbor\//, "")
-    .replace(/:free$/, "");
+  if (lower.includes("deepseek-v4.1-flash")) {
+    return "deepseek-v4.1-flash";
+  }
+  if (lower.includes("claude-haiku-4.5")) {
+    return "claude-haiku-4.5";
+  }
+  if (lower.includes("claude-sonnet-4.5")) {
+    return "claude-sonnet-4.5";
+  }
+
+  // Strip trailing :free or :batch
+  const withoutSuffix = modelId.replace(/:(free|batch)$/i, "");
+  // Extract clean model slug by taking the last segment (strips cx/, cl/, xai/, etc.)
+  const parts = withoutSuffix.split("/");
+  const slug = parts[parts.length - 1];
+  return slug.replace(/^~/, "");
 }
 
 /**

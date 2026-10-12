@@ -13,6 +13,13 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## 2026-10-12
 
+### `f9b6461` — feat(ui): strip all router prefixes (cx/, xai/, cl/, etc.) for clean regular user display
+**Ditambahkan / Diubah**
+- **Pembersihan Prefiks Model Menyeluruh untuk Pengguna Biasa (`lib/model-utils.ts`)**:
+  - Semua prefiks routing internal upstream seperti `cx/`, `xai/`, `cl/`, `kc/`, `bzl/`, `qd/`, `apinex/`, `cutadai/`, `tokenharbor/`, `kr/`, `openrouter/`, `ollama/`, `together/`, `af/`, `cbai/`, `ag/`, dll. otomatis dipotong habis untuk pengguna web biasa.
+  - Tampilan nama model di antarmuka web 100% bersih menjadi nama komersial murni (contoh: `gpt-6.1-sol`, `grok-4.6`, `claude-sonnet-5.5`, `claude-haiku-4.5`, `deepseek-v4.1-flash`).
+  - Untuk Admin (`adminfordhani`), nama teknis/routing tetap dipertahankan untuk kebutuhan inspeksi upstream.
+
 ### `aab1bc3` — feat(ui): sort accessible models to the top of model catalog and playground
 **Ditambahkan / Diubah**
 - **Model yang Dapat Digunakan Tampil di Paling Atas**:
