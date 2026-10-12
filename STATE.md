@@ -3,10 +3,10 @@
 - **Repository**: `https://github.com/Dhani078/KiosAI.git`
 - **Location**: `E:/Hermesproject/KiosAI`
 - **Live Worker**: `https://kiosai.dhanisepeda.workers.dev` (subdomain `dhanisepeda`, pakai `e`)
-- **Current Status**: Complete & Fully Verified (Phase 0 - 18)
+- **Current Status**: Complete & Fully Verified (Phase 0 - 19)
 - **Upstream Router**: 9Router local (`http://127.0.0.1:20128`, 765 model aktif)
 - **Database**: TiDB Cloud Serverless (`gateway01.ap-southeast-1.prod.aws.tidbcloud.com:4000/kiosai`)
-- **Last Commit**: `828993d` — playground session key, chat persistence, sidebar Model menu
+- **Last Commit**: `b302bba` — refine free plan claim modal, add Atria to landing catalog, clean docs error handling
 
 ## Dokumen Navigasi Cepat
 - Aturan & perintah untuk agent: `AGENT.md`
@@ -111,6 +111,14 @@
       - Menyimpan histori percakapan Playground di `sessionStorage` (`kios_playground_messages`), sehingga obrolan tidak hilang saat berpindah antar-tab dashboard.
       - Menambahkan menu navigasi "Model" (`Cpu` icon) pada Sidebar dashboard (`Sidebar.tsx`), `constants.ts`, dan modul `ModelsTab.tsx` (137 baris) untuk menjelajah katalog model dengan tombol "Coba di Playground".
       - Nol modifikasi pada API key/kredensial apa pun.
+    - Phase 19: Token Marketplace Restructure, Free Plan Bansos & Universal Model Access:
+      - Restrukturisasi paket harga: Free Bansos (Rp 0 / 5M token), Starter (Rp 5.000 / 15M token), Bronze (Rp 25.000 / 100M token), Silver (Rp 100.000 / 600M token), Gold (Rp 150.000 / 1.000M token).
+      - Pendaftaran akun baru otomatis mendapatkan 5.000.000 token uji coba gratis (Free Plan Bansos) di TiDB.
+      - Integrasi model bansos `atria/Atria-Dawn-Preview` terverifikasi 100% aktif ke upstream 9Router dan fallback.
+      - Akses model universal: seluruh pengguna dapat memakai model apa pun tanpa dibatasi tier (`isModelAllowedForTier` = true), potongan token dihitung proporsional dari multiplier (1.0x, 2.0x, 4.0x).
+      - Tampilan nama model berbasis role: ID routing teknis (`kr/claude-haiku-4.5-thinking-agentic`, `kr/claude-sonnet-4.5-thinking-agentic`) untuk admin `adminfordhani`, nama komersial bersih (`claude-haiku-4.5`, `claude-sonnet-4.5`) untuk pengguna biasa.
+      - Alur modal klaim Free Plan 1-klik tanpa simulasi QRIS.
+      - Cloudflare Tunnel aktif dipulihkan dan status Worker live `kiosai.dhanisepeda.workers.dev` kembali `healthy`.
     - Aturan maks 200 baris per file diverifikasi ketat (74 file `.ts`/`.tsx`/`.mjs` semuanya <= 200 baris).
     - Playwright browser audit di 390px (mobile) & 1366px (desktop): 5 tab x 2 viewport = 100% OK (0 overflow, 0 console error).
   - E2E tests verified: Registration, Login, Key Creation, OpenAI Proxy call, Rate Limit headers, QRIS top-up, Tier gating, Model discovery, Webhook idempotency, and Order list.

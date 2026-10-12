@@ -64,7 +64,7 @@ Dokumen ini adalah sumber kebenaran (source of truth) utama bagi AI agent untuk 
   - Tier: `gold` | Saldo: `100.000.000` token
 - **User Biasa**:
   - Login & Register via format email standar (`budi@gmail.com`).
-  - Bonus pendaftaran baru otomatis: `100.000` token trial tier `bronze`.
+  - Bonus pendaftaran baru otomatis: `5.000.000` token trial tier `bronze` (Free Plan Bansos).
 
 ---
 

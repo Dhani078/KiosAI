@@ -18,7 +18,8 @@ export async function POST(req: NextRequest) {
   // 1. Validate API Key
   const auth = await validateApiKey(rawKey);
   if (!auth.valid || !auth.user || !auth.key) {
-    return errorResponse(auth.error || "Unauthorized", 401, "invalid_key");
+    const isQuota = Boolean(auth.error?.includes("exhausted"));
+    return errorResponse(auth.error || "Unauthorized", isQuota ? 402 : 401, isQuota ? "insufficient_quota" : "invalid_key");
   }
 
   // 2. Check Rate Limit
@@ -68,13 +69,9 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // 3. Validate Tier Access (Bronze vs Silver vs Gold)
+  // 3. Validate Model Access
   if (!isModelAllowedForTier(auth.user.tier, requestedModel)) {
-    return errorResponse(
-      `Model '${requestedModel}' memerlukan paket yang lebih tinggi (Paket Anda saat ini: ${auth.user.tier.toUpperCase()}). Silakan upgrade ke Silver atau Gold di KiosAI.`,
-      403,
-      "tier_restricted"
-    );
+    return errorResponse(`Model '${requestedModel}' tidak diizinkan.`, 403, "tier_restricted");
   }
 
   const isStream = Boolean(body.stream);

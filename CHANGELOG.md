@@ -13,6 +13,11 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## 2026-10-12
 
+### `30dc297` — docs: sync AGENT, STATE, HANDOFF, tasks for Phase 19 + standard 402 insufficient_quota error
+**Ditambahkan / Diubah**
+- Penanganan error `/v1/chat/completions`: ketika saldo token habis, mengembalikan standar HTTP 402 `insufficient_quota` (sebelumnya generic 401).
+- Sinkronisasi dokumentasi menyeluruh: `AGENT.md`, `STATE.md`, `docs/HANDOFF.md`, `tasks/todo.md`, dan `tasks/plan.md` diperbarui dengan spesifikasi Phase 19 (Free Plan 5M token, model Bansos Atria, model access universal, dan pricing restructure).
+
 ### `3f9549b` — feat(ui): refine free plan claim modal, add Atria to landing catalog, clean docs error handling
 **Ditambahkan / Diubah**
 - **Modal Klaim Free Plan (`PaymentModal.tsx`)**:
