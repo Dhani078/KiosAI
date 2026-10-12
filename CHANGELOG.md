@@ -13,6 +13,16 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## 2026-10-12
 
+### `d9c5351` — feat(pricing): update paket token (5rb/15M, 25rb/100M, 100rb/600M, 150rb/1Miliar)
+**Ditambahkan / Diubah**
+- Paket token baru di `app/components/packageData.ts` dan `app/api/orders/route.ts`:
+  - **Starter**: Rp 5.000 untuk 15.000.000 Token (Tier Bronze, 1.0x).
+  - **Bronze**: Rp 25.000 untuk 100.000.000 Token (Tier Bronze, 1.0x).
+  - **Silver**: Rp 100.000 untuk 600.000.000 Token (Tier Silver, 2.0x).
+  - **Gold**: Rp 150.000 untuk 1.000.000.000 Token / 1 Miliar (Tier Gold, 4.0x).
+- Grid paket CSS di `app/globals.css` diupdate jadi auto-fit responsif 4 kolom.
+- Dokumentasi `README.md`, `PRD.md`, `API.md` disinkronkan.
+
 ### `828993d` — feat: playground session key, chat persistence, sidebar Model menu
 **Ditambahkan**
 - `lib/session-key.ts` — generator & verifikator HMAC Playground session key (`kios-pg-<userId>.<sig>`).

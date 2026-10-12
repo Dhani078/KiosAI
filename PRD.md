@@ -125,9 +125,10 @@ CREATE TABLE IF NOT EXISTS usage_logs (
 - `DELETE /api/keys/:id`: Revoke key.
 
 ### 5.4 Billing & Orders:
-- Bronze: Rp 50.000 -> 1.000.000 Token
-- Silver: Rp 150.000 -> 3.500.000 Token
-- Gold: Rp 400.000 -> 10.000.000 Token
+- Starter: Rp 5.000 -> 15.000.000 Token
+- Bronze: Rp 25.000 -> 100.000.000 Token
+- Silver: Rp 100.000 -> 600.000.000 Token
+- Gold: Rp 150.000 -> 1.000.000.000 Token
 - `GET /api/orders?userId=...`: Riwayat transaksi dan invoice pesanan pengguna.
 - `POST /api/payment/webhook`: Webhook callback dengan validasi idempotensi & HMAC signature.
 

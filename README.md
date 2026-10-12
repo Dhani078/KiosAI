@@ -146,9 +146,10 @@ print(response.choices[0].message.content)
 
 | Paket | Harga | Jumlah Token | Rate Limit | Akses Model & Multiplier |
 |---|---|---|---|---|
-| **Bronze Starter** | Rp 50.000 | 1.000.000 Token | 60 req/min | Model Standard (Gemini Flash, DeepSeek Flash) — **1.0x** |
-| **Silver Pro** | Rp 150.000 | 3.500.000 Token | 300 req/min | Termasuk GPT-4o, GPT-5, Claude Sonnet 4.5 — **2.0x** |
-| **Gold Enterprise** | Rp 400.000 | 10.000.000 Token | 1.000 req/min | Seluruh Model AI, Opus & Custom Combos — **4.0x** |
+| **Starter** | Rp 5.000 | 15.000.000 Token | 60 req/min | Model Standard (Gemini Flash, DeepSeek Flash) — **1.0x** |
+| **Bronze** | Rp 25.000 | 100.000.000 Token | 60 req/min | Model Standard (Gemini Flash, DeepSeek Flash) — **1.0x** |
+| **Silver** | Rp 100.000 | 600.000.000 Token | 300 req/min | Termasuk GPT-4o, GPT-5, Claude Sonnet 4.5 — **2.0x** |
+| **Gold** | Rp 150.000 | 1.000.000.000 Token | 1.000 req/min | Seluruh Model AI, Opus & Custom Combos — **4.0x** |
 
 ---
 

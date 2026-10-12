@@ -5,9 +5,10 @@ import crypto from "crypto";
 export const runtime = "nodejs";
 
 const PACKAGES = {
-  bronze: { amountIdr: 50000, tokens: 1000000, name: "Bronze Starter" },
-  silver: { amountIdr: 150000, tokens: 3500000, name: "Silver Pro" },
-  gold: { amountIdr: 400000, tokens: 10000000, name: "Gold Enterprise" },
+  starter: { amountIdr: 5000, tokens: 15000000, name: "Starter", tier: "bronze" },
+  bronze: { amountIdr: 25000, tokens: 100000000, name: "Bronze", tier: "bronze" },
+  silver: { amountIdr: 100000, tokens: 600000000, name: "Silver", tier: "silver" },
+  gold: { amountIdr: 150000, tokens: 1000000000, name: "Gold", tier: "gold" },
 };
 
 export async function GET(req: NextRequest) {
@@ -46,7 +47,7 @@ export async function POST(req: NextRequest) {
     await db.execute(
       `INSERT INTO kiosai.orders (id, user_id, amount_idr, tokens_purchased, package_tier, payment_method, status)
        VALUES (?, ?, ?, ?, ?, 'qris', 'pending')`,
-      [orderId, userId, pkg.amountIdr, pkg.tokens, tier]
+      [orderId, userId, pkg.amountIdr, pkg.tokens, pkg.tier]
     );
 
     return NextResponse.json({
