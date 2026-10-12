@@ -93,6 +93,11 @@
       - Terintegrasi di `app/page.tsx` di antara Fitur dan Paket Harga.
       - Verifikasi Playwright: 0 overflow (mobile 390px & desktop 1366px), navigasi anchor `#model` terhubung, filter berfungsi.
       - Aturan batas 200 baris terpenuhi (71 file total).
-    - Aturan maks 200 baris per file diverifikasi ketat (71 file `.ts`/`.tsx`/`.mjs` semuanya <= 200 baris).
+    - Phase 17: Penyempurnaan Tampilan UI Nama Model:
+      - Tampilan visual model pada UI diubah via `lib/model-utils.ts` (`formatModelName`) menjadi `deepseek-v4.1-flash` (menghilangkan tampilan teks `tokenharbor/` dan `:free` di frontend).
+      - Nilai payload sistem backend tetap utuh menggunakan `tokenharbor/deepseek-v4.1-flash:free` agar kompatibel 100% dengan routing 9Router.
+      - Seluruh API keys dan kredensial di `.env` terjaga aman tanpa perubahan apa pun.
+      - Pengujian Playwright & E2E (10/10) lolos verifikasi.
+    - Aturan maks 200 baris per file diverifikasi ketat (72 file `.ts`/`.tsx`/`.mjs` semuanya <= 200 baris).
     - Playwright browser audit di 390px (mobile) & 1366px (desktop): 5 tab x 2 viewport = 100% OK (0 overflow, 0 console error).
   - E2E tests verified: Registration, Login, Key Creation, OpenAI Proxy call, Rate Limit headers, QRIS top-up, Tier gating, Model discovery, Webhook idempotency, and Order list.

@@ -92,6 +92,13 @@
 - [x] Task 8.4: Playwright audit: verify navigation scroll, card filters, 0 overflow (mobile 390px & desktop 1366px)
 - [x] Task 8.5: Verify 100% files adhere to <= 200 lines limit (71 files checked) and sync documentation
 
+## Phase 9 (UI Clean Model Name Display - Completed)
+- [x] Task 9.1: Build `lib/model-utils.ts` (`formatModelName`) to strip `tokenharbor/` and `:free` prefix/suffix for UI display only
+- [x] Task 9.2: Keep underlying system model ID intact as `tokenharbor/deepseek-v4.1-flash:free` in state, API requests, and `/v1/models`
+- [x] Task 9.3: Update `PlaygroundToolbar.tsx`, `PlaygroundChat.tsx`, `DocsTab.tsx`, `RecentLogsTable.tsx`, `AnalyticsTab.tsx`, and `PackageComparison.tsx`
+- [x] Task 9.4: Protect API keys: confirm zero modifications to `.env` or existing credentials
+- [x] Task 9.5: Verified via Playwright (display shows `deepseek-v4.1-flash [BRONZE]`, value sends system ID) and 10/10 e2e tests pass
+
 
 
 

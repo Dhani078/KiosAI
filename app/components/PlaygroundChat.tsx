@@ -1,6 +1,7 @@
 "use client";
 
 import { Terminal, ArrowUpRight } from "lucide-react";
+import { formatModelName } from "@/lib/model-utils";
 
 export interface ChatMessage {
   text: string;
@@ -59,7 +60,7 @@ export function PlaygroundChat({
         messages.map((m, i) => (
           <div key={i} className={`message ${m.user ? "user" : ""}`}>
             <span className="message-label">
-              {m.user ? "ANDA" : m.model?.toUpperCase() || "AI"}
+              {m.user ? "ANDA" : (m.model ? formatModelName(m.model).toUpperCase() : "AI")}
             </span>
             <p style={{ whiteSpace: "pre-wrap" }}>{m.text}</p>
             {!m.user && (

@@ -2,6 +2,7 @@
 
 import { AlertTriangle, Plus, ArrowRight } from "lucide-react";
 import { Button } from "./ui";
+import { formatModelName } from "@/lib/model-utils";
 import OrderHistoryTable from "./OrderHistoryTable";
 import RecentLogsTable from "./RecentLogsTable";
 
@@ -74,7 +75,7 @@ export function AnalyticsTab({
             return (
               <div className="usage-row" key={item.model}>
                 <div>
-                  <span>{item.model}</span>
+                  <span>{formatModelName(item.model)}</span>
                   <code>{Number(item.tokens).toLocaleString("id-ID")} token ({item.requests} req)</code>
                 </div>
                 <div className="bar-track">

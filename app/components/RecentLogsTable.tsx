@@ -1,7 +1,8 @@
 "use client";
 
 import { Activity, Download } from "lucide-react";
-import { TableRow } from "./ui";
+import { TableRow, Button } from "./ui";
+import { formatModelName } from "@/lib/model-utils";
 import { exportToCsv } from "@/lib/export-csv";
 
 export function RecentLogsTable({ logs }: { logs: any[] }) {
@@ -77,7 +78,7 @@ export function RecentLogsTable({ logs }: { logs: any[] }) {
                       <code>{dateStr}</code>
                     </td>
                     <td>
-                      <strong>{log.model}</strong>
+                      <strong>{formatModelName(log.model)}</strong>
                     </td>
                     <td className="muted">{log.prompt_tokens ?? 0}</td>
                     <td className="muted">{log.completion_tokens ?? 0}</td>

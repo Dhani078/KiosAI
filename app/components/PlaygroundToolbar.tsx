@@ -2,6 +2,7 @@
 
 import { Plus } from "lucide-react";
 import { Badge, Button } from "./ui";
+import { formatModelName } from "@/lib/model-utils";
 
 export function PlaygroundToolbar({
   models,
@@ -25,12 +26,15 @@ export function PlaygroundToolbar({
           value={selectedModel}
           onChange={(e) => onSelectModel(e.target.value)}
         >
-          {models.map((m) => (
-            <option key={m.id} value={m.id}>
-              {m.name || m.id} [{(m.required_tier || "bronze").toUpperCase()}]
-              {!m.accessible ? " — terkunci" : ""}
-            </option>
-          ))}
+          {models.map((m) => {
+            const displayName = formatModelName(m.name || m.id);
+            return (
+              <option key={m.id} value={m.id}>
+                {displayName} [{(m.required_tier || "bronze").toUpperCase()}]
+                {!m.accessible ? " — terkunci" : ""}
+              </option>
+            );
+          })}
         </select>
       </div>
       <Badge tier={requiredTier.toUpperCase()} />

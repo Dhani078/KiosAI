@@ -73,7 +73,13 @@ export function PlaygroundTab({
         body: JSON.stringify({ model: selectedModel, messages: payloadMessages, stream: false }),
       });
 
-      const data = await res.json();
+      const resText = await res.text();
+      let data: any;
+      try {
+        data = JSON.parse(resText);
+      } catch {
+        throw new Error(resText.slice(0, 160) || `HTTP ${res.status}`);
+      }
       if (!res.ok) throw new Error(data.error?.message || `HTTP ${res.status}`);
 
       const replyContent = data.choices?.[0]?.message?.content || "(Tidak ada balasan)";

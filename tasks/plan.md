@@ -55,5 +55,10 @@
   - Komponen `ModelsSection.tsx` dan `modelCatalogData.ts` memuat katalog model terpopuler dengan filter provider
   - Terintegrasi di `app/page.tsx`
   - Playwright audit: 0 overflow (mobile & desktop), filter interaktif berfungsi, tsc & build pass
+- [x] Phase 17: UI Model Name Sanitization
+  - Format tampilan web membuang prefiks `tokenharbor/` dan akhiran `:free` via `lib/model-utils.ts`
+  - Nilai value/sistem backend tetap `tokenharbor/deepseek-v4.1-flash:free`
+  - Seluruh kredensial & API key di `.env` terjaga aman tanpa perubahan
+  - Playwright & 10/10 E2E tests verified pass
 
 

@@ -10,7 +10,7 @@ export function PackageComparison({
   const comparisonModels = [
     {
       name: "Gemini Flash / DeepSeek",
-      sub: "Google / TokenHarbor",
+      sub: "Google / DeepSeek",
       use: "Chatbot & tugas cepat sehari-hari",
       tier: 0,
     },

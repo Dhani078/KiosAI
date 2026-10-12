@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { validateApiKey, getRequiredTierForModel } from "@/lib/keys";
+import { UPSTREAM_URL, UPSTREAM_KEY } from "@/lib/proxy-http";
+import { formatModelName } from "@/lib/model-utils";
 
 export const runtime = "nodejs";
-
-const UPSTREAM_URL = process.env.NINEROUTER_URL || "http://127.0.0.1:20128";
-const UPSTREAM_KEY = process.env.NINEROUTER_API_KEY || "";
 
 export async function GET(req: NextRequest) {
   const authHeader = req.headers.get("authorization") || "";
@@ -39,6 +38,7 @@ export async function GET(req: NextRequest) {
       const tier = getRequiredTierForModel(m.id);
       return {
         id: m.id,
+        name: formatModelName(m.name || m.id),
         object: "model",
         created: m.created || 1700000000,
         owned_by: "kiosai",
@@ -67,6 +67,7 @@ export async function GET(req: NextRequest) {
       object: "list",
       data: fallbacks.map((f) => ({
         id: f.id,
+        name: formatModelName(f.id),
         object: "model",
         created: 1700000000,
         owned_by: "kiosai",

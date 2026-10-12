@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Terminal, Copy, Check } from "lucide-react";
 import { Badge, Button } from "./ui";
+import { formatModelName } from "@/lib/model-utils";
 
 export function DocsTab({
   models,
@@ -107,6 +108,7 @@ console.log(response.choices[0].message.content);`,
           <span className="muted" style={{ fontSize: "12px" }}>Klik model untuk memperbarui contoh kode</span>
         </div>
         {models.map((m) => {
+          const cleanId = formatModelName(m.id);
           const isSelected = m.id === selectedDocModel;
           const tier = (m.required_tier || "bronze").toUpperCase();
           const mult = tier === "GOLD" ? "4.0x" : tier === "SILVER" ? "2.0x" : "1.0x";
@@ -124,7 +126,7 @@ console.log(response.choices[0].message.content);`,
             >
               <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                 {isSelected && <Check size={14} style={{ color: "var(--primary)" }} />}
-                <code>{m.id}</code>
+                <code>{cleanId}</code>
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                 <span className="muted" style={{ fontSize: "11px" }}>{mult} multiplier</span>
