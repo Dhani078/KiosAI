@@ -66,6 +66,14 @@ export async function GET(req: NextRequest) {
           required_tier: tier,
           accessible,
         };
+      })
+      .sort((a, b) => {
+        const aAcc = a.accessible ? 1 : 0;
+        const bAcc = b.accessible ? 1 : 0;
+        if (aAcc !== bAcc) return bAcc - aAcc;
+        const aP = a.id.toLowerCase().includes("atria") ? 2 : a.id.toLowerCase().includes("tokenharbor/deepseek-v4.1-flash") ? 1 : 0;
+        const bP = b.id.toLowerCase().includes("atria") ? 2 : b.id.toLowerCase().includes("tokenharbor/deepseek-v4.1-flash") ? 1 : 0;
+        return bP - aP;
       });
 
     return NextResponse.json({

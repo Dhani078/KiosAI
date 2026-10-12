@@ -21,6 +21,13 @@ export function ModelsTab({
   const [search, setSearch] = useState("");
   const [tierFilter, setTierFilter] = useState<string>("all");
 
+  const isFreeTier = (userTier || "free").toLowerCase() === "free";
+  const checkAllowed = (id: string) => {
+    if (!isFreeTier) return true;
+    const l = id.toLowerCase();
+    return l.includes("atria") || l.includes("tokenharbor/deepseek-v4.1-flash") || l === "deepseek-v4.1-flash";
+  };
+
   const filtered = models
     .filter((m) => m.id !== "combomaut")
     .filter((m) => {
@@ -29,9 +36,15 @@ export function ModelsTab({
       const matchesSearch = !search || clean.includes(search.toLowerCase()) || raw.includes(search.toLowerCase());
       const matchesTier = tierFilter === "all" || (m.required_tier || "bronze").toLowerCase() === tierFilter;
       return matchesSearch && matchesTier;
+    })
+    .sort((a, b) => {
+      const aAllowed = checkAllowed(a.id) ? 1 : 0;
+      const bAllowed = checkAllowed(b.id) ? 1 : 0;
+      if (aAllowed !== bAllowed) return bAllowed - aAllowed;
+      const aP = a.id.toLowerCase().includes("atria") ? 2 : a.id.toLowerCase().includes("tokenharbor/deepseek-v4.1-flash") ? 1 : 0;
+      const bP = b.id.toLowerCase().includes("atria") ? 2 : b.id.toLowerCase().includes("tokenharbor/deepseek-v4.1-flash") ? 1 : 0;
+      return bP - aP;
     });
-
-  const isFreeTier = (userTier || "free").toLowerCase() === "free";
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
@@ -78,7 +91,7 @@ export function ModelsTab({
           const mult = reqTier === "gold" ? "4.0×" : reqTier === "silver" ? "2.0×" : "1.0×";
           const displayName = formatModelName(m.name || m.id, isAdmin);
           const displayId = isAdmin ? m.id : displayName;
-          const isAllowed = !isFreeTier || m.id.toLowerCase().includes("atria") || m.id.toLowerCase().includes("tokenharbor/deepseek-v4.1-flash") || m.id === "deepseek-v4.1-flash";
+          const isAllowed = checkAllowed(m.id);
 
           return (
             <article

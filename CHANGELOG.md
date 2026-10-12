@@ -13,6 +13,13 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## 2026-10-12
 
+### `aab1bc3` — feat(ui): sort accessible models to the top of model catalog and playground
+**Ditambahkan / Diubah**
+- **Model yang Dapat Digunakan Tampil di Paling Atas**:
+  - Di tab **Model** (`ModelsTab.tsx`) dan dropdown **Playground** (`PlaygroundToolbar.tsx`), model yang berstatus terbuka / dapat digunakan (`isAllowed` / `accessible`) otomatis diurutkan ke paling atas.
+  - Untuk pengguna tier `free`, model `Atria Dawn Preview (Bansos)` dan `DeepSeek 4.1 Flash (Token Harbor)` otomatis menempati posisi teratas dengan status terbuka, disusul model lainnya yang berstatus terkunci.
+  - Endpoint `/v1/models` juga mengurutkan model terbuka di urutan teratas secara dinamis sesuai tier akun yang melakukan request.
+
 ### `9911c13` — feat(plans): set free bonus to 2.5M, tier free default, lock non-free models, filter unwanted models
 **Ditambahkan / Diubah**
 - **Bonus Akun Baru 2.5 Juta Token & Tier Default Free**:
