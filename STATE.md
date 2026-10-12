@@ -2,9 +2,17 @@
 
 - **Repository**: `https://github.com/Dhani078/KiosAI.git`
 - **Location**: `E:/Hermesproject/KiosAI`
-- **Current Status**: Complete & Fully Verified (Phase 0 - 10)
-- **Upstream Router**: 9Router local (`http://127.0.0.1:20128`)
+- **Live Worker**: `https://kiosai.dhanisepeda.workers.dev` (subdomain `dhanisepeda`, pakai `e`)
+- **Current Status**: Complete & Fully Verified (Phase 0 - 18)
+- **Upstream Router**: 9Router local (`http://127.0.0.1:20128`, 765 model aktif)
 - **Database**: TiDB Cloud Serverless (`gateway01.ap-southeast-1.prod.aws.tidbcloud.com:4000/kiosai`)
+- **Last Commit**: `828993d` — playground session key, chat persistence, sidebar Model menu
+
+## Dokumen Navigasi Cepat
+- Aturan & perintah untuk agent: `AGENT.md`
+- Ringkasan resume sesi: `docs/HANDOFF.md`
+- Arsitektur sistem: `docs/ARCHITECTURE.md`
+- Riwayat perubahan per commit: `CHANGELOG.md`
 
 ## History & Progress Log
 - 2026-10-11:

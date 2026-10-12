@@ -36,12 +36,17 @@
 ---
 
 ## 📚 Dokumentasi Lengkap
+- 🤖 [**Agent Operating Manual (AGENT.md)**](./AGENT.md) — **Mulai dari sini.** Aturan keras, kredensial, arsitektur kunci, dan perintah kerja rutin untuk AI agent/sesi baru.
+- 🔄 [**Session Handoff & Quick Resume (docs/HANDOFF.md)**](./docs/HANDOFF.md) — Snapshot status terkini, checklist melanjutkan sesi, gotchas penting, dan peta file utama.
+- 🏗️ [**System Architecture (docs/ARCHITECTURE.md)**](./docs/ARCHITECTURE.md) — Topologi komponen, alur data, skema database relasional, dan mekanisme multiplier.
 - 📖 [**API Reference (API.md)**](./API.md) — Spesifikasi lengkap seluruh endpoint REST, OpenAI Proxy, status codes, dan format error.
 - 🚀 [**Deployment Guide (DEPLOYMENT.md)**](./DEPLOYMENT.md) — Panduan deploy produksi Cloudflare Workers + Cloudflare Tunnel ke 9Router + TiDB.
 - 🛡️ [**Security Architecture (SECURITY.md)**](./SECURITY.md) — Standar enkripsi API key SHA-256, scrypt password hashing, sliding-window rate limit, dan mitigasi risiko.
 - 📋 [**Product Requirements Document (PRD.md)**](./PRD.md) — Spesifikasi teknis, arsitektur database, dan aturan engineering KiosAI.
 - 🔧 [**Troubleshooting Worker (docs/TROUBLESHOOTING-WORKER.md)**](./docs/TROUBLESHOOTING-WORKER.md) — Diagnosis env Worker kosong, error 1003, dan sinkronisasi tunnel 9Router.
 - 📊 [**Project State Log (STATE.md)**](./STATE.md) — Catatan riwayat implementasi, pengujian, dan status siklus pengembangan.
+- 🗓️ [**Changelog (CHANGELOG.md)**](./CHANGELOG.md) — Riwayat perubahan terperinci per commit (apa ditambah, diperbaiki, diubah).
+- ✅ [**Task Checklist (tasks/todo.md)**](./tasks/todo.md) & [**Implementation Plan (tasks/plan.md)**](./tasks/plan.md) — Progres 18 fase pengembangan.
 
 ---
 

@@ -73,6 +73,7 @@ data: [DONE]
 
 ### `GET /v1/models`
 Mengambil daftar model aktif dari 9Router beserta tier aksesnya.
+Field `id` memuat model ID sistem lengkap (misal `tokenharbor/deepseek-v4.1-flash:free`), sedangkan `name` memuat nama bersih untuk tampilan UI (`deepseek-v4.1-flash`).
 
 **Response (HTTP 200):**
 ```json
@@ -91,7 +92,30 @@ Mengambil daftar model aktif dari 9Router beserta tier aksesnya.
 
 ---
 
-## 3. Manajemen API Key (`/api/keys`)
+## 3. Profil Pengguna & Session Key (`/api/user`)
+
+### `GET /api/user?id=:id`
+Mengambil data profil pengguna, saldo token terkini, 10 riwayat log penggunaan terakhir, dan `playgroundKey` bertanda tangan HMAC.
+
+**Response (HTTP 200):**
+```json
+{
+  "user": {
+    "id": "usr_admin_dhani",
+    "email": "adminfordhani@kiosai.id",
+    "username": "adminfordhani",
+    "full_name": "Admin Dhani",
+    "tier": "gold",
+    "balance_tokens": "99991351"
+  },
+  "recentUsage": [...],
+  "playgroundKey": "kios-pg-usr_admin_dhani.a1b2c3d4..."
+}
+```
+
+---
+
+## 4. Manajemen API Key (`/api/keys`)
 
 ### `GET /api/keys?userId=:id`
 Mengambil daftar API key aktif milik pengguna (hanya prefix yang ditampilkan).

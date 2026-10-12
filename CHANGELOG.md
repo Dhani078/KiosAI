@@ -1,0 +1,128 @@
+# Changelog — KiosAI
+
+Semua perubahan penting pada proyek ini dicatat di sini.
+Format: `[commit-hash] tipe(scope): deskripsi`.
+
+---
+
+## [Unreleased]
+
+*(Tidak ada perubahan tertunda. Working tree bersih setelah `828993d`.)*
+
+---
+
+## 2026-10-12
+
+### `828993d` — feat: playground session key, chat persistence, sidebar Model menu
+**Ditambahkan**
+- `lib/session-key.ts` — generator & verifikator HMAC Playground session key (`kios-pg-<userId>.<sig>`).
+- `app/components/ModelsTab.tsx` — tab katalog model di dashboard (pencarian, filter tier, tombol "Coba di Playground").
+- Menu **Model** (ikon `Cpu`) di `app/components/Sidebar.tsx`.
+
+**Diperbaiki**
+- Playground sekarang memotong saldo token nyata dari akun pengguna yang login (sebelumnya memakai API key hardcoded milik user lain).
+- Setiap request Playground tercatat di `usage_logs` dan tampil di tab Statistik.
+- Histori chat Playground tidak lagi hilang saat berpindah tab dashboard (disimpan di `sessionStorage` `kios_playground_messages`).
+- `GET /api/user` kini mengembalikan `playgroundKey`.
+
+**Diubah**
+- `app/api/user/route.ts`, `app/hooks/useKiosData.ts`, `app/dashboard/DashboardApp.tsx`, `app/components/constants.ts`, `lib/keys.ts`.
+
+---
+
+### `da1217c` — feat(ui): tampilkan nama model bersih tanpa `tokenharbor` di UI
+**Ditambahkan**
+- `lib/model-utils.ts` — fungsi `formatModelName()` untuk membuang prefiks `tokenharbor/` dan sufiks `:free` **hanya untuk tampilan**.
+
+**Diubah**
+- `PlaygroundToolbar.tsx`, `PlaygroundChat.tsx`, `DocsTab.tsx`, `RecentLogsTable.tsx`, `AnalyticsTab.tsx`, `PackageComparison.tsx` — render nama bersih (`deepseek-v4.1-flash`).
+- ID sistem lengkap (`tokenharbor/deepseek-v4.1-flash:free`) tetap dipakai untuk value/API request agar routing 9Router tetap valid.
+
+**Catatan penting**
+- Tampilan berubah, **sistem tetap sama**. Nilai API key & `.env` tidak disentuh.
+
+---
+
+### `710f4d4` — feat(landing): tambah menu Model di navbar & section katalog model
+**Ditambahkan**
+- `app/landing/components/ModelsSection.tsx` + `modelCatalogData.ts` — katalog model publik dengan filter provider.
+- Anchor `#model` di `LandingNavbar.tsx` dan `LandingFooter.tsx`.
+
+---
+
+### `eb105de` — docs: catatan troubleshooting Worker + naikkan timeout health ke 12s
+**Diperbaiki**
+- `app/api/health/route.ts` — timeout probe upstream `5s` → `12s`. Tunnel + payload 765 model butuh ~2-4 detik dan sempat memicu abort palsu.
+
+**Ditambahkan**
+- `docs/TROUBLESHOOTING-WORKER.md` — catatan lapangan error env Worker, error 1003, dan rotasi URL tunnel.
+
+---
+
+### `f514d06` — fix(deploy): sinkronisasi secret Worker + otomatisasi tunnel
+**Ditambahkan**
+- `scripts/sync-worker-secrets.mjs` (`npm run secrets:sync`) — dorong `.env` → secret Worker.
+- `scripts/tunnel-sync.mjs` (`npm run tunnel`) — jalankan cloudflared lalu set `NINEROUTER_URL` otomatis.
+
+**Diperbaiki**
+- **Akar masalah** `DATABASE_URL environment variable is not defined` di Worker live: Worker punya **0 secret**. Bukan salah konfigurasi Cloudflare.
+- `scripts/verify-deployment.mjs` diperluas jadi 6 pengecekan termasuk deteksi drift secret Worker.
+
+**Diubah**
+- `DEPLOYMENT.md` ditulis ulang (Cloudflare Workers, bukan Vercel).
+- `README.md` bagian deploy: Vercel → Cloudflare Workers.
+
+---
+
+### `010feb2` / `a5be29f` — feat(auth): guard `/dashboard`, admin login via username
+**Ditambahkan**
+- Kolom `username VARCHAR(64)` + unique index di `kiosai.users`.
+- `AuthGuard` — `/dashboard` diblokir untuk anonim (redirect `/?login=1`).
+- `LandingAuthWatcher` — buka modal login otomatis dari query `?login=1`.
+- `scripts/seed-admin.mjs` — akun `adminfordhani` (Gold, 100M token).
+
+**Diperbaiki**
+- Logout membersihkan session dan kembali ke `/`.
+- Bug payload register: mengirim `fullName` (sebelumnya `name` sehingga nama selalu default).
+- Fallback demo user dihapus dari `useKiosData` dan `DashboardApp`.
+
+---
+
+### `311769b` — feat: landing page jadi beranda `/`, dashboard pindah ke `/dashboard`
+- Rute `/` menyajikan Landing Page publik (server component + SEO metadata).
+- Rute `/dashboard` menyajikan workspace dashboard.
+- `/landing` redirect ke `/` (kompatibilitas mundur).
+
+---
+
+### `3539562` — docs(security): tulis ulang SECURITY.md dengan hasil audit secret
+- Hasil audit: `.env` tidak pernah ter-track dan tidak ada di seluruh history git.
+- Repo berstatus **public** — risiko & checklist pra-produksi didokumentasikan.
+
+---
+
+## 2026-10-11
+
+### `404130d` — test: suite E2E 10 alur gateway
+### `f8ff6cc` — docs: `API.md`, `DEPLOYMENT.md`, `SECURITY.md`
+### `f39fe11` — feat: Docs interaktif + `npm run verify`
+### `fef9e83` — feat: ekspor CSV + System Prompt di Playground
+### `a7fe60e` — feat: `/api/health` + selector rate limit per key
+### `e1350e7` — feat: `RecentLogsTable` (20 log terakhir dari TiDB)
+### `9fe0ba0` — fix: session key terpadu `kiosai_user_id` + logout
+### `3d3a11f` — feat: design system KiosAI Token Marketplace + zero dummy data
+### `d43169b` — fix(billing): tagih `total_tokens` upstream untuk stream (`stream_options.include_usage`)
+### `27c01fe` / `dedc1db` — docs/model: default demo `tokenharbor/deepseek-v4.1-flash:free`
+
+---
+
+## Format Penulisan Commit
+
+```
+tipe(scope): deskripsi singkat
+
+- poin perubahan 1
+- poin perubahan 2
+```
+
+Tipe yang dipakai: `feat`, `fix`, `docs`, `test`, `refactor`, `chore`.

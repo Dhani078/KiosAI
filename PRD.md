@@ -242,3 +242,27 @@ Desain prototype dari `KiosAI Token Marketplace Design` diterapkan sepenuhnya pa
 | `npm run migrate` | `scripts/migrate.mjs` | DDL tabel TiDB |
 | `npm run test:e2e` | `scripts/test-e2e.mjs` | 10 alur gateway E2E |
 | — | `scripts/seed-admin.mjs` | Seed akun admin `adminfordhani` |
+
+## 17. Dokumentasi Sesi & Onboarding
+
+| Dokumen | Fungsi |
+|---|---|
+| `AGENT.md` | Operating manual AI agent: aturan keras, kredensial, arsitektur kunci, perintah rutin |
+| `docs/HANDOFF.md` | Snapshot status terkini, checklist resume sesi, gotchas, peta file utama |
+| `docs/ARCHITECTURE.md` | Topologi komponen, alur data, skema relasional, mekanisme multiplier |
+| `docs/TROUBLESHOOTING-WORKER.md` | Diagnosis error env Worker & tunnel |
+| `STATE.md` | Log riwayat implementasi tiap fase |
+| `tasks/todo.md`, `tasks/plan.md` | Progres task dan rencana implementasi |
+
+## 18. Playground Session Key & Chat Persistence
+
+- **HMAC Session Key** (`lib/session-key.ts`): `GET /api/user?id=...` menghasilkan `kios-pg-<userId>.<hmac32>` yang ditandatangani HMAC-SHA256 dengan secret `DATABASE_URL`. `validateApiKey` di `lib/keys.ts` mendeteksi prefix `kios-pg-` lebih dulu, lalu memverifikasi signature dan memuat user asli.
+- **Efek**: Playground web memotong saldo nyata dari akun pengguna yang login, dan setiap request tercatat di tabel `usage_logs` serta tampil di tab Statistik. Tidak ada lagi ketergantungan pada API key hardcoded.
+- **Chat Persistence**: Percakapan disimpan di `sessionStorage` (`kios_playground_messages`). Berpindah tab dashboard tidak menghapus riwayat. Hanya tombol "Chat baru +" yang mengosongkannya.
+- **Handoff Model**: Tombol "Coba di Playground" di `ModelsTab.tsx` menyimpan `kios_selected_model` lalu membuka tab Playground dengan model tersebut terpilih.
+
+## 19. Katalog Model di Dashboard
+
+- Menu **Model** (`Sidebar.tsx`, ikon `Cpu`) menampilkan `ModelsTab.tsx`.
+- Fitur: pencarian teks, filter tier (Semua/Bronze/Silver/Gold), indikator kunci untuk model yang belum accessible, dan tombol aksi kontekstual (Upgrade paket atau Coba di Playground).
+- Menampilkan nama bersih via `formatModelName` (misal `deepseek-v4.1-flash`) tetapi tetap memakai `m.id` lengkap sebagai value.
