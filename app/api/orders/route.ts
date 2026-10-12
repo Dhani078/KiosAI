@@ -5,6 +5,7 @@ import crypto from "crypto";
 export const runtime = "nodejs";
 
 const PACKAGES = {
+  free: { amountIdr: 0, tokens: 5000000, name: "Free Bansos", tier: "bronze" },
   starter: { amountIdr: 5000, tokens: 15000000, name: "Starter", tier: "bronze" },
   bronze: { amountIdr: 25000, tokens: 100000000, name: "Bronze", tier: "bronze" },
   silver: { amountIdr: 100000, tokens: 600000000, name: "Silver", tier: "silver" },

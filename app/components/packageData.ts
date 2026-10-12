@@ -1,5 +1,18 @@
 export const PACKAGES = [
   {
+    tierKey: "free",
+    name: "Free Bansos",
+    price: "0",
+    tokens: "5.000.000",
+    multiplier: "1.0",
+    desc: "Uji coba gratis untuk mencoba langsung tanpa bayar.",
+    features: [
+      "5 Juta token gratis akun baru",
+      "Model Atria-Dawn-Preview & DeepSeek",
+      "Langsung aktif di Playground & API",
+    ],
+  },
+  {
     tierKey: "starter",
     name: "Starter",
     price: "5.000",

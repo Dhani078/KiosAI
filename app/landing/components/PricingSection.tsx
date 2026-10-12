@@ -81,7 +81,7 @@ export function PricingSection() {
         <span className="note-dot">·</span>
         <span>Harga transparan sudah termasuk pajak</span>
         <span className="note-dot">·</span>
-        <span>Bonus 100.000 token otomatis untuk akun baru</span>
+        <span>Bonus 5.000.000 token bansos gratis untuk akun baru</span>
       </div>
     </section>
   );

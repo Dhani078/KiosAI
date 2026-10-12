@@ -60,6 +60,7 @@ export async function GET(req: NextRequest) {
   } catch {
     // Fallback model list if 9router unreachable
     const fallbacks = [
+      { id: "atria/Atria-Dawn-Preview", tier: "bronze" },
       { id: "tokenharbor/deepseek-v4.1-flash:free", tier: "bronze" },
       { id: "kr/claude-haiku-4.5-thinking-agentic", tier: "bronze" },
       { id: "kr/deepseek-3.2-thinking", tier: "bronze" },

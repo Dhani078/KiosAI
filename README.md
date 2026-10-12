@@ -146,6 +146,7 @@ print(response.choices[0].message.content)
 
 | Paket | Harga | Jumlah Token | Rate Limit | Akses Model & Multiplier |
 |---|---|---|---|---|
+| **Free Bansos** | Rp 0 (Gratis) | 5.000.000 Token | 60 req/min | Bonus Akun Baru (Atria-Dawn-Preview Bansos, DeepSeek) — **1.0x** |
 | **Starter** | Rp 5.000 | 15.000.000 Token | 60 req/min | Model Standard (Gemini Flash, DeepSeek Flash) — **1.0x** |
 | **Bronze** | Rp 25.000 | 100.000.000 Token | 60 req/min | Model Standard (Gemini Flash, DeepSeek Flash) — **1.0x** |
 | **Silver** | Rp 100.000 | 600.000.000 Token | 300 req/min | Termasuk GPT-4o, GPT-5, Claude Sonnet 4.5 — **2.0x** |

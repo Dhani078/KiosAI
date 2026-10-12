@@ -56,7 +56,7 @@ await test("POST /api/auth/register", async () => {
   const data = await res.json();
   assert(res.ok, `HTTP ${res.status}`);
   assert(data.user?.id, "No user ID returned");
-  assert(Number(data.user.balance_tokens) === 100000, "Trial tokens mismatch");
+  assert(Number(data.user.balance_tokens) === 5000000, "Trial tokens mismatch");
   testUser = data.user;
 });
 
@@ -169,7 +169,7 @@ await test("POST /api/orders/pay (Payment Fulfillment)", async () => {
   const uRes = await fetch(`${BASE}/api/user?id=${testUser.id}`);
   const uData = await uRes.json();
   assert(uData.user.tier === "silver", `Expected silver tier, got ${uData.user.tier}`);
-  assert(Number(uData.user.balance_tokens) > 100000, "Tokens not credited");
+  assert(Number(uData.user.balance_tokens) > 5000000, "Tokens not credited");
 });
 
 // 10. Analytics & Usage Logs

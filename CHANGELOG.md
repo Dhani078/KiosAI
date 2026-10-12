@@ -13,6 +13,17 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## 2026-10-12
 
+### `2368424` — feat(plans): add Free Plan 5M tokens and atria/Atria-Dawn-Preview bansos model
+**Ditambahkan / Diubah**
+- **Free Plan 5 Juta Token**:
+  - Registrasi user baru otomatis memperoleh saldo gratis **5.000.000 token** (Free Plan Bansos) di TiDB.
+  - Ditambahkan paket `Free Bansos` (Rp 0 / 5M token) di `app/components/packageData.ts` dan `app/api/orders/route.ts`.
+- **Model Bansos `atria/Atria-Dawn-Preview`**:
+  - Terintegrasi langsung dengan upstream 9Router dan fallback catalog.
+  - Ditampilkan di web sebagai `Atria-Dawn-Preview (Bansos)` untuk pengguna biasa, dan `atria/Atria-Dawn-Preview` untuk admin.
+  - Dukungan resolusi alias otomatis di `/v1/chat/completions`.
+- Dokumentasi `README.md`, `PRD.md`, `API.md` disinkronkan.
+
 ### `e3d90e9` — feat(models): universal model access, remove combomaut, role-based model names
 **Ditambahkan / Diubah**
 - **Akses Model Universal**: Semua model AI terbuka untuk seluruh pengguna tanpa batas tier (`isModelAllowedForTier` = true). Pemakaian hanya dibatasi oleh saldo token nyata, dengan multiplier potongan (1.0x, 2.0x, 4.0x).
