@@ -26,7 +26,7 @@ function walk(dir, out = []) {
     if (EXCLUDED.includes(entry)) continue;
     const p = join(dir, entry);
     if (statSync(p).isDirectory()) walk(p, out);
-    else if (/\.(ts|tsx|mjs)$/.test(entry)) out.push(p);
+    else if (/\.(ts|tsx|mjs|cjs)$/.test(entry)) out.push(p);
   }
   return out;
 }

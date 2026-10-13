@@ -12,6 +12,7 @@
     "secrets:sync": "node --env-file=.env scripts/sync-worker-secrets.mjs",
     "test:e2e": "node --env-file=.env scripts/test-e2e.mjs",
     "test:pricing": "node scripts/test-pricing.mjs",
+    "test:billing": "node scripts/verify-billing.cjs",
     "migrate:tiers": "node --env-file=.env scripts/migrate-tiers.mjs",
     "audit:ui": "node scripts/audit-ui.mjs",
     "audit:dashboard": "node scripts/audit-dashboard.mjs",
