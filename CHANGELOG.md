@@ -13,7 +13,7 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## 2026-10-13
 
-### `HEAD` — feat(billing): 2 tier final (Free & Pro), billing = tarif $/1M, migrasi data legacy
+### `798c24a` — feat(billing): final 2-tier model (Free & Pro), billing from $/1M rates
 
 **Ditambahkan**
 - **`getCostRatio()` di `lib/model-pricing.ts`** — sumber tunggal rasio pemotongan saldo: `(Input $ + Output $) / 1.37`, baseline DeepSeek Flash ($0.27 + $1.10). Floor `0.05` untuk model $0 (Atria) sebagai jaring anti-abuse. Angka yang dirender di kartu model dan angka yang dipotong kini tidak bisa berbeda.
