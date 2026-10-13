@@ -110,7 +110,7 @@
 - [x] Task 11.1: Token pricing packages (historis: Starter 5k/15M, Bronze 25k/100M, Silver 100k/600M, Gold 150k/1Miliar — kini 2 tier)
 - [x] Task 11.2: Add Free Plan trial bonus for all new registered accounts in TiDB (kini 2.500.000 token, tier `free`)
 - [x] Task 11.3: Integrate `atria/Atria-Dawn-Preview` (Bansos) model into gateway, fallbacks, and landing catalog
-- [x] Task 11.4: Model gating 2 tier final — `free` (Atria Dawn + DeepSeek Flash) dan `pro` (seluruh model), dibatasi saldo token nyata dengan rasio tarif $/1M (lihat Phase 20).
+- [x] Task 11.4: Model gating 2 tier final — `free` (hanya Atria Dawn) dan `pro` (seluruh model), dibatasi saldo token nyata dengan rasio tarif $/1M (lihat Phase 20).
 - [x] Task 11.5: Role-based model names in UI (`lib/model-utils.ts`): raw technical routing for admin (`adminfordhani`), clean commercial names for regular users
 - [x] Task 11.6: Dynamic 1-click Free Plan claim flow in `PaymentModal.tsx` (bypassing QRIS for Rp 0 packages)
 - [x] Task 11.7: Cloudflare Quick Tunnel restored and verified live healthy on `kiosai.dhanisepeda.workers.dev`

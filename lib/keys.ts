@@ -26,7 +26,7 @@ export interface UserRecord {
 
 export function getRequiredTierForModel(modelId: string): "free" | "pro" {
   const m = modelId.toLowerCase();
-  if (m.includes("atria") || m.includes("tokenharbor/deepseek-v4.1-flash") || m === "deepseek-v4.1-flash") {
+  if (m.includes("atria")) {
     return "free";
   }
   return "pro";
@@ -36,9 +36,7 @@ export function isModelAllowedForTier(tier: string, model: string): boolean {
   const t = (tier || "free").toLowerCase();
   if (t === "free") {
     const m = model.toLowerCase();
-    const isAtria = m.includes("atria");
-    const isTokenHarborDeepSeek = m.includes("tokenharbor/deepseek-v4.1-flash") || m === "deepseek-v4.1-flash";
-    return isAtria || isTokenHarborDeepSeek;
+    return m.includes("atria");
   }
   return true;
 }

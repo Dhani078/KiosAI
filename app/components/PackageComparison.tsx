@@ -16,9 +16,9 @@ export function PackageComparison({
     },
     {
       name: "DeepSeek V4.1 Flash",
-      sub: "DeepSeek / Free",
+      sub: "DeepSeek / Pro",
       use: "Chatbot & tugas cepat sehari-hari",
-      tier: 0,
+      tier: 1,
     },
     {
       name: "Claude Haiku / GPT-4o mini",

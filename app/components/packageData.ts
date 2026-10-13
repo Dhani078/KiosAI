@@ -7,7 +7,7 @@ export const PACKAGES = [
     desc: "Bonus pendaftaran akun baru tanpa bayar.",
     features: [
       "2.5 Juta token aktif langsung",
-      "Model Atria Dawn & DeepSeek Flash",
+      "Model Atria Dawn",
       "Akses API & Playground",
     ],
   },

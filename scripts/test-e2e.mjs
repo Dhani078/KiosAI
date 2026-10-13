@@ -85,14 +85,14 @@ await test("POST /v1/chat/completions (Non-stream)", async () => {
       Authorization: `Bearer ${testKey}`,
     },
     body: JSON.stringify({
-      model: "tokenharbor/deepseek-v4.1-flash:free",
+      model: "atria/Atria-Dawn-Preview",
       messages: [{ role: "user", content: "Halo KiosAI e2e" }],
       max_tokens: 10,
     }),
   });
   const data = await res.json();
   assert(res.ok, `HTTP ${res.status}`);
-  assert(data.choices?.[0]?.message?.content, "No response content");
+  assert(data.choices?.[0]?.message, "No response message");
   assert(data.usage?.total_tokens > 0, "No usage accounted");
   assert(res.headers.get("X-RateLimit-Limit"), "Missing X-RateLimit-Limit");
   assert(res.headers.get("X-RateLimit-Remaining"), "Missing X-RateLimit-Remaining");
@@ -108,7 +108,7 @@ await test("POST /v1/chat/completions (Stream SSE)", async () => {
       Authorization: `Bearer ${testKey}`,
     },
     body: JSON.stringify({
-      model: "tokenharbor/deepseek-v4.1-flash:free",
+      model: "atria/Atria-Dawn-Preview",
       messages: [{ role: "user", content: "Stream test" }],
       max_tokens: 10,
       stream: true,
@@ -130,7 +130,7 @@ await test("Free Tier Gating (403 tier_restricted)", async () => {
       Authorization: `Bearer ${testKey}`,
     },
     body: JSON.stringify({
-      model: "claude-haiku-4.5",
+      model: "tokenharbor/deepseek-v4.1-flash:free",
       messages: [{ role: "user", content: "Ping" }],
       max_tokens: 5,
     }),

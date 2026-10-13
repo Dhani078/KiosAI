@@ -102,7 +102,7 @@ export function PaymentModal({
             <div style={{ textAlign: "center", padding: "24px 16px", background: "var(--canvas)", borderRadius: "var(--radius-card)", border: "1px solid var(--border)", margin: "16px 0" }}>
               <Gift size={34} style={{ color: "var(--primary)", margin: "0 auto 8px" }} />
               <h3 style={{ fontSize: "15px", margin: "0 0 4px" }}>{pkg.tokens} Token Siap Pakai</h3>
-              <p style={{ fontSize: "12px", color: "var(--text-muted)", margin: 0 }}>Akses model Atria Dawn & DeepSeek Flash.</p>
+              <p style={{ fontSize: "12px", color: "var(--text-muted)", margin: 0 }}>Akses model Atria Dawn.</p>
             </div>
             <Button kind="primary" loading={loading} disabled={!orderId} onClick={handleConfirmPay}>
               Klaim {pkg.name} <CheckCheck size={17} />

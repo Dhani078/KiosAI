@@ -25,10 +25,10 @@ export const MODELS: ModelItem[] = [
     name: "DeepSeek V4.1 Flash",
     provider: "DeepSeek",
     context: "128k",
-    tier: "free",
+    tier: "pro",
     pricing: "In $0.27 · Out $1.10 / 1M",
     desc: "Model reasoning super cepat, efisien untuk coding & chat harian.",
-    strengths: ["Free & Pro", "Coding Cepat", "Bahasa Indonesia"],
+    strengths: ["Pro Tier", "Coding Cepat", "Bahasa Indonesia"],
   },
   {
     id: "anthropic/claude-3.7-sonnet",

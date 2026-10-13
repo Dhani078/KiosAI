@@ -71,8 +71,8 @@ export async function GET(req: NextRequest) {
         const aAcc = a.accessible ? 1 : 0;
         const bAcc = b.accessible ? 1 : 0;
         if (aAcc !== bAcc) return bAcc - aAcc;
-        const aP = a.id.toLowerCase().includes("atria") ? 2 : a.id.toLowerCase().includes("tokenharbor/deepseek-v4.1-flash") ? 1 : 0;
-        const bP = b.id.toLowerCase().includes("atria") ? 2 : b.id.toLowerCase().includes("tokenharbor/deepseek-v4.1-flash") ? 1 : 0;
+        const aP = a.id.toLowerCase().includes("atria") ? 1 : 0;
+        const bP = b.id.toLowerCase().includes("atria") ? 1 : 0;
         return bP - aP;
       });
 
@@ -85,7 +85,7 @@ export async function GET(req: NextRequest) {
     // Fallback model list if 9router unreachable
     const fallbacks = [
       { id: "atria/Atria-Dawn-Preview", tier: "free" },
-      { id: "tokenharbor/deepseek-v4.1-flash:free", tier: "free" },
+      { id: "tokenharbor/deepseek-v4.1-flash:free", tier: "pro" },
       { id: "kr/claude-haiku-4.5-thinking-agentic", tier: "pro" },
       { id: "kr/deepseek-3.2-thinking", tier: "pro" },
       { id: "kr/claude-sonnet-4.5-thinking-agentic", tier: "pro" },

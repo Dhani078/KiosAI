@@ -71,7 +71,7 @@
   - Model `atria/Atria-Dawn-Preview` diaktifkan dan terhubung ke upstream 9Router
   - Nama model role-based: routing teknis untuk admin, komersial bersih untuk pengguna umum
 - [x] Phase 20: Final 2-Tier Model (Free & Pro) + Billing Tarif $/1M
-  - Paket final: `free` (Rp 0 / 2.5 Juta token, hanya Atria Dawn & DeepSeek Flash) dan `pro` (25K/100K/150K — seluruh model AI, top-up QRIS)
+  - Paket final: `free` (Rp 0 / 2.5 Juta token, hanya Atria Dawn) dan `pro` (25K/100K/150K — seluruh model AI, top-up QRIS)
   - `getModelMultiplier()` dihapus; billing pakai `getCostRatio()` = `(Input $ + Output $) / 1.37`, sumber tunggal dengan angka yang dirender di kartu model
   - Kartu model menampilkan tarif **Input / Output ($ / 1M tokens)**; label `1.0×/2.0×/4.0×` dihapus
   - Migrasi data legacy `bronze`/`silver`/`gold` → `pro` via `npm run migrate:tiers` (idempoten + backup JSON)

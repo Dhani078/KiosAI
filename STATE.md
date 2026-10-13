@@ -119,7 +119,7 @@
           - Alur modal klaim Free Plan 1-klik tanpa simulasi QRIS.
           - Cloudflare Tunnel aktif dipulihkan dan status Worker live `kiosai.dhanisepeda.workers.dev` kembali `healthy`.
         - Phase 20: Final 2-Tier Model (Free & Pro) + Billing Tarif $/1M
-          - **Tier final**: `free` (Rp 0 / 2.5 Juta token, hanya Atria Dawn & DeepSeek Flash) dan `pro` (Pro 25K Rp 25.000 / 100 Juta, Pro 100K Rp 100.000 / 600 Juta, Pro 150K Rp 150.000 / 1 Miliar — seluruh model AI, top-up QRIS).
+          - **Tier final**: `free` (Rp 0 / 2.5 Juta token, hanya Atria Dawn) dan `pro` (Pro 25K Rp 25.000 / 100 Juta, Pro 100K Rp 100.000 / 600 Juta, Pro 150K Rp 150.000 / 1 Miliar — seluruh model AI, top-up QRIS).
           - `getModelMultiplier()` dihapus dari `lib/keys.ts`. Billing kini `getCostRatio()` di `lib/model-pricing.ts` = `(Input $ + Output $) / 1.37` (baseline DeepSeek Flash $0.27 + $1.10), floor `0.05` untuk model $0. Sumber tunggal dengan angka yang dirender di kartu model.
           - Kartu model menampilkan tarif **Input / Output ($ / 1M tokens)**; label `1.0× / 2.0× / 4.0×` dan istilah `multiplier`/`Bansos` dihapus dari seluruh UI, FAQ, dan dokumen.
           - Migrasi data legacy `bronze`/`silver`/`gold` → `pro` via `npm run migrate:tiers` (idempoten, backup JSON ke `backups/`). Hasil: 41 user + 29 order dimigrasi; akhirnya `free: 1`, `pro: 46` (users).

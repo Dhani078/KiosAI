@@ -26,8 +26,8 @@ export function PlaygroundToolbar({
       const aAcc = a.accessible !== false ? 1 : 0;
       const bAcc = b.accessible !== false ? 1 : 0;
       if (aAcc !== bAcc) return bAcc - aAcc;
-      const aP = a.id.toLowerCase().includes("atria") ? 2 : a.id.toLowerCase().includes("tokenharbor/deepseek-v4.1-flash") ? 1 : 0;
-      const bP = b.id.toLowerCase().includes("atria") ? 2 : b.id.toLowerCase().includes("tokenharbor/deepseek-v4.1-flash") ? 1 : 0;
+      const aP = a.id.toLowerCase().includes("atria") ? 1 : 0;
+      const bP = b.id.toLowerCase().includes("atria") ? 1 : 0;
       return bP - aP;
     });
 

@@ -105,7 +105,7 @@ CREATE TABLE IF NOT EXISTS usage_logs (
   2. Rate limit sliding window (maks per menit) -> Return 429 jika overload
   3. Cek `is_active == true` & `balance_tokens > 0`
   4. Cek `allowed_models` cocok dengan `body.model`
-  5. Cek Tier Gating: Free hanya model gratis (Atria Dawn, DeepSeek Flash), Pro membuka seluruh model.
+  5. Cek Tier Gating: Free hanya model gratis (Atria Dawn), Pro membuka seluruh model.
 - **Tarif Token (rasio dari harga $ / 1M)**:
   - Tarif model diambil dari `lib/model-pricing.ts` (Input + Output $ / 1M).
   - Rasio pemotongan = (Input + Output) / 1.37, baseline DeepSeek Flash ($0.27 + $1.10).
@@ -124,7 +124,7 @@ CREATE TABLE IF NOT EXISTS usage_logs (
 - `DELETE /api/keys/:id`: Revoke key.
 
 ### 5.4 Billing & Orders:
-- Free: Rp 0 -> 2.500.000 Token (Bonus akun baru, Model: Atria Dawn & DeepSeek Flash)
+- Free: Rp 0 -> 2.500.000 Token (Bonus akun baru, Model: Atria Dawn)
 - Pro 25K: Rp 25.000 -> 100.000.000 Token (Seluruh model AI)
 - Pro 100K: Rp 100.000 -> 600.000.000 Token
 - Pro 150K: Rp 150.000 -> 1.000.000.000 Token

@@ -26,7 +26,7 @@ export function ModelsTab({
   const checkAllowed = (id: string) => {
     if (!isFreeTier) return true;
     const l = id.toLowerCase();
-    return l.includes("atria") || l.includes("tokenharbor/deepseek-v4.1-flash") || l === "deepseek-v4.1-flash";
+    return l.includes("atria");
   };
 
   const filtered = models
@@ -43,8 +43,8 @@ export function ModelsTab({
       const aAllowed = checkAllowed(a.id) ? 1 : 0;
       const bAllowed = checkAllowed(b.id) ? 1 : 0;
       if (aAllowed !== bAllowed) return bAllowed - aAllowed;
-      const aP = a.id.toLowerCase().includes("atria") ? 2 : a.id.toLowerCase().includes("tokenharbor/deepseek-v4.1-flash") ? 1 : 0;
-      const bP = b.id.toLowerCase().includes("atria") ? 2 : b.id.toLowerCase().includes("tokenharbor/deepseek-v4.1-flash") ? 1 : 0;
+      const aP = a.id.toLowerCase().includes("atria") ? 1 : 0;
+      const bP = b.id.toLowerCase().includes("atria") ? 1 : 0;
       return bP - aP;
     });
 

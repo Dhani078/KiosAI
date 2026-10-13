@@ -67,12 +67,12 @@ export async function POST(req: NextRequest) {
 
   // 3. Validate Model Access
   if (!isModelAllowedForTier(auth.user.tier, requestedModel)) {
-    return errorResponse(
-      `Model '${rawModel}' tidak tersedia di tier FREE. Model gratis hanya Atria Dawn dan DeepSeek Flash. Beli paket Pro untuk membuka seluruh model AI.`,
-      403,
-      "tier_restricted"
-    );
-  }
+      return errorResponse(
+        `Model '${rawModel}' tidak tersedia di tier FREE. Model gratis hanya Atria Dawn. Beli paket Pro untuk membuka seluruh model AI.`,
+        403,
+        "tier_restricted",
+      );
+    }
 
   const isStream = Boolean(body.stream);
   const targetUrl = `${UPSTREAM_URL}/v1/chat/completions`;

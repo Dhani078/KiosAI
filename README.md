@@ -15,7 +15,7 @@
 - **OpenAI-Compatible Proxy (`/v1/chat/completions`)**: Mendukung streaming (SSE) dan JSON completion. Kompatibel dengan semua official OpenAI SDKs.
 - **Dynamic Model Discovery (`/v1/models`)**: Sinkronisasi otomatis dengan upstream 9Router dan anotasi tier akses model.
 - **TiDB Cloud Serverless**: Database MySQL-compatible berbasis HTTP fetch via `@tidbcloud/serverless`. Skalabel tanpa limit koneksi pool di serverless/Vercel.
-- **Model Gating 2 Tier**: Dua tier saja — `free` (Atria Dawn + DeepSeek Flash) dan `pro` (seluruh model AI). Model di luar tier Free ditolak HTTP 403 `tier_restricted`.
+- **Model Gating 2 Tier**: Dua tier saja — `free` (hanya Atria Dawn) dan `pro` (seluruh model AI termasuk DeepSeek Flash, Claude, GPT, Gemini). Model di luar tier Free ditolak HTTP 403 `tier_restricted`.
 - **Tarif Token Transparan ($/1M)**: Tidak ada multiplier tersembunyi. Kartu model menampilkan tarif `Input / Output ($ / 1M tokens)` apa adanya; rasio pemotongan saldo diturunkan dari angka yang sama via `getCostRatio()` di `lib/model-pricing.ts` (baseline DeepSeek Flash = 1.0).
 - **Low-Balance Alert**: Header otomatis `X-Quota-Warning: low_balance` dan peringatan di UI jika saldo < 20.000 token.
 - **Riwayat Transaksi & Invoice**: Endpoint `GET /api/orders` dan tabel riwayat order QRIS di antarmuka web.
@@ -146,7 +146,7 @@ print(response.choices[0].message.content)
 
 | Paket | Harga | Jumlah Token | Rate Limit | Akses Model |
 |---|---|---|---|---|
-| **Free** | Rp 0 (Gratis) | 2.500.000 Token | 60 req/min | Bonus akun baru — hanya Atria Dawn & DeepSeek Flash |
+| **Free** | Rp 0 (Gratis) | 2.500.000 Token | 60 req/min | Bonus akun baru — hanya Atria Dawn |
 | **Pro 25K** | Rp 25.000 | 100.000.000 Token | 120 req/min | Seluruh model AI (Claude, GPT, Gemini, Grok) |
 | **Pro 100K** | Rp 100.000 | 600.000.000 Token | 300 req/min | Seluruh model AI termasuk flagship |
 | **Pro 150K** | Rp 150.000 | 1.000.000.000 Token | 1.000 req/min | Seluruh model AI & combo flagship |

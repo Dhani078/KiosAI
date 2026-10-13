@@ -23,7 +23,7 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 - **`scripts/verify-billing.cjs`** — verifikasi rasio live end-to-end terhadap TiDB nyata.
 
 **Diubah**
-- **Paket jadi 2 tier**: `free` (Rp 0 / 2.5 Juta token, hanya Atria Dawn & DeepSeek Flash) dan `pro` (Pro 25K Rp 25.000 / 100 Juta, Pro 100K Rp 100.000 / 600 Juta, Pro 150K Rp 150.000 / 1 Miliar — seluruh model AI, top-up QRIS).
+- **Paket jadi 2 tier**: `free` (Rp 0 / 2.5 Juta token, hanya Atria Dawn) dan `pro` (Pro 25K Rp 25.000 / 100 Juta, Pro 100K Rp 100.000 / 600 Juta, Pro 150K Rp 150.000 / 1 Miliar — seluruh model AI, top-up QRIS).
 - **`getModelMultiplier()` dihapus** dari `lib/keys.ts`; kedua titik potong (`stream` + non-stream) di `app/v1/chat/completions/route.ts` kini memakai `getCostRatio()`.
 - **Semua copy lama dibersihkan**: `Bansos`, `multiplier`, `1.0×/2.0×/4.0×`, dan label `Silver`/`Gold` hilang dari landing, dashboard, FAQ, PRD, README, API.md, SECURITY.md, ARCHITECTURE.md, AGENT.md, dan HANDOFF.md.
 - **Badge tier di `PaymentModal.tsx`** — sebelumnya `<Badge tier={pkg.name} />` menghasilkan kelas CSS rusak (`badge pro 25k`); kini `FREE`/`PRO`.
