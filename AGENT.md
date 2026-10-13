@@ -61,10 +61,10 @@ Dokumen ini adalah sumber kebenaran (source of truth) utama bagi AI agent untuk 
   - Username: `adminfordhani` (Login bisa pakai username langsung)
   - Email: `adminfordhani@kiosai.id`
   - Password: `dhaniforadmin` (Tersimpan via hash `scrypt` di TiDB)
-  - Tier: `gold` | Saldo: `100.000.000` token
+  - Tier: `pro` | Saldo: `100.000.000` token
 - **User Biasa**:
   - Login & Register via format email standar (`budi@gmail.com`).
-  - Bonus pendaftaran baru otomatis: `5.000.000` token trial tier `bronze` (Free Plan Bansos).
+  - Bonus pendaftaran baru otomatis: `2.500.000` token tier `free`.
 
 ---
 
@@ -73,7 +73,7 @@ Dokumen ini adalah sumber kebenaran (source of truth) utama bagi AI agent untuk 
 - `/` : Landing Page publik (Navbar, Hero, Fitur, Katalog Model, Paket Harga, Sandbox Kode, FAQ, Footer).
 - `/dashboard` : Workspace pengguna terlindungi `AuthGuard` (Redirect ke `/?login=1` jika belum login).
   - Tab 1: **API Keys** (`KeysTab.tsx`) — Generate key `kios-xxxx` (SHA-256), rate limit 30/60/120.
-  - Tab 2: **Beli Token** (`PackagesTab.tsx`) — Checkout paket Bronze, Silver, Gold via QRIS simulasi.
+  - Tab 2: **Beli Token** (`PackagesTab.tsx`) — Checkout paket Free & Pro (25K/100K/150K) via QRIS simulasi.
   - Tab 3: **Model** (`ModelsTab.tsx`) — Katalog model AI dengan filter tier & tombol uji Playground.
   - Tab 4: **Playground** (`PlaygroundTab.tsx`) — Chatbot uji coba live, terikat HMAC session key.
   - Tab 5: **Statistik** (`AnalyticsTab.tsx`) — Grafik konsumsi per model & tabel riwayat 20 log TiDB.

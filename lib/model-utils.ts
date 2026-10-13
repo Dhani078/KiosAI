@@ -11,7 +11,7 @@ export function formatModelName(modelId: string, isAdmin: boolean = false): stri
 
   const lower = modelId.toLowerCase();
   if (lower.includes("atria-dawn")) {
-    return "Atria-Dawn-Preview (Bansos)";
+    return "Atria-Dawn-Preview";
   }
   if (lower.includes("deepseek-v4.1-flash")) {
     return "deepseek-v4.1-flash";
@@ -46,7 +46,7 @@ export function resolveModelAlias(modelId: string): string {
   if (m === "deepseek-v4.1-flash") {
     return "tokenharbor/deepseek-v4.1-flash:free";
   }
-  if (m === "Atria-Dawn-Preview (Bansos)" || m.toLowerCase() === "atria-dawn-preview" || m.toLowerCase() === "atria-bansos") {
+  if (m.toLowerCase() === "atria-dawn-preview" || m.toLowerCase() === "atria") {
     return "atria/Atria-Dawn-Preview";
   }
   return m;

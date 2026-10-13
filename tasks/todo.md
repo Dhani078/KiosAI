@@ -28,7 +28,7 @@
 - [x] Task 4.4: Sync Documentation & Git Push
 
 ## Phase 5 (Model Multiplier Pricing, Order Invoices & Low-Balance Alert - Completed)
-- [x] Task 5.1: Model Pricing Multipliers (1.0x Bronze, 2.0x Silver, 4.0x Gold) in `lib/keys.ts`
+- [x] Task 5.1: Model pricing ratios (rasio dari tarif $/1M) in `lib/model-pricing.ts` — `getModelMultiplier()` dihapus di Phase 20
   - Acceptance: Token deduction applies weight based on model complexity
   - Verify: Verified deduction formula
   - Files: `lib/keys.ts`, `app/v1/chat/completions/route.ts`
@@ -106,11 +106,11 @@
 - [x] Task 10.4: Add "Model" item to left dashboard Sidebar (`Sidebar.tsx`), `constants.ts`, and mount `ModelsTab.tsx` in `DashboardApp.tsx`
 - [x] Task 10.5: Zero API keys modified; 100% files <= 200 LOC; verified via Playwright & E2E suite
 
-## Phase 11 (Token Marketplace Restructure & Free Plan Bansos - Completed)
-- [x] Task 11.1: Restructure token pricing packages (Starter 5k/15M, Bronze 25k/100M, Silver 100k/600M, Gold 150k/1Miliar)
-- [x] Task 11.2: Add Free Plan (Rp 0 / 5.000.000 tokens) trial bonus for all new registered accounts in TiDB
+## Phase 11 (Token Marketplace Restructure — Completed, superseded by Phase 20)
+- [x] Task 11.1: Token pricing packages (historis: Starter 5k/15M, Bronze 25k/100M, Silver 100k/600M, Gold 150k/1Miliar — kini 2 tier)
+- [x] Task 11.2: Add Free Plan trial bonus for all new registered accounts in TiDB (kini 2.500.000 token, tier `free`)
 - [x] Task 11.3: Integrate `atria/Atria-Dawn-Preview` (Bansos) model into gateway, fallbacks, and landing catalog
-- [x] Task 11.4: Universal model access — all models unlocked regardless of user tier, billed proportionally by multiplier
+- [x] Task 11.4: Model gating 2 tier final — `free` (Atria Dawn + DeepSeek Flash) dan `pro` (seluruh model), dibatasi saldo token nyata dengan rasio tarif $/1M (lihat Phase 20).
 - [x] Task 11.5: Role-based model names in UI (`lib/model-utils.ts`): raw technical routing for admin (`adminfordhani`), clean commercial names for regular users
 - [x] Task 11.6: Dynamic 1-click Free Plan claim flow in `PaymentModal.tsx` (bypassing QRIS for Rp 0 packages)
 - [x] Task 11.7: Cloudflare Quick Tunnel restored and verified live healthy on `kiosai.dhanisepeda.workers.dev`

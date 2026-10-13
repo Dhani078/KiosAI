@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
 
     const userId = `usr_${crypto.randomUUID()}`;
     const passwordHash = hashPassword(password);
-    const initialTokens = 2500000; // 2.5M trial token (Free Plan Bansos)
+    const initialTokens = 2500000; // 2.5M bonus token (Free tier)
 
     await db.execute(
       `INSERT INTO kiosai.users (id, email, password_hash, full_name, tier, balance_tokens)
@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       success: true,
       user,
-      message: "Pendaftaran berhasil! Anda mendapatkan 2.500.000 token uji coba gratis (Free Plan Bansos).",
+      message: "Pendaftaran berhasil! Anda mendapatkan 2.500.000 token gratis (Free tier).",
     });
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });

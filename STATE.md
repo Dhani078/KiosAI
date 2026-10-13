@@ -33,10 +33,10 @@
     - `POST /api/orders/pay`: Order confirmation & instant token credit.
     - `POST /api/payment/webhook`: Webhook handler with idempotency check, auto-upgrade tier, and token credit.
   - Hardening & Security (OWASP standard):
-    - User Authentication: `POST /api/auth/register` (auto-credits 100k trial token) and `POST /api/auth/login` (scrypt password verification).
-    - Rate Limiting: In-memory sliding window enforcing `rate_limit_per_min`, injects `X-RateLimit-*` headers, returns HTTP 429 when abused.
-    - Tier-based model permission gating: Bronze tier blocked from advanced models (`tier_restricted`), Silver/Gold unlocked.
-    - Model Multiplier Pricing: 1.0x Bronze/Flash, 2.0x Silver/Sonnet, 4.0x Gold/Opus.
+    - User Authentication: `POST /api/auth/register` (auto-credits 2.5M bonus token, tier `free`) and `POST /api/auth/login` (scrypt password verification).
+        - Rate Limiting: In-memory sliding window enforcing `rate_limit_per_min`, injects `X-RateLimit-*` headers, returns HTTP 429 when abused.
+        - 2-tier model gating: `free` blocked from Pro models (`tier_restricted`), `pro` unlocks everything.
+        - Billing via tarif: rasio potong = `(Input $ + Output $) / 1.37` dari `lib/model-pricing.ts` — sama persis dengan tarif $/1M di kartu model.
     - Low-Balance Quota Warning: Injects `X-Quota-Warning: low_balance` header when tokens < 20,000.
     - Usage Analytics: `GET /api/analytics` returns aggregated tokens, requests count, average latency, model breakdown, and recent log rows.
   - Phase 4 & 5 Enhancements:
@@ -48,7 +48,7 @@
     - `app/page.tsx` (1032 baris) dipecah jadi shell 30 baris + `app/hooks/` (useKiosData, useKiosActions, KiosContext) + `app/components/` (Header, Nav, KeysTab, PackagesTab, PlaygroundTab, AnalyticsTab, DocsTab, AuthModal).
     - Helper proxy dipindah ke `lib/proxy-http.ts`.
     - Upstream key: `NINEROUTER_API_KEY_2` (prioritas) dengan fallback `NINEROUTER_API_KEY`. Key lama tidak dihapus.
-    - Billing: tagih total `prompt+completion` x multiplier, non-stream & stream (stream pakai `stream_options.include_usage`). Detail: PRD §9.
+    - Billing: tagih total `prompt+completion` x rasio tarif model (`getCostRatio`), non-stream & stream (stream pakai `stream_options.include_usage`). Detail: PRD §9.
     - Default model demo diganti ke `tokenharbor/deepseek-v4.1-flash:free` (playground, docs, `/v1/models`). Alasan: `ag/*` pakai akun OAuth pribadi, tidak aman untuk pelanggan publik. Lihat PRD.md §7.
     - Verifikasi: `tsc --noEmit` exit 0, `npm run build` exit 0, `/`, `/v1/models`, `/v1/chat/completions` 200.
   - Phase 11: Full Design System Integration & Zero Dummy Data (KiosAI Token Marketplace Design):
@@ -111,14 +111,23 @@
       - Menyimpan histori percakapan Playground di `sessionStorage` (`kios_playground_messages`), sehingga obrolan tidak hilang saat berpindah antar-tab dashboard.
       - Menambahkan menu navigasi "Model" (`Cpu` icon) pada Sidebar dashboard (`Sidebar.tsx`), `constants.ts`, dan modul `ModelsTab.tsx` (137 baris) untuk menjelajah katalog model dengan tombol "Coba di Playground".
       - Nol modifikasi pada API key/kredensial apa pun.
-    - Phase 19: Token Marketplace Restructure, Free Plan Bansos & Universal Model Access:
-      - Restrukturisasi paket harga: Free Bansos (Rp 0 / 5M token), Starter (Rp 5.000 / 15M token), Bronze (Rp 25.000 / 100M token), Silver (Rp 100.000 / 600M token), Gold (Rp 150.000 / 1.000M token).
-      - Pendaftaran akun baru otomatis mendapatkan 5.000.000 token uji coba gratis (Free Plan Bansos) di TiDB.
-      - Integrasi model bansos `atria/Atria-Dawn-Preview` terverifikasi 100% aktif ke upstream 9Router dan fallback.
-      - Akses model universal: seluruh pengguna dapat memakai model apa pun tanpa dibatasi tier (`isModelAllowedForTier` = true), potongan token dihitung proporsional dari multiplier (1.0x, 2.0x, 4.0x).
-      - Tampilan nama model berbasis role: ID routing teknis (`kr/claude-haiku-4.5-thinking-agentic`, `kr/claude-sonnet-4.5-thinking-agentic`) untuk admin `adminfordhani`, nama komersial bersih (`claude-haiku-4.5`, `claude-sonnet-4.5`) untuk pengguna biasa.
-      - Alur modal klaim Free Plan 1-klik tanpa simulasi QRIS.
-      - Cloudflare Tunnel aktif dipulihkan dan status Worker live `kiosai.dhanisepeda.workers.dev` kembali `healthy`.
-    - Aturan maks 200 baris per file diverifikasi ketat (74 file `.ts`/`.tsx`/`.mjs` semuanya <= 200 baris).
-    - Playwright browser audit di 390px (mobile) & 1366px (desktop): 5 tab x 2 viewport = 100% OK (0 overflow, 0 console error).
+    - Phase 19 (historis): Token Marketplace Restructure & Free Plan
+          - Restrukturisasi paket harga saat itu: Free (Rp 0 / 5M token), Starter (Rp 5.000 / 15M token), Bronze (Rp 25.000 / 100M token), Silver (Rp 100.000 / 600M token), Gold (Rp 150.000 / 1.000M token).
+          - Pendaftaran akun baru saat itu mendapatkan 5.000.000 token uji coba gratis di TiDB.
+          - Integrasi model `atria/Atria-Dawn-Preview` terverifikasi 100% aktif ke upstream 9Router dan fallback.
+          - Tampilan nama model berbasis role: ID routing teknis (`kr/claude-haiku-4.5-thinking-agentic`, `kr/claude-sonnet-4.5-thinking-agentic`) untuk admin `adminfordhani`, nama komersial bersih (`claude-haiku-4.5`, `claude-sonnet-4.5`) untuk pengguna biasa.
+          - Alur modal klaim Free Plan 1-klik tanpa simulasi QRIS.
+          - Cloudflare Tunnel aktif dipulihkan dan status Worker live `kiosai.dhanisepeda.workers.dev` kembali `healthy`.
+        - Phase 20: Final 2-Tier Model (Free & Pro) + Billing Tarif $/1M
+          - **Tier final**: `free` (Rp 0 / 2.5 Juta token, hanya Atria Dawn & DeepSeek Flash) dan `pro` (Pro 25K Rp 25.000 / 100 Juta, Pro 100K Rp 100.000 / 600 Juta, Pro 150K Rp 150.000 / 1 Miliar — seluruh model AI, top-up QRIS).
+          - `getModelMultiplier()` dihapus dari `lib/keys.ts`. Billing kini `getCostRatio()` di `lib/model-pricing.ts` = `(Input $ + Output $) / 1.37` (baseline DeepSeek Flash $0.27 + $1.10), floor `0.05` untuk model $0. Sumber tunggal dengan angka yang dirender di kartu model.
+          - Kartu model menampilkan tarif **Input / Output ($ / 1M tokens)**; label `1.0× / 2.0× / 4.0×` dan istilah `multiplier`/`Bansos` dihapus dari seluruh UI, FAQ, dan dokumen.
+          - Migrasi data legacy `bronze`/`silver`/`gold` → `pro` via `npm run migrate:tiers` (idempoten, backup JSON ke `backups/`). Hasil: 41 user + 29 order dimigrasi; akhirnya `free: 1`, `pro: 46` (users).
+          - **Bug fix 1**: 502 pada setiap request non-stream model Pro. Upstream 9Router membalas `stream:false` dalam tiga bentuk (JSON biasa, JSON + `data: [DONE]` ditempel tanpa newline, dan SSE chunk asli untuk `kr/*` thinking models); `parseUpstreamJson()` hanya mampu bentuk pertama. Kini ketiganya dinormalisasi.
+          - **Bug fix 2**: error upstream kini lewat `errorResponse()` (code `upstream_error`), bukan `new NextResponse(errText)` mentah.
+          - **Bug fix 3**: overflow horizontal mobile — `.landing-nav-links` tidak punya rule CSS sehingga nav landing meluber 18 elemen di 390px. Ditambah media query `display:none!important`.
+          - Badge tier di `PaymentModal.tsx` diperbaiki (`badge pro 25k` → `FREE`/`PRO`); dead code `handleBuyPackage` dihapus dari `app/hooks/useKiosActions.ts`.
+          - **Verifikasi**: `npm run test:e2e` 10/10, `npm run test:pricing` 9/9, `npm run audit:ui` 4/4, `npm run audit:dashboard` 12/12, rasio live terhadap TiDB nyata cocok dengan harga kartu (DeepSeek `1.000`, Haiku `1.095`, Sonnet `13.139`), `tsc --noEmit` bersih, `next build` sukses.
+        - Aturan maks 200 baris per file diverifikasi ketat (semua file `.ts`/`.tsx`/`.mjs` <= 200 baris).
+        - UI audit via CDP ke `chrome-headless-shell` pada 1440px (PC) & 390px (mobile), 6 tab dashboard + landing: 0 overflow, 0 copy lama.
   - E2E tests verified: Registration, Login, Key Creation, OpenAI Proxy call, Rate Limit headers, QRIS top-up, Tier gating, Model discovery, Webhook idempotency, and Order list.

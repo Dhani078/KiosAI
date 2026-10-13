@@ -32,13 +32,6 @@ export function getRequiredTierForModel(modelId: string): "free" | "pro" {
   return "pro";
 }
 
-export function getModelMultiplier(modelId: string): number {
-  const m = modelId.toLowerCase();
-  if (m.includes("opus") || m.includes("combo") || m.includes("flagship")) return 4.0;
-  if (m.includes("sonnet") || m.includes("gpt-5") || m.includes("gpt-4") || m.includes("pro")) return 2.0;
-  return 1.0;
-}
-
 export function isModelAllowedForTier(tier: string, model: string): boolean {
   const t = (tier || "free").toLowerCase();
   if (t === "free") {

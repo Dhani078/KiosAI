@@ -7,13 +7,48 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
-*(Tidak ada perubahan tertunda. Working tree bersih setelah `828993d`.)*
+*(Tidak ada perubahan tertunda. Working tree bersih.)*
+
+---
+
+## 2026-10-13
+
+### `HEAD` — feat(billing): 2 tier final (Free & Pro), billing = tarif $/1M, migrasi data legacy
+
+**Ditambahkan**
+- **`getCostRatio()` di `lib/model-pricing.ts`** — sumber tunggal rasio pemotongan saldo: `(Input $ + Output $) / 1.37`, baseline DeepSeek Flash ($0.27 + $1.10). Floor `0.05` untuk model $0 (Atria) sebagai jaring anti-abuse. Angka yang dirender di kartu model dan angka yang dipotong kini tidak bisa berbeda.
+- **`scripts/migrate-tiers.mjs`** (`npm run migrate:tiers`) — migrasi data `bronze`/`silver`/`gold` → `pro` di `users.tier` dan `orders.package_tier`. Idempoten, menulis backup JSON ke `backups/` sebelum menulis.
+- **`scripts/test-pricing.mjs`** (`npm run test:pricing`) — 9 assert: tiap model rasio == `(in+out)/1.37`, dan rasio tidak boleh divergen dari harga UI.
+- **`scripts/audit-ui.mjs`** (`npm run audit:ui`) + **`scripts/audit-dashboard.mjs`** (`npm run audit:dashboard`) + helper bersama `scripts/cdp.mjs` — audit UI nyata lewat CDP ke `chrome-headless-shell` bawaan (tanpa dependency npm baru). Memeriksa 0 overflow horizontal + tidak ada copy `1.0×/2.0×/4.0×`/`multiplier`/`bansos`.
+- **`scripts/verify-billing.cjs`** — verifikasi rasio live end-to-end terhadap TiDB nyata.
+
+**Diubah**
+- **Paket jadi 2 tier**: `free` (Rp 0 / 2.5 Juta token, hanya Atria Dawn & DeepSeek Flash) dan `pro` (Pro 25K Rp 25.000 / 100 Juta, Pro 100K Rp 100.000 / 600 Juta, Pro 150K Rp 150.000 / 1 Miliar — seluruh model AI, top-up QRIS).
+- **`getModelMultiplier()` dihapus** dari `lib/keys.ts`; kedua titik potong (`stream` + non-stream) di `app/v1/chat/completions/route.ts` kini memakai `getCostRatio()`.
+- **Semua copy lama dibersihkan**: `Bansos`, `multiplier`, `1.0×/2.0×/4.0×`, dan label `Silver`/`Gold` hilang dari landing, dashboard, FAQ, PRD, README, API.md, SECURITY.md, ARCHITECTURE.md, AGENT.md, dan HANDOFF.md.
+- **Badge tier di `PaymentModal.tsx`** — sebelumnya `<Badge tier={pkg.name} />` menghasilkan kelas CSS rusak (`badge pro 25k`); kini `FREE`/`PRO`.
+- **`handleBuyPackage` dihapus** dari `app/hooks/useKiosActions.ts` (dead code bertipe `"bronze" | "silver" | "gold"`).
+- **`scripts/migrate.mjs` & `scripts/seed-admin.mjs`** — default tier jadi `free` (2.5M token) dan `pro`, bukan `bronze`/`gold`.
+
+**Diperbaiki**
+- **502 pada setiap request non-stream model Pro** (pre-existing, ditemukan saat verifikasi). Upstream 9Router membalas `stream:false` dalam tiga bentuk berbeda: (a) `chat.completion` JSON biasa, (b) JSON dengan `data: [DONE]` **ditempel tanpa newline** (`}data: [DONE]`), (c) stream SSE chunk asli (`kr/*` thinking models). `parseUpstreamJson()` di `lib/proxy-http.ts` hanya mampu bentuk (a). Kini ketiganya dinormalisasi menjadi satu objek `chat.completion` (+ salvage kurung seimbang untuk body yang terkontaminasi).
+- **Envelope error upstream** — error upstream kini lewat `errorResponse()` dengan code `upstream_error`, bukan `new NextResponse(errText)` mentah yang membocorkan body upstream apa adanya.
+- **Overflow horizontal mobile** (pre-existing). `.landing-nav-links` tidak punya rule CSS sama sekali sehingga nav landing tidak pernah collapse di 390px (18 elemen meluber). Ditambahkan `@media(max-width:700px){.landing-nav-links{display:none!important}}` — `!important` wajib karena inline style React mengalahkan CSS biasa.
+
+**Diverifikasi (bukti eksekusi, bukan klaim)**
+- `npm run test:e2e` → **10/10 lolos**.
+- `npm run test:pricing` → **9/9 lolos**.
+- `npm run audit:ui` → **4/4 lolos** (pc+mobile × `/` + `/dashboard`, 0 overflow).
+- `npm run audit:dashboard` → **12/12 lolos** (6 tab × pc+mobile, 0 overflow, 0 copy terlarang).
+- Rasio live terhadap TiDB nyata: DeepSeek Flash `1.000`, Claude Haiku `1.095`, Claude Sonnet `13.139` — persis sama dengan angka `$/1M` di kartu model.
+- Migrasi data: 41 user + 29 order lama → `free`/`pro`; hasil akhir `free:1, pro:46` (users) dan `free:10, pro:34` (orders). Backup di `backups/tier-migration-*.json`.
+- `tsc --noEmit` bersih, `next build` sukses.
 
 ---
 
 ## 2026-10-12
 
-### `3355979` — feat(tiers): simplify to 2 tiers (Free & Pro), replace multipliers with real $/1M rates
+### `c42e0cb` — feat(tiers): simplify to 2 tiers (Free & Pro), replace multipliers with real $/1M rates
 **Ditambahkan / Diubah**
 - **Penyederhanaan Menjadi 2 Tier (`Free` & `Pro`)**:
   - Hapus skema lama (starter, bronze, silver, gold) menjadi hanya dua tier murni:

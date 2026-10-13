@@ -12,8 +12,8 @@ export function PackageFaq() {
       a: "Tidak. Token Anda tidak kedaluwarsa dan bisa digunakan kapan saja.",
     },
     {
-      q: "Bagaimana multiplier token bekerja?",
-      a: "Model Silver menggunakan 2.0× token dan model Gold 4.0× token dari jumlah token asli request Anda.",
+      q: "Bagaimana token saya dihitung?",
+      a: "Setiap model punya tarif Input / Output ($ per 1 juta token) yang ditampilkan di kartu model. Pemakaian nyata request Anda dikonversi ke tarif tersebut, jadi Anda hanya membayar sesuai harga model yang dipakai.",
     },
     {
       q: "Bisa upgrade tier kapan saja?",

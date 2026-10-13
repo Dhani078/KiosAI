@@ -21,7 +21,7 @@
 | `core-db` | Schema DDL, HTTP connection pool TiDB, seed data | Selesai |
 | `auth` | Registrasi user (`/api/auth/register`), login (`/api/auth/login`), trial token | Selesai |
 | `key-mgmt` | Generate key (`kios-xxxx`), SHA256 hash, validasi izin model & tier | Selesai |
-| `proxy-engine` | Endpoint `/v1/chat/completions`, SSE streaming, rate limiting, tier gating, model multipliers, low-balance alert | Selesai |
+| `proxy-engine` | Endpoint `/v1/chat/completions`, SSE streaming, rate limiting, tier gating 2 tier, rasio tarif $/1M, low-balance alert | Selesai |
 | `catalog-sync` | Dynamic model discovery `/v1/models` sinkron dengan upstream 9Router dan anotasi tier | Selesai |
 | `analytics` | Agregasi metrik penggunaan per model, latensi, dan log request (`/api/analytics`) | Selesai |
 | `billing` | Paket token (Bronze/Silver/Gold), order flow, order history (`/api/orders`), webhook pembayaran & idempotensi | Selesai |
@@ -43,8 +43,8 @@ CREATE TABLE IF NOT EXISTS users (
   username VARCHAR(64) NULL, -- NULL untuk user biasa; diisi untuk admin (login pakai username)
   password_hash VARCHAR(255) NULL,
   full_name VARCHAR(100),
-  tier ENUM('bronze', 'silver', 'gold') DEFAULT 'bronze',
-  balance_tokens BIGINT DEFAULT 100000, -- Free 100k trial
+  tier ENUM('free', 'pro') DEFAULT 'free',
+  balance_tokens BIGINT DEFAULT 2500000, -- Free 2.5M bonus akun baru
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   UNIQUE INDEX idx_username (username),
   INDEX idx_email (email)
@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS orders (
   user_id VARCHAR(64) NOT NULL,
   amount_idr INT NOT NULL,
   tokens_purchased BIGINT NOT NULL,
-  package_tier ENUM('bronze', 'silver', 'gold') NOT NULL,
+  package_tier ENUM('free', 'pro') NOT NULL,
   payment_method VARCHAR(32) DEFAULT 'qris',
   status ENUM('pending', 'paid', 'expired', 'failed') DEFAULT 'pending',
   paid_at TIMESTAMP NULL,
@@ -105,11 +105,10 @@ CREATE TABLE IF NOT EXISTS usage_logs (
   2. Rate limit sliding window (maks per menit) -> Return 429 jika overload
   3. Cek `is_active == true` & `balance_tokens > 0`
   4. Cek `allowed_models` cocok dengan `body.model`
-  5. Cek Tier Gating: Bronze dibatasi model standar, Silver mencakup GPT/Claude, Gold unmetered
-- **Model Multiplier Pricing**:
-  - Bronze/Flash: 1.0x token
-  - Silver/Sonnet/GPT-5: 2.0x token
-  - Gold/Opus/Combos: 4.0x token
+  5. Cek Tier Gating: Free hanya model gratis (Atria Dawn, DeepSeek Flash), Pro membuka seluruh model.
+- **Tarif Token (rasio dari harga $ / 1M)**:
+  - Tarif model diambil dari `lib/model-pricing.ts` (Input + Output $ / 1M).
+  - Rasio pemotongan = (Input + Output) / 1.37, baseline DeepSeek Flash ($0.27 + $1.10).
 - **Forwarding**:
   - URL: `${NINEROUTER_URL}/v1/chat/completions`
   - Auth: Master `NINEROUTER_KEY`
@@ -117,7 +116,7 @@ CREATE TABLE IF NOT EXISTS usage_logs (
 - **Token Deduction**: Potong `balance_tokens` dan rekam ke `usage_logs`.
 
 ### 5.2 Model Discovery: `GET /v1/models`
-- Mengembalikan daftar model aktif dari 9Router, dianotasi dengan `required_tier` ("bronze", "silver", "gold") dan ketersediaan akses sesuai tier pengguna.
+- Mengembalikan daftar model aktif dari 9Router, dianotasi dengan `required_tier` ("free", "pro") dan ketersediaan akses sesuai tier pengguna.
 
 ### 5.3 Key Management:
 - `POST /api/keys`: Buat key baru, return plaintext key sekali saja.
@@ -125,11 +124,10 @@ CREATE TABLE IF NOT EXISTS usage_logs (
 - `DELETE /api/keys/:id`: Revoke key.
 
 ### 5.4 Billing & Orders:
-- Free Bansos: Rp 0 -> 2.500.000 Token (Bonus Akun Baru, Model: Atria Dawn & DeepSeek Flash)
-- Starter: Rp 5.000 -> 15.000.000 Token
-- Bronze: Rp 25.000 -> 100.000.000 Token
-- Silver: Rp 100.000 -> 600.000.000 Token
-- Gold: Rp 150.000 -> 1.000.000.000 Token
+- Free: Rp 0 -> 2.500.000 Token (Bonus akun baru, Model: Atria Dawn & DeepSeek Flash)
+- Pro 25K: Rp 25.000 -> 100.000.000 Token (Seluruh model AI)
+- Pro 100K: Rp 100.000 -> 600.000.000 Token
+- Pro 150K: Rp 150.000 -> 1.000.000.000 Token
 - `GET /api/orders?userId=...`: Riwayat transaksi dan invoice pesanan pengguna.
 - `POST /api/payment/webhook`: Webhook callback dengan validasi idempotensi & HMAC signature.
 
@@ -163,7 +161,7 @@ Console error: 0. Belum dicek: Safari iOS, Android Chrome, tampilan QRIS pada la
 
 ## 9. Billing: Tagih Total (Final)
 
-Keputusan: tagih total token upstream (`prompt_tokens + completion_tokens`) x multiplier model. Paling umum, sama dengan OpenAI/OpenRouter.
+Keputusan: tagih total token upstream (`prompt_tokens + completion_tokens`) x rasio tarif model (`getCostRatio`, diturunkan dari harga $/1M yang tampil di kartu). Paling umum, sama dengan OpenAI/OpenRouter.
 
 - Non-stream: pakai `usage` dari response upstream.
 - Stream: request ke upstream dengan `stream_options.include_usage = true`, baca `usage` dari chunk terakhir, tagih sama dengan non-stream.
@@ -251,7 +249,7 @@ Desain prototype dari `KiosAI Token Marketplace Design` diterapkan sepenuhnya pa
 |---|---|
 | `AGENT.md` | Operating manual AI agent: aturan keras, kredensial, arsitektur kunci, perintah rutin |
 | `docs/HANDOFF.md` | Snapshot status terkini, checklist resume sesi, gotchas, peta file utama |
-| `docs/ARCHITECTURE.md` | Topologi komponen, alur data, skema relasional, mekanisme multiplier |
+| `docs/ARCHITECTURE.md` | Topologi komponen, alur data, skema relasional, mekanisme perhitungan biaya |
 | `docs/TROUBLESHOOTING-WORKER.md` | Diagnosis error env Worker & tunnel |
 | `STATE.md` | Log riwayat implementasi tiap fase |
 | `tasks/todo.md`, `tasks/plan.md` | Progres task dan rencana implementasi |

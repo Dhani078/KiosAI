@@ -20,12 +20,12 @@ export function LandingFaq() {
       a: "Tidak ada. Token yang Anda beli berlaku selamanya sampai terpakai habis.",
     },
     {
-      q: "Bagaimana cara kerja sistem multiplier token?",
-      a: "Setiap paket memiliki pengali konsumsi: model ringan (Flash) dihitung 1.0x token, model reasoning lanjutan dihitung 2.0x atau 4.0x token dari usage asli request.",
+      q: "Bagaimana cara kerja tarif token?",
+      a: "Tiap model punya tarif Input / Output ($ per 1 juta token) yang tampil di katalog. Token terpotong mengikuti tarif model yang Anda pakai — model murah hemat saldo, model flagship memakai lebih banyak.",
     },
     {
       q: "Apakah ada bonus untuk pendaftaran akun baru?",
-      a: "Ya! Setiap akun yang baru mendaftar otomatis mendapatkan saldo gratis 100.000 token untuk mencoba endpoint dan Playground langsung.",
+      a: "Ya! Setiap akun baru otomatis mendapat 2.500.000 token gratis (Free tier) untuk langsung mencoba endpoint dan Playground.",
     },
   ];
 

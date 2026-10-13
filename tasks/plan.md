@@ -65,12 +65,18 @@
   - Pesan obrolan Playground persisten saat berpindah tab via `sessionStorage`
   - Menu "Model" (`Cpu` icon) ditambahkan ke Sidebar dashboard dan `ModelsTab.tsx` terpasang di dashboard
   - 100% file <= 200 baris, zero API keys modified
-- [x] Phase 19: Token Marketplace Restructure & Free Plan Bansos
-  - Pembaruan paket token (Starter 5k/15M, Bronze 25k/100M, Silver 100k/600M, Gold 150k/1Miliar)
-  - Free Plan 5.000.000 token bonus pendaftaran akun baru
-  - Model Bansos `atria/Atria-Dawn-Preview` diaktifkan dan terhubung ke upstream 9Router
-  - Akses model universal tanpa sekat tier, konsumsi berdasarkan multiplier
+- [x] Phase 19: Token Marketplace Restructure & Free Plan (historis — sudah digantikan Phase 20)
+  - Pembaruan paket token saat itu (Starter 5k/15M, Bronze 25k/100M, Silver 100k/600M, Gold 150k/1Miliar)
+  - Free Plan 5.000.000 token bonus pendaftaran akun baru saat itu
+  - Model `atria/Atria-Dawn-Preview` diaktifkan dan terhubung ke upstream 9Router
   - Nama model role-based: routing teknis untuk admin, komersial bersih untuk pengguna umum
+- [x] Phase 20: Final 2-Tier Model (Free & Pro) + Billing Tarif $/1M
+  - Paket final: `free` (Rp 0 / 2.5 Juta token, hanya Atria Dawn & DeepSeek Flash) dan `pro` (25K/100K/150K — seluruh model AI, top-up QRIS)
+  - `getModelMultiplier()` dihapus; billing pakai `getCostRatio()` = `(Input $ + Output $) / 1.37`, sumber tunggal dengan angka yang dirender di kartu model
+  - Kartu model menampilkan tarif **Input / Output ($ / 1M tokens)**; label `1.0×/2.0×/4.0×` dihapus
+  - Migrasi data legacy `bronze`/`silver`/`gold` → `pro` via `npm run migrate:tiers` (idempoten + backup JSON)
+  - Bug fix: 502 pada non-stream model Pro (upstream balas 3 bentuk berbeda), envelope error upstream, overflow nav mobile 390px
+  - Verifikasi: e2e 10/10, pricing 9/9, audit UI 16/16, rasio live cocok dengan harga kartu, `tsc` + `next build` bersih
   - Alur klaim modal 1-klik untuk paket gratis tanpa QRIS simulator
   - Tunnel Cloudflare dipulihkan, Worker live `healthy`
 

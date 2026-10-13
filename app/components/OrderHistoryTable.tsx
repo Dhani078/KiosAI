@@ -10,7 +10,7 @@ export function OrderHistoryTable({ orders }: { orders: any[] }) {
     const rows = orders.map((o) => [
       o.id,
       o.created_at ? new Date(o.created_at).toISOString() : "",
-      o.package_tier || "bronze",
+      o.package_tier || "free",
       o.amount_idr || 0,
       o.tokens_purchased || 0,
       o.status || "pending",
@@ -77,7 +77,7 @@ export function OrderHistoryTable({ orders }: { orders: any[] }) {
                     </td>
                     <td className="muted">{dateStr}</td>
                     <td>
-                      <Badge tier={(o.package_tier || "bronze").toUpperCase()} />
+                      <Badge tier={(o.package_tier || "free").toUpperCase()} />
                     </td>
                     <td>Rp {Number(o.amount_idr || 0).toLocaleString("id-ID")}</td>
                     <td>

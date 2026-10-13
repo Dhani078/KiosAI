@@ -12,7 +12,7 @@ export function FeaturesSection() {
     {
       icon: CreditCard,
       title: "Bayar Pakai QRIS Rupiah",
-      desc: "Beli token mulai Rp 50.000 dengan Gopay, OVO, Dana, ShopeePay, atau BCA Mobile tanpa kartu kredit.",
+      desc: "Beli token mulai Rp 25.000 dengan Gopay, OVO, Dana, ShopeePay, atau BCA Mobile tanpa kartu kredit.",
     },
     {
       icon: Layers,
@@ -21,8 +21,8 @@ export function FeaturesSection() {
     },
     {
       icon: Gauge,
-      title: "Pricing Multiplier Transparan",
-      desc: "Model ringan hanya 1.0× token, model reasoning 2.0× atau 4.0×. Anda hanya membayar apa yang dipakai.",
+      title: "Tarif Token Transparan",
+      desc: "Setiap model menampilkan tarif Input / Output ($ per 1M token). Tanpa pengali tersembunyi — Anda hanya membayar apa yang dipakai.",
     },
     {
       icon: Zap,

@@ -10,6 +10,10 @@
     "verify": "node --env-file=.env scripts/verify-deployment.mjs",
     "secrets:sync": "node --env-file=.env scripts/sync-worker-secrets.mjs",
     "test:e2e": "node --env-file=.env scripts/test-e2e.mjs",
+    "test:pricing": "node scripts/test-pricing.mjs",
+    "migrate:tiers": "node --env-file=.env scripts/migrate-tiers.mjs",
+    "audit:ui": "node scripts/audit-ui.mjs",
+    "audit:dashboard": "node scripts/audit-dashboard.mjs",
     "tunnel": "node scripts/tunnel-sync.mjs"
   },
   "dependencies": {

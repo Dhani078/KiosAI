@@ -89,20 +89,20 @@ export function PaymentModal({
             <h2>Token sudah masuk ke akun Anda.</h2>
             <p><strong>{tokensGranted.toLocaleString("id-ID")} token</strong> berhasil ditambahkan ke TiDB.</p>
             <div className="success-summary"><span>Saldo sekarang</span><code>{(Number(userBalance) + Number(tokensGranted)).toLocaleString("id-ID")} token</code></div>
-            <div className="success-summary"><span>Tier aktif</span><Badge tier={pkg.name} /></div>
+            <div className="success-summary"><span>Tier aktif</span><Badge tier={pkg.tierKey === "free" ? "FREE" : "PRO"} /></div>
             <Button kind="primary" onClick={onNavigateKeys}>Lanjut ke API Keys <ArrowRight size={16} /></Button>
             <Button kind="ghost" onClick={onNavigateStatistik}>Lihat riwayat transaksi</Button>
           </div>
         ) : isFree ? (
           <>
-            <span className="eyebrow">FREE TRIAL / BANSOS</span>
+            <span className="eyebrow">FREE TIER</span>
             <h2>Klaim Token Gratis Anda</h2>
             <p>Uji coba langsung ke akun Anda tanpa perlu pembayaran.</p>
-            <div className="payment-summary"><Badge tier={pkg.name} /><strong>Gratis (Rp 0)</strong></div>
+            <div className="payment-summary"><Badge tier={pkg.tierKey === "free" ? "FREE" : "PRO"} /><strong>Gratis (Rp 0)</strong></div>
             <div style={{ textAlign: "center", padding: "24px 16px", background: "var(--canvas)", borderRadius: "var(--radius-card)", border: "1px solid var(--border)", margin: "16px 0" }}>
               <Gift size={34} style={{ color: "var(--primary)", margin: "0 auto 8px" }} />
               <h3 style={{ fontSize: "15px", margin: "0 0 4px" }}>{pkg.tokens} Token Siap Pakai</h3>
-              <p style={{ fontSize: "12px", color: "var(--text-muted)", margin: 0 }}>Mendukung Atria Dawn (Bansos) & DeepSeek Flash.</p>
+              <p style={{ fontSize: "12px", color: "var(--text-muted)", margin: 0 }}>Akses model Atria Dawn & DeepSeek Flash.</p>
             </div>
             <Button kind="primary" loading={loading} disabled={!orderId} onClick={handleConfirmPay}>
               Klaim {pkg.name} <CheckCheck size={17} />
@@ -114,7 +114,7 @@ export function PaymentModal({
             <span className="eyebrow">CHECKOUT / QRIS</span>
             <h2>Scan. Bayar. Mulai.</h2>
             <p>Gunakan e-wallet atau mobile banking QRIS apa saja.</p>
-            <div className="payment-summary"><Badge tier={pkg.name} /><strong>Rp {pkg.price}</strong></div>
+            <div className="payment-summary"><Badge tier="PRO" /><strong>Rp {pkg.price}</strong></div>
             <div className="qr-wrap">
               <div className="qris-word">QRIS <span>PEMBAYARAN INSTAN</span></div>
               <svg viewBox="0 0 210 210" aria-label="QRIS Code">

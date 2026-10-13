@@ -83,7 +83,7 @@ Field `id` memuat model ID sistem lengkap (misal `tokenharbor/deepseek-v4.1-flas
     {
       "id": "tokenharbor/deepseek-v4.1-flash:free",
       "name": "deepseek-v4.1-flash",
-      "required_tier": "bronze",
+      "required_tier": "free",
       "accessible": true
     }
   ]
@@ -105,7 +105,7 @@ Mengambil data profil pengguna, saldo token terkini, 10 riwayat log penggunaan t
     "email": "adminfordhani@kiosai.id",
     "username": "adminfordhani",
     "full_name": "Admin Dhani",
-    "tier": "gold",
+    "tier": "pro",
     "balance_tokens": "99991351"
   },
   "recentUsage": [...],
@@ -139,7 +139,7 @@ Mencabut (soft-delete) API key agar tidak dapat digunakan lagi.
 
 ### `POST /api/orders`
 Membuat tagihan pembelian paket token baru.
-- Paket: `free` (Rp 0 / 2.5M token trial), `starter` (Rp 5.000 / 15M token), `bronze` (Rp 25.000 / 100M token), `silver` (Rp 100.000 / 600M token), `gold` (Rp 150.000 / 1.000M token).
+- Paket: `free` (Rp 0 / 2.5M token bonus akun baru), `pro_25k` (Rp 25.000 / 100M token), `pro_100k` (Rp 100.000 / 600M token), `pro_150k` (Rp 150.000 / 1.000M token). Alias lama `bronze`/`silver`/`gold` masih diterima untuk order sebelum rename 2-tier.
 
 ### `POST /api/orders/pay`
 Konfirmasi pembayaran simulasi. Menambah saldo token dan mengupgrade tier pengguna secara real-time di TiDB.

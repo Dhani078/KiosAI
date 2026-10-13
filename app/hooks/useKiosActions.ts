@@ -84,22 +84,6 @@ export function useKiosActions(d: ReturnType<typeof useKiosData>) {
     }
   };
 
-  const handleBuyPackage = async (tier: "bronze" | "silver" | "gold") => {
-    try {
-      const res = await fetch("/api/orders", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: currentUser?.id || "usr_kiosai_demo", tier }),
-      });
-      const data = await res.json();
-      if (data.orderId) {
-        setSelectedOrder(data);
-      }
-    } catch (e) {
-      alert("Gagal membuat pesanan");
-    }
-  };
-
   const handleSimulatePayment = async () => {
     if (!selectedOrder) return;
     setPayingOrder(true);
@@ -183,5 +167,5 @@ export function useKiosActions(d: ReturnType<typeof useKiosData>) {
     }
   };
 
-  return { handleAuthSubmit, handleLogout, handleCreateKey, handleDeleteKey, handleBuyPackage, handleSimulatePayment, handleRunPlayground };
+  return { handleAuthSubmit, handleLogout, handleCreateKey, handleDeleteKey, handleSimulatePayment, handleRunPlayground };
 }

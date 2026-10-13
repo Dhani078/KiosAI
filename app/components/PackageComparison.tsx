@@ -9,14 +9,14 @@ export function PackageComparison({
 }) {
   const comparisonModels = [
     {
-      name: "Atria Dawn Preview (Bansos)",
-      sub: "Atria / Community",
+      name: "Atria Dawn Preview",
+      sub: "Atria / Free",
       use: "Uji coba gratis, eksperimen prompt & bot",
       tier: 0,
     },
     {
-      name: "Gemini Flash / DeepSeek",
-      sub: "Google / DeepSeek",
+      name: "DeepSeek V4.1 Flash",
+      sub: "DeepSeek / Free",
       use: "Chatbot & tugas cepat sehari-hari",
       tier: 0,
     },
@@ -24,10 +24,10 @@ export function PackageComparison({
       name: "Claude Haiku / GPT-4o mini",
       sub: "Anthropic / OpenAI",
       use: "Respons cepat & multimodal",
-      tier: 0,
+      tier: 1,
     },
     {
-      name: "Claude 3.5 Sonnet / GPT-4o",
+      name: "Claude Sonnet / GPT-4o",
       sub: "Anthropic / OpenAI",
       use: "Coding & analisis mendalam",
       tier: 1,
@@ -39,10 +39,10 @@ export function PackageComparison({
       tier: 1,
     },
     {
-      name: "Claude 3.7 Sonnet / Flagship",
-      sub: "Anthropic / Flagship",
+      name: "Gemini Pro / Flagship",
+      sub: "Google / Flagship",
       use: "Penalaran kompleks tanpa kompromi",
-      tier: 2,
+      tier: 1,
     },
   ];
 

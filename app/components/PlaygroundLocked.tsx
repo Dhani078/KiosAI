@@ -15,9 +15,9 @@ export function PlaygroundLocked({
   return (
     <div className="empty-state">
       <LockKeyhole size={32} />
-      <h2>Model ini khusus Paket Pro.</h2>
+      <h2>Model ini khusus Pro Tier.</h2>
       <p>
-        403 · tier_restricted — Paket Free hanya mendukung Atria Dawn dan DeepSeek Flash. Beli paket Pro untuk membuka {model} dan seluruh model AI lainnya.
+        403 · tier_restricted — Free tier hanya membuka Atria Dawn dan DeepSeek Flash. Beli salah satu paket Pro untuk membuka {model} dan seluruh model AI lainnya.
       </p>
       <Button kind="primary" onClick={onNavigatePackages}>
         Beli Paket Pro <ArrowRight size={16} />

@@ -15,22 +15,22 @@
 - **OpenAI-Compatible Proxy (`/v1/chat/completions`)**: Mendukung streaming (SSE) dan JSON completion. Kompatibel dengan semua official OpenAI SDKs.
 - **Dynamic Model Discovery (`/v1/models`)**: Sinkronisasi otomatis dengan upstream 9Router dan anotasi tier akses model.
 - **TiDB Cloud Serverless**: Database MySQL-compatible berbasis HTTP fetch via `@tidbcloud/serverless`. Skalabel tanpa limit koneksi pool di serverless/Vercel.
-- **Model Gating Per Tier**: Pembatasan model otomatis berdasarkan level paket (Bronze untuk model cepat/gratis, Silver untuk GPT/Sonnet, Gold untuk seluruh model).
-- **Model Multiplier Pricing**: Pembobotan pemotongan token sesuai kompleksitas model (1.0x Bronze/Flash, 2.0x Silver/Sonnet, 4.0x Gold/Opus).
+- **Model Gating 2 Tier**: Dua tier saja — `free` (Atria Dawn + DeepSeek Flash) dan `pro` (seluruh model AI). Model di luar tier Free ditolak HTTP 403 `tier_restricted`.
+- **Tarif Token Transparan ($/1M)**: Tidak ada multiplier tersembunyi. Kartu model menampilkan tarif `Input / Output ($ / 1M tokens)` apa adanya; rasio pemotongan saldo diturunkan dari angka yang sama via `getCostRatio()` di `lib/model-pricing.ts` (baseline DeepSeek Flash = 1.0).
 - **Low-Balance Alert**: Header otomatis `X-Quota-Warning: low_balance` dan peringatan di UI jika saldo < 20.000 token.
 - **Riwayat Transaksi & Invoice**: Endpoint `GET /api/orders` dan tabel riwayat order QRIS di antarmuka web.
 - **Manajemen API Key Aman**: Kunci format `kios-<hash32>` di-hash dengan SHA-256. Mendukung pembatasan model dan rate limiting per kunci.
 - **Rate Limiting Engine**: Menggunakan algoritma sliding-window per menit, mengembalikan header standar `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`.
-- **Autentikasi Pengguna**: Registrasi & login mandiri dengan keamanan `scrypt` hashing dan bonus uji coba 100.000 token otomatis.
+- **Autentikasi Pengguna**: Registrasi & login mandiri dengan keamanan `scrypt` hashing dan bonus 2.500.000 token otomatis (tier `free`).
 - **Gerbang Dashboard (`/dashboard`)**: Halaman dashboard dilindungi `AuthGuard` — pengguna anonim otomatis diarahkan ke landing page dan diminta login. Login mendukung email (user biasa) maupun username (admin).
 - **Payment Webhook & Idempotensi**: Menerima callback QRIS/VA dari payment gateway dengan pencegahan double-spending secara otomatis.
 - **Statistik & Log Penggunaan**: Visualisasi riwayat pemakaian token, total request, rata-rata latensi, dan breakdown per model AI.
 - **Pemotongan Saldo Otomatis**: Setiap request AI otomatis memotong saldo token pengguna di database TiDB secara real-time.
-- **Top-Up Token (QRIS)**: Sistem paket token (Bronze, Silver, Gold) dengan simulasi pembayaran instan.
+- **Top-Up Token (QRIS)**: Sistem paket token Pro (Pro 25K / 100K / 150K) dengan simulasi pembayaran instan.
 - **Live AI Playground**: Antarmuka dashboard untuk menguji endpoint dan streaming model AI secara langsung.
-- **Billing Total**: Token ditagih dari `usage` upstream (prompt + completion) x multiplier, baik stream maupun non-stream. Overhead prompt upstream ikut ditagih (lihat PRD §9).
+- **Billing Total**: Token ditagih dari `usage` upstream (prompt + completion) dikali rasio tarif model (`getCostRatio`), baik stream maupun non-stream. Overhead prompt upstream ikut ditagih (lihat PRD §9).
 - **Desain KiosAI Token Marketplace**: Antarmuka responsif (Desktop Sidebar + Mobile Bottom Nav), tema oranye hangat (`#F28C38`), tanpa komponen dummy — 100% data live dari TiDB & gateway.
-- **Katalog Model Publik**: Halaman muka menampilkan showcase model AI unggulan (DeepSeek, Claude, GPT, Gemini, Llama) dengan informasi tier akses, multiplier, context window, dan filter provider interaktif.
+- **Katalog Model Publik**: Halaman muka menampilkan showcase model AI unggulan (DeepSeek, Claude, GPT, Gemini, Llama) dengan informasi tier akses, tarif `Input / Output ($ / 1M)`, context window, dan filter provider interaktif.
 - **Standar Kode Moduler**: Seluruh modul kode TypeScript/React dibatasi maksimal 200 baris per file demi keterbacaan dan pemeliharaan jangka panjang.
 
 ---
@@ -38,7 +38,7 @@
 ## 📚 Dokumentasi Lengkap
 - 🤖 [**Agent Operating Manual (AGENT.md)**](./AGENT.md) — **Mulai dari sini.** Aturan keras, kredensial, arsitektur kunci, dan perintah kerja rutin untuk AI agent/sesi baru.
 - 🔄 [**Session Handoff & Quick Resume (docs/HANDOFF.md)**](./docs/HANDOFF.md) — Snapshot status terkini, checklist melanjutkan sesi, gotchas penting, dan peta file utama.
-- 🏗️ [**System Architecture (docs/ARCHITECTURE.md)**](./docs/ARCHITECTURE.md) — Topologi komponen, alur data, skema database relasional, dan mekanisme multiplier.
+- 🏗️ [**System Architecture (docs/ARCHITECTURE.md)**](./docs/ARCHITECTURE.md) — Topologi komponen, alur data, skema database relasional, dan mekanisme perhitungan biaya.
 - 📖 [**API Reference (API.md)**](./API.md) — Spesifikasi lengkap seluruh endpoint REST, OpenAI Proxy, status codes, dan format error.
 - 🚀 [**Deployment Guide (DEPLOYMENT.md)**](./DEPLOYMENT.md) — Panduan deploy produksi Cloudflare Workers + Cloudflare Tunnel ke 9Router + TiDB.
 - 🛡️ [**Security Architecture (SECURITY.md)**](./SECURITY.md) — Standar enkripsi API key SHA-256, scrypt password hashing, sliding-window rate limit, dan mitigasi risiko.
@@ -68,7 +68,7 @@
   └── Provider upstream (Codex, Qoder, Kilo, Claude, Gemini)
              │
              ▼
-[AI Response Stream] ──> [Potong Saldo TiDB via Multiplier] ──> [Client]
+[AI Response Stream] ──> [Potong Saldo TiDB via Rasio Tarif Model] ──> [Client]
 ```
 
 ---
@@ -144,13 +144,14 @@ print(response.choices[0].message.content)
 
 ## 📦 Paket Token & Pembobotan Model
 
-| Paket | Harga | Jumlah Token | Rate Limit | Akses Model & Multiplier |
+| Paket | Harga | Jumlah Token | Rate Limit | Akses Model |
 |---|---|---|---|---|
-| **Free Bansos** | Rp 0 (Gratis) | 2.500.000 Token | 60 req/min | Bonus Akun Baru (Atria-Dawn-Preview Bansos, DeepSeek) — **1.0x** |
-| **Starter** | Rp 5.000 | 15.000.000 Token | 60 req/min | Model Standard (Gemini Flash, DeepSeek Flash) — **1.0x** |
-| **Bronze** | Rp 25.000 | 100.000.000 Token | 60 req/min | Model Standard (Gemini Flash, DeepSeek Flash) — **1.0x** |
-| **Silver** | Rp 100.000 | 600.000.000 Token | 300 req/min | Termasuk GPT-4o, GPT-5, Claude Sonnet 4.5 — **2.0x** |
-| **Gold** | Rp 150.000 | 1.000.000.000 Token | 1.000 req/min | Seluruh Model AI, Opus & Custom Combos — **4.0x** |
+| **Free** | Rp 0 (Gratis) | 2.500.000 Token | 60 req/min | Bonus akun baru — hanya Atria Dawn & DeepSeek Flash |
+| **Pro 25K** | Rp 25.000 | 100.000.000 Token | 120 req/min | Seluruh model AI (Claude, GPT, Gemini, Grok) |
+| **Pro 100K** | Rp 100.000 | 600.000.000 Token | 300 req/min | Seluruh model AI termasuk flagship |
+| **Pro 150K** | Rp 150.000 | 1.000.000.000 Token | 1.000 req/min | Seluruh model AI & combo flagship |
+
+> **Catatan tarif**: tidak ada pengali `1.0x / 2.0x / 4.0x`. Setiap model menampilkan tarif **Input / Output ($ / 1M tokens)** di kartu model. Pemakaian nyata request dikonversi ke tarif tersebut (baseline DeepSeek Flash = 1.0), jadi model murah hemat saldo dan model flagship memakai lebih banyak.
 
 ---
 

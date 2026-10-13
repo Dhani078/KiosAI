@@ -103,9 +103,10 @@ hanya bisa dibaca user lokal — jangan pernah disalin ke dalam project.
 
 ## 5. Pembatasan Akses Model per Tier
 
-- `bronze` diblokir dari model lanjutan → HTTP 403 `tier_restricted`.
-- `silver` dan `gold` membuka model bertingkat lebih tinggi.
+- Tier `free` diblokir dari model Pro → HTTP 403 `tier_restricted`.
+- Tier `pro` membuka seluruh model AI yang tersedia di gateway.
 - Anotasi tier dihitung dari nama model, **bukan** dari klaim klien.
+- Hanya ada dua tier: `free` dan `pro`. Nilai tier lama (`bronze`/`silver`/`gold`) sudah dimigrasi ke `pro` via `npm run migrate:tiers`.
 
 ---
 

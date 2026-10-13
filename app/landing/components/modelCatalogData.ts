@@ -16,7 +16,7 @@ export const MODELS: ModelItem[] = [
     provider: "Atria",
     context: "128k",
     tier: "free",
-    pricing: "Gratis (Free Plan)",
+    pricing: "Gratis",
     desc: "Model uji coba gratis untuk eksplorasi chat & prompt bagi semua pengguna baru.",
     strengths: ["Free Tier", "Trial Cepat", "Multi-turn Chat"],
   },

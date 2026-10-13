@@ -16,10 +16,10 @@ export const PACKAGES = [
     name: "Pro 25K",
     price: "25.000",
     tokens: "100.000.000",
-    desc: "Akses penuh seluruh model AI untuk bot & proyek.",
+    desc: "Buka seluruh model AI untuk bot & proyek.",
     features: [
       "100 Juta token tanpa kedaluwarsa",
-      "Buka seluruh model (Claude, GPT, Grok)",
+      "Seluruh model AI (Claude, GPT, Gemini, Grok)",
       "Rate limit 120 req/menit",
     ],
   },
@@ -31,7 +31,7 @@ export const PACKAGES = [
     desc: "Kapasitas besar untuk coding & reasoning intensif.",
     features: [
       "600 Juta token tanpa kedaluwarsa",
-      "Buka seluruh model AI tanpa batas",
+      "Seluruh model AI termasuk flagship",
       "Rate limit 300 req/menit",
     ],
   },
@@ -43,7 +43,7 @@ export const PACKAGES = [
     desc: "Kapasitas maksimal 1 Miliar token.",
     features: [
       "1 Miliar token (1.000.000.000)",
-      "Buka seluruh model AI & Flagship",
+      "Seluruh model AI & combo flagship",
       "Prioritas rate limit tertinggi 1.000 req/menit",
     ],
   },

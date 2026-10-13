@@ -13,7 +13,7 @@ export function getModelPricing(modelId: string): ModelPricing {
   const m = (modelId || "").toLowerCase();
 
   if (m.includes("atria")) {
-    return { input: "0.00", output: "0.00", cached: "0.00", formatted: "Gratis (Bansos)" };
+    return { input: "0.00", output: "0.00", cached: "0.00", formatted: "Gratis" };
   }
   if (m.includes("r1") || (m.includes("deepseek") && m.includes("reasoning"))) {
     return { input: "0.55", output: "2.19", cached: "0.14", formatted: "In $0.55 · Out $2.19 / 1M" };
@@ -55,4 +55,20 @@ export function getModelPricing(modelId: string): ModelPricing {
     return { input: "2.00", output: "8.00", cached: "0.50", formatted: "In $2.00 · Out $8.00 / 1M" };
   }
   return { input: "0.30", output: "1.20", cached: "0.08", formatted: "In $0.30 · Out $1.20 / 1M" };
+}
+
+/** Baseline = DeepSeek Flash ($0.27 in + $1.10 out). 1 ratio == 1 token dipotong. */
+const BASELINE_RATE = 1.37;
+
+/**
+ * Rasio pemotongan saldo, diturunkan dari harga $(input+output) yang sama dengan
+ * yang dirender di kartu model — supaya angka di UI dan angka yang dipotong tidak
+ * pernah bisa berbeda. Floor 0.05 = jaring anti-abuse untuk model $0 (Atria).
+ * ponytail: linear (bukan blended per-direction); pisahkan in/out kalau margin
+ * per-model perlu presisi tinggi.
+ */
+export function getCostRatio(modelId: string): number {
+  const p = getModelPricing(modelId);
+  const rate = (Number(p.input) || 0) + (Number(p.output) || 0);
+  return Math.max(0.05, rate / BASELINE_RATE);
 }

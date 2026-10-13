@@ -23,8 +23,8 @@ async function runMigration() {
       username VARCHAR(64) NULL,
       password_hash VARCHAR(255) NULL,
       full_name VARCHAR(100),
-      tier VARCHAR(20) DEFAULT 'bronze',
-      balance_tokens BIGINT DEFAULT 100000,
+      tier VARCHAR(20) DEFAULT 'free',
+      balance_tokens BIGINT DEFAULT 2500000,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       UNIQUE INDEX idx_username (username),
       INDEX idx_email (email)
@@ -90,7 +90,7 @@ async function runMigration() {
     const defaultUserId = 'usr_kiosai_demo';
     await conn.execute(`
       INSERT INTO kiosai.users (id, email, full_name, tier, balance_tokens)
-      VALUES ('${defaultUserId}', 'demo@kiosai.id', 'Demo User', 'gold', 1000000)
+      VALUES ('${defaultUserId}', 'demo@kiosai.id', 'Demo User', 'pro', 1000000)
     `);
     console.log('Seeded demo user:', defaultUserId);
   }

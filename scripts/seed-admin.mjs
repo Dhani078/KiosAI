@@ -24,11 +24,11 @@ const combined = `${salt}:${hash}`;
 
 await conn.execute(`
   INSERT INTO kiosai.users (id, email, username, password_hash, full_name, tier, balance_tokens)
-  VALUES ('usr_admin_dhani', 'adminfordhani@kiosai.id', 'adminfordhani', ?, 'Admin Dhani', 'gold', 100000000)
+  VALUES ('usr_admin_dhani', 'adminfordhani@kiosai.id', 'adminfordhani', ?, 'Admin Dhani', 'pro', 100000000)
   ON DUPLICATE KEY UPDATE
     username = 'adminfordhani',
     password_hash = ?,
-    tier = 'gold',
+    tier = 'pro',
     balance_tokens = 100000000,
     full_name = 'Admin Dhani'
 `, [combined, combined]);

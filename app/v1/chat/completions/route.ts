@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { validateApiKey, deductTokens, logUsage, isModelAllowedForTier, getModelMultiplier } from "@/lib/keys";
+import { validateApiKey, deductTokens, logUsage, isModelAllowedForTier } from "@/lib/keys";
+import { getCostRatio } from "@/lib/model-pricing";
 import { checkRateLimit } from "@/lib/ratelimit";
 import { UPSTREAM_URL, UPSTREAM_KEY, errorResponse, parseUpstreamJson } from "@/lib/proxy-http";
 import { resolveModelAlias } from "@/lib/model-utils";
@@ -67,7 +68,7 @@ export async function POST(req: NextRequest) {
   // 3. Validate Model Access
   if (!isModelAllowedForTier(auth.user.tier, requestedModel)) {
     return errorResponse(
-      `Model '${rawModel}' tidak tersedia di paket FREE. Paket Free Bansos hanya mendukung Atria Dawn dan DeepSeek Flash. Silakan beli paket token untuk membuka seluruh model.`,
+      `Model '${rawModel}' tidak tersedia di tier FREE. Model gratis hanya Atria Dawn dan DeepSeek Flash. Beli paket Pro untuk membuka seluruh model AI.`,
       403,
       "tier_restricted"
     );
@@ -100,10 +101,13 @@ export async function POST(req: NextRequest) {
         latencyMs: latency,
         statusCode: upstreamRes.status,
       });
-      return new NextResponse(errText, {
-        status: upstreamRes.status,
-        headers: { "Content-Type": upstreamRes.headers.get("content-Type") || "application/json" },
-      });
+      let upstreamMessage = errText.slice(0, 400);
+      try {
+        upstreamMessage = JSON.parse(errText)?.error?.message || upstreamMessage;
+      } catch {
+        // non-JSON error body — keep the raw text
+      }
+      return errorResponse(`Upstream (${upstreamRes.status}): ${upstreamMessage}`, upstreamRes.status, "upstream_error");
     }
 
     // 3. Handle Streaming Response
@@ -124,7 +128,7 @@ export async function POST(req: NextRequest) {
             const promptTokens = usage?.prompt_tokens ?? 15;
             const completionTokens = usage?.completion_tokens ?? Math.max(1, deltas);
             const totalTokens = usage?.total_tokens ?? promptTokens + completionTokens;
-            await deductTokens(auth.user!.id, totalTokens, getModelMultiplier(requestedModel));
+            await deductTokens(auth.user!.id, totalTokens, getCostRatio(requestedModel));
             await logUsage({
               apiKeyId: auth.key!.id,
               userId: auth.user!.id,
@@ -170,8 +174,7 @@ export async function POST(req: NextRequest) {
     const totalTokens = data.usage?.total_tokens || promptTokens + completionTokens;
 
     const latency = Date.now() - startTime;
-    const multiplier = getModelMultiplier(requestedModel);
-    const deducted = await deductTokens(auth.user.id, totalTokens, multiplier);
+        const deducted = await deductTokens(auth.user.id, totalTokens, getCostRatio(requestedModel));
     await logUsage({
       apiKeyId: auth.key.id,
       userId: auth.user.id,

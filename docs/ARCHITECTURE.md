@@ -25,14 +25,14 @@ Dokumentasi arsitektur teknis mendalam untuk platform gateway AI dan pasar token
 |     - Validasi hash SHA-256 / HMAC session signature        |
 |     - Cek rate limit sliding-window per menit               |
 |     - Validasi saldo token > 0                              |
-|     - Validasi izin tier akses model (Bronze/Silver/Gold)   |
+|     - Validasi izin tier akses model (free/pro)             |
 |                                                             |
 |  2. /v1/models (Model Discovery)                            |
 |     - Sinkronisasi dinamis dari upstream 9Router            |
 |     - Anotasi required_tier & accessible status             |
 |                                                             |
 |  3. /api/* (Backend Services)                               |
-|     - /api/auth (Login scrypt / Register 100k trial)        |
+|     - /api/auth (Login scrypt / Register 2.5M trial)        |
 |     - /api/user (Profil, saldo & playground session key)    |
 |     - /api/keys (CRUD API keys mandiri)                     |
 |     - /api/orders (Checkout & payment webhook idempotency)  |
@@ -92,8 +92,8 @@ users (
   username VARCHAR(64) UNIQUE NULL,
   password_hash VARCHAR(255) NULL,
   full_name VARCHAR(100),
-  tier ENUM('bronze', 'silver', 'gold') DEFAULT 'bronze',
-  balance_tokens BIGINT DEFAULT 100000,
+  tier ENUM('free', 'pro') DEFAULT 'free',
+  balance_tokens BIGINT DEFAULT 2500000,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 )
 
@@ -115,7 +115,7 @@ orders (
   user_id VARCHAR(64) FOREIGN KEY -> users(id),
   amount_idr INT NOT NULL,
   tokens_purchased BIGINT NOT NULL,
-  package_tier ENUM('bronze', 'silver', 'gold') NOT NULL,
+  package_tier ENUM('free', 'pro') NOT NULL,
   payment_method VARCHAR(32) DEFAULT 'qris',
   status ENUM('pending', 'paid', 'expired', 'failed') DEFAULT 'pending',
   paid_at TIMESTAMP NULL,
@@ -138,16 +138,28 @@ usage_logs (
 
 ---
 
-## 4. Mekanisme Multiplier & Perhitungan Biaya
+## 4. Mekanisme Perhitungan Biaya
 
-Setiap request AI dihitung berdasarkan rumus:
-$$\text{Token Terpotong} = \lceil (\text{Prompt Tokens} + \text{Completion Tokens}) \times \text{Multiplier} \rceil$$
+Tidak ada multiplier. Setiap request AI dihitung dengan rasio yang diturunkan langsung dari tarif `$/1M` yang tampil di kartu model:
 
-| Tier Model | Multiplier | Contoh Model |
+$$\text{Token Terpotong} = \lceil (\text{Prompt Tokens} + \text{Completion Tokens}) \times \text{Rasio Tarif} \rceil$$
+
+$$\text{Rasio Tarif} = \max\left(0.05,\ \frac{\text{Input}\,\$ + \text{Output}\,\$}{1.37}\right)$$
+
+`1.37` = baseline DeepSeek Flash (\$0.27 in + \$1.10 out), sehingga rasio `1.0` berarti 1 token usage memotong 1 token saldo.
+
+| Model | Tarif ($/1M) | Rasio |
 |---|---|---|
-| **Bronze** | `1.0×` | DeepSeek V4.1 Flash, Gemini 2.0 Flash, Claude Haiku |
-| **Silver** | `2.0×` | Claude 3.7 Sonnet, GPT-4o, DeepSeek R1 |
-| **Gold** | `4.0×` | Claude 3.5/3.7 Opus, Combo Models |
+| Atria-Dawn-Preview | \$0.00 + \$0.00 | `0.05` (floor anti-abuse) |
+| DeepSeek V4.1 Flash | \$0.27 + \$1.10 | `1.00` |
+| Claude Haiku 4.5 | \$0.25 + \$1.25 | `1.10` |
+| Gemini 2.0 Flash | \$0.075 + \$0.30 | `0.27` |
+| DeepSeek R1 | \$0.55 + \$2.19 | `2.00` |
+| GPT-4o | \$2.50 + \$10.00 | `9.12` |
+| Claude Sonnet 4.5 | \$3.00 + \$15.00 | `13.14` |
+| Claude Opus | \$15.00 + \$75.00 | `65.69` |
+
+Sumber tunggal: `getModelPricing()` & `getCostRatio()` di `lib/model-pricing.ts` — angka yang dirender di kartu model dan angka yang dipotong tidak bisa berbeda.
 
 Pemotongan saldo dieksekusi secara atomik di TiDB menggunakan `GREATEST(0, balance_tokens - ?)`.
 
