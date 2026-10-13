@@ -13,6 +13,8 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## 2026-10-13
 
+### `c4edee2` — scripts: add test:billing npm script and include cjs in verify audit
+
 ### `dc9a0f1` — build: add type module to package.json to resolve typeless warning
 
 ### `4010d06` / `e5b7718` — feat(tiers): restrict Free tier exclusively to Atria Dawn, move all other models to Pro
