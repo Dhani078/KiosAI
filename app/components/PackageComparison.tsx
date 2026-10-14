@@ -10,37 +10,37 @@ export function PackageComparison({
   const comparisonModels = [
     {
       name: "Atria Dawn Preview",
-      sub: "Atria / Free",
+      sub: "Atria · Gratis ($0)",
       use: "Uji coba gratis, eksperimen prompt & bot",
       tier: 0,
     },
     {
       name: "DeepSeek V4.1 Flash",
-      sub: "DeepSeek / Pro",
+      sub: "DeepSeek · In $0.27 / Out $1.10 (1M)",
       use: "Chatbot & tugas cepat sehari-hari",
       tier: 1,
     },
     {
       name: "Claude Haiku / GPT-4o mini",
-      sub: "Anthropic / OpenAI",
+      sub: "Anthropic / OpenAI · In $0.25 / Out $1.25 (1M)",
       use: "Respons cepat & multimodal",
       tier: 1,
     },
     {
       name: "Claude Sonnet / GPT-4o",
-      sub: "Anthropic / OpenAI",
+      sub: "Anthropic / OpenAI · In $3.00 / Out $15.00 (1M)",
       use: "Coding & analisis mendalam",
       tier: 1,
     },
     {
       name: "DeepSeek R1 / Reasoning",
-      sub: "DeepSeek",
+      sub: "DeepSeek · In $0.55 / Out $2.19 (1M)",
       use: "Penalaran & matematika lanjutan",
       tier: 1,
     },
     {
       name: "Gemini Pro / Flagship",
-      sub: "Google / Flagship",
+      sub: "Google · In $1.25 / Out $5.00 (1M)",
       use: "Penalaran kompleks tanpa kompromi",
       tier: 1,
     },

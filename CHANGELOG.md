@@ -7,7 +7,18 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
-*(Tidak ada perubahan tertunda. Working tree bersih.)*
+### `HEAD` — style(ui): polish model cards, dynamic counts, search reset, and pricing comparison
+
+**Dipoles**
+- **ModelsTab (`app/components/ModelsTab.tsx`)**:
+  - Tombol filter tier kini menampilkan counter dinamis: `Semua (764)`, `Free Tier (2)`, `Pro Tier (762)`.
+  - Input pencarian dilengkapi tombol reset instan `X` saat teks terisi.
+  - Kartu model diperkaya label provider (Anthropic, OpenAI, DeepSeek, Google, Meta, Atria, xAI, dll.).
+  - Tipografi harga Input/Output/Cached per 1M token diformat tabular monospace (`JetBrains Mono`).
+  - Empty state elegan saat pencarian tidak menghasilkan model yang cocok, lengkap dengan tombol reset.
+  - Tetap patuh batas arsitektur modularitas KiosAI: 159 LOC (maks 200 LOC).
+- **PackageComparison (`app/components/PackageComparison.tsx`)**:
+  - Subtitle model diperkaya tarif resmi $/1M (mis. `In $0.27 / Out $1.10 (1M)`).
 
 ---
 
