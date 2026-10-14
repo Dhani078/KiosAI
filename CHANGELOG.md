@@ -11,6 +11,8 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ---
 
+### `7a7f4ee` — docs: add Phase 12 checklist to tasks/todo.md
+
 ### `4ca7336` — fix(ui): decouple model tier badge & filter from current user access level
 
 **Diperbaiki**
