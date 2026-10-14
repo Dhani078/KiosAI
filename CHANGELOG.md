@@ -7,6 +7,20 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `HEAD` — docs: synchronize all documentation across repository
+
+**Diperbarui**
+- **Dokumentasi Terpadu**:
+  - `AGENT.md`: pembaruan perintah kerja rutin (tambah `test:pricing`, `test:billing`, `audit:ui`, `audit:dashboard`), jumlah total 82 file sumber patuh.
+  - `PRD.md`: sinkronisasi spesifikasi billing 2 tier (Free & Pro 25K/100K/150K).
+  - `API.md`: penyesuaian contoh endpoint `GET /v1/models` (Atria = Free, DeepSeek = Pro).
+  - `DEPLOYMENT.md`: pembaruan tier akun admin `adminfordhani` menjadi `pro`.
+  - `STATE.md`: pembaruan status ke Phase 21, upstream 771 model, commit pin.
+  - `tasks/plan.md`: penambahan catatan Phase 21 (UI polish, dynamic counters, strict 200 LOC).
+  - `tasks/todo.md`: penambahan checklist Phase 13 (UI Polish, Dynamic Counters & Architecture Audit).
+
+---
+
 ### `e1184a1` — style(ui): polish model cards, dynamic counts, search reset, and pricing comparison
 
 **Dipoles**

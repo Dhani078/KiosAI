@@ -24,7 +24,7 @@
 | `proxy-engine` | Endpoint `/v1/chat/completions`, SSE streaming, rate limiting, tier gating 2 tier, rasio tarif $/1M, low-balance alert | Selesai |
 | `catalog-sync` | Dynamic model discovery `/v1/models` sinkron dengan upstream 9Router dan anotasi tier | Selesai |
 | `analytics` | Agregasi metrik penggunaan per model, latensi, dan log request (`/api/analytics`) | Selesai |
-| `billing` | Paket token (Bronze/Silver/Gold), order flow, order history (`/api/orders`), webhook pembayaran & idempotensi | Selesai |
+| `billing` | Paket token 2 Tier (Free & Pro 25K/100K/150K), order flow, order history (`/api/orders`), webhook pembayaran & idempotensi | Selesai |
 | `dashboard-ui` | UI toko, panel saldo, generator key, analytics charts, dynamic model picker, riwayat order, live playground | Selesai |
 | `landing` | Landing page publik (`/`) dengan hero, fitur, katalog model, pricing, code sandbox, FAQ | Selesai |
 | `admin-auth` | Admin login via username, user biasa via email, seed script | Selesai |

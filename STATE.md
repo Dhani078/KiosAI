@@ -3,10 +3,10 @@
 - **Repository**: `https://github.com/Dhani078/KiosAI.git`
 - **Location**: `E:/Hermesproject/KiosAI`
 - **Live Worker**: `https://kiosai.dhanisepeda.workers.dev` (subdomain `dhanisepeda`, pakai `e`)
-- **Current Status**: Complete & Fully Verified (Phase 0 - 19)
-- **Upstream Router**: 9Router local (`http://127.0.0.1:20128`, 765 model aktif)
+- **Current Status**: Complete & Fully Verified (Phase 0 - 21)
+- **Upstream Router**: 9Router local (`http://127.0.0.1:20128`, 771 model aktif)
 - **Database**: TiDB Cloud Serverless (`gateway01.ap-southeast-1.prod.aws.tidbcloud.com:4000/kiosai`)
-- **Last Commit**: `b302bba` — refine free plan claim modal, add Atria to landing catalog, clean docs error handling
+- **Last Commit**: `a9ca860` — style(ui): polish model cards, dynamic counts, search reset, and pricing comparison
 
 ## Dokumen Navigasi Cepat
 - Aturan & perintah untuk agent: `AGENT.md`
@@ -131,3 +131,10 @@
         - Aturan maks 200 baris per file diverifikasi ketat (semua file `.ts`/`.tsx`/`.mjs` <= 200 baris).
         - UI audit via CDP ke `chrome-headless-shell` pada 1440px (PC) & 390px (mobile), 6 tab dashboard + landing: 0 overflow, 0 copy lama.
   - E2E tests verified: Registration, Login, Key Creation, OpenAI Proxy call, Rate Limit headers, QRIS top-up, Tier gating, Model discovery, Webhook idempotency, and Order list.
+  - Phase 21: UI Polish, Dynamic Model Counters & Strict 200 LOC Enforcement:
+    - `app/components/ModelsTab.tsx` dipoles: counter dinamis pada filter tier (`Semua (764)`, `Free Tier (2)`, `Pro Tier (762)`), tombol reset `X` pada input pencarian, label provider model (Anthropic, OpenAI, DeepSeek, Google, Meta, Atria, xAI), kotak tarif Input/Output/Cached tabular monospace, empty state pencarian dengan tombol reset. Ukuran file terjaga 159 baris (patuh `<= 200`).
+    - Subtitle model pada tabel `app/components/PackageComparison.tsx` diperkaya tarif resmi $/1M.
+    - Test runner baru `npm run test:billing` memverifikasi live deduction TiDB per rasio tarif.
+    - Seluruh 82 file sumber TypeScript/MJS lolos audit `<= 200` baris via `npm run verify`.
+    - 0 overflow horizontal pada pengujian CDP Chrome di PC (1440px) dan Mobile (390px).
+

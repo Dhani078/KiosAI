@@ -112,17 +112,25 @@ npm run verify
 # 2. Pengujian Integrasi Otomatis (10 Skenario Gateway)
 npm run test:e2e
 
-# 3. Sinkronisasi Kredensial Lokal ke Cloudflare Worker
+# 3. Pengujian Billing & Pricing
+npm run test:pricing
+npm run test:billing
+
+# 4. Audit UI & Dashboard (0 Horizontal Overflow pada 390px Mobile & Desktop)
+npm run audit:ui
+npm run audit:dashboard
+
+# 5. Sinkronisasi Kredensial Lokal ke Cloudflare Worker
 npm run secrets:sync
 
-# 4. Aktifkan Tunnel 9Router & Sinkronkan URL ke Worker
+# 6. Aktifkan Tunnel 9Router & Sinkronkan URL ke Worker
 npm run tunnel
 
-# 5. Build Next.js & TypeScript Check
+# 7. Build Next.js & TypeScript Check
 npm run build
 npx tsc --noEmit -p tsconfig.json
 
-# 6. Menjalankan Server Lokal Port 3000
+# 8. Menjalankan Server Lokal Port 3000
 npm start
 ```
 
@@ -130,7 +138,9 @@ npm start
 
 ## 8. Status Terkini (Session Continuity)
 
-- **Total File Sumber**: 74 file TypeScript/MJS (100% patuh `<= 200` baris).
+- **Total File Sumber**: 82 file TypeScript/MJS (100% patuh `<= 200` baris).
 - **E2E Integration Test**: 10 Lolos, 0 Gagal (`test:e2e`).
-- **Git Branch**: `main` ter-push sinkron dengan `origin`.
+- **Pricing & Billing Test**: 9/9 PASS (`test:pricing`), live deduction PASS (`test:billing`).
+- **UI & Dashboard Audit**: 16/16 PASS (0 horizontal overflow pada mobile 390px & PC).
+- **Git Branch**: `main` ter-push sinkron dengan `origin` (Commit `a9ca860`).
 - **Status Layanan**: Worker `kiosai.dhanisepeda.workers.dev` live dan sehat (`/api/health` status `healthy`).

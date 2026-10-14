@@ -81,9 +81,15 @@ Field `id` memuat model ID sistem lengkap (misal `tokenharbor/deepseek-v4.1-flas
   "object": "list",
   "data": [
     {
+      "id": "atria/Atria-Dawn-Preview",
+      "name": "Atria-Dawn-Preview",
+      "required_tier": "free",
+      "accessible": true
+    },
+    {
       "id": "tokenharbor/deepseek-v4.1-flash:free",
       "name": "deepseek-v4.1-flash",
-      "required_tier": "free",
+      "required_tier": "pro",
       "accessible": true
     }
   ]

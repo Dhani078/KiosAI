@@ -67,7 +67,7 @@ Seed akun admin:
 ```bash
 node --env-file=.env scripts/seed-admin.mjs
 ```
-Membuat `adminfordhani` (username, tier Gold, 100 juta token).
+Membuat `adminfordhani` (username, tier Pro, 100 juta token).
 
 ---
 

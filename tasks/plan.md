@@ -79,5 +79,12 @@
   - Verifikasi: e2e 10/10, pricing 9/9, audit UI 16/16, rasio live cocok dengan harga kartu, `tsc` + `next build` bersih
   - Alur klaim modal 1-klik untuk paket gratis tanpa QRIS simulator
   - Tunnel Cloudflare dipulihkan, Worker live `healthy`
+- [x] Phase 21: UI Polish, Dynamic Model Counters & Strict 200 LOC Enforcement
+  - `ModelsTab.tsx` dipoles: counter dinamis (`Semua (764)`, `Free Tier (2)`, `Pro Tier (762)`), tombol reset `X` pada input pencarian, label provider model (Anthropic, OpenAI, DeepSeek, Google, Meta, Atria, xAI), kotak tarif Input/Output/Cached tabular monospace, empty state pencarian dengan tombol reset
+  - Subtitle model pada tabel `PackageComparison.tsx` diperkaya tarif resmi $/1M
+  - Test runner baru `npm run test:billing` memverifikasi live deduction TiDB per rasio tarif
+  - Seluruh 82 file sumber TypeScript/MJS lolos audit `<= 200` baris via `npm run verify`
+  - 0 overflow horizontal pada pengujian CDP Chrome di PC (1440px) dan Mobile (390px)
+
 
 

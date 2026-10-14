@@ -127,6 +127,15 @@
 - [x] Task 12.8: Add test scripts: `npm run test:pricing`, `npm run test:billing`, `npm run audit:ui`, `npm run audit:dashboard`
 - [x] Task 12.9: 100% tests passing, 0 overflow, clean git tree, Cloudflare tunnel live healthy
 
+## Phase 13 (UI Polish, Dynamic Counters & Architecture Audit - Completed)
+- [x] Task 13.1: Add dynamic counters to tier filter buttons (`Semua (764)`, `Free Tier (2)`, `Pro Tier (762)`) in `ModelsTab.tsx`
+- [x] Task 13.2: Add instant search reset button `X` and empty search state in `ModelsTab.tsx`
+- [x] Task 13.3: Add provider tag (Anthropic, OpenAI, DeepSeek, Google, Meta, Atria, xAI) to model cards
+- [x] Task 13.4: Format Input/Output/Cached rates in clean monospace typography
+- [x] Task 13.5: Add $/1M rate annotations to model comparison subtitles in `PackageComparison.tsx`
+- [x] Task 13.6: Verify 100% compliance across all 82 source files (<= 200 LOC per file)
+- [x] Task 13.7: Sync all documentation markdown files across the repository
+
 
 
 
