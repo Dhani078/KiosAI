@@ -11,9 +11,12 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ---
 
-## 2026-10-13
+### `HEAD` — fix(ui): decouple model tier badge & filter from current user access level
 
-### `c4edee2` — scripts: add test:billing npm script and include cjs in verify audit
+**Diperbaiki**
+- **Badge dan Filter Tier di `ModelsTab.tsx`**:
+  - Root cause: `modelTier` sebelumnya dihitung dari `checkAllowed(m.id) ? "free" : "pro"`. Karena admin/pengguna Pro memiliki akses ke seluruh model (`checkAllowed` selalu `true`), semua model salah terlabeli sebagai `FREE` dan filter "Pro Tier" menjadi kosong.
+  - Fix: Memisahkan penentuan tier model (`getModelTier(m)`) dari izin akses pengguna (`checkAllowed(m)`). Model Atria tetap `FREE`, sedangkan seluruh model AI lainnya (Claude, GPT, Gemini, DeepSeek, dll.) bertanda `PRO`. Filter "Free Tier" hanya memunculkan Atria, dan filter "Pro Tier" memunculkan seluruh model Pro.
 
 ### `dc9a0f1` — build: add type module to package.json to resolve typeless warning
 

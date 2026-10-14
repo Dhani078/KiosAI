@@ -23,10 +23,13 @@ export function ModelsTab({
   const [tierFilter, setTierFilter] = useState<string>("all");
 
   const isFreeTier = (userTier || "free").toLowerCase() === "free";
-  const checkAllowed = (id: string) => {
+  const getModelTier = (m: any): "free" | "pro" => {
+    if (m.required_tier) return m.required_tier;
+    return (m.id || "").toLowerCase().includes("atria") ? "free" : "pro";
+  };
+  const checkAllowed = (m: any) => {
     if (!isFreeTier) return true;
-    const l = id.toLowerCase();
-    return l.includes("atria");
+    return getModelTier(m) === "free";
   };
 
   const filtered = models
@@ -35,17 +38,17 @@ export function ModelsTab({
       const clean = formatModelName(m.name || m.id, isAdmin).toLowerCase();
       const raw = (m.id || "").toLowerCase();
       const matchesSearch = !search || clean.includes(search.toLowerCase()) || raw.includes(search.toLowerCase());
-      const modelTier = checkAllowed(m.id) ? "free" : "pro";
+      const modelTier = getModelTier(m);
       const matchesTier = tierFilter === "all" || modelTier === tierFilter;
       return matchesSearch && matchesTier;
     })
     .sort((a, b) => {
-      const aAllowed = checkAllowed(a.id) ? 1 : 0;
-      const bAllowed = checkAllowed(b.id) ? 1 : 0;
+      const aAllowed = checkAllowed(a) ? 1 : 0;
+      const bAllowed = checkAllowed(b) ? 1 : 0;
       if (aAllowed !== bAllowed) return bAllowed - aAllowed;
-      const aP = a.id.toLowerCase().includes("atria") ? 1 : 0;
-      const bP = b.id.toLowerCase().includes("atria") ? 1 : 0;
-      return bP - aP;
+      const aFree = getModelTier(a) === "free" ? 1 : 0;
+      const bFree = getModelTier(b) === "free" ? 1 : 0;
+      return bFree - aFree;
     });
 
   return (
@@ -93,8 +96,8 @@ export function ModelsTab({
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "16px" }}>
         {filtered.map((m) => {
-          const isAllowed = checkAllowed(m.id);
-          const modelTier = isAllowed ? "free" : "pro";
+          const isAllowed = checkAllowed(m);
+          const modelTier = getModelTier(m);
           const displayName = formatModelName(m.name || m.id, isAdmin);
           const displayId = isAdmin ? m.id : displayName;
           const pricing = getModelPricing(m.id);
