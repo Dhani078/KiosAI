@@ -7,7 +7,7 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
-### `HEAD` — style(ui): polish model cards, dynamic counts, search reset, and pricing comparison
+### `e1184a1` — style(ui): polish model cards, dynamic counts, search reset, and pricing comparison
 
 **Dipoles**
 - **ModelsTab (`app/components/ModelsTab.tsx`)**:
