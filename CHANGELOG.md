@@ -11,7 +11,7 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ---
 
-### `HEAD` — fix(ui): decouple model tier badge & filter from current user access level
+### `4ca7336` — fix(ui): decouple model tier badge & filter from current user access level
 
 **Diperbaiki**
 - **Badge dan Filter Tier di `ModelsTab.tsx`**:
