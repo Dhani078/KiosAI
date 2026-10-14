@@ -7,7 +7,7 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
-### `HEAD` — docs: synchronize all documentation across repository
+### `712ccc6` — docs: synchronize all documentation across repository
 
 **Diperbarui**
 - **Dokumentasi Terpadu**:
