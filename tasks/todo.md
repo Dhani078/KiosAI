@@ -116,6 +116,17 @@
 - [x] Task 11.7: Cloudflare Quick Tunnel restored and verified live healthy on `kiosai.dhanisepeda.workers.dev`
 - [x] Task 11.8: Sync documentation (`CHANGELOG.md`, `README.md`, `PRD.md`, `API.md`, `HANDOFF.md`, `STATE.md`)
 
+## Phase 12 (Final 2-Tier Architecture & $/1M Token Billing - Completed)
+- [x] Task 12.1: Implement `getCostRatio()` in `lib/model-pricing.ts` using real $/1M rates (baseline DeepSeek Flash = 1.0, floor 0.05)
+- [x] Task 12.2: Remove legacy `getModelMultiplier()` and wire `app/v1/chat/completions/route.ts` to `getCostRatio()`
+- [x] Task 12.3: Restrict Free tier strictly to Atria Dawn; gate all other models behind Pro tier
+- [x] Task 12.4: One-time idempotent TiDB data migration (`scripts/migrate-tiers.mjs`) migrating users and orders to `free`/`pro`
+- [x] Task 12.5: Fix `parseUpstreamJson()` in `lib/proxy-http.ts` to normalize 3 upstream shapes (JSON, glued DONE, and SSE chunk streams)
+- [x] Task 12.6: Fix landing navbar mobile overflow on 390px via `@media(max-width:700px)`
+- [x] Task 12.7: Decouple `modelTier` from `checkAllowed` in `ModelsTab.tsx` so Pro/Admin users see correct model badges & filters
+- [x] Task 12.8: Add test scripts: `npm run test:pricing`, `npm run test:billing`, `npm run audit:ui`, `npm run audit:dashboard`
+- [x] Task 12.9: 100% tests passing, 0 overflow, clean git tree, Cloudflare tunnel live healthy
+
 
 
 
