@@ -7,6 +7,31 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `HEAD` — feat(analytics): upgrade Statistik tab to Maxxmode with 4 KPI cards, multi-segment model breakdown, and live search
+
+**Peningkatan Statistik Maxxmode**
+- **4 Kartu KPI Interaktif (`app/components/AnalyticsCards.tsx`)**:
+  - Saldo Aktif dengan tombol cepat Isi Saldo.
+  - Konsumsi Token dengan rincian In (prompt) vs Out (completion) serta total request.
+  - Latensi Rata-Rata lengkap dengan indikator Min dan Max latency (ms).
+  - Reliabilitas Gateway dengan kalkulasi persentase sukses HTTP 200 live TiDB dan pulse status dot.
+- **Distribusi Penggunaan per Model (`app/components/ModelUsageBreakdown.tsx`)**:
+  - Multi-segment visual bar berwarna proporsional per model AI.
+  - Kartu baris model dengan jumlah request, rata-rata latensi, dan persentase pangsa token.
+- **Penyaringan & Pencarian Log Real-Time (`app/components/RecentLogsTable.tsx`)**:
+  - Input pencarian instan berdasarkan nama model atau slug teknis.
+  - Tombol filter status: `Semua`, `Sukses 200`, dan `Error`.
+  - Ekspor CSV data log inferensi.
+- **Ringkasan Investasi & Faktur (`app/components/OrderHistoryTable.tsx`)**:
+  - Banner ringkasan total dana yang diinvestasikan (Rp) dan total token yang berhasil masuk.
+  - Ekspor CSV riwayat pembelian.
+- **Penyempurnaan Endpoint Analytics (`app/api/analytics/route.ts`)**:
+  - Menghitung agregasi `prompt_tokens`, `completion_tokens`, `min_latency_ms`, `max_latency_ms`, dan `success_rate` langsung dari database TiDB.
+- **Kepatuhan Arsitektur**:
+  - Seluruh 6 file modul komponen tetap patuh batas ketat $\le 200$ baris per file.
+
+---
+
 ### `0519315` — feat(models): audit 746 models with 5x retry, prune 679 dead models, retain 65 verified models
 
 **Audit 5x & Penyaringan Menyeluruh**
