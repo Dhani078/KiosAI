@@ -7,6 +7,26 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `HEAD` — fix(models): test candidate models 3x and prune 13 dead models from catalog
+
+**Diuji 3x & Dihapus**
+- **Audit Pengujian Nyata 3x (`scripts/test-model-trials.mjs`)**:
+  - Menguji 14 model kandidat dari tangkapan layar masing-masing 3 kali berturut-turut.
+  - 13 model gagal 3/3 kali (TimeoutError / 503) dan resmi dihapus dari gateway:
+    1. `nemotron-3.5-lightning` (`cl/nvidia/nemotron-3.5-lightning`, `:free`)
+    2. `sakana-namazu` (`cl/sakana/sakana-namazu`)
+    3. `solar-pro4` (`cl/upstage/solar-pro4`)
+    4. `muse-glimmer-30b` (`cl/meta/muse-glimmer-30b`)
+    5. `muse-spark-1.2` (`cl/meta/muse-spark-1.2`, `-contributor`, `cutadai/...`)
+    6. `deepseek-v4-flash-latest` (`cl/~deepseek/deepseek-v4-flash-latest`)
+    7. `deepseek-v4-flash-0731` (`cl/...`, `apinex/free/...`)
+    8. `inkling-small` (`cl/thinkingmachines/inkling-small`, `:free`)
+  - 1 model terbukti berhasil (`200 OK`) dan dipertahankan: `bzl/deepseek/deepseek-v4-flash-0731free`.
+- **Penyaringan Gateway (`app/v1/models/route.ts`)**:
+  - `isHiddenModel` menyaring seluruh 13 model yang gagal 3x dari API dan dashboard.
+
+---
+
 ### `f21de9b` — docs: add Phase 14 / Phase 22 checklist and state records
 
 ### `ee06a39` — feat(models): hide unwanted Gemini 3.7/3.6/3.1 models and retain Gemini 3.8 & Claude 4.6 in Pro plan

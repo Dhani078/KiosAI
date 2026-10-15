@@ -20,7 +20,16 @@ function isHiddenModel(id: string): boolean {
     lower.startsWith("ag/gemini-3.7") ||
     lower.startsWith("ag/gemini-3.6") ||
     lower.startsWith("ag/gemini-3.1") ||
-    lower === "ag/gemini-pro-agent"
+    lower === "ag/gemini-pro-agent" ||
+    lower.includes("nemotron-3.5-lightning") ||
+    lower.includes("sakana-namazu") ||
+    lower.includes("solar-pro4") ||
+    lower.includes("muse-glimmer-30b") ||
+    lower.includes("muse-spark-1.2") ||
+    lower.includes("deepseek-v4-flash-latest") ||
+    lower === "cl/deepseek/deepseek-v4-flash-0731" ||
+    lower === "apinex/free/deepseek-v4-flash-0731" ||
+    lower.includes("inkling-small")
   );
 }
 
