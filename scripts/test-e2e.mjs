@@ -75,14 +75,14 @@ await test("POST /api/keys", async () => {
   testKey = data.apiKey;
 });
 
-// 5. Chat Completion (Non-Streaming)
-await test("POST /v1/chat/completions (Non-stream)", async () => {
+// 5. Chat Completion (Non-Streaming & Model Alias)
+await test("POST /v1/chat/completions (Alias & Non-stream)", async () => {
   assert(testKey, "No test key");
   const res = await fetch(`${BASE}/v1/chat/completions`, {
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: "Bearer " + testKey },
     body: JSON.stringify({
-      model: "atria/Atria-Dawn-Preview",
+      model: "atria", // tests resolveModelAlias: "atria" -> "atria/Atria-Dawn-Preview"
       messages: [{ role: "user", content: "Halo KiosAI e2e" }],
       max_tokens: 10,
     }),

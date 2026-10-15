@@ -73,7 +73,7 @@ export async function POST(req: NextRequest) {
       `UPDATE kiosai.users 
        SET balance_tokens = balance_tokens + ?,
            tier = CASE 
-             WHEN ? IN ('pro', 'bronze', 'silver', 'gold') THEN 'pro'
+             WHEN ? IN ('pro', 'pro_25k', 'pro_100k', 'pro_150k', 'bronze', 'silver', 'gold') THEN 'pro'
              ELSE tier
            END
        WHERE id = ?`,
