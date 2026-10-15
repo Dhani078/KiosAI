@@ -7,6 +7,18 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `fa56315` — feat(models): add universal commercial alias resolution for standard OpenAI model identifiers
+
+**Resolusi Alias Model Industri Otomatis**
+- **Dukungan Identifier Standar (`lib/model-utils.ts`)**: Fungsi `resolveModelAlias` kini memetakan secara cerdas identifier industri standar ke rute model 9Router yang terbukti aktif (`200 OK`):
+  - `claude-3.7-sonnet` / `anthropic/claude-3.7-sonnet` $\rightarrow$ `ag/claude-sonnet-4-6`
+  - `gpt-4o` / `openai/gpt-4o` $\rightarrow$ `cx/gpt-6-luna`
+  - `gemini-2.0-flash` / `google/gemini-2.0-flash` $\rightarrow$ `ag/gemini-3.8-flash-high`
+  - `deepseek-r1` / `deepseek/deepseek-r1` $\rightarrow$ `cf/@cf/deepseek-ai/deepseek-r1-distill-qwen-32b`
+  - `llama-3.3-70b` / `meta/llama-3.3-70b` $\rightarrow$ `cf/@cf/meta/llama-3.3-70b-instruct-fp8-fast`
+- **Zero Configuration untuk Client SDK**: Developer yang menggunakan Cursor, Cline, atau script OpenAI SDK yang memanggil nama model standar tidak akan lagi mengalami error rute mati atau upstream 503.
+- **Kepatuhan Modularitas**: `lib/model-utils.ts` berukuran 81 baris (patuh batas ketat $\le 200$ baris).
+
 ### `5302c29` — feat(docs): add real-time model search and reset in DocsTab with role-based formatting
 
 **Pencarian Model di Dokumentasi**

@@ -3,10 +3,10 @@
 - **Repository**: `https://github.com/Dhani078/KiosAI.git`
 - **Location**: `E:/Hermesproject/KiosAI`
 - **Live Worker**: `https://kiosai.dhanisepeda.workers.dev` (subdomain `dhanisepeda`, pakai `e`)
-- **Current Status**: Complete & Fully Verified (Phase 0 - 25)
+- **Current Status**: Complete & Fully Verified (Phase 0 - 26)
 - **Upstream Router**: 9Router local (`http://127.0.0.1:20128`) dengan 65 model aktif terverifikasi 5x audit (1 Free, 64 Pro)
 - **Database**: TiDB Cloud Serverless (`gateway01.ap-southeast-1.prod.aws.tidbcloud.com:4000/kiosai`)
-- **Last Commit**: `5302c29` — feat(docs): add real-time model search and reset in DocsTab with role-based formatting
+- **Last Commit**: `fa56315` — feat(models): add universal commercial alias resolution for standard OpenAI model identifiers
 
 ## Dokumen Navigasi Cepat
 - Aturan & perintah untuk agent: `AGENT.md`
@@ -161,4 +161,8 @@
     - Indikator `last_used_at` pada tabel API key di `KeysTab.tsx`.
     - Fleksibilitas alias payload registrasi di `register/route.ts`.
     - Seluruh file patuh $\le 200$ baris per file (`verify` lolos 100%).
+  - Phase 26: Universal Commercial Alias Resolution:
+    - Pemetaan otomatis nama model standar industri (`claude-3.7-sonnet`, `gpt-4o`, `gemini-2.0-flash`, `deepseek-r1`, `llama-3.3-70b`) ke model 9Router yang terbukti aktif di `resolveModelAlias`.
+    - Mencegah error 404/503 saat client eksternal menggunakan penamaan model OpenAI/Anthropic/Google standar.
+    - 100% lulus 10 uji alias, 10/10 E2E, 12/12 pricing, dan 16/16 UI checks.
 

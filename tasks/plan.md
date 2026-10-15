@@ -109,6 +109,10 @@
   - Indikator `last_used_at` pada tabel API key di `KeysTab.tsx`
   - Dukungan alias `name`/`fullName` pada API registrasi
   - 100% lolos E2E test, pricing check, billing deduction, dan UI CDP audit 16/16
+- [x] Phase 26: Universal Commercial Alias Resolution
+  - Pemetaan otomatis nama model standar industri (`claude-3.7-sonnet`, `gpt-4o`, `gemini-2.0-flash`, `deepseek-r1`, `llama-3.3-70b`) ke model 9Router yang terbukti aktif di `resolveModelAlias`
+  - Mencegah error 404/503 saat client eksternal menggunakan penamaan model OpenAI/Anthropic/Google standar
+  - 100% lulus 10 uji alias, 10/10 E2E, 12/12 pricing, dan 16/16 UI checks
 
 
 

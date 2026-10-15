@@ -169,6 +169,11 @@
 - [x] Task 17.5: Accept `name` alias alongside `fullName` in `register/route.ts`
 - [x] Task 17.6: Verify 100% compliance: all 87 files <= 200 lines, 10/10 E2E tests passed, 16/16 UI checks passed
 
+## Phase 18 (Universal Commercial Model Aliases - Completed)
+- [x] Task 18.1: Map industry standard model IDs (`claude-3.7-sonnet`, `gpt-4o`, `gemini-2.0-flash`, `deepseek-r1`, `llama-3.3-70b`) to verified active routes in `resolveModelAlias`
+- [x] Task 18.2: Verify zero regression across all 10 alias scenarios, 10/10 E2E tests, and 12/12 pricing assertions
+- [x] Task 18.3: Confirm strict modularity compliance (81 LOC in `lib/model-utils.ts`, all 87 files <= 200 LOC)
+
 
 
 
