@@ -86,7 +86,12 @@ export function KeysTab({
                       <td>
                         <code>{displayKey}</code>
                       </td>
-                      <td className="muted">{dateStr}</td>
+                      <td className="muted">
+                        <div>{dateStr}</div>
+                        <small style={{ fontSize: "11px", display: "block", opacity: 0.75 }}>
+                          {k.last_used_at ? `Dipakai ${new Date(k.last_used_at).toLocaleDateString("id-ID", { day: "2-digit", month: "short" })}` : "Belum dipakai"}
+                        </small>
+                      </td>
                       <td>
                         <div className="row-actions">
                           <Button

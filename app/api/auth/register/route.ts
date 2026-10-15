@@ -7,7 +7,10 @@ export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
   try {
-    const { email, password, fullName } = await req.json();
+    const body = await req.json();
+    const email = body?.email;
+    const password = body?.password;
+    const fullName = body?.fullName || body?.name;
 
     if (!email || !email.includes("@")) {
       return NextResponse.json({ error: "Email tidak valid" }, { status: 400 });
