@@ -7,7 +7,7 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
-### `HEAD` — fix(models): test candidate models 3x and prune 13 dead models from catalog
+### `5db9717` — fix(models): test candidate models 3x and prune 13 dead models from catalog
 
 **Diuji 3x & Dihapus**
 - **Audit Pengujian Nyata 3x (`scripts/test-model-trials.mjs`)**:
