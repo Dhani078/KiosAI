@@ -136,6 +136,15 @@
 - [x] Task 13.6: Verify 100% compliance across all 82 source files (<= 200 LOC per file)
 - [x] Task 13.7: Sync all documentation markdown files across the repository
 
+## Phase 14 (Pro Model Expansion & Curation - Completed)
+- [x] Task 14.1: Integrate Google Gemini 3.8 Flash (High/Medium/Low/Flash) and Claude 4.6 (Sonnet & Opus Thinking) into Pro tier
+- [x] Task 14.2: Filter out unwanted Gemini 3.7/3.6/3.1 and `gemini-pro-agent` models via `isHiddenModel` in `app/v1/models/route.ts`
+- [x] Task 14.3: Add commercial name formatting in `lib/model-utils.ts` (`formatAgGemini`) and alias resolvers
+- [x] Task 14.4: Fix substring clash (`gemini` matching `mini`) in `lib/model-pricing.ts`
+- [x] Task 14.5: Update `test:pricing` to 12 checks (100% pass)
+- [x] Task 14.6: Implement Wrangler OAuth auto-refresh in `scripts/tunnel-sync.mjs` and `scripts/sync-worker-secrets.mjs`
+- [x] Task 14.7: Live Worker edge deployment verified — 0 unwanted models, Pro models active and healthy
+
 
 
 

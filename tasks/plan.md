@@ -85,6 +85,12 @@
   - Test runner baru `npm run test:billing` memverifikasi live deduction TiDB per rasio tarif
   - Seluruh 82 file sumber TypeScript/MJS lolos audit `<= 200` baris via `npm run verify`
   - 0 overflow horizontal pada pengujian CDP Chrome di PC (1440px) dan Mobile (390px)
+- [x] Phase 22: Pro Model Expansion & Curation
+  - Model `ag/gemini-3.8-flash*`, `ag/claude-sonnet-4-6`, `ag/claude-opus-4-6-thinking` masuk Pro plan
+  - Model `ag/gemini-3.7-*`, `ag/gemini-3.6-*`, `ag/gemini-3.1-*`, `ag/gemini-pro-agent` disaring via `isHiddenModel`
+  - Fix substring collision `"gemini".includes("mini")` di `lib/model-pricing.ts`
+  - Auto-refresh Wrangler OAuth di skrip tunnel & secrets
+  - Worker live terdeploy dan terverifikasi sehat di edge Cloudflare
 
 
 
