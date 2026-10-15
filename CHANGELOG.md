@@ -7,6 +7,21 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `3decad7` — docs: synchronize all markdown documentation for session transition
+
+- Sinkronisasi menyeluruh seluruh dokumen markdown (`AGENT.md`, `STATE.md`, `docs/HANDOFF.md`, `docs/ARCHITECTURE.md`, `tasks/plan.md`, `tasks/todo.md`).
+- Mencatat hasil audit 5x penyaringan katalog (65 model aktif, 679 model mati disaring) pada Phase 23.
+- Memperbarui status kelulusan pengujian (87 file sumber patuh $\le 200$ baris, 12/12 pricing, 10/10 E2E).
+
+### `34fcbd3` — feat(models): audit 746 models with 5x retry, prune 679 dead models, retain 65 verified models
+
+**Audit 5x & Penyaringan Menyeluruh**
+- **Pengujian Nyata 5x Retry (`scripts/audit-all-models-5x.mjs`)**: Menguji seluruh 746 model dengan toleransi 5x percobaan berturut-turut ke gateway 9Router.
+- **Pemangkasan 679 Model Mati**: Menemukan 679 model yang gagal 5/5 kali berturut-turut (termasuk seluruh 482 model internal `cl/*` yang timeout scraper, serta model yang mengembalikan error 503).
+- **Daftar Model Terverifikasi (`lib/verified-models.ts`)**: Mendaftarkan 65 model aktif yang terbukti berhasil 200 OK.
+- **Penyaringan Gateway (`app/v1/models/route.ts`)**: Gateway dan dashboard hanya menampilkan model yang lolos audit.
+- **Verifikasi Produksi Live**: Dashboard Worker `https://kiosai.dhanisepeda.workers.dev/dashboard` bersih dengan filter `Semua (65)`, `Free Tier (1)`, `Pro Tier (64)`.
+
 ### `2d27ccb` — feat(analytics): upgrade Statistik tab to Maxxmode with 4 KPI cards, multi-segment model breakdown, and live search
 
 **Peningkatan Statistik Maxxmode**
