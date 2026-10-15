@@ -7,6 +7,7 @@ import PlaygroundToolbar from "./PlaygroundToolbar";
 import PlaygroundChat, { ChatMessage } from "./PlaygroundChat";
 import PlaygroundLocked from "./PlaygroundLocked";
 import { getModelPricing } from "@/lib/model-pricing";
+import { humanizeErrorMessage } from "@/lib/model-utils";
 
 export function PlaygroundTab({
   models,
@@ -107,7 +108,7 @@ export function PlaygroundTab({
       ]);
       onRefreshUserData();
     } catch (err: any) {
-      setErrorBanner(err.message || "Gagal memanggil model AI.");
+      setErrorBanner(humanizeErrorMessage(err.message || "Gagal memanggil model AI.", isAdmin));
     } finally {
       setReplying(false);
     }
