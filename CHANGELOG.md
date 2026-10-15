@@ -7,6 +7,13 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `7b803d2` — refactor(code): streamline PlaygroundTab and chat completions route for safe line limit headroom
+
+**Penyederhanaan & Headroom Batas Baris**
+- **Headroom Modul Kunci**: Merampingkan `PlaygroundTab.tsx` (dari 200 ke 192 baris) dan `app/v1/chat/completions/route.ts` (dari 198 ke 184 baris).
+- **Hasil Audit Batas Baris**: Seluruh 87 file sumber kini memiliki headroom aman (maksimal 196 baris di `DashboardApp.tsx`), menghilangkan risiko melanggar batas ketat $\le 200$ baris pada perubahan mendatang.
+- **Verifikasi**: 10/10 test E2E lolos, 12/12 pricing checks lolos, 16/16 UI audits lolos.
+
 ### `d7fdde3` — fix(auth): update signup bonus copy to 2.5M and enrich profile card with tier & balance
 
 **Penyempurnaan Modal Akun & Profil**
