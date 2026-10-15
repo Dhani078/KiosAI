@@ -7,7 +7,7 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
-### `HEAD` — feat(analytics): upgrade Statistik tab to Maxxmode with 4 KPI cards, multi-segment model breakdown, and live search
+### `2d27ccb` — feat(analytics): upgrade Statistik tab to Maxxmode with 4 KPI cards, multi-segment model breakdown, and live search
 
 **Peningkatan Statistik Maxxmode**
 - **4 Kartu KPI Interaktif (`app/components/AnalyticsCards.tsx`)**:

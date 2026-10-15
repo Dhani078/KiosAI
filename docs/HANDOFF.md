@@ -9,7 +9,7 @@ Dokumen ini dirancang agar setiap sesi AI atau pengembang dapat melanjutkan peke
 | Komponen | Status | Keterangan |
 |---|---|---|
 | **Repository** | Clean, Up-to-Date | `https://github.com/Dhani078/KiosAI.git` (Branch `main`) |
-| **Commit Terakhir** | `0519315` | Feat: audit 746 models with 5x retry, prune 679 dead models, retain 65 verified models |
+| **Commit Terakhir** | `2d27ccb` | Feat: upgrade Statistik tab to Maxxmode with 4 KPI cards, multi-segment model breakdown, and live search |
 | **Worker Live** | `healthy` | `https://kiosai.dhanisepeda.workers.dev` (Subdomain `dhanisepeda` dengan huruf 'e') |
 | **Database** | `connected` | TiDB Cloud Serverless (AWS Tokyo `ap-southeast-1` / `ap-northeast-1`) |
 | **Upstream 9Router** | `connected` | `http://127.0.0.1:20128` (768 model aktif) |
