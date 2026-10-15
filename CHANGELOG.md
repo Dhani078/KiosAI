@@ -7,6 +7,16 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `HEAD` — feat(models): hide unwanted Gemini 3.7/3.6/3.1 models and retain Gemini 3.8 & Claude 4.6 in Pro plan
+
+**Dihapus & Disaring**
+- **Model Disembunyikan (`app/v1/models/route.ts`)**:
+  - `isHiddenModel` menyaring `ag/gemini-3.7-*`, `ag/gemini-3.6-*`, `ag/gemini-3.1-*`, dan `ag/gemini-pro-agent` dari discovery list `/v1/models` dan dashboard UI.
+  - Menghapus `ag/gemini-3.1-pro-high` dari katalog landing page (`app/landing/components/modelCatalogData.ts`).
+  - Model Pro aktif yang dipertahankan: `ag/gemini-3.8-flash*` (High/Medium/Low/Flash), `ag/claude-sonnet-4-6`, `ag/claude-opus-4-6-thinking`.
+
+---
+
 ### `76f6c27` — feat(models): integrate Google Gemini 3.8/3.7/3.6/3.1 and Claude 4.6 Thinking models into Pro plan
 
 **Ditambahkan & Diperbaiki**

@@ -16,7 +16,11 @@ function isHiddenModel(id: string): boolean {
     lower.endsWith("/auto") ||
     lower.endsWith("/auto-thinking") ||
     lower.includes("free123") ||
-    lower.includes("tesss")
+    lower.includes("tesss") ||
+    lower.startsWith("ag/gemini-3.7") ||
+    lower.startsWith("ag/gemini-3.6") ||
+    lower.startsWith("ag/gemini-3.1") ||
+    lower === "ag/gemini-pro-agent"
   );
 }
 

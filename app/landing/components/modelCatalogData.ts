@@ -71,16 +71,6 @@ export const MODELS: ModelItem[] = [
     strengths: ["Vision", "Reasoning", "Ultra Fast"],
   },
   {
-    id: "ag/gemini-3.1-pro-high",
-    name: "Gemini 3.1 Pro (High)",
-    provider: "Google",
-    context: "2M",
-    tier: "pro",
-    pricing: "In $1.25 · Out $5.00 / 1M",
-    desc: "Model Pro Google dengan penalaran tinggi dan analisis visual mendalam.",
-    strengths: ["Vision", "Reasoning", "2M Context"],
-  },
-  {
     id: "ag/claude-sonnet-4-6",
     name: "Claude Sonnet 4.6 (Thinking)",
     provider: "Anthropic",
