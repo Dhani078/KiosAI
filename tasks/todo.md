@@ -174,6 +174,11 @@
 - [x] Task 18.2: Verify zero regression across all 10 alias scenarios, 10/10 E2E tests, and 12/12 pricing assertions
 - [x] Task 18.3: Confirm strict modularity compliance (81 LOC in `lib/model-utils.ts`, all 87 files <= 200 LOC)
 
+## Phase 19 (Granular Order Settlement & E2E Alias Validation - Completed)
+- [x] Task 19.1: Support `pro_25k`, `pro_100k`, and `pro_150k` package keys in `pay/route.ts` & `payment/webhook/route.ts`
+- [x] Task 19.2: Test live alias resolution directly in step 5 of `scripts/test-e2e.mjs`
+- [x] Task 19.3: Verify all 87 files <= 200 LOC, clean working tree, and sync documentation
+
 
 
 

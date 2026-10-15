@@ -7,6 +7,13 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `016412e` — feat(billing): support granular pro tier keys in order settlement and test alias routing in e2e
+
+**Penyelesaian Order Granular & Validasi E2E Alias**
+- **Dukungan Key Tier Granular (`pay/route.ts` & `payment/webhook/route.ts`)**: Klausul `CASE WHEN` kini memvalidasi `'pro_25k'`, `'pro_100k'`, dan `'pro_150k'` secara eksplisit, menjamin akun terupgrade ke `pro` tanpa bergantung pada normalisasi tier sebelumnya.
+- **Validasi E2E Live Alias (`scripts/test-e2e.mjs`)**: Step 5 pengujian integrasi gateway memanggil model alias `"atria"` (memverifikasi pemetaan otomatis ke `"atria/Atria-Dawn-Preview"` pada request nyata non-stream).
+- **Kepatuhan Modularitas**: Semua file termodifikasi tetap patuh batasan $\le 200$ baris per file (`test-e2e.mjs` 191 baris, `pay/route.ts` 54 baris, `webhook/route.ts` 91 baris).
+
 ### `fa56315` — feat(models): add universal commercial alias resolution for standard OpenAI model identifiers
 
 **Resolusi Alias Model Industri Otomatis**

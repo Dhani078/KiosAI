@@ -113,6 +113,10 @@
   - Pemetaan otomatis nama model standar industri (`claude-3.7-sonnet`, `gpt-4o`, `gemini-2.0-flash`, `deepseek-r1`, `llama-3.3-70b`) ke model 9Router yang terbukti aktif di `resolveModelAlias`
   - Mencegah error 404/503 saat client eksternal menggunakan penamaan model OpenAI/Anthropic/Google standar
   - 100% lulus 10 uji alias, 10/10 E2E, 12/12 pricing, dan 16/16 UI checks
+- [x] Phase 27: Granular Order Settlement & E2E Alias Coverage
+  - Dukungan eksplisit tier `pro_25k`, `pro_100k`, `pro_150k` pada settlement query
+  - Uji live alias `"atria"` pada runner E2E step 5
+  - Kepatuhan modularitas ketat: seluruh 87 file sumber <= 200 LOC
 
 
 

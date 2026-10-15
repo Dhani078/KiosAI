@@ -3,10 +3,10 @@
 - **Repository**: `https://github.com/Dhani078/KiosAI.git`
 - **Location**: `E:/Hermesproject/KiosAI`
 - **Live Worker**: `https://kiosai.dhanisepeda.workers.dev` (subdomain `dhanisepeda`, pakai `e`)
-- **Current Status**: Complete & Fully Verified (Phase 0 - 26)
+- **Current Status**: Complete & Fully Verified (Phase 0 - 27)
 - **Upstream Router**: 9Router local (`http://127.0.0.1:20128`) dengan 65 model aktif terverifikasi 5x audit (1 Free, 64 Pro)
 - **Database**: TiDB Cloud Serverless (`gateway01.ap-southeast-1.prod.aws.tidbcloud.com:4000/kiosai`)
-- **Last Commit**: `fa56315` — feat(models): add universal commercial alias resolution for standard OpenAI model identifiers
+- **Last Commit**: `016412e` — feat(billing): support granular pro tier keys in order settlement and test alias routing in e2e
 
 ## Dokumen Navigasi Cepat
 - Aturan & perintah untuk agent: `AGENT.md`
@@ -165,4 +165,8 @@
     - Pemetaan otomatis nama model standar industri (`claude-3.7-sonnet`, `gpt-4o`, `gemini-2.0-flash`, `deepseek-r1`, `llama-3.3-70b`) ke model 9Router yang terbukti aktif di `resolveModelAlias`.
     - Mencegah error 404/503 saat client eksternal menggunakan penamaan model OpenAI/Anthropic/Google standar.
     - 100% lulus 10 uji alias, 10/10 E2E, 12/12 pricing, dan 16/16 UI checks.
+  - Phase 27: Granular Order Settlement & E2E Alias Coverage:
+    - Dukungan eksplisit untuk key tier paket pro (`pro_25k`, `pro_100k`, `pro_150k`) pada query update `users.tier` di `pay/route.ts` dan `payment/webhook/route.ts`.
+    - Integrasi skenario pemanggilan model via alias (`"atria"`) langsung pada test 5 di `scripts/test-e2e.mjs`.
+    - Seluruh file tetap patuh batas $\le 200$ baris per file (`test-e2e.mjs` 191 baris).
 
