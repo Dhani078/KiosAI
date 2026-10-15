@@ -3,10 +3,10 @@
 - **Repository**: `https://github.com/Dhani078/KiosAI.git`
 - **Location**: `E:/Hermesproject/KiosAI`
 - **Live Worker**: `https://kiosai.dhanisepeda.workers.dev` (subdomain `dhanisepeda`, pakai `e`)
-- **Current Status**: Complete & Fully Verified (Phase 0 - 24)
+- **Current Status**: Complete & Fully Verified (Phase 0 - 25)
 - **Upstream Router**: 9Router local (`http://127.0.0.1:20128`) dengan 65 model aktif terverifikasi 5x audit (1 Free, 64 Pro)
 - **Database**: TiDB Cloud Serverless (`gateway01.ap-southeast-1.prod.aws.tidbcloud.com:4000/kiosai`)
-- **Last Commit**: `cd4bddb` — feat(keys): show last used timestamp on API keys and accept name alias on register
+- **Last Commit**: `5302c29` — feat(docs): add real-time model search and reset in DocsTab with role-based formatting
 
 ## Dokumen Navigasi Cepat
 - Aturan & perintah untuk agent: `AGENT.md`
@@ -155,4 +155,10 @@
     - Sinkronisasi flag admin `kiosai_is_admin` di `localStorage`.
     - Audit CDP pada 390px dan 1440px membuktikan 0 kemunculan kata "TiDB" untuk pengguna reguler di landing page dan 6 tab dashboard.
     - Seluruh 87 file kode sumber patuh batasan $\le 200$ baris per file.
+  - Phase 25: Docs Model Search & Activity Indicators:
+    - Bilah pencarian instan dan reset `X` pada katalog model di tab Dokumentasi (`DocsTab.tsx`).
+    - Counter model dinamis dan pemformatan nama model berbasis role (`isAdmin`).
+    - Indikator `last_used_at` pada tabel API key di `KeysTab.tsx`.
+    - Fleksibilitas alias payload registrasi di `register/route.ts`.
+    - Seluruh file patuh $\le 200$ baris per file (`verify` lolos 100%).
 

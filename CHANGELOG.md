@@ -7,6 +7,14 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `5302c29` — feat(docs): add real-time model search and reset in DocsTab with role-based formatting
+
+**Pencarian Model di Dokumentasi**
+- **Live Search & Reset (`DocsTab.tsx`)**: Menambahkan bilah pencarian instan dan tombol reset `X` pada daftar model aktif di tab Dokumentasi, memudahkan developer menemukan model spesifik tanpa perlu scroll 65 baris.
+- **Counter Model Dinamis**: Judul panel diperkaya counter dinamis yang mencerminkan jumlah model aktif yang tersedia.
+- **Penerusan Prop Role `isAdmin`**: `DashboardApp.tsx` meneruskan status `isAdmin` ke `DocsTab.tsx` agar format nama model konsisten dengan preferensi role pengguna.
+- **Kepatuhan Modularitas**: `DocsTab.tsx` (187 baris) dan `DashboardApp.tsx` (197 baris) patuh $\le 200$ baris per file.
+
 ### `cd4bddb` — feat(keys): show last used timestamp on API keys and accept name alias on register
 
 **Aktivitas API Key & Robustness Registrasi**

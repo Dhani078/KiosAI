@@ -9,7 +9,7 @@ Dokumen ini dirancang agar setiap sesi AI atau pengembang dapat melanjutkan peke
 | Komponen | Status | Keterangan |
 |---|---|---|
 | **Repository** | Clean, Up-to-Date | `https://github.com/Dhani078/KiosAI.git` (Branch `main`) |
-| **Commit Terakhir** | `cd4bddb` | Feat: show last used timestamp on API keys and accept name alias on register |
+| **Commit Terakhir** | `5302c29` | Feat(docs): add real-time model search and reset in DocsTab with role-based formatting |
 | **Worker Live** | `healthy` | `https://kiosai.dhanisepeda.workers.dev` (Subdomain `dhanisepeda` dengan huruf 'e') |
 | **Database** | `connected` | TiDB Cloud Serverless (AWS Tokyo `ap-southeast-1` / `ap-northeast-1`) |
 | **Upstream 9Router** | `connected` | `http://127.0.0.1:20128` (65 model terverifikasi 5x audit, 1 Free, 64 Pro) |

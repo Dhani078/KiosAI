@@ -143,5 +143,5 @@ npm start
 - **E2E Integration Test**: 10 Lolos, 0 Gagal (`test:e2e`).
 - **Pricing & Billing Test**: 12/12 PASS (`test:pricing`), live deduction PASS (`test:billing`).
 - **UI & Dashboard Audit**: 16/16 PASS (0 horizontal overflow pada mobile 390px & PC).
-- **Git Branch**: `main` ter-push sinkron dengan `origin` (Commit `cd4bddb`).
+- **Git Branch**: `main` ter-push sinkron dengan `origin` (Commit `5302c29`).
 - **Status Layanan**: Worker `kiosai.dhanisepeda.workers.dev` live dan sehat (`/api/health` status `healthy`).

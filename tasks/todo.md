@@ -161,6 +161,14 @@
 - [x] Task 16.4: Validate with CDP on PC & Mobile (0 occurrences of TiDB on landing and all dashboard tabs for visitor/regular user; visible for admin)
 - [x] Task 16.5: Verify 100% compliance: all 87 source files <= 200 LOC, 10/10 E2E passed, 16/16 UI audits passed
 
+## Phase 17 (Docs Model Search & Key Activity Tracking - Completed)
+- [x] Task 17.1: Add live search and reset button to active models list in `DocsTab.tsx`
+- [x] Task 17.2: Add dynamic model counter in `DocsTab.tsx` header
+- [x] Task 17.3: Pass `isAdmin` to `DocsTab.tsx` from `DashboardApp.tsx` for consistent model name rendering
+- [x] Task 17.4: Add `last_used_at` activity indicator to API key rows in `KeysTab.tsx`
+- [x] Task 17.5: Accept `name` alias alongside `fullName` in `register/route.ts`
+- [x] Task 17.6: Verify 100% compliance: all 87 files <= 200 lines, 10/10 E2E tests passed, 16/16 UI checks passed
+
 
 
 

@@ -103,6 +103,12 @@
   - 14 komponen UI disesuaikan dengan prop/status `isAdmin`
   - Verifikasi CDP PC & Mobile: 0 kemunculan "TiDB" untuk pengguna reguler, tetap tampil untuk admin
   - 87 file sumber patuh batas <= 200 baris, 10/10 E2E lolos, 16/16 UI & dashboard audit lolos
+- [x] Phase 25: Docs Model Search & Key Activity Tracking
+  - Fitur pencarian teks instan dan reset tombol `X` di tab Dokumentasi (`DocsTab.tsx`)
+  - Counter jumlah model dinamis pada header Dokumentasi
+  - Indikator `last_used_at` pada tabel API key di `KeysTab.tsx`
+  - Dukungan alias `name`/`fullName` pada API registrasi
+  - 100% lolos E2E test, pricing check, billing deduction, dan UI CDP audit 16/16
 
 
 
