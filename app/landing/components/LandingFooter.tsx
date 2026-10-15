@@ -47,7 +47,7 @@ export function LandingFooter() {
         <div style={{ textAlign: "right", fontSize: "12px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "8px", justifyContent: "flex-end" }}>
             <span className="status-dot" />
-            <span>{isAdmin ? "TiDB Serverless" : "Cloud Database"} & 9Router Live</span>
+            <span>{isAdmin ? "TiDB Serverless & 9Router Live" : "Cloud Database & Gateway Live"}</span>
           </div>
           <span className="muted" style={{ display: "block", marginTop: "4px" }}>
             © 2026 KiosAI. Dikembangkan oleh Dhani078.

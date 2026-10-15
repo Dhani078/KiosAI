@@ -49,7 +49,7 @@ export function Header({
   const isAdmin = Boolean(user && (user.username === "adminfordhani" || user.email === "adminfordhani@kiosai.id"));
   const isOnline = health?.status === "healthy";
   const healthTooltip = health
-    ? `${isAdmin ? "TiDB" : "Database"}: ${health.database.status} (${health.database.latencyMs}ms) | 9Router: ${health.upstream.status} (${health.upstream.latencyMs}ms)`
+    ? `${isAdmin ? "TiDB" : "Database"}: ${health.database.status} (${health.database.latencyMs}ms) | ${isAdmin ? "9Router" : "Gateway"}: ${health.upstream.status} (${health.upstream.latencyMs}ms)`
     : "Memeriksa status gateway...";
 
   return (

@@ -129,7 +129,7 @@ export function PlaygroundTab({
       />
 
       <div className="playground-context">
-        <span>Koneksi Live {isAdmin ? "TiDB" : "Cloud DB"} & 9Router</span>
+        <span>Koneksi Live {isAdmin ? "TiDB & 9Router" : "Gateway Aktif"}</span>
         <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
           <button
             className="text-link"
