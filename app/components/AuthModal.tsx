@@ -74,8 +74,12 @@ export function AuthModal({
           <div>
             <Logo />
             <h2>Akun Anda</h2>
-            <p>Anda saat ini masuk sebagai <strong>{currentUser.email}</strong>.</p>
-            <div className="new-key-secret" style={{ margin: "16px 0" }}>
+            <p>Anda saat ini masuk sebagai <strong>{currentUser.email}</strong>{currentUser.username ? ` (@${currentUser.username})` : ""}.</p>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 14px", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "var(--radius-input)", margin: "14px 0" }}>
+              <span className="muted" style={{ fontSize: "12px" }}>Tier: <strong style={{ color: "var(--primary)" }}>{(currentUser.tier || "FREE").toUpperCase()}</strong></span>
+              <span className="muted" style={{ fontSize: "12px" }}>Saldo: <strong style={{ color: "var(--text)" }}>{(currentUser.balance_tokens ?? 0).toLocaleString("id-ID")} token</strong></span>
+            </div>
+            <div className="new-key-secret" style={{ margin: "0 0 14px" }}>
               <code>ID: {currentUser.id}</code>
             </div>
             <div style={{ display: "flex", gap: "10px", marginTop: "20px" }}>
@@ -94,7 +98,7 @@ export function AuthModal({
             <p>
               {tab === "login"
                 ? "Masuk untuk mengelola saldo token dan API key Anda."
-                : "Daftar sekarang dan dapatkan bonus 100.000 token gratis!"}
+                : "Daftar sekarang dan dapatkan bonus 2.500.000 token gratis!"}
             </p>
 
             <div style={{ display: "flex", gap: "8px", margin: "16px 0 20px" }}>
@@ -164,7 +168,7 @@ export function AuthModal({
               loading={loading}
               style={{ width: "100%", marginTop: "20px" }}
             >
-              {tab === "login" ? "Masuk ke Akun" : "Daftar & Ambil 100k Token"}
+              {tab === "login" ? "Masuk ke Akun" : "Daftar & Ambil 2.5 Juta Token"}
               <ArrowRight size={16} />
             </Button>
             <small className="modal-note">
