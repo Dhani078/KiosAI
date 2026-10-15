@@ -93,13 +93,8 @@ export async function POST(req: NextRequest) {
       const errText = await upstreamRes.text();
       const latency = Date.now() - startTime;
       await logUsage({
-        apiKeyId: auth.key.id,
-        userId: auth.user.id,
-        model: requestedModel,
-        promptTokens: 0,
-        completionTokens: 0,
-        latencyMs: latency,
-        statusCode: upstreamRes.status,
+        apiKeyId: auth.key.id, userId: auth.user.id, model: requestedModel,
+        promptTokens: 0, completionTokens: 0, latencyMs: latency, statusCode: upstreamRes.status,
       });
       let upstreamMessage = errText.slice(0, 400);
       try {
@@ -130,13 +125,8 @@ export async function POST(req: NextRequest) {
             const totalTokens = usage?.total_tokens ?? promptTokens + completionTokens;
             await deductTokens(auth.user!.id, totalTokens, getCostRatio(requestedModel));
             await logUsage({
-              apiKeyId: auth.key!.id,
-              userId: auth.user!.id,
-              model: requestedModel,
-              promptTokens,
-              completionTokens,
-              latencyMs: Date.now() - startTime,
-              statusCode: 200,
+              apiKeyId: auth.key!.id, userId: auth.user!.id, model: requestedModel,
+              promptTokens, completionTokens, latencyMs: Date.now() - startTime, statusCode: 200,
             });
             return;
           }
@@ -175,15 +165,10 @@ export async function POST(req: NextRequest) {
 
     const latency = Date.now() - startTime;
         const deducted = await deductTokens(auth.user.id, totalTokens, getCostRatio(requestedModel));
-    await logUsage({
-      apiKeyId: auth.key.id,
-      userId: auth.user.id,
-      model: requestedModel,
-      promptTokens,
-      completionTokens,
-      latencyMs: latency,
-      statusCode: 200,
-    });
+        await logUsage({
+          apiKeyId: auth.key.id, userId: auth.user.id, model: requestedModel,
+          promptTokens, completionTokens, latencyMs: latency, statusCode: 200,
+        });
 
     const isLowBalance = Number(auth.user.balance_tokens) - deducted < 20000;
     const finalHeaders = {

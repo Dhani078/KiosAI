@@ -92,11 +92,7 @@ export function PlaygroundTab({
 
       const resText = await res.text();
       let data: any;
-      try {
-        data = JSON.parse(resText);
-      } catch {
-        throw new Error(resText.slice(0, 160) || `HTTP ${res.status}`);
-      }
+      try { data = JSON.parse(resText); } catch { throw new Error(resText.slice(0, 160) || `HTTP ${res.status}`); }
       if (!res.ok) throw new Error(data.error?.message || `HTTP ${res.status}`);
 
       const replyContent = data.choices?.[0]?.message?.content || "(Tidak ada balasan)";
@@ -105,12 +101,8 @@ export function PlaygroundTab({
       setMessages((prev) => [
         ...prev,
         {
-          text: replyContent,
-          user: false,
-          model: selectedModel,
-          tokens: tokensUsed,
-          rateInfo: `In: $${pricing.input} / Out: $${pricing.output}`,
-          latencyMs: Date.now() - startTime,
+          text: replyContent, user: false, model: selectedModel, tokens: tokensUsed,
+          rateInfo: `In: $${pricing.input} / Out: $${pricing.output}`, latencyMs: Date.now() - startTime,
         },
       ]);
       onRefreshUserData();
