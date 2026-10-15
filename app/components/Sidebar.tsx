@@ -55,7 +55,15 @@ export function Sidebar({
   return (
     <aside className="sidebar">
       <Logo />
-      <div className="workspace">
+      <div
+        className="workspace"
+        onClick={onOpenAuth}
+        style={{ cursor: "pointer" }}
+        role="button"
+        tabIndex={0}
+        aria-label="Profil Akun"
+        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") onOpenAuth(); }}
+      >
         <div className="workspace-avatar">{initials[0] || "K"}</div>
         <div>
           <strong>{userName}</strong>
