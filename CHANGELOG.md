@@ -7,6 +7,12 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `2055cda` — feat(ui): make workspace header clickable to open account profile modal
+
+**Akses Cepat Profil & Pengaturan Akun**
+- **Interaksi Workspace Header (`Sidebar.tsx`)**: Header `.workspace` di bagian atas sidebar kiri kini interaktif (`role="button"`, `tabIndex={0}`, navigasi keyboard Enter/Spasi), langsung membuka modal profil akun untuk mengecek saldo token, tier, dan detail akun.
+- **Kepatuhan Modularitas & Aksesibilitas**: `Sidebar.tsx` tetap patuh 130 baris ($\le 200$ baris) dengan dukungan atribut aksesibilitas standar.
+
 ### `016412e` — feat(billing): support granular pro tier keys in order settlement and test alias routing in e2e
 
 **Penyelesaian Order Granular & Validasi E2E Alias**

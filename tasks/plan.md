@@ -117,6 +117,10 @@
   - Dukungan eksplisit tier `pro_25k`, `pro_100k`, `pro_150k` pada settlement query
   - Uji live alias `"atria"` pada runner E2E step 5
   - Kepatuhan modularitas ketat: seluruh 87 file sumber <= 200 LOC
+- [x] Phase 28: Interactive Workspace Profile Trigger
+  - Integrasi click handler dan keyboard accessibility pada `.workspace` header di `Sidebar.tsx`
+  - Verifikasi otomatis via CDP: klik workspace membuka modal profil akun
+  - 100% test passing, clean tree, and git sync
 
 
 

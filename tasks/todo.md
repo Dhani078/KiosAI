@@ -179,6 +179,11 @@
 - [x] Task 19.2: Test live alias resolution directly in step 5 of `scripts/test-e2e.mjs`
 - [x] Task 19.3: Verify all 87 files <= 200 LOC, clean working tree, and sync documentation
 
+## Phase 20 (Interactive Workspace Profile Trigger - Completed)
+- [x] Task 20.1: Make `.workspace` in `Sidebar.tsx` clickable with Enter/Space keyboard accessibility
+- [x] Task 20.2: Verify CDP click behavior opening profile modal (Akun Anda)
+- [x] Task 20.3: Ensure 0 overflow, 10/10 E2E tests, 12/12 pricing tests, and git sync
+
 
 
 
