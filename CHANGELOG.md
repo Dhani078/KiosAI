@@ -7,7 +7,7 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
-### `HEAD` — feat(models): integrate Google Gemini 3.8/3.7/3.6/3.1 and Claude 4.6 Thinking models into Pro plan
+### `76f6c27` — feat(models): integrate Google Gemini 3.8/3.7/3.6/3.1 and Claude 4.6 Thinking models into Pro plan
 
 **Ditambahkan & Diperbaiki**
 - **Model Pro Baru (`ag/*`)**:
