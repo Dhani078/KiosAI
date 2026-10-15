@@ -6,7 +6,7 @@
 - **Current Status**: Complete & Fully Verified (Phase 0 - 23)
 - **Upstream Router**: 9Router local (`http://127.0.0.1:20128`) dengan 65 model aktif terverifikasi 5x audit (1 Free, 64 Pro)
 - **Database**: TiDB Cloud Serverless (`gateway01.ap-southeast-1.prod.aws.tidbcloud.com:4000/kiosai`)
-- **Last Commit**: `34fcbd3` — feat(models): audit 746 models with 5x retry, prune 679 dead models, retain 65 verified models
+- **Last Commit**: `94bf188` — docs: pin 3decad7 in CHANGELOG and HANDOFF
 
 ## Dokumen Navigasi Cepat
 - Aturan & perintah untuk agent: `AGENT.md`
