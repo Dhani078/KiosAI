@@ -7,6 +7,11 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `24221f4` — docs: align commit hash references across AGENT, STATE, and HANDOFF
+
+- Menyelaraskan seluruh referensi commit hash di `AGENT.md`, `STATE.md`, dan `docs/HANDOFF.md` agar konsisten dengan `HEAD`.
+- Verifikasi menyeluruh: tsc, 87 file <= 200 baris, 10/10 e2e, 12/12 pricing, 3/3 billing, 16/16 UI & dashboard audit, dan health check Worker live.
+
 ### `3decad7` — docs: synchronize all markdown documentation for session transition
 
 - Sinkronisasi menyeluruh seluruh dokumen markdown (`AGENT.md`, `STATE.md`, `docs/HANDOFF.md`, `docs/ARCHITECTURE.md`, `tasks/plan.md`, `tasks/todo.md`).
