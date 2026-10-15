@@ -17,9 +17,11 @@ const PALETTE = [
 export function ModelUsageBreakdown({
   perModel,
   totalTokens,
+  isAdmin = false,
 }: {
   perModel: any[];
   totalTokens: number;
+  isAdmin?: boolean;
 }) {
   const models = perModel || [];
   const safeTotal = totalTokens > 0 ? totalTokens : 1;
@@ -29,7 +31,7 @@ export function ModelUsageBreakdown({
       <div className="section-heading" style={{ marginBottom: "16px" }}>
         <div>
           <h2>Distribusi Penggunaan per Model</h2>
-          <span>Analisis konsumsi token & latensi dari database TiDB</span>
+          <span>Analisis konsumsi token & latensi dari {isAdmin ? "database TiDB" : "database"}</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "6px", color: "var(--text-muted)", fontSize: "12px" }}>
           <PieChart size={15} /> {models.length} Model Terpakai

@@ -6,6 +6,7 @@ import { Button } from "./ui";
 export function AnalyticsCards({
   balance,
   summary,
+  isAdmin = false,
   onNavigatePackages,
 }: {
   balance: number;
@@ -19,6 +20,7 @@ export function AnalyticsCards({
     maxLatencyMs: number;
     successRate: number;
   };
+  isAdmin?: boolean;
   onNavigatePackages: () => void;
 }) {
   const promptTokens = summary?.totalPromptTokens || 0;
@@ -38,7 +40,7 @@ export function AnalyticsCards({
         <div className="stat-number" style={{ fontSize: "28px", fontWeight: 700 }}>
           {balance.toLocaleString("id-ID")}
         </div>
-        <span className="muted" style={{ fontSize: "11px" }}>token tersedia di TiDB</span>
+        <span className="muted" style={{ fontSize: "11px" }}>token tersedia di {isAdmin ? "TiDB" : "akun"}</span>
         <div style={{ marginTop: "auto", paddingTop: "8px" }}>
           <Button kind="primary" style={{ width: "100%", height: "32px", fontSize: "12px" }} onClick={onNavigatePackages}>
             Isi Saldo <Plus size={14} />

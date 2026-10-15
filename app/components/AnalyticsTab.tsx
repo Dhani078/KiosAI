@@ -11,11 +11,13 @@ export function AnalyticsTab({
   balance,
   analytics,
   orders,
+  isAdmin = false,
   onNavigatePackages,
 }: {
   balance: number;
   analytics: any;
   orders: any[];
+  isAdmin?: boolean;
   onNavigatePackages: () => void;
 }) {
   const summary = analytics?.summary || {
@@ -37,6 +39,7 @@ export function AnalyticsTab({
       <AnalyticsCards
         balance={balance}
         summary={summary}
+        isAdmin={isAdmin}
         onNavigatePackages={onNavigatePackages}
       />
 
@@ -50,11 +53,11 @@ export function AnalyticsTab({
         </div>
       )}
 
-      <ModelUsageBreakdown perModel={perModel} totalTokens={totalTokens} />
+      <ModelUsageBreakdown perModel={perModel} totalTokens={totalTokens} isAdmin={isAdmin} />
 
-      <RecentLogsTable logs={recentLogs} />
+      <RecentLogsTable logs={recentLogs} isAdmin={isAdmin} />
 
-      <OrderHistoryTable orders={orders} />
+      <OrderHistoryTable orders={orders} isAdmin={isAdmin} />
     </div>
   );
 }

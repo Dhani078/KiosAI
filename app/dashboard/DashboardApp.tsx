@@ -43,9 +43,7 @@ export default function Dashboard() {
       <div className="app-shell">
         <main id="main-content" style={{ display: "grid", placeItems: "center", minHeight: "60vh" }}>
           <div className="skeleton-table" role="status" aria-live="polite">
-            <div className="skeleton-row" />
-            <div className="skeleton-row" />
-            <div className="skeleton-row" />
+            <div className="skeleton-row" /><div className="skeleton-row" /><div className="skeleton-row" />
           </div>
         </main>
       </div>
@@ -64,7 +62,7 @@ export default function Dashboard() {
             <div>
               <div className="eyebrow">{heading.eyebrow}</div>
               <h1>{heading.title}</h1>
-              <p>{heading.desc}</p>
+              <p>{page === "Statistik" && isAdmin ? "Semua riwayat penggunaan token dan transaksi tersimpan di database TiDB." : heading.desc}</p>
             </div>
             <div className="heading-note">
               <ShieldCheck size={16} /> Tanpa langganan. Tanpa komitmen.
@@ -75,6 +73,7 @@ export default function Dashboard() {
             <PackagesTab
               balance={user.balance_tokens}
               activeTier={user.tier}
+              isAdmin={isAdmin}
               onSelectPackage={(idx) => { setSelectedPkgIndex(idx); setModal("payment"); }}
               onNavigateStatistik={() => setPage("Statistik")}
               onNavigateDocs={() => setPage("Dokumentasi")}
@@ -98,9 +97,7 @@ export default function Dashboard() {
               userTier={user.tier}
               isAdmin={isAdmin}
               onNavigatePlayground={(mId) => {
-                if (mId && typeof window !== "undefined") {
-                  sessionStorage.setItem("kios_selected_model", mId);
-                }
+                if (mId && typeof window !== "undefined") sessionStorage.setItem("kios_selected_model", mId);
                 setPage("Playground");
               }}
               onNavigatePackages={() => setPage("Beli Token")}
@@ -115,10 +112,7 @@ export default function Dashboard() {
               activeKey={data.playgroundKey}
               isAdmin={isAdmin}
               onNavigatePackages={() => setPage("Beli Token")}
-              onRefreshUserData={() => {
-                data.fetchUserData();
-                data.fetchAnalytics();
-              }}
+              onRefreshUserData={() => { data.fetchUserData(); data.fetchAnalytics(); }}
             />
           )}
 
@@ -127,6 +121,7 @@ export default function Dashboard() {
               balance={user.balance_tokens}
               analytics={data.analytics}
               orders={data.orders}
+              isAdmin={isAdmin}
               onNavigatePackages={() => setPage("Beli Token")}
             />
           )}
@@ -141,7 +136,7 @@ export default function Dashboard() {
 
           <footer>
             <span>© 2026 KiosAI. Dibangun untuk ide Anda.</span>
-            <div><span className="status-dot" /> Live TiDB Serverless</div>
+            <div><span className="status-dot" /> Live {isAdmin ? "TiDB" : "Cloud"} Serverless</div>
           </footer>
         </main>
       </div>
@@ -153,10 +148,10 @@ export default function Dashboard() {
           selectedPkgIndex={selectedPkgIndex}
           userId={user.id}
           userBalance={user.balance_tokens}
+          isAdmin={isAdmin}
           onClose={() => setModal(null)}
           onPaymentSuccess={() => {
-            data.fetchUserData();
-            data.fetchOrders();
+            data.fetchUserData(); data.fetchOrders();
             setToast("Pembayaran berhasil! Token telah ditambahkan ke database.");
           }}
           onNavigateKeys={() => { setModal(null); setPage("API Keys"); }}
@@ -169,9 +164,10 @@ export default function Dashboard() {
           mode={modal === "create_key" ? "create" : "revoke"}
           keyToRevoke={revokeKeyTarget}
           userId={user.id}
+          isAdmin={isAdmin}
           onClose={() => { setModal(null); setRevokeKeyTarget(null); }}
-          onKeyCreated={() => { data.fetchKeys(); setToast("API key berhasil dibuat di TiDB."); }}
-          onKeyRevoked={() => { data.fetchKeys(); setToast("API key berhasil dinonaktifkan di TiDB."); }}
+          onKeyCreated={() => { data.fetchKeys(); setToast(isAdmin ? "API key berhasil dibuat di TiDB." : "API key berhasil dibuat."); }}
+          onKeyRevoked={() => { data.fetchKeys(); setToast(isAdmin ? "API key berhasil dinonaktifkan di TiDB." : "API key berhasil dinonaktifkan."); }}
           onCopy={copy}
         />
       )}

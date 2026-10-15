@@ -25,7 +25,7 @@ export const PAGE_HEADINGS: Record<
   Statistik: {
     eyebrow: "WORKSPACE / STATISTIK",
     title: "Statistik",
-    desc: "Semua riwayat penggunaan token dan transaksi tersimpan di database TiDB.",
+    desc: "Semua riwayat penggunaan token dan transaksi tersimpan di database.",
   },
   Dokumentasi: {
     eyebrow: "WORKSPACE / DOKUMENTASI",

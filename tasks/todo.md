@@ -154,6 +154,13 @@
 - [x] Task 15.6: Verify live worker production `https://kiosai.dhanisepeda.workers.dev/dashboard` via CDP (Semua 65, Free 1, Pro 64)
 - [x] Task 15.7: All 86 source files verified <= 200 lines, 12/12 pricing tests passed, 10/10 E2E tests passed
 
+## Phase 16 (Hide Internal DB Branding from Public/Regular Users - Completed)
+- [x] Task 16.1: Gate "TiDB" text behind `isAdmin` condition in `LandingFooter`, `DashboardApp`, `Header`, `AuthModal`, `KeyModal`, `PackagesTab`, `PaymentModal`, `PlaygroundTab`, `PlaygroundChat`, `AnalyticsCards`, `ModelUsageBreakdown`, `RecentLogsTable`, and `OrderHistoryTable`
+- [x] Task 16.2: Ensure clean user experience ("Cloud Database", "database", "akun") while keeping technical "TiDB" details for admin
+- [x] Task 16.3: Sync session admin flag (`kiosai_is_admin`) in `localStorage` across login, fetch, and logout
+- [x] Task 16.4: Validate with CDP on PC & Mobile (0 occurrences of TiDB on landing and all dashboard tabs for visitor/regular user; visible for admin)
+- [x] Task 16.5: Verify 100% compliance: all 87 source files <= 200 LOC, 10/10 E2E passed, 16/16 UI audits passed
+
 
 
 

@@ -6,7 +6,7 @@ import { TableRow } from "./ui";
 import { formatModelName } from "@/lib/model-utils";
 import { exportToCsv } from "@/lib/export-csv";
 
-export function RecentLogsTable({ logs }: { logs: any[] }) {
+export function RecentLogsTable({ logs, isAdmin = false }: { logs: any[]; isAdmin?: boolean }) {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<"all" | "200" | "error">("all");
 
@@ -42,7 +42,7 @@ export function RecentLogsTable({ logs }: { logs: any[] }) {
       <div className="panel-heading" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "12px", marginBottom: "16px" }}>
         <div>
           <h2>Log Permintaan Real-Time</h2>
-          <span>50 riwayat aktivitas inferensi live dari database TiDB</span>
+          <span>50 riwayat aktivitas inferensi live dari {isAdmin ? "database TiDB" : "database"}</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
           {list.length > 0 && (

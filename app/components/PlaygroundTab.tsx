@@ -136,7 +136,7 @@ export function PlaygroundTab({
       />
 
       <div className="playground-context">
-        <span>Koneksi Live TiDB & 9Router</span>
+        <span>Koneksi Live {isAdmin ? "TiDB" : "Cloud DB"} & 9Router</span>
         <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
           <button
             className="text-link"
@@ -189,7 +189,7 @@ export function PlaygroundTab({
             </Button>
           </form>
           <div className="chat-disclaimer">
-            Enter untuk kirim · Shift + Enter untuk baris baru. Token asli terpotong di database TiDB.
+            Enter untuk kirim · Shift + Enter untuk baris baru. Token asli terpotong di database{isAdmin ? " TiDB" : ""}.
           </div>
         </>
       )}

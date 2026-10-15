@@ -8,6 +8,7 @@ export function KeyModal({
   mode,
   keyToRevoke,
   userId,
+  isAdmin = false,
   onClose,
   onKeyCreated,
   onKeyRevoked,
@@ -16,6 +17,7 @@ export function KeyModal({
   mode: "create" | "revoke";
   keyToRevoke?: any;
   userId: string;
+  isAdmin?: boolean;
   onClose: () => void;
   onKeyCreated: () => void;
   onKeyRevoked: () => void;
@@ -81,7 +83,7 @@ export function KeyModal({
             <span className="eyebrow">API KEYS / REVOKE</span>
             <h2>Cabut kunci ini?</h2>
             <p>
-              Akses untuk <strong>{keyToRevoke?.name || "API Key"}</strong> akan dinonaktifkan secara permanen di TiDB.
+              Akses untuk <strong>{keyToRevoke?.name || "API Key"}</strong> akan dinonaktifkan secara permanen{isAdmin ? " di TiDB" : ""}.
             </p>
             <div className="modal-actions">
               <Button onClick={onClose}>Batal</Button>

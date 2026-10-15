@@ -9,6 +9,7 @@ export function PaymentModal({
   selectedPkgIndex,
   userId,
   userBalance,
+  isAdmin = false,
   onClose,
   onPaymentSuccess,
   onNavigateKeys,
@@ -17,6 +18,7 @@ export function PaymentModal({
   selectedPkgIndex: number;
   userId: string;
   userBalance: number;
+  isAdmin?: boolean;
   onClose: () => void;
   onPaymentSuccess: (newBalance: number) => void;
   onNavigateKeys: () => void;
@@ -87,7 +89,7 @@ export function PaymentModal({
             <div className="payment-success-icon"><CheckCheck size={32} /></div>
             <span className="eyebrow">PAYMENT / BERHASIL</span>
             <h2>Token sudah masuk ke akun Anda.</h2>
-            <p><strong>{tokensGranted.toLocaleString("id-ID")} token</strong> berhasil ditambahkan ke TiDB.</p>
+            <p><strong>{tokensGranted.toLocaleString("id-ID")} token</strong> berhasil ditambahkan{isAdmin ? " ke TiDB" : ""}.</p>
             <div className="success-summary"><span>Saldo sekarang</span><code>{(Number(userBalance) + Number(tokensGranted)).toLocaleString("id-ID")} token</code></div>
             <div className="success-summary"><span>Tier aktif</span><Badge tier={pkg.tierKey === "free" ? "FREE" : "PRO"} /></div>
             <Button kind="primary" onClick={onNavigateKeys}>Lanjut ke API Keys <ArrowRight size={16} /></Button>
@@ -107,7 +109,7 @@ export function PaymentModal({
             <Button kind="primary" loading={loading} disabled={!orderId} onClick={handleConfirmPay}>
               Klaim {pkg.name} <CheckCheck size={17} />
             </Button>
-            <small className="modal-note">Token otomatis masuk ke akun Anda di database TiDB.</small>
+            <small className="modal-note">Token otomatis masuk ke akun Anda di database{isAdmin ? " TiDB" : ""}.</small>
           </>
         ) : (
           <>
@@ -135,7 +137,7 @@ export function PaymentModal({
             <Button kind="primary" loading={loading} disabled={!orderId || countdown <= 0} onClick={handleConfirmPay}>
               Saya sudah bayar <CheckCheck size={17} />
             </Button>
-            <small className="modal-note">Simulasi pembayaran langsung mengupdate status order dan saldo token di database TiDB.</small>
+            <small className="modal-note">Simulasi pembayaran langsung mengupdate status order dan saldo token di database{isAdmin ? " TiDB" : ""}.</small>
           </>
         )}
       </section>

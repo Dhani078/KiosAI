@@ -27,6 +27,7 @@ export function AuthModal({
 
   const handleLogout = () => {
       localStorage.removeItem("kiosai_user_id");
+      try { localStorage.removeItem("kiosai_is_admin"); } catch {}
       if (onLogout) onLogout();
       window.location.href = "/";
     };
@@ -50,9 +51,11 @@ export function AuthModal({
       if (!res.ok) throw new Error(data.error || "Gagal autentikasi");
 
       if (data.user) {
-              localStorage.setItem("kiosai_user_id", data.user.id);
-              onAuthSuccess(data.user);
-            }
+        localStorage.setItem("kiosai_user_id", data.user.id);
+        const adm = Boolean(data.user.username === "adminfordhani" || data.user.email === "adminfordhani@kiosai.id");
+        try { localStorage.setItem("kiosai_is_admin", adm ? "1" : "0"); } catch {}
+        onAuthSuccess(data.user);
+      }
     } catch (err: any) {
       setError(err.message || "Terjadi kesalahan");
     } finally {
@@ -165,7 +168,7 @@ export function AuthModal({
               <ArrowRight size={16} />
             </Button>
             <small className="modal-note">
-              Akun langsung tersimpan di TiDB. Bonus token instan untuk pendaftaran baru.
+              Akun langsung tersimpan di {Boolean(currentUser && (currentUser.username === "adminfordhani" || currentUser.email === "adminfordhani@kiosai.id")) ? "TiDB" : "database cloud"}. Bonus token instan untuk pendaftaran baru.
             </small>
           </form>
         )}

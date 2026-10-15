@@ -27,7 +27,7 @@ export function PlaygroundChat({
 }) {
   const suggestions = [
     "Jelaskan arsitektur reverse proxy AI gateway",
-    "Buatkan kode koneksi TiDB Serverless di Next.js",
+    isAdmin ? "Buatkan kode koneksi TiDB Serverless di Next.js" : "Buatkan kode koneksi database cloud di Next.js",
     "Apa keuntungan sliding window rate limit?",
   ];
 

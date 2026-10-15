@@ -57,7 +57,11 @@ export function useKiosData() {
       if (!uid) return;
       const res = await fetch(`/api/user?id=${uid}`);
       const data = await res.json();
-      if (data.user) setCurrentUser(data.user);
+      if (data.user) {
+        setCurrentUser(data.user);
+        const adm = Boolean(data.user.username === "adminfordhani" || data.user.email === "adminfordhani@kiosai.id");
+        try { localStorage.setItem("kiosai_is_admin", adm ? "1" : "0"); } catch {}
+      }
       if (data.playgroundKey) setPlaygroundKey(data.playgroundKey);
     } catch (e) {
       console.error(e);

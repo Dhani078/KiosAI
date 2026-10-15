@@ -4,7 +4,7 @@ import { Check, Download, Receipt } from "lucide-react";
 import { Badge, TableRow } from "./ui";
 import { exportToCsv } from "@/lib/export-csv";
 
-export function OrderHistoryTable({ orders }: { orders: any[] }) {
+export function OrderHistoryTable({ orders, isAdmin = false }: { orders: any[]; isAdmin?: boolean }) {
   const list = orders || [];
   const paidOrders = list.filter((o) => o.status === "paid");
   const totalPaidIdr = paidOrders.reduce((sum, o) => sum + Number(o.amount_idr || 0), 0);
@@ -28,7 +28,7 @@ export function OrderHistoryTable({ orders }: { orders: any[] }) {
       <div className="panel-heading" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "12px", marginBottom: "16px" }}>
         <div>
           <h2>Riwayat Pembelian & Faktur</h2>
-          <span>Rekam jejak transaksi QRIS resmi dari database TiDB</span>
+          <span>Rekam jejak transaksi QRIS resmi dari {isAdmin ? "database TiDB" : "database"}</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
           {list.length > 0 && (

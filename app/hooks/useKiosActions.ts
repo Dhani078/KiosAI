@@ -24,6 +24,8 @@ export function useKiosActions(d: ReturnType<typeof useKiosData>) {
       }
       if (data.user) {
         localStorage.setItem("kiosai_user_id", data.user.id);
+        const adm = Boolean(data.user.username === "adminfordhani" || data.user.email === "adminfordhani@kiosai.id");
+        try { localStorage.setItem("kiosai_is_admin", adm ? "1" : "0"); } catch {}
         setCurrentUser(data.user);
         setShowAuthModal(false);
         setAuthEmail("");
@@ -38,6 +40,7 @@ export function useKiosActions(d: ReturnType<typeof useKiosData>) {
 
   const handleLogout = () => {
     localStorage.removeItem("kiosai_user_id");
+    try { localStorage.removeItem("kiosai_is_admin"); } catch {}
     // Switch to demo user
     fetchUserData();
     fetchKeys();

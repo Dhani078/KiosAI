@@ -20,12 +20,14 @@ export { PACKAGES };
 export function PackagesTab({
   balance,
   activeTier,
+  isAdmin = false,
   onSelectPackage,
   onNavigateStatistik,
   onNavigateDocs,
 }: {
   balance: number;
   activeTier: string;
+  isAdmin?: boolean;
   onSelectPackage: (pkgIndex: number) => void;
   onNavigateStatistik: () => void;
   onNavigateDocs: () => void;
@@ -110,7 +112,7 @@ export function PackagesTab({
             </Button>
             <div className="package-foot">
               <CreditCard size={13} />
-              {p.price === "0" ? "Langsung aktif ke TiDB" : "Bayar dengan QRIS"}
+              {p.price === "0" ? (isAdmin ? "Langsung aktif ke TiDB" : "Langsung aktif ke akun") : "Bayar dengan QRIS"}
             </div>
           </article>
         ))}
@@ -141,7 +143,7 @@ export function PackagesTab({
               },
               {
                 title: "Buat API key",
-                text: "Token masuk otomatis ke TiDB. Buat kunci API di halaman API Keys.",
+                text: isAdmin ? "Token masuk otomatis ke TiDB. Buat kunci API di halaman API Keys." : "Token masuk otomatis ke akun Anda. Buat kunci API di halaman API Keys.",
               },
               {
                 title: "Mulai membangun",

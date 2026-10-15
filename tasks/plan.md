@@ -97,6 +97,12 @@
   - 65 model aktif lolos audit dicatat di `lib/verified-models.ts` dan dipasang pada gateway
   - Verifikasi live produksi `kiosai.dhanisepeda.workers.dev`: 65 kartu model aktif, 0 timeout, 0 error 503
   - 86 file sumber patuh <= 200 baris, 12/12 pricing pass, 10/10 e2e pass
+- [x] Phase 24: Role-Based Database Branding (TiDB Visible to Admin Only)
+  - Penyaringan label teknis internal "TiDB" di seluruh antarmuka publik dan pengguna biasa
+  - Tampilan admin (`adminfordhani`) tetap mempertahankan label "TiDB" untuk inspeksi teknis
+  - 14 komponen UI disesuaikan dengan prop/status `isAdmin`
+  - Verifikasi CDP PC & Mobile: 0 kemunculan "TiDB" untuk pengguna reguler, tetap tampil untuk admin
+  - 87 file sumber patuh batas <= 200 baris, 10/10 E2E lolos, 16/16 UI & dashboard audit lolos
 
 
 
