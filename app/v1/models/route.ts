@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { validateApiKey, getRequiredTierForModel, isModelAllowedForTier } from "@/lib/keys";
 import { UPSTREAM_URL, UPSTREAM_KEY } from "@/lib/proxy-http";
 import { formatModelName } from "@/lib/model-utils";
+import { isModelVerified } from "@/lib/verified-models";
 
 export const runtime = "nodejs";
 
@@ -66,7 +67,7 @@ export async function GET(req: NextRequest) {
     const rawList: any[] = Array.isArray(data.data) ? data.data : [];
 
     const enhanced = rawList
-      .filter((m) => !isHiddenModel(m.id))
+      .filter((m) => isModelVerified(m.id) && !isHiddenModel(m.id))
       .map((m) => {
         const tier = getRequiredTierForModel(m.id);
         const accessible = isModelAllowedForTier(userTier, m.id);

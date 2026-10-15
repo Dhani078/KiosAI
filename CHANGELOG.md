@@ -7,6 +7,20 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `HEAD` — feat(models): audit 746 models with 5x retry, prune 679 dead models, retain 65 verified models
+
+**Audit 5x & Penyaringan Menyeluruh**
+- **Pengujian Nyata 5x Retry (`scripts/audit-all-models-5x.mjs`)**:
+  - Menguji seluruh 746 model gateway 9Router dengan retry hingga 5x percobaan berturut-turut.
+  - 679 model terbukti mati/timeout 5x berturut-turut (termasuk seluruh 482 model scrap `cl/*` yang tidak pernah merespons, model rute palsu `together/*`, `kc/*`, `af/*`, dll.).
+  - 65 model aktif lolos verifikasi dan merespons `200 OK` (model unggulan Claude Sonnet & Haiku `kr/*`, DeepSeek `tokenharbor/*` & `kr/*`, Gemini `ag/*` & `gemini/*`, Qwen `kr/*` & `cf/*`, Llama `cf/*`, dll.).
+- **Daftar Model Terverifikasi (`lib/verified-models.ts`)**:
+  - Menyimpan set 65 model yang lolos audit 5x secara deterministik.
+  - `app/v1/models/route.ts` menyaring katalog hanya menampilkan model yang terbukti hidup.
+  - Dashboard KiosAI kini bersih, cepat, tanpa kartu duplikat palsu atau error 503/timeout.
+
+---
+
 ### `5db9717` — fix(models): test candidate models 3x and prune 13 dead models from catalog
 
 **Diuji 3x & Dihapus**
