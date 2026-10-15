@@ -7,6 +7,8 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `f21de9b` — docs: add Phase 14 / Phase 22 checklist and state records
+
 ### `ee06a39` — feat(models): hide unwanted Gemini 3.7/3.6/3.1 models and retain Gemini 3.8 & Claude 4.6 in Pro plan
 
 **Dihapus & Disaring**
