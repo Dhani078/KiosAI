@@ -7,6 +7,14 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `d7fdde3` — fix(auth): update signup bonus copy to 2.5M and enrich profile card with tier & balance
+
+**Penyempurnaan Modal Akun & Profil**
+- **Koreksi Saldo Pendaftaran Baru**: Memperbaiki teks pendaftaran akun baru dari sisa copy lama (`100.000 token` / `100k Token`) menjadi `2.500.000 token gratis` (sesuai implementasi aktual Free Tier di `register/route.ts`).
+- **Peningkatan Kartu Profil Pengguna**: Menambahkan kartu ringkasan interaktif yang menampilkan status Tier aktif (`FREE` / `PRO`) dan Saldo Token aktual langsung di dalam dialog profil akun.
+- **Tampilan Handle Username**: Menampilkan handle username akun (misal `@adminfordhani`) jika tersedia.
+- **Kepatuhan Modularitas**: File `AuthModal.tsx` berukuran 183 baris (patuh $\le 200$ baris).
+
 ### `80c78c8` — feat(ui): gate TiDB branding behind admin check, hide from regular users
 
 **Penyembunyian Branding Database Internal**

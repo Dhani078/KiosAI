@@ -6,7 +6,7 @@
 - **Current Status**: Complete & Fully Verified (Phase 0 - 24)
 - **Upstream Router**: 9Router local (`http://127.0.0.1:20128`) dengan 65 model aktif terverifikasi 5x audit (1 Free, 64 Pro)
 - **Database**: TiDB Cloud Serverless (`gateway01.ap-southeast-1.prod.aws.tidbcloud.com:4000/kiosai`)
-- **Last Commit**: `80c78c8` — feat(ui): gate TiDB branding behind admin check, hide from regular users
+- **Last Commit**: `d7fdde3` — fix(auth): update signup bonus copy to 2.5M and enrich profile card with tier & balance
 
 ## Dokumen Navigasi Cepat
 - Aturan & perintah untuk agent: `AGENT.md`
