@@ -7,7 +7,7 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
-### `HEAD` — feat(models): audit 746 models with 5x retry, prune 679 dead models, retain 65 verified models
+### `0519315` — feat(models): audit 746 models with 5x retry, prune 679 dead models, retain 65 verified models
 
 **Audit 5x & Penyaringan Menyeluruh**
 - **Pengujian Nyata 5x Retry (`scripts/audit-all-models-5x.mjs`)**:
