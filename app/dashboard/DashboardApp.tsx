@@ -130,6 +130,7 @@ export default function Dashboard() {
             <DocsTab
               models={data.availableModels}
               activeKey={data.keys[0]?.key_prefix ? `${data.keys[0].key_prefix}...` : ""}
+              isAdmin={isAdmin}
               onCopy={copy}
             />
           )}
