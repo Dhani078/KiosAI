@@ -190,6 +190,13 @@
 - [x] Task 21.3: Wire `PlaygroundTab.tsx` error state to `humanizeErrorMessage` with role-based debug details for admin
 - [x] Task 21.4: Verify all 87 source files <= 200 lines, 10/10 E2E tests, and sync git origin
 
+## Phase 22 (Role-Based 9Router Branding - Completed)
+- [x] Task 22.1: Hide "9Router" from `LandingFooter.tsx` for regular users ("Gateway Live")
+- [x] Task 22.2: Hide "9Router" from `Header.tsx` tooltip for regular users ("Gateway: connected")
+- [x] Task 22.3: Hide "9Router" from `PlaygroundTab.tsx` status bar for regular users ("Gateway Aktif")
+- [x] Task 22.4: Keep "9Router" label intact for admin `adminfordhani` across all components
+- [x] Task 22.5: Verify CDP audit on PC & Mobile (0 occurrences of 9Router for visitors/regular users)
+
 
 
 

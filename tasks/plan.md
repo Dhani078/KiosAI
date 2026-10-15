@@ -126,6 +126,11 @@
   - Deteksi kuota habis, waktu reset countdown (`reset after 24s`), rate limit, dan overload 503
   - Dukungan detail teknis debugging khusus sesi admin (`[Detail Teknis: ...]`)
   - 100% lulus audit modularitas $\le 200$ baris dan test suite E2E
+- [x] Phase 30: Role-Based 9Router Branding
+  - Sembunyikan label teknis "9Router" dari seluruh UI publik dan pengguna biasa di `LandingFooter`, `Header`, dan `PlaygroundTab`
+  - Tampilkan label generik ("Gateway", "Gateway Live", "Gateway Aktif") untuk pengguna reguler
+  - Pertahankan label "9Router" untuk admin `adminfordhani`
+  - Verifikasi audit CDP PC & Mobile: 0 kemunculan "9Router" untuk user biasa, tampil normal untuk admin
 
 
 

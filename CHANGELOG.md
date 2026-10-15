@@ -7,6 +7,18 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `8703846` — feat(ui): hide 9Router branding from public and regular users, keep visible for admin
+
+**Penyembunyian Branding Router Internal**
+- **Kondisional `isAdmin` pada UI**: Teks "9Router" disembunyikan dari semua pengguna umum / publik di 3 komponen antarmuka web (`LandingFooter.tsx`, `Header.tsx`, dan `PlaygroundTab.tsx`).
+- **Tampilan Khusus Pengguna**:
+  - Footer landing: `"Cloud Database & Gateway Live"` (bukan 9Router).
+  - Header tooltip: `"Database: connected (Xms) | Gateway: connected (Yms)"` (bukan 9Router).
+  - Konteks Playground: `"Koneksi Live Gateway Aktif"` (bukan 9Router).
+- **Tampilan Admin Tetap Lengkap**: Admin (`adminfordhani`) tetap melihat label teknis `"9Router"` lengkap untuk kemudahan inspeksi gateway.
+- **Verifikasi CDP**: 0 kemunculan kata "9Router" pada landing page dan seluruh tab dashboard untuk pengguna reguler; tetap tampil normal untuk sesi admin.
+- **Kepatuhan Modularitas**: Semua file termodifikasi tetap patuh $\le 200$ baris per file (`Header.tsx` 91 baris, `LandingFooter.tsx` 60 baris, `PlaygroundTab.tsx` 192 baris).
+
 ### `c0a6533` — feat(playground): humanize gateway error messages with friendly indonesian explanations and countdown
 
 **Pesan Error Manusiawi di Playground**

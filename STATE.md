@@ -3,10 +3,10 @@
 - **Repository**: `https://github.com/Dhani078/KiosAI.git`
 - **Location**: `E:/Hermesproject/KiosAI`
 - **Live Worker**: `https://kiosai.dhanisepeda.workers.dev` (subdomain `dhanisepeda`, pakai `e`)
-- **Current Status**: Complete & Fully Verified (Phase 0 - 29)
+- **Current Status**: Complete & Fully Verified (Phase 0 - 30)
 - **Upstream Router**: 9Router local (`http://127.0.0.1:20128`) dengan 65 model aktif terverifikasi 5x audit (1 Free, 64 Pro)
 - **Database**: TiDB Cloud Serverless (`gateway01.ap-southeast-1.prod.aws.tidbcloud.com:4000/kiosai`)
-- **Last Commit**: `c0a6533` — feat(playground): humanize gateway error messages with friendly indonesian explanations and countdown
+- **Last Commit**: `8703846` — feat(ui): hide 9Router branding from public and regular users, keep visible for admin
 
 ## Dokumen Navigasi Cepat
 - Aturan & perintah untuk agent: `AGENT.md`
@@ -179,4 +179,9 @@
     - Anotasi `[Detail Teknis: ...]` otomatis disematkan khusus untuk admin.
     - Komponen `PlaygroundTab.tsx` terintegrasi penuh tanpa melanggar batas 200 baris (192 baris).
     - Verifikasi uji kasus nyata 100% lulus.
+  - Phase 30: Role-Based 9Router Branding:
+    - Teks "9Router" disembunyikan dari semua pengguna umum / publik di 3 komponen UI (`LandingFooter.tsx`, `Header.tsx`, `PlaygroundTab.tsx`), diganti label generik ("Gateway", "Gateway Live", "Gateway Aktif").
+    - Admin (`adminfordhani`) tetap dapat melihat label "9Router" secara presisi untuk audit dan observabilitas.
+    - Audit CDP membuktikan 0 kemunculan kata "9Router" untuk pengguna reguler di landing page dan 6 tab dashboard.
+    - Seluruh 87 file kode sumber patuh batasan $\le 200$ baris per file.
 
