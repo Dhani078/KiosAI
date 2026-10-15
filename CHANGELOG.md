@@ -7,6 +7,13 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `cd4bddb` — feat(keys): show last used timestamp on API keys and accept name alias on register
+
+**Aktivitas API Key & Robustness Registrasi**
+- **Indikator Terakhir Digunakan (`KeysTab.tsx`)**: Menampilkan waktu `last_used_at` pada setiap baris tabel API key (`Dipakai [Tgl/Bln]` atau `Belum dipakai`) untuk membedakan key yang sedang aktif menerima traffic.
+- **Dukungan Alias Field Registrasi (`app/api/auth/register/route.ts`)**: Menerima input `fullName` maupun `name` secara fleksibel pada payload JSON registrasi.
+- **Kepatuhan Modularitas**: `KeysTab.tsx` (145 baris) dan `register/route.ts` (64 baris) patuh $\le 200$ baris per file.
+
 ### `7b803d2` — refactor(code): streamline PlaygroundTab and chat completions route for safe line limit headroom
 
 **Penyederhanaan & Headroom Batas Baris**
