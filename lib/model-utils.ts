@@ -42,16 +42,33 @@ export function formatModelName(modelId: string, isAdmin: boolean = false): stri
 export function resolveModelAlias(modelId: string): string {
   if (!modelId) return "";
   const m = modelId.trim();
+  const lower = m.toLowerCase();
+
   if (m === "claude-haiku-4.5" || m === "kr/claude-haiku-4.5") {
     return "kr/claude-haiku-4.5-thinking-agentic";
   }
   if (m === "claude-sonnet-4.5" || m === "kr/claude-sonnet-4.5") {
     return "kr/claude-sonnet-4.5-thinking-agentic";
   }
+  if (lower === "claude-3.7-sonnet" || lower === "anthropic/claude-3.7-sonnet") {
+    return "ag/claude-sonnet-4-6";
+  }
+  if (lower === "gpt-4o" || lower === "openai/gpt-4o") {
+    return "cx/gpt-6-luna";
+  }
+  if (lower === "gemini-2.0-flash" || lower === "google/gemini-2.0-flash") {
+    return "ag/gemini-3.8-flash-high";
+  }
+  if (lower === "deepseek-r1" || lower === "deepseek/deepseek-r1") {
+    return "cf/@cf/deepseek-ai/deepseek-r1-distill-qwen-32b";
+  }
+  if (lower === "llama-3.3-70b" || lower === "meta/llama-3.3-70b") {
+    return "cf/@cf/meta/llama-3.3-70b-instruct-fp8-fast";
+  }
   if (m === "deepseek-v4.1-flash") {
     return "tokenharbor/deepseek-v4.1-flash:free";
   }
-  if (m.toLowerCase() === "atria-dawn-preview" || m.toLowerCase() === "atria") {
+  if (lower === "atria-dawn-preview" || lower === "atria") {
     return "atria/Atria-Dawn-Preview";
   }
   if (m === "claude-sonnet-4-6" || m === "Claude Sonnet 4.6 (Thinking)") {
