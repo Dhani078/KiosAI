@@ -184,6 +184,12 @@
 - [x] Task 20.2: Verify CDP click behavior opening profile modal (Akun Anda)
 - [x] Task 20.3: Ensure 0 overflow, 10/10 E2E tests, 12/12 pricing tests, and git sync
 
+## Phase 21 (Humanized Playground Error Messaging - Completed)
+- [x] Task 21.1: Build `humanizeErrorMessage` in `lib/model-utils.ts` to translate raw upstream errors to Indonesian
+- [x] Task 21.2: Parse provider quota limits, countdown timer (`reset after 24s`), rate limits, and 503 overloads
+- [x] Task 21.3: Wire `PlaygroundTab.tsx` error state to `humanizeErrorMessage` with role-based debug details for admin
+- [x] Task 21.4: Verify all 87 source files <= 200 lines, 10/10 E2E tests, and sync git origin
+
 
 
 

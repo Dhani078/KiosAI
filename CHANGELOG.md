@@ -7,6 +7,17 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `c0a6533` — feat(playground): humanize gateway error messages with friendly indonesian explanations and countdown
+
+**Pesan Error Manusiawi di Playground**
+- **Format Pesan Ramah Pengguna (`lib/model-utils.ts` & `PlaygroundTab.tsx`)**: Fungsi `humanizeErrorMessage` mengubah pesan error teknis mentah gateway upstream (seperti `Upstream (503): [atria] [429]: {"error":{"message":"Token quota exhausted"}} (reset after 24s)`) menjadi kalimat bahasa Indonesia yang jelas dan mudah dipahami:
+  - Error kuota upstream: `"Kuota provider untuk model ini sedang habis (reset dalam 24s). Silakan tunggu sebentar atau beralih ke model lain."`
+  - Error rate limit: `"Batas frekuensi permintaan tercapai (reset dalam Xs). Silakan tunggu sebentar."`
+  - Error 503 upstream: `"Layanan model AI upstream sedang sibuk atau mengalami gangguan sementara. Silakan coba sesaat lagi atau beralih ke model lain."`
+  - Error timeout, tier restricted, atau balance: otomatis diterjemahkan ke solusi konkret.
+- **Dukungan Debug untuk Admin**: Untuk sesi admin (`isAdmin = true`), pesan ramah disertai anotasi `[Detail Teknis: ...]` agar kemudahan investigasi upstream tetap terjaga.
+- **Kepatuhan Modularitas**: `lib/model-utils.ts` (116 baris) dan `PlaygroundTab.tsx` (192 baris) tetap patuh batasan $\le 200$ baris per file.
+
 ### `2055cda` — feat(ui): make workspace header clickable to open account profile modal
 
 **Akses Cepat Profil & Pengaturan Akun**

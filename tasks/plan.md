@@ -121,6 +121,11 @@
   - Integrasi click handler dan keyboard accessibility pada `.workspace` header di `Sidebar.tsx`
   - Verifikasi otomatis via CDP: klik workspace membuka modal profil akun
   - 100% test passing, clean tree, and git sync
+- [x] Phase 29: Humanized Playground Error Messages
+  - Konversi pesan error mentah upstream gateway ke bahasa manusia ramah pengguna di `lib/model-utils.ts`
+  - Deteksi kuota habis, waktu reset countdown (`reset after 24s`), rate limit, dan overload 503
+  - Dukungan detail teknis debugging khusus sesi admin (`[Detail Teknis: ...]`)
+  - 100% lulus audit modularitas $\le 200$ baris dan test suite E2E
 
 
 

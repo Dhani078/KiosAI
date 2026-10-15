@@ -3,10 +3,10 @@
 - **Repository**: `https://github.com/Dhani078/KiosAI.git`
 - **Location**: `E:/Hermesproject/KiosAI`
 - **Live Worker**: `https://kiosai.dhanisepeda.workers.dev` (subdomain `dhanisepeda`, pakai `e`)
-- **Current Status**: Complete & Fully Verified (Phase 0 - 28)
+- **Current Status**: Complete & Fully Verified (Phase 0 - 29)
 - **Upstream Router**: 9Router local (`http://127.0.0.1:20128`) dengan 65 model aktif terverifikasi 5x audit (1 Free, 64 Pro)
 - **Database**: TiDB Cloud Serverless (`gateway01.ap-southeast-1.prod.aws.tidbcloud.com:4000/kiosai`)
-- **Last Commit**: `2055cda` — feat(ui): make workspace header clickable to open account profile modal
+- **Last Commit**: `c0a6533` — feat(playground): humanize gateway error messages with friendly indonesian explanations and countdown
 
 ## Dokumen Navigasi Cepat
 - Aturan & perintah untuk agent: `AGENT.md`
@@ -174,4 +174,9 @@
     - Dukungan keyboard accessibility (Enter/Space) dan ARIA role button.
     - Verifikasi CDP: klik `.workspace` langsung memicu modal "Akun Anda".
     - Seluruh 87 file kode sumber patuh $\le 200$ baris per file.
+  - Phase 29: Humanized Playground Error Messages:
+    - Implementasi `humanizeErrorMessage` di `lib/model-utils.ts` untuk memformat error mentah upstream (kuota habis, rate limit, reset duration, 503, timeout, tier) menjadi kalimat bahasa Indonesia yang ramah.
+    - Anotasi `[Detail Teknis: ...]` otomatis disematkan khusus untuk admin.
+    - Komponen `PlaygroundTab.tsx` terintegrasi penuh tanpa melanggar batas 200 baris (192 baris).
+    - Verifikasi uji kasus nyata 100% lulus.
 
