@@ -29,6 +29,8 @@ Dokumentasi arsitektur teknis mendalam untuk platform gateway AI dan pasar token
 |                                                             |
 |  2. /v1/models (Model Discovery)                            |
 |     - Sinkronisasi dinamis dari upstream 9Router            |
+|     - Penyaringan model terverifikasi (lib/verified-models) |
+|     - Audit 5x uji berkala (679 model mati disaring)        |
 |     - Anotasi required_tier & accessible status             |
 |                                                             |
 |  3. /api/* (Backend Services)                               |

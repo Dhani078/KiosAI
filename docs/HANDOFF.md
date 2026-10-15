@@ -9,13 +9,13 @@ Dokumen ini dirancang agar setiap sesi AI atau pengembang dapat melanjutkan peke
 | Komponen | Status | Keterangan |
 |---|---|---|
 | **Repository** | Clean, Up-to-Date | `https://github.com/Dhani078/KiosAI.git` (Branch `main`) |
-| **Commit Terakhir** | `2d27ccb` | Feat: upgrade Statistik tab to Maxxmode with 4 KPI cards, multi-segment model breakdown, and live search |
+| **Commit Terakhir** | `34fcbd3` | Feat: audit 746 models with 5x retry, prune 679 dead models, retain 65 verified models |
 | **Worker Live** | `healthy` | `https://kiosai.dhanisepeda.workers.dev` (Subdomain `dhanisepeda` dengan huruf 'e') |
 | **Database** | `connected` | TiDB Cloud Serverless (AWS Tokyo `ap-southeast-1` / `ap-northeast-1`) |
-| **Upstream 9Router** | `connected` | `http://127.0.0.1:20128` (768 model aktif) |
-| **Batas Baris Kode** | 100% Patuh | semua file sumber `.ts`/`.tsx`/`.mjs` `<= 200` baris |
+| **Upstream 9Router** | `connected` | `http://127.0.0.1:20128` (65 model terverifikasi 5x audit, 1 Free, 64 Pro) |
+| **Batas Baris Kode** | 100% Patuh | 86 file sumber `.ts`/`.tsx`/`.mjs` `<= 200` baris |
 | **E2E Integration** | 10/10 Passed | `npm run test:e2e` lolos semua skenario |
-| **Pricing Unit Test** | 9/9 Passed | `npm run test:pricing` — rasio == harga $/1M di kartu model |
+| **Pricing Unit Test** | 12/12 Passed | `npm run test:pricing` — rasio == harga $/1M di kartu model |
 | **UI Audit** | 16/16 Passed | `npm run audit:ui` (4) + `npm run audit:dashboard` (12) — 0 overflow, 0 copy lama |
 | **Tier Database** | 2 tier bersih | `free: 1`, `pro: 46` — legacy `bronze`/`silver`/`gold` sudah dimigrasi |
 

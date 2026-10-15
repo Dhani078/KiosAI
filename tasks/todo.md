@@ -145,6 +145,15 @@
 - [x] Task 14.6: Implement Wrangler OAuth auto-refresh in `scripts/tunnel-sync.mjs` and `scripts/sync-worker-secrets.mjs`
 - [x] Task 14.7: Live Worker edge deployment verified — 0 unwanted models, Pro models active and healthy
 
+## Phase 15 (Model 5x Audit & Catalog Pruning - Completed)
+- [x] Task 15.1: Write automated 5x retry tester script `scripts/audit-all-models-5x.mjs`
+- [x] Task 15.2: Audit all 746 models against upstream 9Router with 5 consecutive attempts
+- [x] Task 15.3: Identify and prune 679 dead models (all 482 `cl/*` timeout scrapers + 503 broken routes)
+- [x] Task 15.4: Create `lib/verified-models.ts` with 65 proven functional models (1 Free, 64 Pro)
+- [x] Task 15.5: Wire `app/v1/models/route.ts` with `isModelVerified` filter
+- [x] Task 15.6: Verify live worker production `https://kiosai.dhanisepeda.workers.dev/dashboard` via CDP (Semua 65, Free 1, Pro 64)
+- [x] Task 15.7: All 86 source files verified <= 200 lines, 12/12 pricing tests passed, 10/10 E2E tests passed
+
 
 
 

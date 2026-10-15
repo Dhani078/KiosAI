@@ -3,10 +3,10 @@
 - **Repository**: `https://github.com/Dhani078/KiosAI.git`
 - **Location**: `E:/Hermesproject/KiosAI`
 - **Live Worker**: `https://kiosai.dhanisepeda.workers.dev` (subdomain `dhanisepeda`, pakai `e`)
-- **Current Status**: Complete & Fully Verified (Phase 0 - 21)
-- **Upstream Router**: 9Router local (`http://127.0.0.1:20128`, 771 model aktif)
+- **Current Status**: Complete & Fully Verified (Phase 0 - 23)
+- **Upstream Router**: 9Router local (`http://127.0.0.1:20128`) dengan 65 model aktif terverifikasi 5x audit (1 Free, 64 Pro)
 - **Database**: TiDB Cloud Serverless (`gateway01.ap-southeast-1.prod.aws.tidbcloud.com:4000/kiosai`)
-- **Last Commit**: `a9ca860` — style(ui): polish model cards, dynamic counts, search reset, and pricing comparison
+- **Last Commit**: `34fcbd3` — feat(models): audit 746 models with 5x retry, prune 679 dead models, retain 65 verified models
 
 ## Dokumen Navigasi Cepat
 - Aturan & perintah untuk agent: `AGENT.md`
@@ -143,4 +143,10 @@
     - Substring clash `"gemini".includes("mini")` diperbaiki di `lib/model-pricing.ts`.
     - Auto-refresh token Wrangler ditambahkan pada `scripts/tunnel-sync.mjs` dan `scripts/sync-worker-secrets.mjs`.
     - Edge Worker Cloudflare sinkron dan live terverifikasi (0 unwanted models).
+  - Phase 23: Model Audit 5x & Pruning Katalog:
+    - Pengujian otomatis 746 model via `scripts/audit-all-models-5x.mjs` dengan toleransi hingga 5x percobaan berturut-turut.
+    - 679 model mati (seluruh 482 model internal `cl/*`, serta rute palsu yang menghasilkan error 503/timeout) disaring secara total.
+    - 65 model aktif yang lolos verifikasi dicatat dalam `lib/verified-models.ts` dan diekspos melalui `app/v1/models/route.ts`.
+    - UI Dashboard live pada `https://kiosai.dhanisepeda.workers.dev/dashboard` terverifikasi via CDP: `Semua (65)`, `Free Tier (1)`, `Pro Tier (64)`.
+    - 100% bebas model mati, 0 timeout, 0 error 503 untuk pengguna.
 

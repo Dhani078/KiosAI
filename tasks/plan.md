@@ -91,6 +91,12 @@
   - Fix substring collision `"gemini".includes("mini")` di `lib/model-pricing.ts`
   - Auto-refresh Wrangler OAuth di skrip tunnel & secrets
   - Worker live terdeploy dan terverifikasi sehat di edge Cloudflare
+- [x] Phase 23: Model 5x Audit & Catalog Pruning
+  - Pengujian nyata 746 model via `scripts/audit-all-models-5x.mjs` dengan 5x retry
+  - 679 model mati (seluruh 482 `cl/*` scrapers + rute mati 503) dipangkas tuntas
+  - 65 model aktif lolos audit dicatat di `lib/verified-models.ts` dan dipasang pada gateway
+  - Verifikasi live produksi `kiosai.dhanisepeda.workers.dev`: 65 kartu model aktif, 0 timeout, 0 error 503
+  - 86 file sumber patuh <= 200 baris, 12/12 pricing pass, 10/10 e2e pass
 
 
 
