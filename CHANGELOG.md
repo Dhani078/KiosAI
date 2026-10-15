@@ -7,6 +7,16 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `80c78c8` — feat(ui): gate TiDB branding behind admin check, hide from regular users
+
+**Penyembunyian Branding Database Internal**
+- **Kondisional `isAdmin` pada UI**: Teks "TiDB" disembunyikan dari semua pengguna umum / publik di 14 komponen UI (`LandingFooter`, `DashboardApp`, `Header`, `AuthModal`, `KeyModal`, `PackagesTab`, `PaymentModal`, `PlaygroundTab`, `PlaygroundChat`, `AnalyticsCards`, `ModelUsageBreakdown`, `RecentLogsTable`, `OrderHistoryTable`, dan `constants.ts`).
+- **Tampilan Khusus Pengguna**: Digantikan dengan sebutan generik bersih ("Cloud Database", "database", "akun", "Live Cloud Serverless").
+- **Tampilan Admin Tetap Utuh**: Admin (`adminfordhani`) tetap dapat melihat label "TiDB" lengkap untuk inspeksi teknis gateway.
+- **Session Persistence**: Flag `kiosai_is_admin` disinkronkan di `localStorage` saat login, pengambilan profil, dan dibersihkan saat logout.
+- **Verifikasi CDP**: 0 kemunculan kata "TiDB" pada landing page dan 6 tab dashboard untuk pengguna reguler (100% lolos); terlihat normal pada sesi admin.
+- **Kepatuhan Arsitektur**: Seluruh 87 file sumber tetap patuh $\le 200$ baris per file (`npm run verify`).
+
 ### `24221f4` — docs: align commit hash references across AGENT, STATE, and HANDOFF
 
 - Menyelaraskan seluruh referensi commit hash di `AGENT.md`, `STATE.md`, dan `docs/HANDOFF.md` agar konsisten dengan `HEAD`.

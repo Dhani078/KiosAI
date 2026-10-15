@@ -3,10 +3,10 @@
 - **Repository**: `https://github.com/Dhani078/KiosAI.git`
 - **Location**: `E:/Hermesproject/KiosAI`
 - **Live Worker**: `https://kiosai.dhanisepeda.workers.dev` (subdomain `dhanisepeda`, pakai `e`)
-- **Current Status**: Complete & Fully Verified (Phase 0 - 23)
+- **Current Status**: Complete & Fully Verified (Phase 0 - 24)
 - **Upstream Router**: 9Router local (`http://127.0.0.1:20128`) dengan 65 model aktif terverifikasi 5x audit (1 Free, 64 Pro)
 - **Database**: TiDB Cloud Serverless (`gateway01.ap-southeast-1.prod.aws.tidbcloud.com:4000/kiosai`)
-- **Last Commit**: `24221f4` — docs: align commit hash references across AGENT, STATE, and HANDOFF
+- **Last Commit**: `80c78c8` — feat(ui): gate TiDB branding behind admin check, hide from regular users
 
 ## Dokumen Navigasi Cepat
 - Aturan & perintah untuk agent: `AGENT.md`
@@ -149,4 +149,10 @@
     - 65 model aktif yang lolos verifikasi dicatat dalam `lib/verified-models.ts` dan diekspos melalui `app/v1/models/route.ts`.
     - UI Dashboard live pada `https://kiosai.dhanisepeda.workers.dev/dashboard` terverifikasi via CDP: `Semua (65)`, `Free Tier (1)`, `Pro Tier (64)`.
     - 100% bebas model mati, 0 timeout, 0 error 503 untuk pengguna.
+  - Phase 24: Role-Based Database Branding:
+    - Teks "TiDB" disembunyikan dari semua pengguna umum / publik di 14 komponen antarmuka web, diganti label generik ("Cloud Database", "database", "akun", "Live Cloud Serverless").
+    - Admin (`adminfordhani`) tetap dapat melihat label "TiDB" secara presisi untuk audit dan observabilitas.
+    - Sinkronisasi flag admin `kiosai_is_admin` di `localStorage`.
+    - Audit CDP pada 390px dan 1440px membuktikan 0 kemunculan kata "TiDB" untuk pengguna reguler di landing page dan 6 tab dashboard.
+    - Seluruh 87 file kode sumber patuh batasan $\le 200$ baris per file.
 
