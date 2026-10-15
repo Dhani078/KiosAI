@@ -1,3 +1,13 @@
+function formatAgGemini(id: string): string {
+  if (id === "ag/gemini-pro-agent") return "Gemini 3.1 Pro (High)";
+  const raw = id.replace(/^ag\//, "");
+  const parts = raw.split("-");
+  const version = parts[1] || "";
+  const type = (parts[2] || "").charAt(0).toUpperCase() + (parts[2] || "").slice(1);
+  const tier = parts[3] ? ` (${parts[3].charAt(0).toUpperCase() + parts[3].slice(1)})` : "";
+  return `Gemini ${version} ${type}${tier}`.trim();
+}
+
 /**
  * Format model ID for clean display across web UI.
  * - Admin: sees internal routing keys (kr/claude-haiku-4.5-thinking-agentic, cx/..., etc.)
@@ -10,18 +20,13 @@ export function formatModelName(modelId: string, isAdmin: boolean = false): stri
   }
 
   const lower = modelId.toLowerCase();
-  if (lower.includes("atria-dawn")) {
-    return "Atria-Dawn-Preview";
-  }
-  if (lower.includes("deepseek-v4.1-flash")) {
-    return "deepseek-v4.1-flash";
-  }
-  if (lower.includes("claude-haiku-4.5")) {
-    return "claude-haiku-4.5";
-  }
-  if (lower.includes("claude-sonnet-4.5")) {
-    return "claude-sonnet-4.5";
-  }
+  if (lower.includes("atria-dawn")) return "Atria-Dawn-Preview";
+  if (lower.includes("deepseek-v4.1-flash")) return "deepseek-v4.1-flash";
+  if (lower.includes("claude-haiku-4.5")) return "claude-haiku-4.5";
+  if (lower.includes("claude-sonnet-4.5")) return "claude-sonnet-4.5";
+  if (lower === "ag/claude-sonnet-4-6") return "Claude Sonnet 4.6 (Thinking)";
+  if (lower === "ag/claude-opus-4-6-thinking") return "Claude Opus 4.6 (Thinking)";
+  if (lower.startsWith("ag/gemini-")) return formatAgGemini(lower);
 
   // Strip trailing :free or :batch
   const withoutSuffix = modelId.replace(/:(free|batch)$/i, "");
@@ -48,6 +53,12 @@ export function resolveModelAlias(modelId: string): string {
   }
   if (m.toLowerCase() === "atria-dawn-preview" || m.toLowerCase() === "atria") {
     return "atria/Atria-Dawn-Preview";
+  }
+  if (m === "claude-sonnet-4-6" || m === "Claude Sonnet 4.6 (Thinking)") {
+    return "ag/claude-sonnet-4-6";
+  }
+  if (m === "claude-opus-4-6-thinking" || m === "Claude Opus 4.6 (Thinking)") {
+    return "ag/claude-opus-4-6-thinking";
   }
   return m;
 }

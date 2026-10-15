@@ -12,6 +12,10 @@ const cases = [
   ["anthropic/claude-3.7-sonnet", 13.14],
   ["openai/gpt-4o", 9.12],
   ["google/gemini-2.0-flash", 0.27],
+  ["ag/gemini-3.8-flash-high", 0.27],
+  ["ag/gemini-3.1-pro-high", 4.56],
+  ["ag/claude-sonnet-4-6", 13.14],
+  ["ag/claude-opus-4-6-thinking", 65.69],
   ["deepseek/deepseek-r1", 2.0],
   ["meta/llama-3.3-70b", 0.95],
 ];

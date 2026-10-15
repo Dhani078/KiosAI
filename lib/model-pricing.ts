@@ -27,11 +27,11 @@ export function getModelPricing(modelId: string): ModelPricing {
   if (m.includes("gemini") && m.includes("flash")) {
     return { input: "0.075", output: "0.30", cached: "0.018", formatted: "In $0.075 · Out $0.30 / 1M" };
   }
-  if (m.includes("4o-mini") || m.includes("4o_mini") || m.includes("mini")) {
-    return { input: "0.15", output: "0.60", cached: "0.075", formatted: "In $0.15 · Out $0.60 / 1M" };
-  }
-  if (m.includes("gemini") && m.includes("pro")) {
+  if (m.includes("gemini") && (m.includes("pro") || m.includes("agent"))) {
     return { input: "1.25", output: "5.00", cached: "0.31", formatted: "In $1.25 · Out $5.00 / 1M" };
+  }
+  if (m.includes("4o-mini") || m.includes("4o_mini") || m.includes("-mini") || m.includes("/mini")) {
+    return { input: "0.15", output: "0.60", cached: "0.075", formatted: "In $0.15 · Out $0.60 / 1M" };
   }
   if (m.includes("sonnet")) {
     return { input: "3.00", output: "15.00", cached: "0.30", formatted: "In $3.00 · Out $15.00 / 1M" };

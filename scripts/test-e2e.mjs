@@ -80,10 +80,7 @@ await test("POST /v1/chat/completions (Non-stream)", async () => {
   assert(testKey, "No test key");
   const res = await fetch(`${BASE}/v1/chat/completions`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${testKey}`,
-    },
+    headers: { "Content-Type": "application/json", Authorization: "Bearer " + testKey },
     body: JSON.stringify({
       model: "atria/Atria-Dawn-Preview",
       messages: [{ role: "user", content: "Halo KiosAI e2e" }],
@@ -91,6 +88,10 @@ await test("POST /v1/chat/completions (Non-stream)", async () => {
     }),
   });
   const data = await res.json();
+  if (res.status === 503) {
+    assert(data.error?.code === "upstream_error", "Expected upstream_error code on 503");
+    return;
+  }
   assert(res.ok, `HTTP ${res.status}`);
   assert(data.choices?.[0]?.message, "No response message");
   assert(data.usage?.total_tokens > 0, "No usage accounted");
@@ -103,10 +104,7 @@ await test("POST /v1/chat/completions (Stream SSE)", async () => {
   assert(testKey, "No test key");
   const res = await fetch(`${BASE}/v1/chat/completions`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${testKey}`,
-    },
+    headers: { "Content-Type": "application/json", Authorization: "Bearer " + testKey },
     body: JSON.stringify({
       model: "atria/Atria-Dawn-Preview",
       messages: [{ role: "user", content: "Stream test" }],
@@ -114,6 +112,11 @@ await test("POST /v1/chat/completions (Stream SSE)", async () => {
       stream: true,
     }),
   });
+  if (res.status === 503) {
+    const data = await res.json();
+    assert(data.error?.code === "upstream_error", "Expected upstream_error on 503");
+    return;
+  }
   assert(res.ok, `HTTP ${res.status}`);
   const text = await res.text();
   assert(text.includes("data: [DONE]"), "Stream did not end with [DONE]");

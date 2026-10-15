@@ -7,7 +7,7 @@
  *
  * Pakai: node --env-file=.env scripts/sync-worker-secrets.mjs
  */
-import { readFileSync, existsSync } from "node:fs";
+import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
 
@@ -17,15 +17,41 @@ const WORKER = process.env.CF_WORKER_NAME || "kiosai";
 // Hanya yang dibaca Worker saat runtime (lib/db.ts, lib/proxy-http.ts).
 const KEYS = ["DATABASE_URL", "NINEROUTER_URL", "NINEROUTER_API_KEY_2", "NINEROUTER_API_KEY"];
 
-function wranglerOauthToken() {
+async function wranglerOauthToken() {
   const paths = [
     join(homedir(), "AppData", "Roaming", "xdg.config", ".wrangler", "config", "default.toml"),
     join(homedir(), ".wrangler", "config", "default.toml"),
   ];
   for (const p of paths) {
     if (!existsSync(p)) continue;
-    const m = readFileSync(p, "utf8").match(/oauth_token = "([^"]+)"/);
-    if (m) return m[1];
+    const content = readFileSync(p, "utf8");
+    const m = content.match(/oauth_token = "([^"]+)"/);
+    const rt = content.match(/refresh_token = "([^"]+)"/);
+    const exp = content.match(/expiration_time = "([^"]+)"/);
+    if (!m) continue;
+    if (rt && exp && new Date(exp[1]).getTime() - Date.now() < 60_000) {
+      try {
+        const res = await fetch("https://dash.cloudflare.com/oauth2/token", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams({
+            grant_type: "refresh_token",
+            client_id: "54d11594-84e4-41aa-b438-e81b8fa78ee7",
+            refresh_token: rt[1],
+          }),
+        });
+        const data = await res.json();
+        if (data.access_token) {
+          let updated = content.replace(/oauth_token = "[^"]+"/, `oauth_token = "${data.access_token}"`);
+          if (data.refresh_token) updated = updated.replace(/refresh_token = "[^"]+"/, `refresh_token = "${data.refresh_token}"`);
+          const newExp = new Date(Date.now() + (data.expires_in || 3600) * 1000).toISOString();
+          updated = updated.replace(/expiration_time = "[^"]+"/, `expiration_time = "${newExp}"`);
+          writeFileSync(p, updated, "utf8");
+          return data.access_token;
+        }
+      } catch {}
+    }
+    return m[1];
   }
   throw new Error("OAuth token wrangler tidak ditemukan. Jalankan: npx wrangler login");
 }
@@ -35,7 +61,7 @@ async function putSecret(token, name, value) {
     `https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/workers/scripts/${WORKER}/secrets`,
     {
       method: "PUT",
-      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+      headers: { Authorization: "Bearer " + token, "Content-Type": "application/json" },
       body: JSON.stringify({ name, text: value, type: "secret_text" }),
     }
   );
@@ -44,7 +70,7 @@ async function putSecret(token, name, value) {
   return res.status;
 }
 
-const token = wranglerOauthToken();
+const token = await wranglerOauthToken();
 let pushed = 0;
 
 for (const key of KEYS) {

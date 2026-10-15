@@ -7,6 +7,31 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `HEAD` — feat(models): integrate Google Gemini 3.8/3.7/3.6/3.1 and Claude 4.6 Thinking models into Pro plan
+
+**Ditambahkan & Diperbaiki**
+- **Model Pro Baru (`ag/*`)**:
+  - `ag/gemini-3.8-flash-high`, `ag/gemini-3.8-flash-medium`, `ag/gemini-3.8-flash-low`, `ag/gemini-3.8-flash`
+  - `ag/gemini-3.7-flash-high`, `ag/gemini-3.7-flash-medium`, `ag/gemini-3.7-flash-low`
+  - `ag/gemini-3.6-flash-high`, `ag/gemini-3.6-flash-medium`, `ag/gemini-3.6-flash-low`
+  - `ag/gemini-3.1-pro-high`, `ag/gemini-pro-agent`, `ag/gemini-3.1-pro-low`
+  - `ag/claude-sonnet-4-6` (`Claude Sonnet 4.6 (Thinking)`)
+  - `ag/claude-opus-4-6-thinking` (`Claude Opus 4.6 (Thinking)`)
+- **Format UI (`lib/model-utils.ts`)**:
+  - Helper `formatAgGemini` mengubah ID internal menjadi nama komersial rapi: misal `ag/gemini-3.8-flash-high` $\rightarrow$ `Gemini 3.8 Flash (High)`.
+  - Mapping alias untuk Claude Sonnet 4.6 & Claude Opus 4.6 Thinking.
+- **Perbaikan Evaluasi Tarif (`lib/model-pricing.ts`)**:
+  - Mengatasi substring clash (`"gemini".includes("mini")`) sehingga model Gemini Pro (`$1.25 / $5.00`) tidak salah tergolong sebagai model mini (`$0.15 / $0.60`).
+- **Showcase Landing Page (`app/landing/components/modelCatalogData.ts`)**:
+  - Menampilkan Gemini 3.8 Flash (High), Gemini 3.1 Pro (High), Claude Sonnet 4.6 Thinking, dan Claude Opus 4.6 Thinking di katalog publik.
+- **Otomasi Refresh Token Worker (`scripts/tunnel-sync.mjs`, `scripts/sync-worker-secrets.mjs`)**:
+  - Auto-refresh OAuth access token Wrangler menggunakan `refresh_token` saat mendekati masa kedaluwarsa.
+- **Pengujian & Kepatuhan**:
+  - `test:pricing` diperluas dari 9 ke 13 assertion (100% pass).
+  - Seluruh file tetap patuh batas arsitektur $\le 200$ baris.
+
+---
+
 ### `712ccc6` — docs: synchronize all documentation across repository
 
 **Diperbarui**
