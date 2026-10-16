@@ -58,6 +58,12 @@ export default function Dashboard() {
       <div className="main-shell">
         <Header page={page} user={user} onOpenAuth={() => setModal("auth")} />
         <main id="main-content" tabIndex={-1}>
+          {user.balance_tokens < 50000 && (
+            <div className="warning-banner" role="alert" style={{ marginBottom: "20px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span>⚠️ Saldo token menipis ({user.balance_tokens.toLocaleString("id-ID")} token). Isi ulang agar API bot & aplikasi Anda tidak terputus.</span>
+              <button className="button primary" style={{ height: "28px", fontSize: "11px", padding: "0 10px" }} onClick={() => setPage("Beli Token")}>Isi Ulang</button>
+            </div>
+          )}
           <div className="page-heading">
             <div>
               <div className="eyebrow">{heading.eyebrow}</div>
@@ -145,49 +151,44 @@ export default function Dashboard() {
 
       <BottomNav page={page} setPage={setPage} />
 
-      {modal === "payment" && (
-        <PaymentModal
-          selectedPkgIndex={selectedPkgIndex}
-          userId={user.id}
-          userBalance={user.balance_tokens}
-          isAdmin={isAdmin}
-          onClose={() => setModal(null)}
-          onPaymentSuccess={() => {
-            data.fetchUserData(); data.fetchOrders();
-            setToast("Pembayaran berhasil! Token telah ditambahkan ke database.");
-          }}
-          onNavigateKeys={() => { setModal(null); setPage("API Keys"); }}
-          onNavigateStatistik={() => { setModal(null); setPage("Statistik"); }}
-        />
-      )}
+          {modal === "payment" && (
+            <PaymentModal
+              selectedPkgIndex={selectedPkgIndex}
+              userId={user.id}
+              userBalance={user.balance_tokens}
+              isAdmin={isAdmin}
+              onClose={() => setModal(null)}
+              onPaymentSuccess={() => {
+                data.fetchUserData(); data.fetchOrders();
+                setToast("Pembayaran berhasil! Token telah ditambahkan ke database.");
+              }}
+              onNavigateKeys={() => { setModal(null); setPage("API Keys"); }}
+              onNavigateStatistik={() => { setModal(null); setPage("Statistik"); }}
+            />
+          )}
 
-      {(modal === "create_key" || modal === "revoke_key") && (
-        <KeyModal
-          mode={modal === "create_key" ? "create" : "revoke"}
-          keyToRevoke={revokeKeyTarget}
-          userId={user.id}
-          isAdmin={isAdmin}
-          onClose={() => { setModal(null); setRevokeKeyTarget(null); }}
-          onKeyCreated={() => { data.fetchKeys(); setToast(isAdmin ? "API key berhasil dibuat di TiDB." : "API key berhasil dibuat."); }}
-          onKeyRevoked={() => { data.fetchKeys(); setToast(isAdmin ? "API key berhasil dinonaktifkan di TiDB." : "API key berhasil dinonaktifkan."); }}
-          onCopy={copy}
-        />
-      )}
+          {(modal === "create_key" || modal === "revoke_key") && (
+            <KeyModal
+              mode={modal === "create_key" ? "create" : "revoke"}
+              keyToRevoke={revokeKeyTarget}
+              userId={user.id}
+              isAdmin={isAdmin}
+              onClose={() => { setModal(null); setRevokeKeyTarget(null); }}
+              onKeyCreated={() => { data.fetchKeys(); setToast("API key berhasil dibuat."); }}
+              onKeyRevoked={() => { data.fetchKeys(); setToast("API key berhasil dinonaktifkan."); }}
+              onCopy={copy}
+            />
+          )}
 
       {modal === "auth" && (
         <AuthModal
           currentUser={data.currentUser}
           onClose={() => setModal(null)}
           onAuthSuccess={(u) => {
-            data.setCurrentUser(u);
-            data.refreshAll();
-            setModal(null);
+            data.setCurrentUser(u); data.refreshAll(); setModal(null);
             setToast(`Selamat datang, ${u.full_name || u.name}!`);
           }}
-          onLogout={() => {
-            data.setCurrentUser(null);
-            router.replace("/");
-          }}
+          onLogout={() => { data.setCurrentUser(null); router.replace("/"); }}
         />
       )}
 
