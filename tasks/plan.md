@@ -220,6 +220,10 @@
   - Callback streaming `onSettled` di `lib/stream-billing.ts` dan chat completions endpoint
   - Pengaturan URL webhook di modal profil pengguna `AuthModal.tsx` dan endpoint `PATCH /api/user`
   - 100% lolos verifikasi: 100 file <= 200 LOC, tsc 0 error, 18/18 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
+- [x] Phase 49: One-Click .env File Export Modal
+  - Modal generator `app/components/EnvExportModal.tsx` (88 baris) untuk unduh instan `.env.local`
+  - Tombol `.env` di sebelah Base URL pada `app/components/DocsTab.tsx` (196 baris)
+  - 100% lolos verifikasi: 101 file <= 200 LOC, tsc 0 error, 18/18 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
 
 
 

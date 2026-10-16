@@ -3,10 +3,10 @@
 - **Repository**: `https://github.com/Dhani078/KiosAI.git`
 - **Location**: `E:/Hermesproject/KiosAI`
 - **Live Worker**: `https://kiosai.dhanisepeda.workers.dev` (subdomain `dhanisepeda`, pakai `e`)
-- **Current Status**: Complete & Fully Verified (Phase 0 - 48)
+- **Current Status**: Complete & Fully Verified (Phase 0 - 49)
 - **Upstream Router**: 9Router local (`http://127.0.0.1:20128`) dengan 66 model aktif terverifikasi 5x audit (1 Free, 65 Pro)
 - **Database**: TiDB Cloud Serverless (`gateway01.ap-southeast-1.prod.aws.tidbcloud.com:4000/kiosai`)
-- **Last Commit**: `614ab45` — feat(billing): add low-balance webhook notifications with 30m debounce and user config
+- **Last Commit**: `b4dac3f` — feat(docs): add one-click .env file export modal for cline, vs code, and python
 
 ## Dokumen Navigasi Cepat
 - Aturan & perintah untuk agent: `AGENT.md`
@@ -272,6 +272,11 @@
     - Integrasi streaming callback `onSettled` di `lib/stream-billing.ts` (119 baris) dan chat completion route (167 baris).
     - UI konfigurasi URL webhook di modal profil pengguna `AuthModal.tsx` (146 baris).
     - 100% verifikasi lolos: 100/100 file kode sumber patuh $\le 200$ baris, tsc 0 error, E2E 11/11, pricing 18/18, billing 3/3, chaos PASS, UI 16/16.
+  - Phase 49: One-Click .env File Export Modal:
+    - Modul `app/components/EnvExportModal.tsx` (88 baris) menyediakan preview `.env.local` instan dan tombol unduh langsung.
+    - Tombol aksi `.env` di samping Base URL tab Dokumentasi `app/components/DocsTab.tsx` (196 baris).
+    - 100% verifikasi lolos: 101/101 file kode sumber patuh $\le 200$ baris, tsc 0 error, E2E 11/11, pricing 18/18, billing 3/3, chaos PASS, UI 16/16.
+
 
 
 

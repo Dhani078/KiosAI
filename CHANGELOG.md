@@ -7,6 +7,14 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `b4dac3f` — feat(docs): add one-click .env file export modal for cline, vs code, and python
+
+**Modal Ekspor File .env Satu-Klik**
+- **Modal Generator .env (`app/components/EnvExportModal.tsx`)**: Modul baru (88 baris) menyediakan preview konfigurasi lingkungan produksi `.env.local` lengkap dengan Base URL, active API Key, target model, dan panduan provider kustom untuk Cline / Roo Code / Cursor / Next.js / Python.
+- **Tombol Download & Ekspor Cepat (`app/components/DocsTab.tsx`)**: Menambahkan tombol `.env` di sebelah Base URL pada tab Dokumentasi untuk mengunduh langsung file `.env.local` atau menyalin cuplikan teks dengan 1 klik.
+- **Kepatuhan Modularitas**: 101/101 file kode sumber patuh $\le 200$ baris per file (`DocsTab.tsx` 196 baris, `EnvExportModal.tsx` 88 baris).
+- **Hasil Verifikasi**: tsc 0 error, E2E 11/11, pricing 18/18, chaos test PASS, billing deduction 3/3, UI audit 16/16.
+
 ### `614ab45` — feat(billing): add low-balance webhook notifications with 30m debounce and user config
 
 **Notifikasi Webhook Saldo Menipis Otomatis**

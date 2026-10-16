@@ -390,3 +390,8 @@ Desain prototype dari `KiosAI Token Marketplace Design` diterapkan sepenuhnya pa
 - **Sistem Webhook Alert Proaktif (`lib/balance-alerts.ts`)**: Mendukung pengiriman payload JSON otomatis ke webhook Discord, Slack, atau bot Telegram pengguna saat saldo token menipis (< ambang batas default 50.000 token).
 - **Proteksi Anti-Spam (30-Minute Debounce)**: Mekanisme in-memory throttle membatasi frekuensi webhook maksimal 1 kali setiap 30 menit per pengguna, mencegah spam request beruntun pada beban trafik tinggi.
 - **Konfigurasi Akun Pengguna**: Pengguna dapat memasukkan URL webhook target mereka di modal profil akun (`AuthModal.tsx`) yang tersimpan aman pada kolom `alert_webhook_url` tabel pengguna di TiDB.
+
+## 41. Generator & Ekspor File .env Satu-Klik
+
+- **Modal Ekspor Konfigurasi (`EnvExportModal.tsx`)**: Menghasilkan template file `.env.local` instan yang sudah otomatis terisi `OPENAI_BASE_URL`, `OPENAI_API_KEY`, dan model pilihan pengguna.
+- **Pintasan Pengembang Cepat**: Tombol `.env` pada tab Dokumentasi memungkinkan pengembang mengunduh file `.env.local` langsung atau menyalin teks untuk integrasi 1-detik ke VS Code, Cursor, Cline, atau proyek Next.js.

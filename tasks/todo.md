@@ -303,6 +303,11 @@
 - [x] Task 40.4: Add webhook alert URL configuration in `AuthModal.tsx` and `PATCH /api/user`
 - [x] Task 40.5: Verify 100% test pass: 100 files <= 200 LOC, 18/18 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
 
+## Phase 41 (One-Click .env File Export Modal - Completed)
+- [x] Task 41.1: Implement `app/components/EnvExportModal.tsx` with instant `.env.local` download blob
+- [x] Task 41.2: Add `.env` action button next to Base URL in `app/components/DocsTab.tsx`
+- [x] Task 41.3: Verify 100% test pass: 101 files <= 200 LOC, 18/18 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
+
 
 
 
