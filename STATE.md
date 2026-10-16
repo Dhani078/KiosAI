@@ -3,10 +3,10 @@
 - **Repository**: `https://github.com/Dhani078/KiosAI.git`
 - **Location**: `E:/Hermesproject/KiosAI`
 - **Live Worker**: `https://kiosai.dhanisepeda.workers.dev` (subdomain `dhanisepeda`, pakai `e`)
-- **Current Status**: Complete & Fully Verified (Phase 0 - 43)
-- **Upstream Router**: 9Router local (`http://127.0.0.1:20128`) dengan 65 model aktif terverifikasi 5x audit (1 Free, 64 Pro)
+- **Current Status**: Complete & Fully Verified (Phase 0 - 44)
+- **Upstream Router**: 9Router local (`http://127.0.0.1:20128`) dengan 66 model aktif terverifikasi 5x audit (1 Free, 65 Pro)
 - **Database**: TiDB Cloud Serverless (`gateway01.ap-southeast-1.prod.aws.tidbcloud.com:4000/kiosai`)
-- **Last Commit**: `d48892a` — feat(models): prioritize Gemini family at top of Pro models in dashboard and landing catalog
+- **Last Commit**: `0e43d8d` — feat(models): integrate verified beatapi/deepseek-v4.1-flash-free into catalog, alias resolver, and failover router
 
 ## Dokumen Navigasi Cepat
 - Aturan & perintah untuk agent: `AGENT.md`
@@ -248,6 +248,13 @@
     - Di `app/components/ModelsTab.tsx` (165 baris), algoritma sorting model memprioritaskan keluarga Gemini di posisi paling atas model Pro setelah model Free.
     - Di `app/landing/components/modelCatalogData.ts`, kartu Gemini 3.8 Flash (High) dan Gemini 2.0 Flash diposisikan langsung di samping model Atria.
     - 100% verifikasi lolos: 97/97 file kode sumber patuh $\le 200$ baris, tsc 0 error, E2E 11/11, pricing 17/17, billing 3/3, chaos PASS, UI 16/16.
+  - Phase 44: Integration of beatapi/deepseek-v4.1-flash-free:
+    - Verifikasi model `beatapi/deepseek-v4.1-flash-free` via uji inferensi 200 OK (3103ms) ke 9Router upstream.
+    - Pendaftaran ke `lib/verified-models.ts` (total 66 model aktif terverifikasi) dan pemetaan alias di `lib/model-utils.ts`.
+    - Pasangan failover dua arah dengan `tokenharbor/deepseek-v4.1-flash:free` di `lib/failover-router.ts`.
+    - Assertion pricing ditambahkan di `scripts/test-pricing.mjs` (18/18 checks pass).
+    - 100% verifikasi lolos: 97/97 file kode sumber patuh $\le 200$ baris, tsc 0 error, E2E 11/11, pricing 18/18, billing 3/3, chaos PASS, UI 16/16.
+
 
 
 

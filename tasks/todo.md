@@ -274,6 +274,13 @@
 - [x] Task 35.2: Reorder Gemini models right next to Atria in `app/landing/components/modelCatalogData.ts`
 - [x] Task 35.3: Verify 100% test pass: 97 files <= 200 LOC, 17/17 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
 
+## Phase 36 (BeatAPI DeepSeek Flash Integration - Completed)
+- [x] Task 36.1: Verify `beatapi/deepseek-v4.1-flash-free` via real inference test (200 OK)
+- [x] Task 36.2: Add to `lib/verified-models.ts` and alias resolver in `lib/model-utils.ts`
+- [x] Task 36.3: Add mutual failover route in `lib/failover-router.ts`
+- [x] Task 36.4: Add pricing assertion in `scripts/test-pricing.mjs` (18 checks)
+- [x] Task 36.5: Verify 100% test pass: 97 files <= 200 LOC, 18/18 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
+
 
 
 

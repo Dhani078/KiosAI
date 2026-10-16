@@ -7,6 +7,15 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `0e43d8d` — feat(models): integrate verified beatapi/deepseek-v4.1-flash-free into catalog, alias resolver, and failover router
+
+**Integrasi Model Baru BeatAPI DeepSeek V4.1 Flash Free**
+- **Verifikasi Model (`lib/verified-models.ts`)**: Mendaftarkan `beatapi/deepseek-v4.1-flash-free` ke daftar model terverifikasi aktif setelah uji inferensi nyata HTTP 200 via upstream 9Router (total 66 model aktif terverifikasi).
+- **Resolusi Alias Komersial (`lib/model-utils.ts`)**: Menambahkan pemetaan otomatis untuk alias `deepseek-v4.1-flash-free` dan `beatapi/deepseek-v4.1-flash-free`.
+- **Rute Failover Otomatis (`lib/failover-router.ts`)**: Menjadikan `beatapi/deepseek-v4.1-flash-free` sebagai kandidat failover timbal-balik utama untuk `tokenharbor/deepseek-v4.1-flash:free` saat salah satu upstream mengalami HTTP 429 atau overload.
+- **Pengujian Tarif Token (`scripts/test-pricing.mjs`)**: Menambahkan assertion tarif untuk `beatapi/deepseek-v4.1-flash-free` (18/18 pricing checks lolos 100%).
+- **Hasil Verifikasi**: 97/97 file kode sumber patuh $\le 200$ baris per file, tsc 0 error, E2E 11/11, pricing 18/18, chaos test PASS, billing deduction 3/3, UI audit 16/16.
+
 ### `d48892a` — feat(models): prioritize Gemini family at top of Pro models in dashboard and landing catalog
 
 **Prioritas Model Gemini di Posisi Teratas Katalog Pro**

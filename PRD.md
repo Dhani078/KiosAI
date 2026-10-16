@@ -366,3 +366,8 @@ Desain prototype dari `KiosAI Token Marketplace Design` diterapkan sepenuhnya pa
 ## 35. Prioritas Tampilan Model Gemini (Pro Tier)
 
 - **Posisi Teratas Model Pro (`ModelsTab.tsx` & `modelCatalogData.ts`)**: Keluarga Google Gemini (`ag/gemini-3.8-flash-high`, `google/gemini-2.0-flash`) diposisikan langsung di urutan teratas model Pro setelah model Free (Atria), memaksimalkan utilisasi kuota token Gemini yang melimpah dengan tarif super ekonomis ($0.075 / $0.30 per 1M).
+
+## 36. Integrasi Model Baru BeatAPI DeepSeek Flash Free
+
+- **Rute Baru Aktif (`beatapi/deepseek-v4.1-flash-free`)**: Terverifikasi via pengujian inferensi HTTP 200 (latensi 3103ms) ke 9Router. Terdaftar di `lib/verified-models.ts` (66 model aktif terverifikasi).
+- **Redundansi Failover**: Menjadi kandidat failover timbal-balik utama untuk `tokenharbor/deepseek-v4.1-flash:free`, menjamin ketersediaan model DeepSeek Flash tetap 100% aktif jika salah satu upstream mengalami rate-limit.
