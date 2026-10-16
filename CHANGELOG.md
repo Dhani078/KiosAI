@@ -7,6 +7,16 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `614ab45` — feat(billing): add low-balance webhook notifications with 30m debounce and user config
+
+**Notifikasi Webhook Saldo Menipis Otomatis**
+- **Modul Pemicu Webhook (`lib/balance-alerts.ts`)**: Modul terpisah (57 baris) untuk pengiriman notifikasi webhook HTTP POST saat saldo akun jatuh di bawah ambang batas (default 50.000 token) dengan perlindungan in-memory debounce 30 menit per pengguna anti-spam.
+- **Skema Kolom Database**: Menambahkan kolom `alert_webhook_url` (VARCHAR 500) dan `alert_threshold_tokens` (BIGINT) pada tabel `kiosai.users`.
+- **Integrasi Endpoint & Streaming (`app/v1/chat/completions/route.ts` & `lib/stream-billing.ts`)**: Mendeteksi sisa saldo pasca eksekusi streaming (`onSettled`) maupun non-streaming dan mengeksekusi pengiriman alert secara asinkron tanpa memblokir siklus respon klien.
+- **Konfigurasi Akun Pengguna (`app/components/AuthModal.tsx` & `app/api/user/route.ts`)**: Input URL webhook (Discord/Slack/Telegram) disematkan di modal akun pengguna dan disimpan via endpoint `PATCH /api/user`.
+- **Kepatuhan Modularitas**: 100/100 file kode sumber patuh batasan $\le 200$ baris per file (`AuthModal.tsx` 146 baris, `route.ts` 167 baris, `lib/keys.ts` 182 baris).
+- **Hasil Verifikasi**: tsc 0 error, E2E 11/11, pricing 18/18, chaos test PASS, billing deduction 3/3, UI audit 16/16.
+
 ### `c797359` — feat(models): add one-click code snippet modal generator to every model card
 
 **Generator Cuplikan Kode Satu-Klik pada Setiap Kartu Model**

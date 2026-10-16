@@ -296,6 +296,13 @@
 - [x] Task 39.2: Add `<Code2 />` action button on model cards in `app/components/ModelsTab.tsx`
 - [x] Task 39.3: Verify 100% test pass: 99 files <= 200 LOC, 18/18 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
 
+## Phase 40 (Low-Balance Webhook Notification Trigger - Completed)
+- [x] Task 40.1: Implement `lib/balance-alerts.ts` with 30-min debounce per user
+- [x] Task 40.2: Add `alert_webhook_url` and `alert_threshold_tokens` columns to `kiosai.users`
+- [x] Task 40.3: Wire streaming `onSettled` callback in `lib/stream-billing.ts` and non-streaming in `app/v1/chat/completions/route.ts`
+- [x] Task 40.4: Add webhook alert URL configuration in `AuthModal.tsx` and `PATCH /api/user`
+- [x] Task 40.5: Verify 100% test pass: 100 files <= 200 LOC, 18/18 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
+
 
 
 

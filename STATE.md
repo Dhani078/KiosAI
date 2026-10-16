@@ -3,10 +3,10 @@
 - **Repository**: `https://github.com/Dhani078/KiosAI.git`
 - **Location**: `E:/Hermesproject/KiosAI`
 - **Live Worker**: `https://kiosai.dhanisepeda.workers.dev` (subdomain `dhanisepeda`, pakai `e`)
-- **Current Status**: Complete & Fully Verified (Phase 0 - 47)
+- **Current Status**: Complete & Fully Verified (Phase 0 - 48)
 - **Upstream Router**: 9Router local (`http://127.0.0.1:20128`) dengan 66 model aktif terverifikasi 5x audit (1 Free, 65 Pro)
 - **Database**: TiDB Cloud Serverless (`gateway01.ap-southeast-1.prod.aws.tidbcloud.com:4000/kiosai`)
-- **Last Commit**: `c797359` — feat(models): add one-click code snippet modal generator to every model card
+- **Last Commit**: `614ab45` — feat(billing): add low-balance webhook notifications with 30m debounce and user config
 
 ## Dokumen Navigasi Cepat
 - Aturan & perintah untuk agent: `AGENT.md`
@@ -266,6 +266,13 @@
     - Modul `app/components/ModelSnippetModal.tsx` (106 baris) memproduksi cuplikan integrasi cURL, Python, Node.js lengkap dengan ID model terpilih dan API key pengguna.
     - Tombol aksi kode `<Code2 />` pada setiap kartu model di `ModelsTab.tsx` (189 baris) dan wiring di `DashboardApp.tsx` (199 baris).
     - 100% verifikasi lolos: 99/99 file kode sumber patuh $\le 200$ baris, tsc 0 error, E2E 11/11, pricing 18/18, billing 3/3, chaos PASS, UI 16/16.
+  - Phase 48: Low-Balance Webhook Notification Trigger:
+    - Modul `lib/balance-alerts.ts` (57 baris) untuk pengiriman notifikasi webhook saat saldo < 50k dengan in-memory debounce 30 menit.
+    - Kolom `alert_webhook_url` dan `alert_threshold_tokens` pada tabel `kiosai.users`.
+    - Integrasi streaming callback `onSettled` di `lib/stream-billing.ts` (119 baris) dan chat completion route (167 baris).
+    - UI konfigurasi URL webhook di modal profil pengguna `AuthModal.tsx` (146 baris).
+    - 100% verifikasi lolos: 100/100 file kode sumber patuh $\le 200$ baris, tsc 0 error, E2E 11/11, pricing 18/18, billing 3/3, chaos PASS, UI 16/16.
+
 
 
 

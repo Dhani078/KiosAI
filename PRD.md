@@ -384,3 +384,9 @@ Desain prototype dari `KiosAI Token Marketplace Design` diterapkan sepenuhnya pa
 ## 39. Generator Cuplikan Kode Satu-Klik pada Setiap Model
 
 - **Modal Integrasi Cepat (`ModelSnippetModal.tsx`)**: Pengembang dapat mengklik tombol kode `<Code2 />` pada kartu model apa pun untuk memunculkan cuplikan cURL, Python, dan Node.js yang sudah terisi otomatis dengan ID model target dan API key pengguna, memangkas friksi integrasi pertama hingga di bawah 30 detik.
+
+## 40. Notifikasi Webhook Saldo Menipis Otomatis
+
+- **Sistem Webhook Alert Proaktif (`lib/balance-alerts.ts`)**: Mendukung pengiriman payload JSON otomatis ke webhook Discord, Slack, atau bot Telegram pengguna saat saldo token menipis (< ambang batas default 50.000 token).
+- **Proteksi Anti-Spam (30-Minute Debounce)**: Mekanisme in-memory throttle membatasi frekuensi webhook maksimal 1 kali setiap 30 menit per pengguna, mencegah spam request beruntun pada beban trafik tinggi.
+- **Konfigurasi Akun Pengguna**: Pengguna dapat memasukkan URL webhook target mereka di modal profil akun (`AuthModal.tsx`) yang tersimpan aman pada kolom `alert_webhook_url` tabel pengguna di TiDB.

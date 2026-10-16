@@ -138,10 +138,10 @@ npm start
 
 ## 8. Status Terkini (Session Continuity)
 
-- **Total File Sumber**: 99 file TypeScript/MJS (100% patuh `<= 200` baris).
+- **Total File Sumber**: 100 file TypeScript/MJS (100% patuh `<= 200` baris).
 - **Katalog Model Aktif**: 66 model terverifikasi via audit 5x (`lib/verified-models.ts`), 1 Free Tier (`Atria-Dawn-Preview`), 65 Pro Tier.
 - **E2E Integration Test**: 11 Lolos, 0 Gagal (`test:e2e`).
 - **Pricing & Billing Test**: 18/18 PASS (`test:pricing`), live deduction PASS (`test:billing`).
 - **UI & Dashboard Audit**: 16/16 PASS (0 horizontal overflow pada mobile 390px & PC).
-- **Git Branch**: `main` ter-push sinkron dengan `origin` (Commit `c797359`).
+- **Git Branch**: `main` ter-push sinkron dengan `origin` (Commit `614ab45`).
 - **Status Layanan**: Worker `kiosai.dhanisepeda.workers.dev` live dan sehat (`/api/health` status `healthy`).

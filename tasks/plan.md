@@ -214,6 +214,12 @@
   - Modal integrasi instan `ModelSnippetModal.tsx` (106 baris) dengan cURL, Python, Node.js terisi ID model dan API key
   - Tombol aksi `<Code2 />` pada setiap kartu model di `ModelsTab.tsx` (189 baris) dan dashboard wiring (199 baris)
   - 100% lolos verifikasi: 99 file <= 200 LOC, tsc 0 error, 18/18 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
+- [x] Phase 48: Low-Balance Webhook Notification Trigger
+  - Modul pemicu webhook `lib/balance-alerts.ts` (57 baris) dengan proteksi debounce in-memory 30 menit
+  - DDL TiDB: kolom `alert_webhook_url` dan `alert_threshold_tokens` di `kiosai.users`
+  - Callback streaming `onSettled` di `lib/stream-billing.ts` dan chat completions endpoint
+  - Pengaturan URL webhook di modal profil pengguna `AuthModal.tsx` dan endpoint `PATCH /api/user`
+  - 100% lolos verifikasi: 100 file <= 200 LOC, tsc 0 error, 18/18 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
 
 
 
