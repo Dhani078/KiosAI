@@ -146,6 +146,10 @@
   - Badge monospace ID model pada setiap kartu model di `ModelsSection.tsx`
   - Pengujian tarif diperluas menjadi 13 assertion mencakup `deepseek-v4.1-flash`
   - Verifikasi menyeluruh: tsc, 87 file <= 200 LOC, E2E 10/10, UI audit 16/16 lolos
+- [x] Phase 34: Expanded 11-Step E2E Suite with Post-Upgrade Pro Verification
+  - Penambahan langkah ke-10 pada `scripts/test-e2e.mjs` untuk verifikasi akses model Pro via alias setelah order QRIS settlement
+  - Refactoring helper `postChat` agar file tetap ringkas (195 baris <= 200 LOC)
+  - 100% kelulusan E2E 11/11 lolos semua skenario integration test
 
 
 

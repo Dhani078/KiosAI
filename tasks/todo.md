@@ -214,6 +214,11 @@
 - [x] Task 25.2: Add `deepseek-v4.1-flash` assertion to `test-pricing.mjs` (13/13 passing)
 - [x] Task 25.3: Ensure strict <= 200 lines rule across all 87 files, clean git tree, and push to origin
 
+## Phase 26 (Expanded 11-Step E2E Suite with Pro Verification - Completed)
+- [x] Task 26.1: Add post-upgrade pro model alias chat completion step to `scripts/test-e2e.mjs`
+- [x] Task 26.2: Refactor `postChat` helper to maintain strict <= 200 lines limit (195 lines)
+- [x] Task 26.3: Verify all 11/11 tests PASS in `npm run test:e2e`
+
 
 
 

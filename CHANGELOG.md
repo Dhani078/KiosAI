@@ -7,6 +7,13 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `7393a9e` — test(e2e): expand suite to 11 tests with post-upgrade pro alias access verification
+
+**Pengujian E2E Menyeluruh 11 Langkah dengan Akses Model Pro Alias**
+- **Verifikasi Akses Pro Pasca-Upgrade (`scripts/test-e2e.mjs`)**: Menambahkan langkah ke-10 yang menguji pemanggilan model Pro via alias `deepseek-v4.1-flash` setelah settlement pembayaran QRIS, memvalidasi bahwa status akun `pro` berhasil melewati gate 403 `tier_restricted` dan menghasilkan inferensi sukses.
+- **Refactoring Helper `postChat`**: Menyederhanakan payload dan header request chat completion sehingga file tetap ringkas (195 baris, patuh batas $\le 200$ baris).
+- **Hasil Pengujian**: 11/11 lolos 100%.
+
 ### `81d5212` — docs: synchronize all markdown documentation across repository
 
 **Sinkronisasi Menyeluruh Dokumentasi Markdown**
