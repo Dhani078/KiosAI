@@ -53,7 +53,13 @@ export function ModelsTab({
     .sort((a, b) => {
       const aAllowed = checkAllowed(a) ? 1 : 0, bAllowed = checkAllowed(b) ? 1 : 0;
       if (aAllowed !== bAllowed) return bAllowed - aAllowed;
-      return (getModelTier(b) === "free" ? 1 : 0) - (getModelTier(a) === "free" ? 1 : 0);
+      const aFree = getModelTier(a) === "free" ? 1 : 0, bFree = getModelTier(b) === "free" ? 1 : 0;
+      if (aFree !== bFree) return bFree - aFree;
+      // Prioritaskan keluarga Gemini di posisi teratas model Pro
+      const aGemini = (a.id || "").toLowerCase().includes("gemini") ? 1 : 0;
+      const bGemini = (b.id || "").toLowerCase().includes("gemini") ? 1 : 0;
+      if (aGemini !== bGemini) return bGemini - aGemini;
+      return 0;
     });
 
   return (
