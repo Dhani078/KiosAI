@@ -13,24 +13,55 @@ export interface BilledStreamOptions {
 
 /**
  * Creates an SSE stream that tracks token usage and protects against
- * premature client stream disconnection (stream abort exploitation).
+ * premature client stream disconnection without counting raw SSE framing overhead.
+ * Handles TCP chunk boundary splits and extracts delta.content, reasoning_content, and tool_calls.
  */
 export function createBilledStream(options: BilledStreamOptions): ReadableStream {
   const { reader, userId, keyId, model, startTime, rawPromptEstimate = 15 } = options;
   const decoder = new TextDecoder();
-  let buf = "";
+  let lineBuf = "";
   let usage: { prompt_tokens?: number; completion_tokens?: number } | null = null;
   let deltas = 0;
-  let accumulatedChars = 0;
+  let pureContentChars = 0;
   let settled = false;
+
+  const processLine = (rawLine: string) => {
+    const line = rawLine.trim();
+    if (!line.startsWith("data:")) return;
+    const payloadStr = line.slice(5).trim();
+    if (!payloadStr || payloadStr === "[DONE]") return;
+
+    try {
+      const parsed = JSON.parse(payloadStr);
+      if (parsed.usage && typeof parsed.usage.prompt_tokens === "number") {
+        usage = parsed.usage;
+      }
+      const delta = parsed.choices?.[0]?.delta;
+      if (delta) {
+        deltas++;
+        if (typeof delta.content === "string") pureContentChars += delta.content.length;
+        if (typeof delta.reasoning_content === "string") pureContentChars += delta.reasoning_content.length;
+        if (Array.isArray(delta.tool_calls)) {
+          for (const tc of delta.tool_calls) {
+            if (typeof tc?.function?.arguments === "string") pureContentChars += tc.function.arguments.length;
+          }
+        }
+      }
+    } catch {}
+  };
 
   const settleBilling = async (isAborted: boolean = false) => {
     if (settled) return;
     settled = true;
     releaseStreamSlot(keyId);
 
+    if (lineBuf.length > 0) {
+      processLine(lineBuf);
+      lineBuf = "";
+    }
+
     const promptTokens = usage?.prompt_tokens ?? rawPromptEstimate;
-    const estCompletion = Math.max(1, deltas, Math.ceil(accumulatedChars / 3.5));
+    const estCompletion = Math.max(1, deltas, Math.ceil(pureContentChars / 3.5));
     const completionTokens = usage?.completion_tokens ?? estCompletion;
     const actualCost = calculateTokenCost(model, promptTokens, completionTokens);
 
@@ -60,20 +91,16 @@ export function createBilledStream(options: BilledStreamOptions): ReadableStream
           return;
         }
 
-        accumulatedChars += value.byteLength;
-        buf += decoder.decode(value, { stream: true });
-        const lines = buf.split("\n");
-        buf = lines.pop() || "";
-
-        for (const line of lines) {
-          if (!line.startsWith("data: ") || line === "data: [DONE]") continue;
-          try {
-            const j = JSON.parse(line.slice(6));
-            if (j.usage) usage = j.usage;
-            if (j.choices?.[0]?.delta) deltas++;
-          } catch {}
+        lineBuf += decoder.decode(value, { stream: true });
+        let newlineIdx = lineBuf.indexOf("\n");
+        while (newlineIdx !== -1) {
+          const completeLine = lineBuf.slice(0, newlineIdx);
+          lineBuf = lineBuf.slice(newlineIdx + 1);
+          processLine(completeLine);
+          newlineIdx = lineBuf.indexOf("\n");
         }
 
+        if (lineBuf.length > 32768) lineBuf = "";
         controller.enqueue(value);
       } catch (err) {
         controller.error(err);

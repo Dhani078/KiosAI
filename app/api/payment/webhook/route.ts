@@ -68,18 +68,19 @@ export async function POST(req: NextRequest) {
       [orderId]
     );
 
-    // Credit tokens to user, unlock bonus vault if locked, and upgrade tier to Pro
+    // Credit tokens to user, match-vest bonus from vault (100% match), and upgrade tier to Pro
+    // Prevents F-01 arbitrage: bonus unlocks proportionally with purchased tokens
     await db.execute(
       `UPDATE kiosai.users 
-       SET balance_tokens = balance_tokens + ? + CASE WHEN is_pro_unlocked = 0 THEN locked_bonus_tokens ELSE 0 END,
-           locked_bonus_tokens = CASE WHEN is_pro_unlocked = 0 THEN 0 ELSE locked_bonus_tokens END,
+       SET balance_tokens = balance_tokens + ? + LEAST(locked_bonus_tokens, ?),
+           locked_bonus_tokens = GREATEST(0, locked_bonus_tokens - ?),
            is_pro_unlocked = 1,
            tier = CASE 
              WHEN ? IN ('pro', 'pro_25k', 'pro_100k', 'pro_150k', 'bronze', 'silver', 'gold') THEN 'pro'
              ELSE tier
            END
        WHERE id = ?`,
-      [order.tokens_purchased, order.package_tier, order.user_id]
+      [order.tokens_purchased, order.tokens_purchased, order.tokens_purchased, order.package_tier, order.user_id]
     );
 
     return NextResponse.json({

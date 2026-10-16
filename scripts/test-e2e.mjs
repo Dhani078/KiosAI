@@ -163,11 +163,11 @@ await test("POST /api/orders/pay (Payment Fulfillment)", async () => {
   assert(res.ok, `HTTP ${res.status}`);
   assert(data.success === true, "Payment not marked success");
 
-  // Verify user balance & tier upgraded to pro, and bonus vault unlocked
+  // Verify user balance & tier upgraded to pro, and bonus vault match-vested
   const uRes = await fetch(`${BASE}/api/user?id=${testUser.id}`);
   const uData = await uRes.json();
   assert(uData.user.tier === "pro", `Expected pro tier, got ${uData.user.tier}`);
-  assert(Number(uData.user.locked_bonus_tokens) === 0, "Bonus vault not unlocked to 0");
+  assert(Number(uData.user.locked_bonus_tokens) === 0, "Bonus vault not fully vested for 100M purchase");
   assert(Number(uData.user.balance_tokens) >= 102500000, "Tokens not credited");
 });
 

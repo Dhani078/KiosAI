@@ -1,5 +1,5 @@
 import { UPSTREAM_URL, UPSTREAM_KEY } from "./proxy-http";
-import { getModelPricing, ModelPricing } from "./model-pricing";
+import { ModelPricing } from "./model-pricing";
 
 export interface FailoverResult {
   stream: ReadableStream<Uint8Array>;
@@ -10,6 +10,7 @@ export interface FailoverResult {
 
 const RETRYABLE_STATUS_CODES = new Set([408, 429, 500, 502, 503, 504, 522, 524]);
 const TTFB_TIMEOUT_MS = 3500;
+const MID_STREAM_WATCHDOG_MS = 15000;
 
 const FALLBACK_MAP: Record<string, string[]> = {
   "tokenharbor/deepseek-v4.1-flash:free": [
@@ -34,9 +35,6 @@ export function getFallbackCandidates(modelId: string): string[] {
   return FALLBACK_MAP[modelId] || [];
 }
 
-/**
- * Resolves effective pricing ensuring fallback never overcharges the user.
- */
 export function resolveEffectivePricing(requested: ModelPricing, actual: ModelPricing): ModelPricing {
   return {
     input: String(Math.min(Number(requested.input) || 0, Number(actual.input) || 0)),
@@ -44,6 +42,14 @@ export function resolveEffectivePricing(requested: ModelPricing, actual: ModelPr
     cached: requested.cached,
     formatted: requested.formatted,
   };
+}
+
+async function readWithWatchdog<T>(promise: Promise<T>, ms: number): Promise<T> {
+  let timer: any;
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    timer = setTimeout(() => reject(new Error("MID_STREAM_IDLE_TIMEOUT")), ms);
+  });
+  return Promise.race([promise, timeoutPromise]).finally(() => clearTimeout(timer));
 }
 
 async function probeFirstChunk(
@@ -104,11 +110,16 @@ async function probeFirstChunk(
       },
       async pull(streamController) {
         try {
-          const { done, value } = await reader.read();
-          if (done) streamController.close();
-          else streamController.enqueue(value);
-        } catch (err) {
-          streamController.error(err);
+          const { done, value } = await readWithWatchdog(reader.read(), MID_STREAM_WATCHDOG_MS);
+          if (done) {
+            streamController.close();
+          } else if (value) {
+            streamController.enqueue(value);
+          }
+        } catch {
+          // Mid-stream hang watchdog: close cleanly to let stream-billing settle partial tokens
+          streamController.close();
+          await reader.cancel().catch(() => {});
         }
       },
       async cancel(reason) {
