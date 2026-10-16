@@ -8,6 +8,7 @@ import PlaygroundChat, { ChatMessage } from "./PlaygroundChat";
 import PlaygroundLocked from "./PlaygroundLocked";
 import { getModelPricing } from "@/lib/model-pricing";
 import { humanizeErrorMessage } from "@/lib/model-utils";
+import { PLAYGROUND_PRESETS } from "@/lib/prompt-presets";
 
 export function PlaygroundTab({
   models,
@@ -54,10 +55,6 @@ export function PlaygroundTab({
   const requiredTier = isAllowedForFree ? "free" : "pro";
   const pricing = getModelPricing(selectedModel);
 
-  useEffect(() => {
-    chatRef.current?.scrollTo({ top: chatRef.current.scrollHeight, behavior: "smooth" });
-  }, [messages, replying]);
-
   const send = async () => {
     if (!prompt.trim() || replying || isLocked) return;
     if (balance < 100) {
@@ -74,9 +71,8 @@ export function PlaygroundTab({
     try {
       const storedKey = typeof window !== "undefined" ? sessionStorage.getItem("kios_last_raw_key") : null;
       const apiKeyToUse = storedKey || activeKey;
-      if (!apiKeyToUse) {
-        throw new Error("Sesi API key belum siap. Silakan refresh halaman.");
-      }
+      if (!apiKeyToUse) throw new Error("Sesi API key belum siap. Silakan refresh halaman.");
+
       const payloadMessages = [
         ...(systemPrompt.trim() ? [{ role: "system", content: systemPrompt.trim() }] : []),
         { role: "user", content: userText },
@@ -84,10 +80,7 @@ export function PlaygroundTab({
 
       const res = await fetch("/v1/chat/completions", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${apiKeyToUse}`,
-        },
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKeyToUse}` },
         body: JSON.stringify({ model: selectedModel, messages: payloadMessages, stream: false }),
       });
 
@@ -143,10 +136,24 @@ export function PlaygroundTab({
       </div>
 
       {showSystem && (
-        <div style={{ padding: "10px 24px", background: "var(--canvas)", borderBottom: "1px solid var(--border)" }}>
-          <label htmlFor="sys-prompt" className="small-label" style={{ marginBottom: "4px", display: "block" }}>
-            SYSTEM PROMPT (INSTRUKSI SISTEM)
-          </label>
+        <div style={{ padding: "12px 24px", background: "var(--canvas)", borderBottom: "1px solid var(--border)", display: "flex", flexDirection: "column", gap: "8px" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <label htmlFor="sys-prompt" className="small-label">
+              SYSTEM PROMPT (INSTRUKSI SISTEM)
+            </label>
+            <select
+              onChange={(e) => {
+                const found = PLAYGROUND_PRESETS.find((p) => p.id === e.target.value);
+                if (found) setSystemPrompt(found.system);
+              }}
+              style={{ fontSize: "11px", padding: "2px 8px", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "4px", color: "var(--text)" }}
+            >
+              <option value="">Pilih Preset Persona...</option>
+              {PLAYGROUND_PRESETS.map((p) => (
+                <option key={p.id} value={p.id}>{p.name}</option>
+              ))}
+            </select>
+          </div>
           <input
             id="sys-prompt"
             value={systemPrompt}
