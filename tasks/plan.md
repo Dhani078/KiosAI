@@ -210,6 +210,10 @@
   - Benchmark latensi riil di `lib/model-latency.ts` (Flash ~240ms, Flagship ~650ms, Reasoning ~1.4s)
   - Badge indikator kecepatan respon di setiap kartu model `app/components/ModelsTab.tsx` (170 baris)
   - 100% lolos verifikasi: 98 file <= 200 LOC, tsc 0 error, 18/18 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
+- [x] Phase 47: One-Click Model Code Snippet Modal
+  - Modal integrasi instan `ModelSnippetModal.tsx` (106 baris) dengan cURL, Python, Node.js terisi ID model dan API key
+  - Tombol aksi `<Code2 />` pada setiap kartu model di `ModelsTab.tsx` (189 baris) dan dashboard wiring (199 baris)
+  - 100% lolos verifikasi: 99 file <= 200 LOC, tsc 0 error, 18/18 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
 
 
 

@@ -7,6 +7,14 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `c797359` — feat(models): add one-click code snippet modal generator to every model card
+
+**Generator Cuplikan Kode Satu-Klik pada Setiap Kartu Model**
+- **Modal Integrasi Cepat (`app/components/ModelSnippetModal.tsx`)**: Komponen modal baru (106 baris) yang langsung menghasilkan contoh kode integrasi cURL, Python, dan Node.js lengkap dengan ID model terpilih dan API key aktif pengguna.
+- **Aksi Satu-Klik di Katalog (`app/components/ModelsTab.tsx`)**: Setiap kartu model di katalog dashboard kini memiliki tombol ikon kode `<Code2 />` di samping tombol aksi utama. Mengklik tombol ini langsung memunculkan modal integrasi tanpa harus berpindah ke tab Dokumentasi atau menyalin string ID model secara manual.
+- **Kepatuhan Modularitas**: `DashboardApp.tsx` (199 baris), `ModelsTab.tsx` (189 baris), dan `ModelSnippetModal.tsx` (106 baris) patuh aturan $\le 200$ baris per file.
+- **Hasil Verifikasi**: 99/99 file kode sumber patuh $\le 200$ baris per file, tsc 0 error, E2E 11/11, pricing 18/18, chaos test PASS, billing deduction 3/3, UI audit 16/16.
+
 ### `d64d640` — feat(models): display real-time latency speed indicators on catalog model cards
 
 **Indikator Kecepatan & Latensi Riil pada Kartu Model**

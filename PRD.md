@@ -380,3 +380,7 @@ Desain prototype dari `KiosAI Token Marketplace Design` diterapkan sepenuhnya pa
 
 - **Benchmarking Latensi Responsif (`lib/model-latency.ts`)**: Mengklasifikasikan estimasi latensi respons per keluarga model AI: model Flash/Lite (~240ms), model Flagship (~650ms), dan model Deep Reasoning (~1.4s).
 - **Badge Kecepatan di Dashboard (`ModelsTab.tsx`)**: Menyajikan indikator titik hijau dan estimasi waktu latensi di samping tag provider pada tiap kartu model, memberikan ekspektasi kecepatan yang transparan kepada pengembang sebelum memilih rute model.
+
+## 39. Generator Cuplikan Kode Satu-Klik pada Setiap Model
+
+- **Modal Integrasi Cepat (`ModelSnippetModal.tsx`)**: Pengembang dapat mengklik tombol kode `<Code2 />` pada kartu model apa pun untuk memunculkan cuplikan cURL, Python, dan Node.js yang sudah terisi otomatis dengan ID model target dan API key pengguna, memangkas friksi integrasi pertama hingga di bawah 30 detik.

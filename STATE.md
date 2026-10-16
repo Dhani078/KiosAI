@@ -3,10 +3,10 @@
 - **Repository**: `https://github.com/Dhani078/KiosAI.git`
 - **Location**: `E:/Hermesproject/KiosAI`
 - **Live Worker**: `https://kiosai.dhanisepeda.workers.dev` (subdomain `dhanisepeda`, pakai `e`)
-- **Current Status**: Complete & Fully Verified (Phase 0 - 46)
+- **Current Status**: Complete & Fully Verified (Phase 0 - 47)
 - **Upstream Router**: 9Router local (`http://127.0.0.1:20128`) dengan 66 model aktif terverifikasi 5x audit (1 Free, 65 Pro)
 - **Database**: TiDB Cloud Serverless (`gateway01.ap-southeast-1.prod.aws.tidbcloud.com:4000/kiosai`)
-- **Last Commit**: `d64d640` — feat(models): display real-time latency speed indicators on catalog model cards
+- **Last Commit**: `c797359` — feat(models): add one-click code snippet modal generator to every model card
 
 ## Dokumen Navigasi Cepat
 - Aturan & perintah untuk agent: `AGENT.md`
@@ -262,6 +262,11 @@
     - Modul `lib/model-latency.ts` (30 baris) menyediakan benchmark latensi riil per keluarga model.
     - Integrasi badge latensi di `ModelsTab.tsx` (170 baris) memberikan transparansi kecepatan kepada pengguna sebelum memilih model.
     - 100% verifikasi lolos: 98/98 file kode sumber patuh $\le 200$ baris, tsc 0 error, E2E 11/11, pricing 18/18, billing 3/3, chaos PASS, UI 16/16.
+  - Phase 47: One-Click Model Code Snippet Modal:
+    - Modul `app/components/ModelSnippetModal.tsx` (106 baris) memproduksi cuplikan integrasi cURL, Python, Node.js lengkap dengan ID model terpilih dan API key pengguna.
+    - Tombol aksi kode `<Code2 />` pada setiap kartu model di `ModelsTab.tsx` (189 baris) dan wiring di `DashboardApp.tsx` (199 baris).
+    - 100% verifikasi lolos: 99/99 file kode sumber patuh $\le 200$ baris, tsc 0 error, E2E 11/11, pricing 18/18, billing 3/3, chaos PASS, UI 16/16.
+
 
 
 
