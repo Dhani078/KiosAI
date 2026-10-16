@@ -5,6 +5,7 @@ import { Search, Sparkles, CheckCircle2, Lock, X } from "lucide-react";
 import { Badge, Button } from "./ui";
 import { formatModelName } from "@/lib/model-utils";
 import { getModelPricing } from "@/lib/model-pricing";
+import { getEstimatedModelLatency } from "@/lib/model-latency";
 
 function getProvider(id: string): string {
   const s = (id || "").toLowerCase();
@@ -110,12 +111,16 @@ export function ModelsTab({
             const displayId = isAdmin ? m.id : displayName;
             const pricing = getModelPricing(m.id);
             const provider = getProvider(m.id);
+            const latency = getEstimatedModelLatency(m.id);
 
             return (
               <article key={m.id} className="panel" style={{ padding: "18px 20px", display: "flex", flexDirection: "column", gap: "12px", border: "1px solid var(--border)", borderRadius: "var(--radius-card)", background: "var(--surface)" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "8px" }}>
                   <div style={{ minWidth: 0, flex: 1 }}>
-                    <div style={{ fontSize: "10px", color: "var(--primary)", fontWeight: 600, letterSpacing: "0.5px", textTransform: "uppercase" }}>{provider}</div>
+                    <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                      <span style={{ fontSize: "10px", color: "var(--primary)", fontWeight: 600, letterSpacing: "0.5px", textTransform: "uppercase" }}>{provider}</span>
+                      <span style={{ fontSize: "10px", color: latency.status === "fast" ? "var(--success)" : "var(--text-muted)" }}>• {latency.label}</span>
+                    </div>
                     <h3 style={{ fontSize: "15px", fontWeight: 600, margin: "2px 0 0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={displayName}>{displayName}</h3>
                     <code style={{ fontSize: "11px", color: "var(--text-muted)", display: "block", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{displayId}</code>
                   </div>
