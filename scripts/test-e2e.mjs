@@ -75,17 +75,20 @@ await test("POST /api/keys", async () => {
   testKey = data.apiKey;
 });
 
+const postChat = (body) =>
+  fetch(`${BASE}/v1/chat/completions`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: "Bearer " + testKey },
+    body: JSON.stringify(body),
+  });
+
 // 5. Chat Completion (Non-Streaming & Model Alias)
 await test("POST /v1/chat/completions (Alias & Non-stream)", async () => {
   assert(testKey, "No test key");
-  const res = await fetch(`${BASE}/v1/chat/completions`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json", Authorization: "Bearer " + testKey },
-    body: JSON.stringify({
-      model: "atria", // tests resolveModelAlias: "atria" -> "atria/Atria-Dawn-Preview"
-      messages: [{ role: "user", content: "Halo KiosAI e2e" }],
-      max_tokens: 10,
-    }),
+  const res = await postChat({
+    model: "atria", // tests resolveModelAlias: "atria" -> "atria/Atria-Dawn-Preview"
+    messages: [{ role: "user", content: "Halo KiosAI e2e" }],
+    max_tokens: 10,
   });
   const data = await res.json();
   if (res.status === 503) {
@@ -102,15 +105,11 @@ await test("POST /v1/chat/completions (Alias & Non-stream)", async () => {
 // 6. Chat Completion (Streaming SSE)
 await test("POST /v1/chat/completions (Stream SSE)", async () => {
   assert(testKey, "No test key");
-  const res = await fetch(`${BASE}/v1/chat/completions`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json", Authorization: "Bearer " + testKey },
-    body: JSON.stringify({
-      model: "atria/Atria-Dawn-Preview",
-      messages: [{ role: "user", content: "Stream test" }],
-      max_tokens: 10,
-      stream: true,
-    }),
+  const res = await postChat({
+    model: "atria/Atria-Dawn-Preview",
+    messages: [{ role: "user", content: "Stream test" }],
+    max_tokens: 10,
+    stream: true,
   });
   if (res.status === 503) {
     const data = await res.json();
@@ -126,17 +125,10 @@ await test("POST /v1/chat/completions (Stream SSE)", async () => {
 // 7. Free Tier Gating (Free user blocked from non-free models)
 await test("Free Tier Gating (403 tier_restricted)", async () => {
   assert(testKey, "No test key");
-  const res = await fetch(`${BASE}/v1/chat/completions`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${testKey}`,
-    },
-    body: JSON.stringify({
-      model: "tokenharbor/deepseek-v4.1-flash:free",
-      messages: [{ role: "user", content: "Ping" }],
-      max_tokens: 5,
-    }),
+  const res = await postChat({
+    model: "tokenharbor/deepseek-v4.1-flash:free",
+    messages: [{ role: "user", content: "Ping" }],
+    max_tokens: 5,
   });
   assert(res.status === 403, `Expected 403, got ${res.status}`);
   const data = await res.json();
@@ -177,7 +169,19 @@ await test("POST /api/orders/pay (Payment Fulfillment)", async () => {
   assert(Number(uData.user.balance_tokens) > 2500000, "Tokens not credited");
 });
 
-// 10. Analytics & Usage Logs
+// 10. Pro Tier Access (Post-upgrade Pro Model with Alias)
+await test("POST /v1/chat/completions (Pro Model Accessible)", async () => {
+  const res = await postChat({
+    model: "deepseek-v4.1-flash",
+    messages: [{ role: "user", content: "Pro test" }],
+    max_tokens: 5,
+  });
+  if (res.status === 503) return; // Upstream temporary 503 permissible
+  assert(res.status !== 403, "Pro user should not receive 403 tier_restricted");
+  assert(res.ok, `HTTP ${res.status}`);
+});
+
+// 11. Analytics & Usage Logs
 await test("GET /api/analytics", async () => {
   assert(testUser, "No test user");
   const res = await fetch(`${BASE}/api/analytics?userId=${testUser.id}`);
