@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { validateApiKey, deductTokens, logUsage, isModelAllowedForTier } from "@/lib/keys";
-import { getCostRatio } from "@/lib/model-pricing";
-import { checkRateLimit } from "@/lib/ratelimit";
+import { calculateTokenCost } from "@/lib/model-pricing";
+import { checkRateLimit, acquireStreamSlot, releaseStreamSlot } from "@/lib/ratelimit";
 import { UPSTREAM_URL, UPSTREAM_KEY, errorResponse, parseUpstreamJson } from "@/lib/proxy-http";
 import { resolveModelAlias } from "@/lib/model-utils";
+import { createBilledStream } from "@/lib/stream-billing";
 
 export const runtime = "nodejs";
 
@@ -32,7 +33,12 @@ export async function POST(req: NextRequest) {
   };
 
   if (!rateLimit.allowed) {
-    return errorResponse(`Rate limit exceeded (${auth.key.rate_limit_per_min}/min). Tunggu ${rateLimit.resetSeconds}s.`, 429, "rate_limit_exceeded", { ...rateHeaders, "Retry-After": String(rateLimit.resetSeconds) });
+    return errorResponse(
+      `Rate limit exceeded (${auth.key.rate_limit_per_min}/min). Tunggu ${rateLimit.resetSeconds}s.`,
+      429,
+      "rate_limit_exceeded",
+      { ...rateHeaders, "Retry-After": String(rateLimit.resetSeconds) }
+    );
   }
 
   let body: any;
@@ -49,7 +55,7 @@ export async function POST(req: NextRequest) {
   const requestedModel = resolveModelAlias(rawModel);
   body.model = requestedModel;
 
-  // 2. Validate Allowed Models (on Key)
+  // Validate Allowed Models (on Key)
   if (auth.key.allowed_models) {
     try {
       const allowed: string[] = JSON.parse(auth.key.allowed_models);
@@ -60,21 +66,28 @@ export async function POST(req: NextRequest) {
           "model_forbidden"
         );
       }
-    } catch {
-      // Ignore parse error, allow fallback
-    }
+    } catch {}
   }
 
-  // 3. Validate Model Access
+  // Validate Model Access
   if (!isModelAllowedForTier(auth.user.tier, requestedModel)) {
-      return errorResponse(
-        `Model '${rawModel}' tidak tersedia di tier FREE. Model gratis hanya Atria Dawn. Beli paket Pro untuk membuka seluruh model AI.`,
-        403,
-        "tier_restricted",
-      );
-    }
+    return errorResponse(
+      `Model '${rawModel}' tidak tersedia di tier FREE. Model gratis hanya Atria Dawn. Beli paket Pro untuk membuka seluruh model AI.`,
+      403,
+      "tier_restricted"
+    );
+  }
 
   const isStream = Boolean(body.stream);
+  if (isStream && !acquireStreamSlot(auth.key.id, 3)) {
+    return errorResponse(
+      "Maksimal 3 stream simultan tercapai. Tunggu stream sebelumnya selesai.",
+      429,
+      "concurrent_stream_limit",
+      rateHeaders
+    );
+  }
+
   const targetUrl = `${UPSTREAM_URL}/v1/chat/completions`;
 
   try {
@@ -90,6 +103,7 @@ export async function POST(req: NextRequest) {
     });
 
     if (!upstreamRes.ok) {
+      if (isStream) releaseStreamSlot(auth.key.id);
       const errText = await upstreamRes.text();
       const latency = Date.now() - startTime;
       await logUsage({
@@ -99,54 +113,21 @@ export async function POST(req: NextRequest) {
       let upstreamMessage = errText.slice(0, 400);
       try {
         upstreamMessage = JSON.parse(errText)?.error?.message || upstreamMessage;
-      } catch {
-        // non-JSON error body — keep the raw text
-      }
+      } catch {}
       return errorResponse(`Upstream (${upstreamRes.status}): ${upstreamMessage}`, upstreamRes.status, "upstream_error");
     }
 
-    // 3. Handle Streaming Response
+    // Handle Streaming Response with Abort Protection
     if (isStream && upstreamRes.body) {
-      const reader = upstreamRes.body.getReader();
-      const decoder = new TextDecoder();
-      let buf = "";
-      let usage: { prompt_tokens?: number; completion_tokens?: number; total_tokens?: number } | null = null;
-      let deltas = 0;
-
-      const stream = new ReadableStream({
-        async pull(controller) {
-          const { done, value } = await reader.read();
-          if (done) {
-            controller.close();
-            // Bill real upstream usage (requested via stream_options.include_usage).
-            // ponytail: fallback to chunk count when upstream sends no usage; add tokenizer when that happens often.
-            const promptTokens = usage?.prompt_tokens ?? 15;
-            const completionTokens = usage?.completion_tokens ?? Math.max(1, deltas);
-            const totalTokens = usage?.total_tokens ?? promptTokens + completionTokens;
-            await deductTokens(auth.user!.id, totalTokens, getCostRatio(requestedModel));
-            await logUsage({
-              apiKeyId: auth.key!.id, userId: auth.user!.id, model: requestedModel,
-              promptTokens, completionTokens, latencyMs: Date.now() - startTime, statusCode: 200,
-            });
-            return;
-          }
-
-          buf += decoder.decode(value, { stream: true });
-          const lines = buf.split("\n");
-          buf = lines.pop() || "";
-          for (const line of lines) {
-            if (!line.startsWith("data: ") || line === "data: [DONE]") continue;
-            try {
-              const j = JSON.parse(line.slice(6));
-              if (j.usage) usage = j.usage;
-              if (j.choices?.[0]?.delta) deltas++;
-            } catch {}
-          }
-          controller.enqueue(value);
-        },
+      const billedStream = createBilledStream({
+        reader: upstreamRes.body.getReader(),
+        userId: auth.user.id,
+        keyId: auth.key.id,
+        model: requestedModel,
+        startTime,
       });
 
-      return new NextResponse(stream, {
+      return new NextResponse(billedStream, {
         headers: {
           "Content-Type": "text/event-stream; charset=utf-8",
           "Cache-Control": "no-cache, no-transform",
@@ -156,19 +137,19 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // 4. Handle Non-Streaming JSON Response
+    // Handle Non-Streaming JSON Response
     const rawText = await upstreamRes.text();
     const data = parseUpstreamJson(rawText);
     const promptTokens = data.usage?.prompt_tokens || 15;
     const completionTokens = data.usage?.completion_tokens || 35;
-    const totalTokens = data.usage?.total_tokens || promptTokens + completionTokens;
 
     const latency = Date.now() - startTime;
-        const deducted = await deductTokens(auth.user.id, totalTokens, getCostRatio(requestedModel));
-        await logUsage({
-          apiKeyId: auth.key.id, userId: auth.user.id, model: requestedModel,
-          promptTokens, completionTokens, latencyMs: latency, statusCode: 200,
-        });
+    const actualCost = calculateTokenCost(requestedModel, promptTokens, completionTokens);
+    const deducted = await deductTokens(auth.user.id, actualCost, 1.0);
+    await logUsage({
+      apiKeyId: auth.key.id, userId: auth.user.id, model: requestedModel,
+      promptTokens, completionTokens, latencyMs: latency, statusCode: 200,
+    });
 
     const isLowBalance = Number(auth.user.balance_tokens) - deducted < 20000;
     const finalHeaders = {
@@ -178,6 +159,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(data, { headers: finalHeaders });
   } catch (err: any) {
+    if (isStream) releaseStreamSlot(auth.key.id);
     return errorResponse(`Upstream error: ${err.message}`, 502, "bad_gateway");
   }
 }

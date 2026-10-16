@@ -42,3 +42,25 @@ export function checkRateLimit(keyId: string, limitPerMinute: number = 60): {
     resetSeconds: 60,
   };
 }
+
+// In-memory active stream tracker to prevent concurrent overdraft attacks
+const activeStreams = new Map<string, number>();
+
+export function acquireStreamSlot(keyId: string, maxConcurrent: number = 3): boolean {
+  const current = activeStreams.get(keyId) || 0;
+  if (current >= maxConcurrent) {
+    return false;
+  }
+  activeStreams.set(keyId, current + 1);
+  return true;
+}
+
+export function releaseStreamSlot(keyId: string): void {
+  const current = activeStreams.get(keyId) || 0;
+  if (current <= 1) {
+    activeStreams.delete(keyId);
+  } else {
+    activeStreams.set(keyId, current - 1);
+  }
+}
+

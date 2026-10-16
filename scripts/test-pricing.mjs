@@ -4,7 +4,7 @@
  * Run: npm run test:pricing
  */
 import assert from "node:assert/strict";
-import { getModelPricing, getCostRatio } from "../lib/model-pricing.ts";
+import { getModelPricing, getCostRatio, getDirectionalRatios, calculateTokenCost } from "../lib/model-pricing.ts";
 
 const cases = [
   ["atria/Atria-Dawn-Preview", 0.05],
@@ -32,4 +32,18 @@ for (const [id, expected] of cases) {
 assert.equal(Math.round(100000 * getCostRatio("tokenharbor/deepseek-v4.1-flash:free")), 100000);
 // Free tier is cheap, flagship is not.
 assert.ok(getCostRatio("atria/Atria-Dawn-Preview") < getCostRatio("anthropic/claude-opus-4"));
-console.log(`OK — ${cases.length + 2} pricing checks passed`);
+
+// Directional token cost checks (Input vs Output asymmetry)
+const deepseekRatios = getDirectionalRatios("deepseek-v4.1-flash");
+assert.ok(Math.abs((deepseekRatios.inputRatio + deepseekRatios.outputRatio) - 1.0) < 1e-6);
+
+const balancedCost = calculateTokenCost("deepseek-v4.1-flash", 1000, 1000);
+assert.equal(balancedCost, 1000);
+
+const heavyPromptCost = calculateTokenCost("deepseek-v4.1-flash", 10000, 100);
+assert.equal(heavyPromptCost, 2051);
+
+const sonnetCost = calculateTokenCost("anthropic/claude-3.7-sonnet", 10000, 100);
+assert.equal(sonnetCost, 22993);
+
+console.log(`OK — ${cases.length + 6} pricing & directional cost checks passed`);

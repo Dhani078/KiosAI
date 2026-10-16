@@ -17,7 +17,7 @@ export function DocsTab({
   isAdmin?: boolean;
   onCopy: (t: string) => void;
 }) {
-  const [codeTab, setCodeTab] = useState<"cURL" | "Python" | "Node.js">("cURL");
+  const [codeTab, setCodeTab] = useState<"cURL" | "Python" | "Node.js" | "Cline / .env">("cURL");
   const [selectedDocModel, setSelectedDocModel] = useState("atria/Atria-Dawn-Preview");
   const [search, setSearch] = useState("");
   const displayKey = activeKey || "kios-YOUR_API_KEY";
@@ -25,7 +25,7 @@ export function DocsTab({
 
   const codeSnippets = {
     cURL: `curl ${baseUrl}/chat/completions \\
-  -H "Authorization: Bearer ${displayKey}" \\
+  -H "Authorization: Bearer ***" \\
   -H "Content-Type: application/json" \\
   -d '{
     "model": "${selectedDocModel}",
@@ -47,7 +47,7 @@ print(response.choices[0].message.content)`,
     "Node.js": `import OpenAI from "openai";
 
 const client = new OpenAI({
-  apiKey: "${displayKey}",
+  apiKey: ***
   baseURL: "${baseUrl}"
 });
 
@@ -57,6 +57,10 @@ const response = await client.chat.completions.create({
 });
 
 console.log(response.choices[0].message.content);`,
+    "Cline / .env": `# Konfigurasi VS Code (Cline / Roo Code / Next.js AI SDK)
+OPENAI_BASE_URL="${baseUrl}"
+OPENAI_API_KEY="${displayKey}"
+MODEL="${selectedDocModel}"`,
   };
 
   const currentCode = codeSnippets[codeTab];
@@ -85,7 +89,7 @@ console.log(response.choices[0].message.content);`,
       <section className="code-panel">
         <div className="code-tabs">
           <div className="code-tab-list" role="tablist">
-            {(["cURL", "Python", "Node.js"] as const).map((t) => (
+            {(["cURL", "Python", "Node.js", "Cline / .env"] as const).map((t) => (
               <button
                 key={t}
                 className={codeTab === t ? "active" : ""}

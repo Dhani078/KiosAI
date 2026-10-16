@@ -58,14 +58,48 @@ export function getModelPricing(modelId: string): ModelPricing {
 }
 
 /** Baseline = DeepSeek Flash ($0.27 in + $1.10 out). 1 ratio == 1 token dipotong. */
-const BASELINE_RATE = 1.37;
+export const BASELINE_RATE = 1.37;
+
+export interface DirectionalRatios {
+  inputRatio: number;
+  outputRatio: number;
+}
 
 /**
- * Rasio pemotongan saldo, diturunkan dari harga $(input+output) yang sama dengan
- * yang dirender di kartu model — supaya angka di UI dan angka yang dipotong tidak
- * pernah bisa berbeda. Floor 0.05 = jaring anti-abuse untuk model $0 (Atria).
- * ponytail: linear (bukan blended per-direction); pisahkan in/out kalau margin
- * per-model perlu presisi tinggi.
+ * Rasio input dan output terpisah per model AI relatif terhadap baseline.
+ * Memastikan beban context besar (coding/RAG) tidak diovercharge dan
+ * output generation panjang tercover dengan margin yang tepat.
+ */
+export function getDirectionalRatios(modelId: string): DirectionalRatios {
+  const p = getModelPricing(modelId);
+  const inputUsd = Number(p.input) || 0;
+  const outputUsd = Number(p.output) || 0;
+
+  if (inputUsd === 0 && outputUsd === 0) {
+    return { inputRatio: 0.05, outputRatio: 0.05 };
+  }
+
+  const inputRatio = Math.max(0.025, inputUsd / BASELINE_RATE);
+  const outputRatio = Math.max(0.025, outputUsd / BASELINE_RATE);
+  return { inputRatio, outputRatio };
+}
+
+/**
+ * Menghitung biaya token riil yang dipotong dari saldo pengguna secara directional.
+ */
+export function calculateTokenCost(
+  modelId: string,
+  promptTokens: number,
+  completionTokens: number
+): number {
+  const { inputRatio, outputRatio } = getDirectionalRatios(modelId);
+  const cost = promptTokens * inputRatio + completionTokens * outputRatio;
+  return Math.max(1, Math.round(cost));
+}
+
+/**
+ * Rasio pemotongan saldo gabungan, diturunkan dari harga $(input+output).
+ * Digunakan untuk estimasi kartu UI dan kompatibilitas sistem lama.
  */
 export function getCostRatio(modelId: string): number {
   const p = getModelPricing(modelId);
