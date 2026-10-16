@@ -9,7 +9,7 @@ Dokumen ini dirancang agar setiap sesi AI atau pengembang dapat melanjutkan peke
 | Komponen | Status | Keterangan |
 |---|---|---|
 | **Repository** | Clean, Up-to-Date | `https://github.com/Dhani078/KiosAI.git` (Branch `main`) |
-| **Commit Terakhir** | `8bf2e69` | Feat(edge): add priority scheduler, telemetry rollup, code-aware prompt normalizer, and chaos test |
+| **Commit Terakhir** | `84cc214` | Fix(core): patch bonus vault arbitrage, sse chunk framing distortion, vision memory bloat, and mid-stream watchdog |
 | **Worker Live** | `healthy` | `https://kiosai.dhanisepeda.workers.dev` (Subdomain `dhanisepeda` dengan huruf 'e') |
 | **Database** | `connected` | TiDB Cloud Serverless (AWS Tokyo `ap-southeast-1` / `ap-northeast-1`) |
 | **Upstream 9Router** | `connected` | `http://127.0.0.1:20128` (65 model terverifikasi 5x audit, 1 Free, 64 Pro) |

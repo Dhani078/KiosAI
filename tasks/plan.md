@@ -168,6 +168,13 @@
   - Code-Fence-Aware Prompt Normalizer (`lib/prompt-normalizer.ts`): proteksi 100% blok kode markdown, sorting rekursif schema tools
   - Chaos Load Test Runner (`scripts/chaos-load-test.mjs`, `npm run test:chaos`): uji stres 25 klien konkuren dengan 40% abort dan validasi invarian saldo
   - 100% lolos verifikasi: 95 file <= 200 LOC, 17/17 pricing, 11/11 E2E, chaos test PASS, 3/3 billing, 16/16 UI audits
+- [x] Phase 38: Deep Forensic Patches F-01 to F-07
+  - F-01: Match-vesting proporsional (`LEAST(locked_bonus_tokens, tokens_purchased)`) di `orders/pay` & `payment/webhook`
+  - F-02: Akurasi stream billing di `lib/stream-billing.ts` dengan line buffer utuh & ekstraksi murni content/reasoning/tool_calls
+  - F-03: Base64 Large Blob Fingerprinting di `lib/prompt-normalizer.ts` (>4KB dipotong hash 64-byte) mencegah OOM 128 MB
+  - F-04 & F-07: Telemetri anti-hotspot PK `(model_id, window_start)` di TiDB, cap 64 entri di RAM, try-finally flush lock
+  - F-05: Inactivity watchdog 15 detik di `lib/failover-router.ts` menangani mid-stream silent hang
+  - 100% lolos verifikasi: 95 file <= 200 LOC, 17/17 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
 
 
 

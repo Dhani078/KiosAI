@@ -336,3 +336,11 @@ Desain prototype dari `KiosAI Token Marketplace Design` diterapkan sepenuhnya pa
 - **Agregasi Ring Buffer di RAM**: Metrik inferensi (p50, p95, p99 TTFB, success, failover, cache hit) diringkas per 10 detik di memori V8 dan di-flush via multi-row `INSERT ... ON DUPLICATE KEY UPDATE` ke tabel `telemetry_rollup_10s`. Memangkas 99% konsumsi Request Units (RU) TiDB.
 - **Code-Fence-Aware Normalizer**: Menyeragamkan format teks prompt untuk cache key tanpa memodifikasi satu byte pun isi di dalam blok kode markdown (` ```...``` `).
 - **Chaos Load Testing**: Runner `scripts/chaos-load-test.mjs` memvalidasi sistem di bawah beban 25+ koneksi konkuren dengan 40% client abort tanpa error 500 dan tanpa kebocoran saldo.
+
+## 30. Hardening Forensik F-01 s/d F-07
+
+- **F-01 (Match-Vesting Bonus Vault)**: Bonus dicairkan proporsional 1:1 (`LEAST(locked_bonus_tokens, tokens_purchased)`) saat top-up QRIS, menutup celah eksploitasi arbitrase modal Rp10.000 untuk menyedot model mahal Claude 3.7 Sonnet.
+- **F-02 (Akurasi Stream Billing)**: Perhitungan karakter saat abort murni mengekstrak isi `delta.content`, `delta.reasoning_content` (DeepSeek R1), dan `delta.tool_calls` via line buffer utuh, membuang bingkai metadata JSON SSE.
+- **F-03 (Proteksi Memori V8 Vision)**: String blob Base64 >4KB diringkas menjadi fingerprint deterministik 64 byte mencegah Error 1102 (OOM 128 MB).
+- **F-04 & F-07 (Telemetri Anti-Hotspot TiKV)**: Primary Key tabel `telemetry_rollup_10s` menggunakan urutan `(model_id, window_start)` untuk mendistribusikan beban tulis merata ke Region TiKV. Flag flush dibungkus blok `finally` untuk mencegah permanent lockup.
+- **F-05 (Mid-Stream Watchdog 15 Detik)**: Pembacaan stream pasca-chunk pertama dipantau watchdog 15 detik untuk memutus koneksi menggantung secara anggun dan menagih parsial.

@@ -240,6 +240,14 @@
 - [x] Task 29.4: Build Chaos Load Test Runner (`scripts/chaos-load-test.mjs`, `npm run test:chaos`) with 25 concurrent clients & 40% aborts
 - [x] Task 29.5: Verify 100% test pass: 95 files <= 200 LOC, 17/17 pricing, 11/11 E2E, chaos test PASS, 3/3 billing, 16/16 UI checks
 
+## Phase 30 (Forensic Hardening F-01 to F-07 - Completed)
+- [x] Task 30.1: Patch F-01 bonus vault match-vesting in `orders/pay` & `payment/webhook`
+- [x] Task 30.2: Patch F-02 pure content character extraction in `lib/stream-billing.ts`
+- [x] Task 30.3: Patch F-03 Vision Base64 large blob fingerprinting in `lib/prompt-normalizer.ts`
+- [x] Task 30.4: Patch F-04/F-07 anti-hotspot PK `(model_id, window_start)` in TiDB and try-finally flush lock in `lib/edge-telemetry.ts`
+- [x] Task 30.5: Patch F-05 mid-stream inactivity watchdog (15s) in `lib/failover-router.ts`
+- [x] Task 30.6: Verify 100% test pass: 95 files <= 200 LOC, 17/17 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
+
 
 
 

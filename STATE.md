@@ -3,10 +3,10 @@
 - **Repository**: `https://github.com/Dhani078/KiosAI.git`
 - **Location**: `E:/Hermesproject/KiosAI`
 - **Live Worker**: `https://kiosai.dhanisepeda.workers.dev` (subdomain `dhanisepeda`, pakai `e`)
-- **Current Status**: Complete & Fully Verified (Phase 0 - 37)
+- **Current Status**: Complete & Fully Verified (Phase 0 - 38)
 - **Upstream Router**: 9Router local (`http://127.0.0.1:20128`) dengan 65 model aktif terverifikasi 5x audit (1 Free, 64 Pro)
 - **Database**: TiDB Cloud Serverless (`gateway01.ap-southeast-1.prod.aws.tidbcloud.com:4000/kiosai`)
-- **Last Commit**: `8bf2e69` — feat(edge): add priority scheduler, telemetry rollup, code-aware prompt normalizer, and chaos test
+- **Last Commit**: `84cc214` — fix(core): patch bonus vault arbitrage, sse chunk framing distortion, vision memory bloat, and mid-stream watchdog
 
 ## Dokumen Navigasi Cepat
 - Aturan & perintah untuk agent: `AGENT.md`
@@ -220,6 +220,14 @@
     - Code-Fence-Aware Canonical Normalizer (`lib/prompt-normalizer.ts`): normalisasi whitespace & sort key JSON tanpa menyentuh blok kode markdown.
     - Chaos Load Test Runner (`scripts/chaos-load-test.mjs`, `npm run test:chaos`): uji stres konkurensi dengan 40% abort dan validasi 0 unhandled 500 & saldo non-negatif.
     - 100% verifikasi lolos: 95/95 file kode sumber patuh $\le 200$ baris, tsc 0 error, E2E 11/11, chaos PASS, pricing 17/17, billing 3/3, UI 16/16.
+  - Phase 38: Deep Forensic Patches F-01 to F-07:
+    - F-01: Match-vesting proporsional (`LEAST(locked_bonus_tokens, tokens_purchased)`) di `orders/pay` & `payment/webhook` mencegah eksploitasi arbitrase bonus Rp10.000 pada model Pro mahal.
+    - F-02: Akurasi stream billing di `lib/stream-billing.ts` dengan line buffer utuh & ekstraksi murni `delta.content`, `delta.reasoning_content`, dan `delta.tool_calls` tanpa terdistorsi bingkai SSE.
+    - F-03: Proteksi memori V8 Vision di `lib/prompt-normalizer.ts` merangkum Base64 >4KB menjadi fingerprint 64-byte mencegah OOM 128 MB (Error 1102).
+    - F-04 & F-07: Telemetri anti-hotspot TiKV dengan PK `(model_id, window_start)`, hard cap 64 entri di RAM, dan pembersihan `flushInFlight` di blok `finally`.
+    - F-05: Inactivity watchdog 15 detik di `lib/failover-router.ts` menangani mid-stream silent hang tanpa membiarkan koneksi menggantung selamanya.
+    - 100% verifikasi lolos: 95/95 file kode sumber patuh $\le 200$ baris, tsc 0 error, E2E 11/11, pricing 17/17, billing 3/3, chaos PASS, UI 16/16.
+
 
 
 

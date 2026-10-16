@@ -7,6 +7,16 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `84cc214` — fix(core): patch bonus vault arbitrage, sse chunk framing distortion, vision memory bloat, and mid-stream watchdog
+
+**Patch Forensik F-01 s/d F-07: Anti-Arbitrase Bonus, Parser SSE Konten Murni, Proteksi Memori Vision, dan Watchdog Stream**
+- **F-01 (Anti-Arbitrase Bonus Vault)**: Di `orders/pay/route.ts` dan `payment/webhook/route.ts`, pencairan `locked_bonus_tokens` menggunakan formula match-vesting proporsional (`LEAST(locked_bonus_tokens, tokens_purchased)`). Mencegah bot bermodal Rp10.000 mencairkan langsung 2,25M token untuk menguras model mahal Claude 3.7 Sonnet.
+- **F-02 (Akurasi Stream Billing)**: Di `lib/stream-billing.ts`, menerapkan line buffer utuh yang tahan terhadap pembelahan TCP chunk. Karakter yang dihitung saat stream abort murni mengekstrak isi `delta.content`, `delta.reasoning_content` (DeepSeek R1), dan `delta.tool_calls` tanpa menghitung bingkai metadata JSON SSE.
+- **F-03 (Proteksi Memori V8 Vision)**: Di `lib/prompt-normalizer.ts`, string blob besar (>4096 byte seperti Base64 `data:image/...`) diringkas menjadi fingerprint deterministik 64 byte. Mencegah alokasi memori berlebih 100+ MB yang memicu Cloudflare Error 1102 (OOM 128 MB).
+- **F-04 & F-07 (Telemetri Anti-Hotspot & Anti-Lockup)**: Di `lib/edge-telemetry.ts`, membatasi ukuran Map maksimal 64 entri (FIFO eviction) untuk mencegah kebocoran memori, membungkus `flushInFlight = false` di dalam blok `finally`, dan merekonstruksi skema TiDB `telemetry_rollup_10s` dengan Primary Key `(model_id, window_start)` untuk mendistribusikan beban tulis merata ke seluruh Region TiKV.
+- **F-05 (Mid-Stream Watchdog 15 Detik)**: Di `lib/failover-router.ts`, pembacaan stream downstream pasca-chunk pertama diproteksi watchdog 15 detik. Jika upstream mengalami silent hang di tengah stream, koneksi ditutup secara anggun dan saldo tetap terhitung akurat sesuai chunk yang sudah terkirim.
+- **Hasil Verifikasi**: 95/95 file kode sumber patuh $\le 200$ baris per file, tsc 0 error, E2E 11/11, pricing 17/17, chaos test PASS, billing deduction 3/3, UI audit 16/16.
+
 ### `8bf2e69` — feat(edge): add priority scheduler, telemetry rollup, code-aware prompt normalizer, and chaos test
 
 **Scheduler Jalur Prioritas, Ring Buffer Telemetri 10 Detik, Normalisasi Prompt Aman Kode, dan Chaos Test**
