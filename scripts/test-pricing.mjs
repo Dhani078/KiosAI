@@ -9,6 +9,7 @@ import { getModelPricing, getCostRatio } from "../lib/model-pricing.ts";
 const cases = [
   ["atria/Atria-Dawn-Preview", 0.05],
   ["tokenharbor/deepseek-v4.1-flash:free", 1.0],
+  ["deepseek-v4.1-flash", 1.0],
   ["anthropic/claude-3.7-sonnet", 13.14],
   ["openai/gpt-4o", 9.12],
   ["google/gemini-2.0-flash", 0.27],

@@ -21,7 +21,7 @@ export const MODELS: ModelItem[] = [
     strengths: ["Free Tier", "Trial Cepat", "Multi-turn Chat"],
   },
   {
-    id: "tokenharbor/deepseek-v4.1-flash:free",
+    id: "deepseek-v4.1-flash",
     name: "DeepSeek V4.1 Flash",
     provider: "DeepSeek",
     context: "128k",

@@ -59,6 +59,7 @@ export function ModelsSection() {
                     {m.provider}
                   </span>
                   <h3 style={{ fontSize: "17px", fontWeight: 600, marginTop: "2px" }}>{m.name}</h3>
+                  <code style={{ fontSize: "11px", color: "var(--text-muted)", display: "block", marginTop: "2px" }}>{m.id}</code>
                 </div>
                 <span
                   style={{
