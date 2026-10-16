@@ -88,7 +88,7 @@ try {
   const url = (process.env.NINEROUTER_URL || "").replace(/\/$/, "");
   const res = await fetch(`${url}/v1/models`, {
     headers: { Authorization: `Bearer ${process.env.NINEROUTER_API_KEY_2 || ""}` },
-    signal: AbortSignal.timeout(20_000),
+    signal: AbortSignal.timeout(60_000),
   });
   if (res.ok) {
     const data = await res.json();
