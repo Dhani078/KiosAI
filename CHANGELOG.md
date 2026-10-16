@@ -7,6 +7,24 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `8bf2e69` — feat(edge): add priority scheduler, telemetry rollup, code-aware prompt normalizer, and chaos test
+
+**Scheduler Jalur Prioritas, Ring Buffer Telemetri 10 Detik, Normalisasi Prompt Aman Kode, dan Chaos Test**
+- **Dual-Lane Priority Token Bucket (`lib/priority-scheduler.ts`)**:
+  - Klasifikasi otomatis trafik `INTERACTIVE` (Cline, Roo Code, Cursor, Playground) vs `BULK_BOT` (WhatsApp bot, scraper).
+  - Reserva 40% slot konkurensi khusus untuk jalur interaktif (0ms delay).
+  - Menerapkan Edge Micro-Pacing (150-1200ms sleep di Edge tanpa memakan CPU Workers) untuk bot yang menembak beruntun, mencegah monopoli upstream.
+- **Asynchronous Telemetry Rollup (`lib/edge-telemetry.ts`)**:
+  - Mengagregasi metrik p50, p95, p99 TTFB, jumlah sukses, failover, dan cache hit dalam tumbling window 10 detik di RAM V8.
+  - Multi-row `INSERT ... ON DUPLICATE KEY UPDATE` ke tabel TiDB `telemetry_rollup_10s`. Memangkas operasi tulis database hingga 99% (menghemat ratusan juta Request Units per bulan).
+- **Code-Fence-Aware Prompt Normalizer (`lib/prompt-normalizer.ts`)**:
+  - Menormalisasi variasi whitespace dan format tanpa mengubah satu byte pun isi blok kode markdown (` ```...``` ` dan ` `...` `).
+  - Mengurutkan kunci objek JSON secara rekursif agar urutan schema tools menghasilkan hash deterministik identik.
+- **Chaos Load Test Runner (`scripts/chaos-load-test.mjs`, `npm run test:chaos`)**:
+  - Mensimulasikan klien paralel dengan 40% client abort di tengah stream.
+  - Memvalidasi 3 invarian: 0 unhandled 500 error, saldo pengguna selalu $\ge 0$, dan seluruh slot konkurensi terlepas bersih.
+- **Hasil Verifikasi**: 95/95 file kode sumber patuh $\le 200$ baris per file, TypeScript 0 error, E2E 11/11 lolos, chaos test lolos, pricing 17/17 lolos, billing deduction lolos, UI audit 16/16 lolos.
+
 ### `3852957` — feat(core): implement bonus vault funnel, pre-ttfb failover router, and edge prompt caching
 
 **Funnel Brankas Bonus Anti-Ternak Akun, Router Failover Pre-TTFB, dan Edge Exact Prompt Caching**

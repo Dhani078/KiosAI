@@ -162,6 +162,12 @@
   - Edge Exact Prompt Caching di `lib/edge-cache.ts` (deterministic prompt caching di `caches.default` diskon 80%, tenant-isolated)
   - Tampilan Dual-Wallet di `AnalyticsCards.tsx` & error 402 menuju `/dashboard` (bukan 404 `/billing`)
   - 100% lolos verifikasi: 91 file <= 200 LOC, 17/17 pricing, 11/11 E2E, 3/3 billing, 16/16 UI audits
+- [x] Phase 37: Priority Scheduler, Telemetry Rollup, Prompt Normalizer & Chaos Test
+  - Dual-Lane Priority Scheduler (`lib/priority-scheduler.ts`): klasifikasi `INTERACTIVE` vs `BULK_BOT`, reserva 40% slot, micro-pacing 150-1200ms
+  - Asynchronous Telemetry Rollup (`lib/edge-telemetry.ts`): ring buffer tumbling window 10 detik di RAM, batch insert p50/p95/p99 ke `telemetry_rollup_10s` (hemat 99% RU)
+  - Code-Fence-Aware Prompt Normalizer (`lib/prompt-normalizer.ts`): proteksi 100% blok kode markdown, sorting rekursif schema tools
+  - Chaos Load Test Runner (`scripts/chaos-load-test.mjs`, `npm run test:chaos`): uji stres 25 klien konkuren dengan 40% abort dan validasi invarian saldo
+  - 100% lolos verifikasi: 95 file <= 200 LOC, 17/17 pricing, 11/11 E2E, chaos test PASS, 3/3 billing, 16/16 UI audits
 
 
 

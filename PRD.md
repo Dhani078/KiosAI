@@ -324,3 +324,15 @@ Desain prototype dari `KiosAI Token Marketplace Design` diterapkan sepenuhnya pa
 - **Pre-TTFB Probe**: Gateway menahan stream awal selama 12 detik sampai chunk pertama tiba. Jika upstream primer mengembalikan status retryable (429, 500, 502, 503, 504) atau error SSE, request dialihkan ke model cadangan terverifikasi secara transparan.
 - **Price-Cap Protection**: Biaya yang dipotong tidak akan pernah melebihi tarif model yang diminta: $\min(\text{Harga Primer}, \text{Harga Cadangan})$.
 - **Edge Exact Prompt Caching**: Payload deterministik (`temperature: 0`) di-cache di `caches.default` Cloudflare dengan kunci terisolasi tenant `SHA-256(tenant:${userId})`. Cache hit diberi diskon token 80% (user bayar 20%), dengan latensi <15ms dan biaya upstream Rp0.
+
+## 28. Dual-Lane Priority Scheduler (Interactive vs Bulk Bot)
+
+- **Klasifikasi Trafik**: Mendeteksi signature header IDE (`cline`, `roo-code`, `cursor`, `playground`) dan frekuensi burst (<8 req/10s) sebagai jalur `INTERACTIVE`, sedangkan request masif/non-streaming diklasifikasikan sebagai `BULK_BOT`.
+- **Reserva Konkurensi 40%**: Minimal 40% slot konkurensi direservasi eksklusif untuk jalur interaktif (0ms delay).
+- **Edge Micro-Pacing**: Bot massal yang menghabiskan token bucket ditahan sementara 150-1200ms di Edge (wall-clock sleep di RAM V8 tanpa memakan kuota CPU Workers), meredam lonjakan beban upstream.
+
+## 29. Asynchronous Telemetry Rollup (10s Tumbling Window) & Code Normalization
+
+- **Agregasi Ring Buffer di RAM**: Metrik inferensi (p50, p95, p99 TTFB, success, failover, cache hit) diringkas per 10 detik di memori V8 dan di-flush via multi-row `INSERT ... ON DUPLICATE KEY UPDATE` ke tabel `telemetry_rollup_10s`. Memangkas 99% konsumsi Request Units (RU) TiDB.
+- **Code-Fence-Aware Normalizer**: Menyeragamkan format teks prompt untuk cache key tanpa memodifikasi satu byte pun isi di dalam blok kode markdown (` ```...``` `).
+- **Chaos Load Testing**: Runner `scripts/chaos-load-test.mjs` memvalidasi sistem di bawah beban 25+ koneksi konkuren dengan 40% client abort tanpa error 500 dan tanpa kebocoran saldo.

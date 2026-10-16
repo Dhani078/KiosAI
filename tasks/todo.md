@@ -233,6 +233,13 @@
 - [x] Task 28.4: Add Dual-Wallet display in `AnalyticsCards.tsx` and route 402 errors to `/dashboard`
 - [x] Task 28.5: Verify 100% test pass: 91 files <= 200 LOC, 17/17 pricing, 11/11 E2E, 3/3 billing, 16/16 UI checks
 
+## Phase 29 (Priority Scheduler, Telemetry Rollup, Prompt Normalizer & Chaos Test - Completed)
+- [x] Task 29.1: Implement Dual-Lane Priority Scheduler (`lib/priority-scheduler.ts`) with 40% interactive reservation & edge micro-pacing
+- [x] Task 29.2: Implement Asynchronous Telemetry Rollup (`lib/edge-telemetry.ts`) with 10s tumbling window and TiDB `telemetry_rollup_10s` table
+- [x] Task 29.3: Implement Code-Fence-Aware Prompt Normalizer (`lib/prompt-normalizer.ts`) and wire into `lib/edge-cache.ts`
+- [x] Task 29.4: Build Chaos Load Test Runner (`scripts/chaos-load-test.mjs`, `npm run test:chaos`) with 25 concurrent clients & 40% aborts
+- [x] Task 29.5: Verify 100% test pass: 95 files <= 200 LOC, 17/17 pricing, 11/11 E2E, chaos test PASS, 3/3 billing, 16/16 UI checks
+
 
 
 
