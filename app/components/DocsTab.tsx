@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Terminal, Copy, Check, Search, X } from "lucide-react";
+import { Terminal, Copy, Check, Search, X, Download } from "lucide-react";
 import { Badge, Button } from "./ui";
 import { formatModelName } from "@/lib/model-utils";
 import { getModelPricing } from "@/lib/model-pricing";
+import EnvExportModal from "./EnvExportModal";
 
 export function DocsTab({
   models,
@@ -20,6 +21,7 @@ export function DocsTab({
   const [codeTab, setCodeTab] = useState<"cURL" | "Python" | "Node.js" | "Cline / .env">("cURL");
   const [selectedDocModel, setSelectedDocModel] = useState("atria/Atria-Dawn-Preview");
   const [search, setSearch] = useState("");
+  const [showEnvModal, setShowEnvModal] = useState(false);
   const displayKey = activeKey || "kios-YOUR_API_KEY";
   const baseUrl = typeof window !== "undefined" ? `${window.location.origin}/v1` : "http://localhost:3000/v1";
 
@@ -81,9 +83,12 @@ MODEL="${selectedDocModel}"`,
       <div className="base-url">
         <span>BASE URL</span>
         <code>{baseUrl}</code>
-        <Button kind="ghost" onClick={() => onCopy(baseUrl)} aria-label="Salin base URL">
-          <Copy size={16} />
-        </Button>
+        <div style={{ display: "flex", gap: "6px" }}>
+          <Button kind="ghost" onClick={() => onCopy(baseUrl)} aria-label="Salin base URL"><Copy size={16} /></Button>
+          <Button kind="secondary" style={{ height: "30px", fontSize: "11px", padding: "0 10px" }} onClick={() => setShowEnvModal(true)}>
+            <Download size={14} /> .env
+          </Button>
+        </div>
       </div>
 
       <section className="code-panel">
@@ -149,12 +154,7 @@ MODEL="${selectedDocModel}"`,
                 className="doc-model"
                 key={m.id}
                 onClick={() => setSelectedDocModel(m.id)}
-                style={{
-                  cursor: "pointer",
-                  border: isSelected ? "1px solid var(--primary)" : undefined,
-                  background: isSelected ? "rgba(242, 140, 56, 0.08)" : undefined,
-                  transition: "all 0.15s ease",
-                }}
+                style={{ cursor: "pointer", border: isSelected ? "1px solid var(--primary)" : undefined, background: isSelected ? "rgba(242, 140, 56, 0.08)" : undefined, transition: "all 0.15s ease" }}
               >
                 <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                   {isSelected && <Check size={14} style={{ color: "var(--primary)" }} />}
@@ -173,18 +173,24 @@ MODEL="${selectedDocModel}"`,
         <h2>Menangani respons error</h2>
         <div>
           <code>429 · rate_limit_exceeded</code>
-          <p>
-            Terlalu banyak permintaan dalam 60 detik. Cek header <strong>Retry-After</strong> sebelum mencoba lagi.
-          </p>
+          <p>Terlalu banyak permintaan dalam 60 detik. Cek header <strong>Retry-After</strong> sebelum mencoba lagi.</p>
         </div>
         <div>
           <code>401 / 402 · invalid_key / balance_exhausted</code>
-          <p>
-            API Key salah atau saldo token habis. Top up paket di menu Beli Token untuk melanjutkan pemakaian.
-          </p>
+          <p>API Key salah atau saldo token habis. Top up paket di menu Beli Token untuk melanjutkan pemakaian.</p>
         </div>
       </div>
+
+      <EnvExportModal
+        isOpen={showEnvModal}
+        onClose={() => setShowEnvModal(false)}
+        baseUrl={baseUrl}
+        activeKey={activeKey}
+        selectedModel={selectedDocModel}
+        onCopy={onCopy}
+      />
     </>
   );
 }
+
 export default DocsTab;
