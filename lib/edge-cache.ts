@@ -1,4 +1,5 @@
 import crypto from "crypto";
+import { buildCanonicalPayloadString } from "./prompt-normalizer";
 
 export interface CacheMeta {
   promptTokens: number;
@@ -24,16 +25,7 @@ function sha256Hex(input: string): string {
 }
 
 export function buildCanonicalCacheKey(userId: string, body: Record<string, unknown>): string {
-  const canonicalPayload = JSON.stringify({
-    model: body.model,
-    messages: body.messages,
-    tools: body.tools ?? null,
-    tool_choice: body.tool_choice ?? null,
-    response_format: body.response_format ?? null,
-    seed: body.seed ?? null,
-    stream: Boolean(body.stream),
-  });
-
+  const canonicalPayload = buildCanonicalPayloadString(body);
   const tenantHash = sha256Hex(`tenant:${userId}`);
   const payloadHash = sha256Hex(canonicalPayload);
   const safeModel = String(body.model || "unknown").replace(/[^a-zA-Z0-9._-]/g, "_");

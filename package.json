@@ -16,6 +16,7 @@
     "migrate:tiers": "node --env-file=.env scripts/migrate-tiers.mjs",
     "audit:ui": "node scripts/audit-ui.mjs",
     "audit:dashboard": "node scripts/audit-dashboard.mjs",
+    "test:chaos": "node --env-file=.env scripts/chaos-load-test.mjs",
     "tunnel": "node scripts/tunnel-sync.mjs"
   },
   "dependencies": {

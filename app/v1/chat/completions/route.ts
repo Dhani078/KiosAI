@@ -7,6 +7,8 @@ import { resolveModelAlias } from "@/lib/model-utils";
 import { createBilledStream } from "@/lib/stream-billing";
 import { buildQuotaExhaustedError } from "@/lib/bonus-vault";
 import { executeResilientStream } from "@/lib/failover-router";
+import { evaluatePriorityAdmission } from "@/lib/priority-scheduler";
+import { recordInferenceTelemetry } from "@/lib/edge-telemetry";
 import {
   isCacheEligible,
   buildCanonicalCacheKey,
@@ -66,6 +68,12 @@ export async function POST(req: NextRequest) {
     return errorResponse(`Model '${rawModel}' tidak tersedia di tier FREE. Model gratis hanya Atria Dawn.`, 403, "tier_restricted");
   }
 
+  // Priority Scheduler & Edge Micro-Pacing
+  const admission = await evaluatePriorityAdmission(auth.key.id, req.headers, Boolean(body.stream), 3);
+  if (!admission.allowed) {
+    return errorResponse(`Priority queue saturated. Coba lagi dalam ${admission.retryAfterSeconds || 1}s.`, 429, "rate_limit_exceeded", { ...rateHeaders, "Retry-After": String(admission.retryAfterSeconds || 1) });
+  }
+
   // Edge Exact Prompt Caching Lookup
   const cacheEligible = isCacheEligible(body, req.headers.get("cache-control"));
   const cacheKey = cacheEligible ? buildCanonicalCacheKey(auth.user.id, body) : null;
@@ -74,34 +82,29 @@ export async function POST(req: NextRequest) {
     if (cached) {
       const cost = Math.max(1, Math.round(calculateTokenCost(requestedModel, cached.meta.promptTokens, cached.meta.completionTokens) * CACHE_HIT_DISCOUNT_MULTIPLIER));
       await deductTokens(auth.user.id, cost, 1.0);
-      await logUsage({
-        apiKeyId: auth.key.id, userId: auth.user.id, model: requestedModel,
-        promptTokens: cached.meta.promptTokens, completionTokens: cached.meta.completionTokens,
-        latencyMs: Date.now() - startTime, statusCode: 200,
-      });
+      await logUsage({ apiKeyId: auth.key.id, userId: auth.user.id, model: requestedModel, promptTokens: cached.meta.promptTokens, completionTokens: cached.meta.completionTokens, latencyMs: Date.now() - startTime, statusCode: 200 });
+      recordInferenceTelemetry({ modelId: requestedModel, ttfbMs: Date.now() - startTime, statusCode: 200, didFailover: false, cacheHit: true });
       return cached.response;
     }
   }
 
   const isStream = Boolean(body.stream);
   if (isStream) {
-    if (!acquireStreamSlot(auth.key.id, 3)) {
-      return errorResponse("Maksimal 3 stream simultan tercapai. Tunggu stream selesai.", 429, "concurrent_stream_limit", rateHeaders);
+    if (!acquireStreamSlot(auth.key.id, admission.effectiveMaxConcurrent)) {
+      return errorResponse("Maksimal stream simultan tercapai. Tunggu stream selesai.", 429, "concurrent_stream_limit", rateHeaders);
     }
     try {
       const result = await executeResilientStream(requestedModel, body);
       let outStream = result.stream;
       if (cacheKey) outStream = wrapStreamForEdgeCaching(outStream, cacheKey);
 
-      const billed = createBilledStream({
-        reader: outStream.getReader(), userId: auth.user.id, keyId: auth.key.id,
-        model: result.effectiveModel, startTime,
-      });
+      recordInferenceTelemetry({ modelId: requestedModel, ttfbMs: Date.now() - startTime, statusCode: 200, didFailover: result.didFailover, cacheHit: false });
+      const billed = createBilledStream({ reader: outStream.getReader(), userId: auth.user.id, keyId: auth.key.id, model: result.effectiveModel, startTime });
 
       return new NextResponse(billed, {
         headers: {
           "Content-Type": "text/event-stream; charset=utf-8", "Cache-Control": "no-cache, no-transform", Connection: "keep-alive",
-          ...rateHeaders, ...(result.didFailover ? { "X-Kios-Failover": "true", "X-Kios-Model-Used": result.usedModel } : {}),
+          ...rateHeaders, "X-Kios-Lane": admission.lane, ...(result.didFailover ? { "X-Kios-Failover": "true", "X-Kios-Model-Used": result.usedModel } : {}),
         },
       });
     } catch (err: any) {
@@ -132,9 +135,10 @@ export async function POST(req: NextRequest) {
     const actualCost = calculateTokenCost(requestedModel, pTokens, cTokens);
     const deducted = await deductTokens(auth.user.id, actualCost, 1.0);
     await logUsage({ apiKeyId: auth.key.id, userId: auth.user.id, model: requestedModel, promptTokens: pTokens, completionTokens: cTokens, latencyMs: Date.now() - startTime, statusCode: 200 });
+    recordInferenceTelemetry({ modelId: requestedModel, ttfbMs: Date.now() - startTime, statusCode: 200, didFailover: false, cacheHit: false });
 
     const isLow = Number(auth.user.balance_tokens) - deducted < 20000;
-    return NextResponse.json(data, { headers: { ...rateHeaders, ...(isLow ? { "X-Quota-Warning": "low_balance" } : {}) } });
+    return NextResponse.json(data, { headers: { ...rateHeaders, "X-Kios-Lane": admission.lane, ...(isLow ? { "X-Quota-Warning": "low_balance" } : {}) } });
   } catch (err: any) {
     return errorResponse(`Upstream error: ${err.message}`, 502, "upstream_error");
   }
