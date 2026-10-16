@@ -175,6 +175,10 @@
   - F-04 & F-07: Telemetri anti-hotspot PK `(model_id, window_start)` di TiDB, cap 64 entri di RAM, try-finally flush lock
   - F-05: Inactivity watchdog 15 detik di `lib/failover-router.ts` menangani mid-stream silent hang
   - 100% lolos verifikasi: 95 file <= 200 LOC, 17/17 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
+- [x] Phase 39: Prototype Pollution Protection & Strict Cloudflare Edge Guard
+  - Sanitasi `Object.create(null)` & filter `__proto__`, `constructor`, `prototype` di `lib/prompt-normalizer.ts`
+  - Validasi header `cf-ray` di `app/v1/chat/completions/route.ts` untuk memblokir direct edge bypass di lingkungan produksi
+  - 100% lolos verifikasi: 95 file <= 200 LOC, tsc 0 error, 17/17 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
 
 
 

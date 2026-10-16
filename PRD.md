@@ -344,3 +344,8 @@ Desain prototype dari `KiosAI Token Marketplace Design` diterapkan sepenuhnya pa
 - **F-03 (Proteksi Memori V8 Vision)**: String blob Base64 >4KB diringkas menjadi fingerprint deterministik 64 byte mencegah Error 1102 (OOM 128 MB).
 - **F-04 & F-07 (Telemetri Anti-Hotspot TiKV)**: Primary Key tabel `telemetry_rollup_10s` menggunakan urutan `(model_id, window_start)` untuk mendistribusikan beban tulis merata ke Region TiKV. Flag flush dibungkus blok `finally` untuk mencegah permanent lockup.
 - **F-05 (Mid-Stream Watchdog 15 Detik)**: Pembacaan stream pasca-chunk pertama dipantau watchdog 15 detik untuk memutus koneksi menggantung secara anggun dan menagih parsial.
+
+## 31. Proteksi Prototype Pollution & Strict Cloudflare Edge Guard
+
+- **Anti-Prototype-Pollution**: Objek normalisasi payload dibuat dengan `Object.create(null)` serta memfilter properti `__proto__`, `constructor`, `prototype`.
+- **Strict Cloudflare Edge Guard**: Endpoint `/v1/chat/completions` menolak request produksi yang tidak melewati edge resmi Cloudflare (memvalidasi header `cf-ray`), menutup celah bypass dan IP spoofing.

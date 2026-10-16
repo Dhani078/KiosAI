@@ -248,6 +248,11 @@
 - [x] Task 30.5: Patch F-05 mid-stream inactivity watchdog (15s) in `lib/failover-router.ts`
 - [x] Task 30.6: Verify 100% test pass: 95 files <= 200 LOC, 17/17 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
 
+## Phase 31 (Prototype Pollution Protection & Edge Guard - Completed)
+- [x] Task 31.1: Sanitize prototype pollution keys (`__proto__`, `constructor`, `prototype`) in `lib/prompt-normalizer.ts`
+- [x] Task 31.2: Add strict `cf-ray` header check in `app/v1/chat/completions/route.ts`
+- [x] Task 31.3: Verify 100% test pass: 95 files <= 200 LOC, 17/17 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
+
 
 
 

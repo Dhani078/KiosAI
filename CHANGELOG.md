@@ -7,6 +7,13 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `e014511` — feat(security): add prototype pollution protection and strict cloudflare edge guard
+
+**Proteksi Prototype Pollution di Edge V8 dan Kunci Header Strict Cloudflare Edge**
+- **Anti-Prototype-Pollution (`lib/prompt-normalizer.ts`)**: Objek canonicalization dibangun di atas `Object.create(null)` dengan penyaringan eksplisit terhadap kunci berbahaya (`__proto__`, `constructor`, `prototype`). Mencegah eksploitasi keracunan prototipe objek di memori global V8 isolate.
+- **Strict Cloudflare Edge Guard (`app/v1/chat/completions/route.ts`)**: Pada lingkungan produksi, request diwajibkan menyertakan header resmi `cf-ray` dari Cloudflare Edge (melewati pengecualian aman untuk `localhost` / `127.0.0.1` dev). Menutup celah penyerang melakukan direct IP spoofing atau membypass proteksi edge proxy.
+- **Hasil Verifikasi**: 95/95 file kode sumber patuh $\le 200$ baris per file, tsc 0 error, E2E 11/11, pricing 17/17, chaos test PASS, billing deduction 3/3, UI audit 16/16.
+
 ### `84cc214` — fix(core): patch bonus vault arbitrage, sse chunk framing distortion, vision memory bloat, and mid-stream watchdog
 
 **Patch Forensik F-01 s/d F-07: Anti-Arbitrase Bonus, Parser SSE Konten Murni, Proteksi Memori Vision, dan Watchdog Stream**
