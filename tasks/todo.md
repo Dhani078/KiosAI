@@ -219,6 +219,13 @@
 - [x] Task 26.2: Refactor `postChat` helper to maintain strict <= 200 lines limit (195 lines)
 - [x] Task 26.3: Verify all 11/11 tests PASS in `npm run test:e2e`
 
+## Phase 27 (Directional Pricing, Stream Abort Billing & Cline Preset - Completed)
+- [x] Task 27.1: Implement directional ratios & token cost calculation (`getDirectionalRatios`, `calculateTokenCost` di `lib/model-pricing.ts`)
+- [x] Task 27.2: Create `lib/stream-billing.ts` with stream abort `cancel()` handler to bill delivered characters
+- [x] Task 27.3: Add concurrent stream limiter (`acquireStreamSlot`/`releaseStreamSlot` di `lib/ratelimit.ts`) max 3 stream
+- [x] Task 27.4: Add `Cline / .env` preset tab in `app/components/DocsTab.tsx`
+- [x] Task 27.5: Expand `test-pricing.mjs` to 17 assertions, ensure all 88 files <= 200 lines, 100% tests pass
+
 
 
 

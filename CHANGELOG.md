@@ -7,6 +7,15 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `0bd7361` — feat(billing): implement directional token pricing, stream abort protection, concurrent stream limiter, and cline env preset
+
+**Pemisahan Tarif Input vs Output, Proteksi Stream Abort, Limiter Stream Konkuren, dan Preset Cline .env**
+- **Directional Token Pricing (`lib/model-pricing.ts`)**: Memisahkan kalkulasi tarif prompt vs completion secara asimetris via `getDirectionalRatios` dan `calculateTokenCost`. Token prompt dibobotkan dengan `inputUsd / 1.37` dan token output dengan `outputUsd / 1.37`. Mencegah overcharging 5-6x pada beban konteks besar (coding/RAG) dan melindungi margin penyedia pada respons panjang.
+- **Proteksi Eksploitasi Stream Abort (`lib/stream-billing.ts`)**: Membuat helper stream billing terpisah yang menangani event `cancel()` saat klien memutus koneksi di tengah jalan (stream abort). Saldo tetap terpotong proporsional berdasarkan karakter yang sudah terkirim (`accumulatedChars / 3.5`), mencegah kebocoran kuota gratis.
+- **Limiter Stream Konkuren (`lib/ratelimit.ts`)**: Menambahkan `acquireStreamSlot` dan `releaseStreamSlot` in-memory untuk membatasi maksimal 3 stream SSE simultan per API key. Mencegah race condition saldo terkuras/overdraft akibat puluhan request konkuren paralel.
+- **Preset VS Code Cline / Roo Code / .env (`app/components/DocsTab.tsx`)**: Menambahkan tab baru `Cline / .env` yang langsung menyajikan format variabel lingkungan `OPENAI_BASE_URL`, `OPENAI_API_KEY`, dan `MODEL` siap salin untuk integrasi coding agent instan.
+- **Ekspansi Test Suite**: 17 pricing & directional assertions di `scripts/test-pricing.mjs` lolos 100%. Kepatuhan modularitas: 88/88 file kode sumber patuh $\le 200$ baris per file (`stream-billing.ts` 87 baris, `route.ts` 149 baris, `DocsTab.tsx` 190 baris).
+
 ### `7393a9e` — test(e2e): expand suite to 11 tests with post-upgrade pro alias access verification
 
 **Pengujian E2E Menyeluruh 11 Langkah dengan Akses Model Pro Alias**

@@ -3,10 +3,10 @@
 - **Repository**: `https://github.com/Dhani078/KiosAI.git`
 - **Location**: `E:/Hermesproject/KiosAI`
 - **Live Worker**: `https://kiosai.dhanisepeda.workers.dev` (subdomain `dhanisepeda`, pakai `e`)
-- **Current Status**: Complete & Fully Verified (Phase 0 - 34)
+- **Current Status**: Complete & Fully Verified (Phase 0 - 35)
 - **Upstream Router**: 9Router local (`http://127.0.0.1:20128`) dengan 65 model aktif terverifikasi 5x audit (1 Free, 64 Pro)
 - **Database**: TiDB Cloud Serverless (`gateway01.ap-southeast-1.prod.aws.tidbcloud.com:4000/kiosai`)
-- **Last Commit**: `7393a9e` — test(e2e): expand suite to 11 tests with post-upgrade pro alias access verification
+- **Last Commit**: `0bd7361` — feat(billing): implement directional token pricing, stream abort protection, concurrent stream limiter, and cline env preset
 
 ## Dokumen Navigasi Cepat
 - Aturan & perintah untuk agent: `AGENT.md`
@@ -202,4 +202,11 @@
     - Penambahan langkah ke-10 pada `scripts/test-e2e.mjs` untuk memvalidasi akses model Pro via alias `deepseek-v4.1-flash` pasca-upgrade.
     - Refactoring helper `postChat` untuk dedup payload dan membatasi ukuran file pada 195 baris (patuh $\le 200$ baris).
     - 100% verifikasi lolos (E2E 11/11, pricing 13/13, billing 3/3, UI 16/16).
+  - Phase 35: Directional Token Pricing, Stream Abort Protection & Cline Preset:
+    - Pemisahan formula rasio tarif input vs output (`getDirectionalRatios`, `calculateTokenCost` di `lib/model-pricing.ts`) untuk kalkulasi biaya yang adil pada beban coding/RAG.
+    - Helper `lib/stream-billing.ts` (87 baris) menangani event `cancel()` pada stream reader agar token terpotong proporsional saat klien memutus koneksi di tengah jalan (anti-stream abort exploit).
+    - Limiter stream simultan di `lib/ratelimit.ts` (`acquireStreamSlot`/`releaseStreamSlot`) membatasi max 3 concurrent stream per key (anti-race condition overdraft).
+    - Tab `Cline / .env` di `DocsTab.tsx` (190 baris) untuk konfigurasi instan VS Code Cline, Roo Code, dan Next.js AI SDK.
+    - 100% verifikasi lolos (E2E 11/11, pricing 17/17, billing 3/3, UI 16/16, 88/88 file sumber $\le 200$ baris).
+
 

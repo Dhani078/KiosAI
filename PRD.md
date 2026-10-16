@@ -267,12 +267,17 @@ Desain prototype dari `KiosAI Token Marketplace Design` diterapkan sepenuhnya pa
 - Fitur: pencarian teks, filter tier (Semua/Free/Pro), counter dinamis, indikator kunci untuk model yang belum accessible, dan tombol aksi kontekstual (Beli Paket Pro atau Coba di Playground).
 - Menampilkan nama bersih via `formatModelName` (misal `deepseek-v4.1-flash`) tetapi tetap memakai `m.id` lengkap sebagai value.
 
-## 20. Arsitektur Billing 2-Tier & Rasio Tarif $/1M
+## 20. Arsitektur Billing 2-Tier & Rasio Tarif $/1M Directional
 
 - **Struktur Tier**: Hanya 2 tier: `free` (bonus 2.500.000 token, model Atria Dawn) dan `pro` (seluruh model AI aktif).
-- **Rasio Biaya (`getCostRatio`)**: Diturunkan dari tarif Input + Output per 1M token dibagi baseline DeepSeek Flash ($1.37):
-  $$\text{Rasio} = \max\left(0.05,\ \frac{\text{Input } \$ + \text{Output } \$}{1.37}\right)$$
-- Tidak ada pengali `1.0×/2.0×/4.0×` tersembunyi. Angka yang tertera di kartu model persis sama dengan yang dipotong di TiDB.
+- **Kalkulasi Biaya Terpisah Input vs Output (`calculateTokenCost`)**:
+  $$\text{Input Ratio} = \max\left(0.025,\ \frac{\text{Input } \$}{1.37}\right)$$
+  $$\text{Output Ratio} = \max\left(0.025,\ \frac{\text{Output } \$}{1.37}\right)$$
+  $$\text{Total Deduksi} = \lceil (\text{Prompt Tokens} \times \text{Input Ratio}) + (\text{Completion Tokens} \times \text{Output Ratio}) \rceil$$
+- Mencegah overcharging pada prompt konteks besar (coding/RAG) dan melindungi margin pada output panjang.
+- **Proteksi Stream Abort & Concurrency**:
+  - Event `cancel()` pada stream reader (`lib/stream-billing.ts`) menjamin token tetap dipotong proporsional dari karakter yang sudah terkirim jika koneksi diputus klien sebelum stream selesai.
+  - Concurrency limiter (`acquireStreamSlot`/`releaseStreamSlot` di `lib/ratelimit.ts`) membatasi maksimal 3 stream simultan per API key untuk mencegah race condition overdraft saldo.
 
 ## 21. Maxxmode Statistik & Observabilitas
 

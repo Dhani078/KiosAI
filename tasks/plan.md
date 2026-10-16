@@ -150,6 +150,12 @@
   - Penambahan langkah ke-10 pada `scripts/test-e2e.mjs` untuk verifikasi akses model Pro via alias setelah order QRIS settlement
   - Refactoring helper `postChat` agar file tetap ringkas (195 baris <= 200 LOC)
   - 100% kelulusan E2E 11/11 lolos semua skenario integration test
+- [x] Phase 35: Directional Pricing, Stream Abort Billing & Cline Preset
+  - Formula tarif terpisah prompt vs completion (`getDirectionalRatios`, `calculateTokenCost` di `lib/model-pricing.ts`)
+  - Helper `lib/stream-billing.ts` (87 baris) menangani event `cancel()` reader agar token terpotong proporsional saat stream terputus prematur
+  - Limiter concurrency di `lib/ratelimit.ts` (`acquireStreamSlot`/`releaseStreamSlot`) membatasi max 3 concurrent stream per key
+  - Preset konfigurasi `Cline / .env` di `DocsTab.tsx` untuk integrasi instan coding agent
+  - 100% lolos verifikasi: 17/17 pricing checks, 11/11 E2E, 3/3 billing, 16/16 UI audits, 88 file <= 200 LOC
 
 
 
