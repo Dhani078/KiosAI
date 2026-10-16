@@ -3,10 +3,10 @@
 - **Repository**: `https://github.com/Dhani078/KiosAI.git`
 - **Location**: `E:/Hermesproject/KiosAI`
 - **Live Worker**: `https://kiosai.dhanisepeda.workers.dev` (subdomain `dhanisepeda`, pakai `e`)
-- **Current Status**: Complete & Fully Verified (Phase 0 - 42)
+- **Current Status**: Complete & Fully Verified (Phase 0 - 43)
 - **Upstream Router**: 9Router local (`http://127.0.0.1:20128`) dengan 65 model aktif terverifikasi 5x audit (1 Free, 64 Pro)
 - **Database**: TiDB Cloud Serverless (`gateway01.ap-southeast-1.prod.aws.tidbcloud.com:4000/kiosai`)
-- **Last Commit**: `719a75a` — feat(keys): add per-key spend token limit cap to protect developer budget
+- **Last Commit**: `d48892a` — feat(models): prioritize Gemini family at top of Pro models in dashboard and landing catalog
 
 ## Dokumen Navigasi Cepat
 - Aturan & perintah untuk agent: `AGENT.md`
@@ -244,6 +244,11 @@
     - Pelacakan akumulasi otomatis di `lib/keys.ts` & `lib/stream-billing.ts` untuk streaming maupun non-streaming.
     - Selektor Spend Cap di `KeyModal.tsx` (184 baris) dan indikator kuota di `KeysTab.tsx` (147 baris).
     - 100% verifikasi lolos: 97/97 file kode sumber patuh $\le 200$ baris, tsc 0 error, E2E 11/11, pricing 17/17, billing 3/3, chaos PASS, UI 16/16.
+  - Phase 43: Gemini Family Prioritization in Model Catalog:
+    - Di `app/components/ModelsTab.tsx` (165 baris), algoritma sorting model memprioritaskan keluarga Gemini di posisi paling atas model Pro setelah model Free.
+    - Di `app/landing/components/modelCatalogData.ts`, kartu Gemini 3.8 Flash (High) dan Gemini 2.0 Flash diposisikan langsung di samping model Atria.
+    - 100% verifikasi lolos: 97/97 file kode sumber patuh $\le 200$ baris, tsc 0 error, E2E 11/11, pricing 17/17, billing 3/3, chaos PASS, UI 16/16.
+
 
 
 

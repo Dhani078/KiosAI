@@ -269,6 +269,11 @@
 - [x] Task 34.3: Add spend limit selector in `KeyModal.tsx` and badges in `KeysTab.tsx`
 - [x] Task 34.4: Verify 100% test pass: 97 files <= 200 LOC, 17/17 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
 
+## Phase 35 (Gemini Family Prioritization - Completed)
+- [x] Task 35.1: Sort Gemini family at top of Pro models in `app/components/ModelsTab.tsx`
+- [x] Task 35.2: Reorder Gemini models right next to Atria in `app/landing/components/modelCatalogData.ts`
+- [x] Task 35.3: Verify 100% test pass: 97 files <= 200 LOC, 17/17 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
+
 
 
 

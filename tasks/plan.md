@@ -192,6 +192,10 @@
   - Pelacakan kuota terpakai per key di `lib/stream-billing.ts` dan `/v1/chat/completions`
   - Kontrol UI pembatasan kuota di `KeyModal.tsx` dan indikator `KeysTab.tsx`
   - 100% lolos verifikasi: 97 file <= 200 LOC, tsc 0 error, 17/17 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
+- [x] Phase 43: Gemini Family Prioritization in Model Catalog
+  - Prioritaskan keluarga Google Gemini di posisi teratas model Pro pada `app/components/ModelsTab.tsx`
+  - Showcase Gemini 3.8 Flash (High) dan Gemini 2.0 Flash di samping Atria pada `modelCatalogData.ts`
+  - 100% lolos verifikasi: 97 file <= 200 LOC, tsc 0 error, 17/17 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
 
 
 

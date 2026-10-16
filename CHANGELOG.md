@@ -7,6 +7,13 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `d48892a` — feat(models): prioritize Gemini family at top of Pro models in dashboard and landing catalog
+
+**Prioritas Model Gemini di Posisi Teratas Katalog Pro**
+- **Sorting Katalog Dashboard (`app/components/ModelsTab.tsx`)**: Mengatur urutan tampilan kartu model AI agar keluarga Google Gemini (`ag/gemini-3.8-flash-high`, `google/gemini-2.0-flash`) berada di urutan teratas model Pro setelah model Free (Atria), memudahkan pengguna menemukan model Gemini berkecepatan tinggi dengan kuota melimpah.
+- **Showcase Landing Page (`app/landing/components/modelCatalogData.ts`)**: Memposisikan kartu Gemini 3.8 Flash (High) dan Gemini 2.0 Flash tepat setelah Atria Dawn di grid landing page.
+- **Hasil Verifikasi**: 97/97 file kode sumber patuh $\le 200$ baris per file (`ModelsTab.tsx` 165 baris), tsc 0 error, E2E 11/11, pricing 17/17, chaos test PASS, billing deduction 3/3, UI audit 16/16.
+
 ### `719a75a` — feat(keys): add per-key spend token limit cap to protect developer budget
 
 **Batas Maksimal Pengeluaran Token per API Key (Spend Cap)**
