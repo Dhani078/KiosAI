@@ -156,6 +156,12 @@
   - Limiter concurrency di `lib/ratelimit.ts` (`acquireStreamSlot`/`releaseStreamSlot`) membatasi max 3 concurrent stream per key
   - Preset konfigurasi `Cline / .env` di `DocsTab.tsx` untuk integrasi instan coding agent
   - 100% lolos verifikasi: 17/17 pricing checks, 11/11 E2E, 3/3 billing, 16/16 UI audits, 88 file <= 200 LOC
+- [x] Phase 36: Bonus Vault Funnel, Pre-TTFB Failover Router & Edge Exact Prompt Caching
+  - Bonus Vault Funnel di `lib/bonus-vault.ts` (250k instan + 2.25M terkunci, unlock otomatis di pembayaran QRIS pertama)
+  - Pre-TTFB First-Chunk Probe Failover di `lib/failover-router.ts` (anti-429/503/timeout, price-cap min(requested, actual))
+  - Edge Exact Prompt Caching di `lib/edge-cache.ts` (deterministic prompt caching di `caches.default` diskon 80%, tenant-isolated)
+  - Tampilan Dual-Wallet di `AnalyticsCards.tsx` & error 402 menuju `/dashboard` (bukan 404 `/billing`)
+  - 100% lolos verifikasi: 91 file <= 200 LOC, 17/17 pricing, 11/11 E2E, 3/3 billing, 16/16 UI audits
 
 
 

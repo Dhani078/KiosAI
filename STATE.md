@@ -3,10 +3,10 @@
 - **Repository**: `https://github.com/Dhani078/KiosAI.git`
 - **Location**: `E:/Hermesproject/KiosAI`
 - **Live Worker**: `https://kiosai.dhanisepeda.workers.dev` (subdomain `dhanisepeda`, pakai `e`)
-- **Current Status**: Complete & Fully Verified (Phase 0 - 35)
+- **Current Status**: Complete & Fully Verified (Phase 0 - 36)
 - **Upstream Router**: 9Router local (`http://127.0.0.1:20128`) dengan 65 model aktif terverifikasi 5x audit (1 Free, 64 Pro)
 - **Database**: TiDB Cloud Serverless (`gateway01.ap-southeast-1.prod.aws.tidbcloud.com:4000/kiosai`)
-- **Last Commit**: `0bd7361` — feat(billing): implement directional token pricing, stream abort protection, concurrent stream limiter, and cline env preset
+- **Last Commit**: `3852957` — feat(core): implement bonus vault funnel, pre-ttfb failover router, and edge prompt caching
 
 ## Dokumen Navigasi Cepat
 - Aturan & perintah untuk agent: `AGENT.md`
@@ -208,5 +208,12 @@
     - Limiter stream simultan di `lib/ratelimit.ts` (`acquireStreamSlot`/`releaseStreamSlot`) membatasi max 3 concurrent stream per key (anti-race condition overdraft).
     - Tab `Cline / .env` di `DocsTab.tsx` (190 baris) untuk konfigurasi instan VS Code Cline, Roo Code, dan Next.js AI SDK.
     - 100% verifikasi lolos (E2E 11/11, pricing 17/17, billing 3/3, UI 16/16, 88/88 file sumber $\le 200$ baris).
+  - Phase 36: Bonus Vault Funnel, Pre-TTFB Failover Router & Edge Exact Prompt Caching:
+    - Implementasi Funnel Brankas Bonus anti-ternak akun (`lib/bonus-vault.ts`): pendaftaran baru dapat 250.000 token aktif instan + 2.250.000 token terkunci di brankas (`locked_bonus_tokens`). Top-up pertama via QRIS (mulai Rp10.000) mencairkan seluruh bonus dan membuka model Pro.
+    - Tampilan Dual-Wallet di `AnalyticsCards.tsx` menampilkan Saldo Aktif dan badge Brankas Bonus `🔒`.
+    - Pre-TTFB First-Chunk Probe Failover (`lib/failover-router.ts`): probe respons upstream dengan timeout dan deteksi HTTP 429/500/502/503/504 serta soft-error SSE. Auto-failover transparan ke model cadangan dengan price-cap protection $\min(\text{requested}, \text{actual})$.
+    - Edge Exact Prompt Caching (`lib/edge-cache.ts`): caching deterministik di `caches.default` Cloudflare dengan isolasi tenant `SHA-256(tenant:${userId})` dan diskon token 80% (user bayar 20%).
+    - 100% verifikasi lolos: 91/91 file kode sumber patuh $\le 200$ baris, tsc 0 error, E2E 11/11, pricing 17/17, billing 3/3, UI 16/16.
+
 
 

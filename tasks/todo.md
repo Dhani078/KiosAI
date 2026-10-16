@@ -226,6 +226,13 @@
 - [x] Task 27.4: Add `Cline / .env` preset tab in `app/components/DocsTab.tsx`
 - [x] Task 27.5: Expand `test-pricing.mjs` to 17 assertions, ensure all 88 files <= 200 lines, 100% tests pass
 
+## Phase 28 (Bonus Vault Funnel, Pre-TTFB Failover Router & Edge Exact Prompt Caching - Completed)
+- [x] Task 28.1: Implement Bonus Vault Funnel (`lib/bonus-vault.ts`, `app/api/auth/register`, `orders/pay`, `payment/webhook`) with 250k initial + 2.25M locked bonus
+- [x] Task 28.2: Implement Pre-TTFB First-Chunk Probe Failover (`lib/failover-router.ts`) with anti-429/503 and price-cap protection
+- [x] Task 28.3: Implement Edge Exact Prompt Caching (`lib/edge-cache.ts`) with 80% discount and tenant-isolated SHA-256 keys
+- [x] Task 28.4: Add Dual-Wallet display in `AnalyticsCards.tsx` and route 402 errors to `/dashboard`
+- [x] Task 28.5: Verify 100% test pass: 91 files <= 200 LOC, 17/17 pricing, 11/11 E2E, 3/3 billing, 16/16 UI checks
+
 
 
 

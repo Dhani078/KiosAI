@@ -7,6 +7,23 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `3852957` — feat(core): implement bonus vault funnel, pre-ttfb failover router, and edge prompt caching
+
+**Funnel Brankas Bonus Anti-Ternak Akun, Router Failover Pre-TTFB, dan Edge Exact Prompt Caching**
+- **Funnel Brankas Bonus Anti-Ternak Akun (`lib/bonus-vault.ts`, `app/api/auth/register`, `orders/pay`, `payment/webhook`)**:
+  - Pendaftaran baru kini menerima 250.000 token aktif instan (cukup untuk pengujian integrasi) dan 2.250.000 token disimpan di Brankas Terkunci (`locked_bonus_tokens`).
+  - Top-up pertama via QRIS (mulai Rp10.000) otomatis mencairkan 2.250.000 token bonus ke saldo aktif dan membuka seluruh model Pro secara atomik.
+  - Penanganan error 402 kuota habis (`buildQuotaExhaustedError`) membimbing developer langsung ke `/dashboard` (menghindari error 404 `/billing`).
+  - Tampilan Dual-Wallet di `AnalyticsCards.tsx` menampilkan Saldo Aktif dan badge Brankas Bonus `🔒`.
+- **Pre-TTFB First-Chunk Probe Failover (`lib/failover-router.ts`)**:
+  - Probe first-chunk stream upstream dengan deteksi HTTP 429/500/502/503/504 dan soft-error SSE (`"error":`, `"rate_limit"`).
+  - Otomatis beralih ke model cadangan terverifikasi tanpa memutus koneksi klien yang meminta streaming SSE.
+  - Price-cap protection: tagihan ke pengguna dibatasi maksimal sebesar tarif model yang diminta ($\min(\text{requestedPricing}, \text{actualPricing})$).
+- **Exact Prompt Caching di Edge (`lib/edge-cache.ts`)**:
+  - Mendeteksi payload deterministik (`temperature: 0` / `top_p: 0`) dengan isolasi tenant `SHA-256(tenant:${userId})`.
+  - Cache hit disajikan instan dari `caches.default` dengan diskon token 80% ke pengguna (user bayar 20%) dan biaya upstream Rp0.
+- **Hasil Verifikasi**: 91/91 file kode sumber patuh $\le 200$ baris per file, TypeScript 0 error, E2E 11/11 lolos, pricing 17/17 lolos, billing deduction lolos, UI audit 16/16 lolos.
+
 ### `0bd7361` — feat(billing): implement directional token pricing, stream abort protection, concurrent stream limiter, and cline env preset
 
 **Pemisahan Tarif Input vs Output, Proteksi Stream Abort, Limiter Stream Konkuren, dan Preset Cline .env**

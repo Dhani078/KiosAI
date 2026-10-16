@@ -312,3 +312,15 @@ Desain prototype dari `KiosAI Token Marketplace Design` diterapkan sepenuhnya pa
 
 - Simbol resmi: Monogram huruf "K" minimalis yang dibentuk dari kapsul pill vertikal kiri dan panah chevron kanan (`>`).
 - Format aset tak terbatas: SVG murni di `Logo.tsx`, `public/favicon.svg`, `public/kiosai-icon.svg`, dan varian HD PNG (2048/512/192/transparent) di `public/brand/`.
+
+## 26. Funnel Brankas Bonus Anti-Ternak Akun
+
+- **Skema Dual-Wallet**: Pendaftaran baru menerima 250.000 token aktif langsung di `balance_tokens` (cukup untuk pengujian integrasi coding agent), sedangkan 2.250.000 token dialokasikan di `locked_bonus_tokens`.
+- **Aktivasi Otomatis**: Pembayaran QRIS pertama (mulai Rp10.000) otomatis mencairkan seluruh 2.250.000 token bonus ke saldo aktif dan meng-upgrade akun ke Pro secara atomik.
+- **Pesan 402 Terarah**: Error kuota habis mengarahkan pengguna ke `/dashboard` (Beli Token), menghindari link fiktif 404 `/billing`.
+
+## 27. Pre-TTFB First-Chunk Probe Failover & Edge Prompt Caching
+
+- **Pre-TTFB Probe**: Gateway menahan stream awal selama 12 detik sampai chunk pertama tiba. Jika upstream primer mengembalikan status retryable (429, 500, 502, 503, 504) atau error SSE, request dialihkan ke model cadangan terverifikasi secara transparan.
+- **Price-Cap Protection**: Biaya yang dipotong tidak akan pernah melebihi tarif model yang diminta: $\min(\text{Harga Primer}, \text{Harga Cadangan})$.
+- **Edge Exact Prompt Caching**: Payload deterministik (`temperature: 0`) di-cache di `caches.default` Cloudflare dengan kunci terisolasi tenant `SHA-256(tenant:${userId})`. Cache hit diberi diskon token 80% (user bayar 20%), dengan latensi <15ms dan biaya upstream Rp0.
