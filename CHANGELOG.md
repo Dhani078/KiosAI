@@ -7,6 +7,13 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `e941cc8` — feat(landing): display model id code badge on landing cards and add deepseek-v4.1-flash pricing test
+
+**Tampilan Parameter Model pada Kartu Landing & Pengujian Tarif Alias**
+- **Badge Kode Model (`ModelsSection.tsx` & `modelCatalogData.ts`)**: Kartu model pada landing page kini menampilkan badge kode monospace ID model (misal `deepseek-v4.1-flash`, `atria/Atria-Dawn-Preview`, `openai/gpt-4o`) tepat di bawah nama model, sehingga developer dapat langsung menyalin parameter model persis yang diterima SDK.
+- **Pengujian Tarif Model Alias (`scripts/test-pricing.mjs`)**: Menambahkan uji assertion eksplisit untuk `deepseek-v4.1-flash` (13/13 lolos), menjamin rasio pemotongan saldo terbukti identik 1.0 dengan rute internal.
+- **Kepatuhan Modularitas**: `ModelsSection.tsx` (121 baris) dan `modelCatalogData.ts` (118 baris) patuh batas $\le 200$ baris per file.
+
 ### `6e79e58` — feat(landing): update hero CTA bonus to 2.5M, verified model count to 65+, and use clean model aliases in code snippets
 
 **Penyelarasan Copy Landing Page & Integrasi Kode Bersih**

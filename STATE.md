@@ -3,10 +3,10 @@
 - **Repository**: `https://github.com/Dhani078/KiosAI.git`
 - **Location**: `E:/Hermesproject/KiosAI`
 - **Live Worker**: `https://kiosai.dhanisepeda.workers.dev` (subdomain `dhanisepeda`, pakai `e`)
-- **Current Status**: Complete & Fully Verified (Phase 0 - 32)
+- **Current Status**: Complete & Fully Verified (Phase 0 - 33)
 - **Upstream Router**: 9Router local (`http://127.0.0.1:20128`) dengan 65 model aktif terverifikasi 5x audit (1 Free, 64 Pro)
 - **Database**: TiDB Cloud Serverless (`gateway01.ap-southeast-1.prod.aws.tidbcloud.com:4000/kiosai`)
-- **Last Commit**: `6e79e58` — feat(landing): update hero CTA bonus to 2.5M, verified model count to 65+, and use clean model aliases in code snippets
+- **Last Commit**: `e941cc8` — feat(landing): display model id code badge on landing cards and add deepseek-v4.1-flash pricing test
 
 ## Dokumen Navigasi Cepat
 - Aturan & perintah untuk agent: `AGENT.md`
@@ -194,4 +194,8 @@
     - Kartu metrik hero diperbarui menjadi `65+ Model Terverifikasi`.
     - Contoh kode SDK (Python, Node.js, cURL) di `CodeSection.tsx` menggunakan commercial alias bersih `deepseek-v4.1-flash`.
     - 100% lulus audit modularitas, E2E, pricing, dan CDP UI.
+  - Phase 33: Landing Model Badges & Alias Pricing Test:
+    - Badge kode monospace ID model pada setiap kartu model publik di `ModelsSection.tsx`.
+    - Pengujian pricing diperluas menjadi 13 assertion mencakup `deepseek-v4.1-flash` di `scripts/test-pricing.mjs`.
+    - 100% verifikasi lolos (E2E 10/10, pricing 13/13, billing 3/3, UI 16/16).
 

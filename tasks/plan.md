@@ -142,6 +142,10 @@
   - Metrik hero diperbarui menjadi `65+ Model Terverifikasi`
   - Contoh kode integrasi multi-bahasa di `CodeSection.tsx` menggunakan nama alias bersih
   - 100% kelulusan E2E, audit UI, pricing, dan kepatuhan arsitektur <= 200 baris
+- [x] Phase 33: Landing Model Badges & Alias Pricing Test
+  - Badge monospace ID model pada setiap kartu model di `ModelsSection.tsx`
+  - Pengujian tarif diperluas menjadi 13 assertion mencakup `deepseek-v4.1-flash`
+  - Verifikasi menyeluruh: tsc, 87 file <= 200 LOC, E2E 10/10, UI audit 16/16 lolos
 
 
 

@@ -9,7 +9,7 @@ Dokumen ini dirancang agar setiap sesi AI atau pengembang dapat melanjutkan peke
 | Komponen | Status | Keterangan |
 |---|---|---|
 | **Repository** | Clean, Up-to-Date | `https://github.com/Dhani078/KiosAI.git` (Branch `main`) |
-| **Commit Terakhir** | `6e79e58` | Feat(landing): update hero CTA bonus to 2.5M, verified model count to 65+, and use clean model aliases in code snippets |
+| **Commit Terakhir** | `e941cc8` | Feat(landing): display model id code badge on landing cards and add deepseek-v4.1-flash pricing test |
 | **Worker Live** | `healthy` | `https://kiosai.dhanisepeda.workers.dev` (Subdomain `dhanisepeda` dengan huruf 'e') |
 | **Database** | `connected` | TiDB Cloud Serverless (AWS Tokyo `ap-southeast-1` / `ap-northeast-1`) |
 | **Upstream 9Router** | `connected` | `http://127.0.0.1:20128` (65 model terverifikasi 5x audit, 1 Free, 64 Pro) |

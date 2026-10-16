@@ -209,6 +209,11 @@
 - [x] Task 24.3: Use clean commercial alias `deepseek-v4.1-flash` in `CodeSection.tsx` snippets
 - [x] Task 24.4: Verify all 87 files <= 200 lines, 10/10 E2E tests pass, 16/16 UI audits pass
 
+## Phase 25 (Landing Model Badges & Alias Pricing Test - Completed)
+- [x] Task 25.1: Add monospace model ID code badge on landing cards in `ModelsSection.tsx`
+- [x] Task 25.2: Add `deepseek-v4.1-flash` assertion to `test-pricing.mjs` (13/13 passing)
+- [x] Task 25.3: Ensure strict <= 200 lines rule across all 87 files, clean git tree, and push to origin
+
 
 
 
