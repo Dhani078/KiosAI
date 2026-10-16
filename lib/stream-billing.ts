@@ -66,7 +66,7 @@ export function createBilledStream(options: BilledStreamOptions): ReadableStream
     const actualCost = calculateTokenCost(model, promptTokens, completionTokens);
 
     try {
-      await deductTokens(userId, actualCost, 1.0);
+      await deductTokens(userId, actualCost, 1.0, keyId);
       await logUsage({
         apiKeyId: keyId,
         userId,

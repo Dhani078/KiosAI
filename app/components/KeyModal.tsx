@@ -25,6 +25,7 @@ export function KeyModal({
 }) {
   const [keyName, setKeyName] = useState("");
   const [rateLimit, setRateLimit] = useState(60);
+  const [maxSpendTokens, setMaxSpendTokens] = useState(0);
   const [createdSecret, setCreatedSecret] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -36,7 +37,7 @@ export function KeyModal({
       const res = await fetch("/api/keys", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId, name: keyName.trim(), rateLimit }),
+        body: JSON.stringify({ userId, name: keyName.trim(), rateLimit, maxSpendTokens }),
       });
       const data = await res.json();
       if (res.ok && data.apiKey) {
@@ -143,6 +144,27 @@ export function KeyModal({
               <option value={30}>30 req / menit (Testing)</option>
               <option value={60}>60 req / menit (Standar)</option>
               <option value={120}>120 req / menit (Production Tinggi)</option>
+            </select>
+            <label htmlFor="key-spend-cap" style={{ marginTop: "12px" }}>Batas Kuota Token (Spend Cap)</label>
+            <select
+              id="key-spend-cap"
+              value={maxSpendTokens}
+              onChange={(e) => setMaxSpendTokens(Number(e.target.value))}
+              style={{
+                width: "100%",
+                padding: "8px 12px",
+                borderRadius: "var(--radius-input)",
+                background: "var(--surface)",
+                border: "1px solid var(--border)",
+                color: "var(--text)",
+                fontSize: "13px",
+                marginTop: "4px",
+              }}
+            >
+              <option value={0}>Tanpa Batas (Mengikuti Saldo Akun)</option>
+              <option value={500000}>500.000 Token (Uji Coba / Dev)</option>
+              <option value={2000000}>2.000.000 Token (Bot Ringan)</option>
+              <option value={10000000}>10.000.000 Token (Aplikasi Terbatas)</option>
             </select>
             <Button
               kind="primary"

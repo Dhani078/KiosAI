@@ -10,6 +10,8 @@ export interface ApiKeyRecord {
   name: string;
   rate_limit_per_min: number;
   allowed_models: string | null;
+  max_spend_tokens?: number;
+  spent_tokens?: number;
   is_active: number | boolean;
   last_used_at: string | null;
   created_at: string;
@@ -52,8 +54,9 @@ export async function createApiKey(params: {
   name?: string;
   allowedModels?: string[] | null;
   rateLimit?: number;
+  maxSpendTokens?: number;
 }): Promise<{ rawKey: string; keyRecord: ApiKeyRecord }> {
-  const { userId, name = "KiosAI Key", allowedModels = null, rateLimit = 60 } = params;
+  const { userId, name = "KiosAI Key", allowedModels = null, rateLimit = 60, maxSpendTokens = 0 } = params;
   
   const rawSecret = crypto.randomBytes(16).toString("hex");
   const rawKey = `kios-${rawSecret}`;
@@ -64,9 +67,9 @@ export async function createApiKey(params: {
   const modelsJson = allowedModels ? JSON.stringify(allowedModels) : null;
 
   await db.execute(
-    `INSERT INTO kiosai.api_keys (id, user_id, key_hash, key_prefix, name, rate_limit_per_min, allowed_models)
-     VALUES (?, ?, ?, ?, ?, ?, ?)`,
-    [keyId, userId, keyHash, keyPrefix, name, rateLimit, modelsJson]
+    `INSERT INTO kiosai.api_keys (id, user_id, key_hash, key_prefix, name, rate_limit_per_min, allowed_models, max_spend_tokens, spent_tokens)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0)`,
+    [keyId, userId, keyHash, keyPrefix, name, rateLimit, modelsJson, maxSpendTokens]
   );
 
   const keyRecord = await db.queryOne<ApiKeyRecord>(
@@ -117,18 +120,36 @@ export async function validateApiKey(rawKey: string): Promise<{
     return { valid: false, error: "Token balance exhausted. Please top up." };
   }
 
+  // Check key spend cap
+  if (key.max_spend_tokens && Number(key.max_spend_tokens) > 0) {
+    if (Number(key.spent_tokens || 0) >= Number(key.max_spend_tokens)) {
+      return { valid: false, error: `Key spend limit reached (${Number(key.max_spend_tokens).toLocaleString("id-ID")} tokens).` };
+    }
+  }
+
   // Update last_used_at in background
   db.execute(`UPDATE kiosai.api_keys SET last_used_at = NOW() WHERE id = ?`, [key.id]).catch(() => {});
 
   return { valid: true, user, key };
 }
 
-export async function deductTokens(userId: string, tokens: number, multiplier: number = 1.0): Promise<number> {
+export async function deductTokens(
+  userId: string,
+  tokens: number,
+  multiplier: number = 1.0,
+  keyId?: string
+): Promise<number> {
   const safeTokens = Math.max(1, Math.round(tokens * multiplier));
   await db.execute(
     `UPDATE kiosai.users SET balance_tokens = GREATEST(0, balance_tokens - ?) WHERE id = ?`,
     [safeTokens, userId]
   );
+  if (keyId) {
+    db.execute(
+      `UPDATE kiosai.api_keys SET spent_tokens = spent_tokens + ? WHERE id = ?`,
+      [safeTokens, keyId]
+    ).catch(() => {});
+  }
   return safeTokens;
 }
 

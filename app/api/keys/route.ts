@@ -10,7 +10,7 @@ export async function GET(req: NextRequest) {
 
   try {
     const keys = await db.query<ApiKeyRecord>(
-      `SELECT id, user_id, key_prefix, name, rate_limit_per_min, allowed_models, is_active, last_used_at, created_at
+      `SELECT id, user_id, key_prefix, name, rate_limit_per_min, allowed_models, max_spend_tokens, spent_tokens, is_active, last_used_at, created_at
        FROM kiosai.api_keys WHERE user_id = ? AND is_active = TRUE ORDER BY created_at DESC`,
       [userId]
     );
@@ -28,12 +28,14 @@ export async function POST(req: NextRequest) {
     const name = body.name || "Default Key";
     const allowedModels = body.allowedModels || null;
     const rateLimit = Number(body.rateLimit) || 60;
+    const maxSpendTokens = Number(body.maxSpendTokens) || 0;
 
     const { rawKey, keyRecord } = await createApiKey({
       userId,
       name,
       allowedModels,
       rateLimit,
+      maxSpendTokens,
     });
 
     return NextResponse.json({

@@ -80,7 +80,7 @@ export function KeysTab({
                       <td>
                         <strong>{k.name || "Default Key"}</strong>
                         <small className="muted" style={{ display: "block" }}>
-                          {k.rate_limit_per_min || 60} req / menit
+                          {k.rate_limit_per_min || 60} req/m{k.max_spend_tokens && Number(k.max_spend_tokens) > 0 ? ` · Cap: ${Number(k.max_spend_tokens).toLocaleString("id-ID")}` : ""}
                         </small>
                       </td>
                       <td>

@@ -141,7 +141,7 @@ export async function POST(req: NextRequest) {
     const pTokens = data.usage?.prompt_tokens || 15;
     const cTokens = data.usage?.completion_tokens || 35;
     const actualCost = calculateTokenCost(requestedModel, pTokens, cTokens);
-    const deducted = await deductTokens(auth.user.id, actualCost, 1.0);
+    const deducted = await deductTokens(auth.user.id, actualCost, 1.0, auth.key.id);
     await logUsage({ apiKeyId: auth.key.id, userId: auth.user.id, model: requestedModel, promptTokens: pTokens, completionTokens: cTokens, latencyMs: Date.now() - startTime, statusCode: 200 });
     recordInferenceTelemetry({ modelId: requestedModel, ttfbMs: Date.now() - startTime, statusCode: 200, didFailover: false, cacheHit: false });
 
