@@ -131,6 +131,12 @@
   - Tampilkan label generik ("Gateway", "Gateway Live", "Gateway Aktif") untuk pengguna reguler
   - Pertahankan label "9Router" untuk admin `adminfordhani`
   - Verifikasi audit CDP PC & Mobile: 0 kemunculan "9Router" untuk user biasa, tampil normal untuk admin
+- [x] Phase 31: Official Vector Logo & HD Brand Assets
+  - Ekstraksi dan vektorisasi matematis logo KiosAI (Kapsul pill + chevron K) ke `Logo.tsx`
+  - Update `favicon.svg` dan `kiosai-icon.svg` dengan format SVG resolusi tak terbatas
+  - Pengorganisasian folder aset `public/brand/` dengan file master, lossless PNG 2048/512/192, dan transparent cutout
+  - Integrasi favicon & Apple Touch Icon di `app/layout.tsx` metadata
+  - Verifikasi 100% lulus pada semua pengujian E2E, pricing, billing, dan UI audit
 
 
 

@@ -7,6 +7,18 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `b82acae` — feat(brand): apply official KiosAI vector logo across web, favicon, and brand assets
+
+**Integrasi Logo Resmi KiosAI & Folder Brand Aset**
+- **Vektorisasi Logo Presisi (`Logo.tsx`)**: Mengganti ikon lama (3 batang miring) dengan simbol resmi KiosAI (Kapsul vertikal pill + panah chevron chevron kustom) dalam format SVG vektor murni yang tajam pada resolusi apa pun.
+- **Favicon & Web App Icon (`public/favicon.svg`, `public/kiosai-icon.svg`, `app/layout.tsx`)**: Memasang favicon SVG baru dan metadata ikon browser (PNG 512x512 dan Apple Touch Icon 192x192).
+- **Pengorganisasian Folder Aset (`public/brand/`)**: Memindahkan file master gambar `Gemini_Generated_Image_1q6k8k1q6k8k1q6k.jfif` ke `public/brand/kiosai-logo-master.jfif` dan menghasilkan varian resolusi tinggi:
+  - `kiosai-logo-2048.png` (Master lossless 2048x2048)
+  - `kiosai-logo-512.png` & `kiosai-logo-192.png` (Standard high-res icons)
+  - `kiosai-logo-transparent.png` (Background transparan)
+  - `kiosai-logo.svg` & `kiosai-logo-symbol.svg` (Vektor SVG tak terbatas resolusi)
+- **Kepatuhan Modularitas**: `Logo.tsx` berukuran 30 baris dan `layout.tsx` 30 baris (jauh di bawah batas $\le 200$ baris). Semuanya lolos 100% verifikasi.
+
 ### `8703846` — feat(ui): hide 9Router branding from public and regular users, keep visible for admin
 
 **Penyembunyian Branding Router Internal**
