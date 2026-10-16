@@ -3,10 +3,10 @@
 - **Repository**: `https://github.com/Dhani078/KiosAI.git`
 - **Location**: `E:/Hermesproject/KiosAI`
 - **Live Worker**: `https://kiosai.dhanisepeda.workers.dev` (subdomain `dhanisepeda`, pakai `e`)
-- **Current Status**: Complete & Fully Verified (Phase 0 - 49)
-- **Upstream Router**: 9Router local (`http://127.0.0.1:20128`) dengan 66 model aktif terverifikasi 5x audit (1 Free, 65 Pro)
+- **Current Status**: Complete & Fully Verified (Phase 0 - 50)
+- **Upstream Router**: 9Router local (`http://127.0.0.1:20128`) dengan 71 model aktif terverifikasi 5x audit (5 Free, 66 Pro)
 - **Database**: TiDB Cloud Serverless (`gateway01.ap-southeast-1.prod.aws.tidbcloud.com:4000/kiosai`)
-- **Last Commit**: `b4dac3f` — feat(docs): add one-click .env file export modal for cline, vs code, and python
+- **Last Commit**: `6ba1be5` — feat(models): integrate verified OpenCode models into free tier with failover and zero pricing
 
 ## Dokumen Navigasi Cepat
 - Aturan & perintah untuk agent: `AGENT.md`
@@ -276,6 +276,13 @@
     - Modul `app/components/EnvExportModal.tsx` (88 baris) menyediakan preview `.env.local` instan dan tombol unduh langsung.
     - Tombol aksi `.env` di samping Base URL tab Dokumentasi `app/components/DocsTab.tsx` (196 baris).
     - 100% verifikasi lolos: 101/101 file kode sumber patuh $\le 200$ baris, tsc 0 error, E2E 11/11, pricing 18/18, billing 3/3, chaos PASS, UI 16/16.
+  - Phase 50: Integration of Verified OpenCode Models into Free Tier:
+    - Verifikasi langsung inferensi HTTP 200 ke 9Router untuk model OpenCode: `oc/deepseek-v4.1-flash-free(max)`, `oc/muse-spark-1.3-contributor-free`, `oc/mimo-v2.6-flash-free`, dan `oc/nemotron-3.5-lightning-free`.
+    - Pendaftaran ke `lib/verified-models.ts` (total bertambah menjadi 71 model terverifikasi aktif).
+    - Klasifikasi otomatis model `oc/` sebagai tier "free" dengan tarif $0.00 (Gratis) di `lib/keys.ts`, `lib/model-pricing.ts`, dan endpoint `/v1/models`.
+    - Konfigurasi failover router timbal-balik dan showcase katalog landing page ("70+ Model Terverifikasi").
+    - 100% verifikasi lolos: 101/101 file kode sumber patuh $\le 200$ baris, tsc 0 error, E2E 11/11, pricing 22/22, billing 3/3, chaos PASS, UI 16/16.
+
 
 
 

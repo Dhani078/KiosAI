@@ -395,3 +395,13 @@ Desain prototype dari `KiosAI Token Marketplace Design` diterapkan sepenuhnya pa
 
 - **Modal Ekspor Konfigurasi (`EnvExportModal.tsx`)**: Menghasilkan template file `.env.local` instan yang sudah otomatis terisi `OPENAI_BASE_URL`, `OPENAI_API_KEY`, dan model pilihan pengguna.
 - **Pintasan Pengembang Cepat**: Tombol `.env` pada tab Dokumentasi memungkinkan pengembang mengunduh file `.env.local` langsung atau menyalin teks untuk integrasi 1-detik ke VS Code, Cursor, Cline, atau proyek Next.js.
+
+## 42. Integrasi Keluarga Model OpenCode ke Free Tier
+
+- **Model OpenCode Terverifikasi (`oc/...`)**: 4 model baru dari penyedia OpenCode Free diintegrasikan ke gerbang KiosAI setelah lolos verifikasi inferensi live HTTP 200:
+  - `oc/deepseek-v4.1-flash-free(max)`: Model reasoning cepat 200k context window dengan thinking max.
+  - `oc/muse-spark-1.3-contributor-free`: Model percakapan instruksional open-weights.
+  - `oc/mimo-v2.6-flash-free`: Model coding ringan dan obrolan interaktif kilat.
+  - `oc/nemotron-3.5-lightning-free`: Model arsitektur lightning NVIDIA untuk inferensi terdistribusi.
+- **Akses Gratis & Tarif Nol**: Seluruh model OpenCode dibuka langsung untuk akun tier Free (`tier: "free"`) dengan tarif pemotongan $0.00 / 1M token (Gratis), memperluas pilihan model gratis di KiosAI menjadi 5 model terverifikasi.
+- **Redundansi Jaringan**: Terhubung dalam sistem failover multiarah bersama `beatapi` dan `tokenharbor`.

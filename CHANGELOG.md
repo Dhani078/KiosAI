@@ -7,6 +7,17 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `6ba1be5` — feat(models): integrate verified OpenCode models into free tier with failover and zero pricing
+
+**Integrasi Model OpenCode Terverifikasi ke Free Tier Tanpa Biaya**
+- **Verifikasi Model Nyata 9Router**: Menguji inferensi live HTTP 200 OK untuk 4 model OpenCode: `oc/deepseek-v4.1-flash-free(max)` (3531ms), `oc/muse-spark-1.3-contributor-free` (541ms), `oc/mimo-v2.6-flash-free` (9130ms), dan `oc/nemotron-3.5-lightning-free` (19405ms).
+- **Akses Free Tier Penuh (`lib/keys.ts` & `app/v1/models/route.ts`)**: Seluruh model dengan awalan `oc/` otomatis diklasifikasikan sebagai `tier: "free"` dan dapat diakses langsung oleh akun tier Free tanpa penolakan 403 `tier_restricted`.
+- **Daftar Model Terverifikasi (`lib/verified-models.ts`)**: Mendaftarkan model `oc/` ke dalam whitelist verifikasi resmi (total bertambah dari 66 menjadi 71 model aktif).
+- **Tarif Nol Rupiah (`lib/model-pricing.ts`)**: Menetapkan tarif input $0.00 / output $0.00 (Gratis) untuk seluruh keluarga model OpenCode `oc/`.
+- **Rute Failover Multiarah (`lib/failover-router.ts`)**: Mengonfigurasi jaring pengaman failover timbal-balik antara `oc/deepseek-v4.1-flash-free(max)`, `beatapi/deepseek-v4.1-flash-free`, `tokenharbor`, dan `oc/mimo-v2.6-flash-free`.
+- **Katalog Landing Page & Hero Counter (`modelCatalogData.ts` & `HeroSection.tsx`)**: Menampilkan kartu model OpenCode di katalog landing dan memperbarui metrik hero menjadi "70+ Model Terverifikasi".
+- **Hasil Verifikasi**: tsc 0 error, 101/101 file patuh $\le 200$ baris, 22/22 pricing tests PASS, 11/11 E2E tests PASS, 3/3 billing deduction PASS, chaos test PASS, 16/16 UI audits PASS.
+
 ### `b4dac3f` — feat(docs): add one-click .env file export modal for cline, vs code, and python
 
 **Modal Ekspor File .env Satu-Klik**

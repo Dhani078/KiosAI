@@ -224,6 +224,12 @@
   - Modal generator `app/components/EnvExportModal.tsx` (88 baris) untuk unduh instan `.env.local`
   - Tombol `.env` di sebelah Base URL pada `app/components/DocsTab.tsx` (196 baris)
   - 100% lolos verifikasi: 101 file <= 200 LOC, tsc 0 error, 18/18 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
+- [x] Phase 50: Integration of Verified OpenCode Models into Free Tier
+  - Verifikasi live inferensi HTTP 200 ke 9Router untuk model OpenCode: `oc/deepseek-v4.1-flash-free(max)`, `oc/muse-spark-1.3-contributor-free`, `oc/mimo-v2.6-flash-free`, `oc/nemotron-3.5-lightning-free`
+  - Whitelist di `lib/verified-models.ts` (71 model aktif) dan pemetaan alias di `lib/model-utils.ts`
+  - Klasifikasi Free tier otomatis di `lib/keys.ts` dan tarif Rp0 (Gratis) di `lib/model-pricing.ts`
+  - Konfigurasi failover router timbal-balik dan showcase model di katalog landing ("70+ Model Terverifikasi")
+  - 100% lolos verifikasi: 101 file <= 200 LOC, tsc 0 error, 22/22 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
 
 
 

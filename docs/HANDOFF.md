@@ -9,10 +9,10 @@ Dokumen ini dirancang agar setiap sesi AI atau pengembang dapat melanjutkan peke
 | Komponen | Status | Keterangan |
 |---|---|---|
 | **Repository** | Clean, Up-to-Date | `https://github.com/Dhani078/KiosAI.git` (Branch `main`) |
-| **Commit Terakhir** | `b4dac3f` | Feat(docs): add one-click .env file export modal for cline, vs code, and python |
+| **Commit Terakhir** | `6ba1be5` | Feat(models): integrate verified OpenCode models into free tier with failover and zero pricing |
 | **Worker Live** | `healthy` | `https://kiosai.dhanisepeda.workers.dev` (Subdomain `dhanisepeda` dengan huruf 'e') |
 | **Database** | `connected` | TiDB Cloud Serverless (AWS Tokyo `ap-southeast-1` / `ap-northeast-1`) |
-| **Upstream 9Router** | `connected` | `http://127.0.0.1:20128` (66 model terverifikasi 5x audit, 1 Free, 65 Pro) |
+| **Upstream 9Router** | `connected` | `http://127.0.0.1:20128` (71 model terverifikasi 5x audit, 5 Free, 66 Pro) |
 | **Batas Baris Kode** | 100% Patuh | 101 file sumber `.ts`/`.tsx`/`.mjs` `<= 200` baris |
 | **E2E Integration** | 11/11 Passed | `npm run test:e2e` lolos semua skenario |
 | **Pricing Unit Test** | 17/17 Passed | `npm run test:pricing` — rasio directional input vs output + harga $/1M |

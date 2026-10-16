@@ -308,6 +308,13 @@
 - [x] Task 41.2: Add `.env` action button next to Base URL in `app/components/DocsTab.tsx`
 - [x] Task 41.3: Verify 100% test pass: 101 files <= 200 LOC, 18/18 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
 
+## Phase 42 (Integration of Verified OpenCode Models into Free Tier - Completed)
+- [x] Task 42.1: Verify live HTTP 200 inference on `oc/deepseek-v4.1-flash-free(max)`, `oc/muse-spark-1.3-contributor-free`, `oc/mimo-v2.6-flash-free`, `oc/nemotron-3.5-lightning-free`
+- [x] Task 42.2: Register in `lib/verified-models.ts` and alias resolver in `lib/model-utils.ts`
+- [x] Task 42.3: Grant Free tier access in `lib/keys.ts` and set zero pricing in `lib/model-pricing.ts`
+- [x] Task 42.4: Setup failover routes in `lib/failover-router.ts` and update landing catalog showcase
+- [x] Task 42.5: Verify 100% test pass: 101 files <= 200 LOC, 22/22 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
+
 
 
 
