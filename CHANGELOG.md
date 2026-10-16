@@ -7,6 +7,14 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `81d5212` — docs: synchronize all markdown documentation across repository
+
+**Sinkronisasi Menyeluruh Dokumentasi Markdown**
+- **PRD (`PRD.md`)**: Menambahkan Seksi 20 s/d 25 mencakup spesifikasi arsitektur billing 2-tier final, metrik observabilitas Maxxmode, hasil audit 5x penyaringan katalog, penyembunyian branding internal role-based, resolusi alias komersial, serta identitas brand dan vektor logo resmi.
+- **API Reference (`API.md`)**: Mendokumentasikan tabel pemetaan resolusi alias model industri (`claude-3.7-sonnet`, `gpt-4o`, `gemini-2.0-flash`, `deepseek-r1`, `llama-3.3-70b`, `deepseek-v4.1-flash`, `atria`).
+- **Overview Proyek (`README.md`)**: Memperbarui deskripsi fitur utama, tautan dokumentasi lengkap, aset brand folder `public/brand/`, dan metrik katalog 65 model aktif terverifikasi.
+- **Manual Operasional & Handoff (`AGENT.md`, `docs/HANDOFF.md`)**: Memperbarui total file sumber (87 file <= 200 LOC) dan jumlah assertion pengujian tarif (13/13).
+
 ### `e941cc8` — feat(landing): display model id code badge on landing cards and add deepseek-v4.1-flash pricing test
 
 **Tampilan Parameter Model pada Kartu Landing & Pengujian Tarif Alias**

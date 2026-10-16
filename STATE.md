@@ -6,7 +6,7 @@
 - **Current Status**: Complete & Fully Verified (Phase 0 - 33)
 - **Upstream Router**: 9Router local (`http://127.0.0.1:20128`) dengan 65 model aktif terverifikasi 5x audit (1 Free, 64 Pro)
 - **Database**: TiDB Cloud Serverless (`gateway01.ap-southeast-1.prod.aws.tidbcloud.com:4000/kiosai`)
-- **Last Commit**: `e941cc8` — feat(landing): display model id code badge on landing cards and add deepseek-v4.1-flash pricing test
+- **Last Commit**: `81d5212` — docs: synchronize all markdown documentation across repository
 
 ## Dokumen Navigasi Cepat
 - Aturan & perintah untuk agent: `AGENT.md`
