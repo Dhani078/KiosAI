@@ -358,3 +358,7 @@ Desain prototype dari `KiosAI Token Marketplace Design` diterapkan sepenuhnya pa
 ## 33. Preset Persona System Prompt Instan
 
 - **Katalog Persona Terkurasi (`lib/prompt-presets.ts`)**: Persona spesialis bawaan siap pakai (Coding Specialist, Penerjemah Formal KBBI, JSON Data Extractor, dan Default) yang langsung menyuntikkan instruksi sistem presisi ke Playground tanpa perlu mengetik manual.
+
+## 34. Batas Pengeluaran Token per API Key (Spend Cap)
+
+- **Proteksi Budget Developer (`lib/keys.ts`)**: Setiap API key kini dapat dibatasi plafon kuota maksimal (`max_spend_tokens`). Pemotongan saldo di `lib/stream-billing.ts` dan `/v1/chat/completions` secara otomatis mengakumulasi penggunaan ke kolom `spent_tokens`. Jika kuota tercapai, request berikutnya ditolak 402/403 dengan pesan error deskriptif, mencegah aplikasi klien menguras saldo akun pengguna tanpa terkendali.

@@ -7,6 +7,14 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `719a75a` — feat(keys): add per-key spend token limit cap to protect developer budget
+
+**Batas Maksimal Pengeluaran Token per API Key (Spend Cap)**
+- **Skema Database & Validasi Kunci (`lib/keys.ts`)**: Menambahkan kolom `max_spend_tokens` dan `spent_tokens` di tabel TiDB `api_keys`. Pada saat validasi API key di `/v1/chat/completions`, jika `spent_tokens >= max_spend_tokens`, request ditolak dengan pesan error deskriptif untuk mencegah loop tak hingga di aplikasi klien menguras seluruh saldo akun pengguna.
+- **Pelacakan Pengeluaran Otomatis (`lib/keys.ts` & `lib/stream-billing.ts`)**: Fungsi `deductTokens` kini mencatat akumulasi token pemakaian langsung ke kolom `spent_tokens` milik key terkait, baik pada request streaming SSE maupun non-streaming JSON.
+- **Antarmuka Pembuatan & Manajemen Key (`KeyModal.tsx` & `KeysTab.tsx`)**: Opsi Spend Cap disematkan di modal pembuatan key (500K Dev, 2M Bot Ringan, 10M Aplikasi Terbatas, Tanpa Batas). Label tabel API key menampilkan indikator batas kuota aktif.
+- **Hasil Verifikasi**: 97/97 file kode sumber patuh $\le 200$ baris per file (`KeyModal.tsx` 184 baris, `KeysTab.tsx` 147 baris, `keys.ts` 180 baris), tsc 0 error, E2E 11/11, pricing 17/17, chaos test PASS, billing deduction 3/3, UI audit 16/16.
+
 ### `0f4b146` — feat(playground): add system prompt persona presets dropdown in playground toolbar
 
 **Preset Persona System Prompt Instan di Playground**

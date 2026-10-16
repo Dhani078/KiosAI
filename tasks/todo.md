@@ -263,6 +263,12 @@
 - [x] Task 33.2: Integrate preset selector dropdown in `PlaygroundTab.tsx`
 - [x] Task 33.3: Verify 100% test pass: 97 files <= 200 LOC, 17/17 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
 
+## Phase 34 (Per-Key Spend Token Limit Cap - Completed)
+- [x] Task 34.1: Add `max_spend_tokens` & `spent_tokens` to `api_keys` and gate requests in `lib/keys.ts`
+- [x] Task 34.2: Track spent tokens per key in `lib/stream-billing.ts` and `/v1/chat/completions`
+- [x] Task 34.3: Add spend limit selector in `KeyModal.tsx` and badges in `KeysTab.tsx`
+- [x] Task 34.4: Verify 100% test pass: 97 files <= 200 LOC, 17/17 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
+
 
 
 

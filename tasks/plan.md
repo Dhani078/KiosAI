@@ -187,6 +187,11 @@
   - Modul `lib/prompt-presets.ts` (28 baris) mendefinisikan preset: Coding Specialist, Formal ID, JSON Extractor, Default
   - Dropdown pemilih preset instan di `PlaygroundTab.tsx` (199 baris)
   - 100% lolos verifikasi: 97 file <= 200 LOC, tsc 0 error, 17/17 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
+- [x] Phase 42: Per-Key Spend Token Limit Cap
+  - Kolom `max_spend_tokens` & `spent_tokens` di TiDB `api_keys`, evaluasi otomatis di `lib/keys.ts`
+  - Pelacakan kuota terpakai per key di `lib/stream-billing.ts` dan `/v1/chat/completions`
+  - Kontrol UI pembatasan kuota di `KeyModal.tsx` dan indikator `KeysTab.tsx`
+  - 100% lolos verifikasi: 97 file <= 200 LOC, tsc 0 error, 17/17 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
 
 
 
