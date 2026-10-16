@@ -18,7 +18,7 @@ client = OpenAI(
 )
 
 response = client.chat.completions.create(
-    model="tokenharbor/deepseek-v4.1-flash:free",
+    model="deepseek-v4.1-flash",
     messages=[{"role": "user", "content": "Halo KiosAI, buatkan fungsi sorting!"}],
     stream=True
 )
@@ -28,12 +28,12 @@ for chunk in response:
     "Node.js": `import OpenAI from "openai";
 
 const client = new OpenAI({
-  apiKey: "kios-xxxxxxxxxxxxxxxxxxxxxxxx",
+  apiKey: "kios-...xx",
   baseURL: "https://api.kios.ai/v1"
 });
 
 const stream = await client.chat.completions.create({
-  model: "tokenharbor/deepseek-v4.1-flash:free",
+  model: "deepseek-v4.1-flash",
   messages: [{ role: "user", content: "Halo KiosAI!" }],
   stream: true
 });
@@ -42,10 +42,10 @@ for await (const chunk of stream) {
   process.stdout.write(chunk.choices[0]?.delta?.content || "");
 }`,
     cURL: `curl https://api.kios.ai/v1/chat/completions \\
-  -H "Authorization: Bearer kios-xxxxxxxxxxxxxxxxxxxxxxxx" \\
+  -H "Authorization: Bearer kios-x...xxxx" \\
   -H "Content-Type: application/json" \\
   -d '{
-    "model": "tokenharbor/deepseek-v4.1-flash:free",
+    "model": "deepseek-v4.1-flash",
     "messages": [{"role": "user", "content": "Halo KiosAI!"}],
     "stream": true
   }'`,

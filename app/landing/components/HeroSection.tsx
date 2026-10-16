@@ -79,7 +79,7 @@ export function HeroSection() {
             fontWeight: 600,
           }}
         >
-          Mulai Sekarang (+100.000 Token)
+          Mulai Gratis (2.5 Juta Token)
           <ArrowRight size={17} />
         </Link>
         <a
@@ -115,7 +115,7 @@ export function HeroSection() {
             <Zap size={20} />
           </div>
           <div>
-            <strong style={{ display: "block", fontSize: "14px" }}>765+ Model AI</strong>
+            <strong style={{ display: "block", fontSize: "14px" }}>65+ Model Terverifikasi</strong>
             <small className="muted" style={{ fontSize: "12px" }}>DeepSeek, Claude, GPT, Gemini</small>
           </div>
         </div>
