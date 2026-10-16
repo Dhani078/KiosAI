@@ -1,14 +1,24 @@
 "use client";
 
-import { Check, Download, Receipt } from "lucide-react";
+import { Check, Download, Receipt, Printer } from "lucide-react";
 import { Badge, TableRow } from "./ui";
 import { exportToCsv } from "@/lib/export-csv";
+import { generateInvoiceHtml } from "@/lib/receipt-generator";
 
 export function OrderHistoryTable({ orders, isAdmin = false }: { orders: any[]; isAdmin?: boolean }) {
   const list = orders || [];
   const paidOrders = list.filter((o) => o.status === "paid");
   const totalPaidIdr = paidOrders.reduce((sum, o) => sum + Number(o.amount_idr || 0), 0);
   const totalTokensBought = paidOrders.reduce((sum, o) => sum + Number(o.tokens_purchased || 0), 0);
+
+  const handlePrintReceipt = (order: any) => {
+    const html = generateInvoiceHtml(order);
+    const w = window.open("", "_blank");
+    if (w) {
+      w.document.write(html);
+      w.document.close();
+    }
+  };
 
   const handleExport = () => {
     const headers = ["Order ID", "Tanggal", "Paket Tier", "Total IDR", "Tokens", "Status"];
@@ -83,9 +93,28 @@ export function OrderHistoryTable({ orders, isAdmin = false }: { orders: any[]; 
                     <td>Rp {Number(o.amount_idr || 0).toLocaleString("id-ID")}</td>
                     <td><code>{Number(o.tokens_purchased || 0).toLocaleString("id-ID")}</code></td>
                     <td>
-                      <span className="success-tag" style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}>
-                        <Check size={12} /> {o.status === "paid" ? "Berhasil" : o.status}
-                      </span>
+                      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                        <span className="success-tag" style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                          <Check size={12} /> {o.status === "paid" ? "Berhasil" : o.status}
+                        </span>
+                        {o.status === "paid" && (
+                          <button
+                            onClick={() => handlePrintReceipt(o)}
+                            title="Cetak Bukti Pembayaran"
+                            style={{
+                              background: "none",
+                              border: "none",
+                              color: "var(--text-muted)",
+                              cursor: "pointer",
+                              padding: "2px",
+                              display: "inline-flex",
+                              alignItems: "center",
+                            }}
+                          >
+                            <Printer size={13} />
+                          </button>
+                        )}
+                      </div>
                     </td>
                   </TableRow>
                 );
