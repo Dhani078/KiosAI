@@ -371,3 +371,7 @@ Desain prototype dari `KiosAI Token Marketplace Design` diterapkan sepenuhnya pa
 
 - **Rute Baru Aktif (`beatapi/deepseek-v4.1-flash-free`)**: Terverifikasi via pengujian inferensi HTTP 200 (latensi 3103ms) ke 9Router. Terdaftar di `lib/verified-models.ts` (66 model aktif terverifikasi).
 - **Redundansi Failover**: Menjadi kandidat failover timbal-balik utama untuk `tokenharbor/deepseek-v4.1-flash:free`, menjamin ketersediaan model DeepSeek Flash tetap 100% aktif jika salah satu upstream mengalami rate-limit.
+
+## 37. Banner Peringatan Saldo Rendah Global
+
+- **Sticky Low-Balance Alert (`DashboardApp.tsx`)**: Muncul otomatis di atas konten utama setiap tab saat saldo akun pengguna berada di bawah ambang batas aman 50.000 token, dilengkapi tombol aksi langsung ke checkout paket untuk mencegah disrupsi bot/integrasi klien.

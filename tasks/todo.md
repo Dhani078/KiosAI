@@ -281,6 +281,11 @@
 - [x] Task 36.4: Add pricing assertion in `scripts/test-pricing.mjs` (18 checks)
 - [x] Task 36.5: Verify 100% test pass: 97 files <= 200 LOC, 18/18 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
 
+## Phase 37 (Sticky Low Balance Warning Banner - Completed)
+- [x] Task 37.1: Add global low-balance banner (<50k tokens) in `DashboardApp.tsx`
+- [x] Task 37.2: Add quick "Isi Ulang" action button redirecting to Packages tab
+- [x] Task 37.3: Verify 100% test pass: 97 files <= 200 LOC, 18/18 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
+
 
 
 

@@ -3,10 +3,10 @@
 - **Repository**: `https://github.com/Dhani078/KiosAI.git`
 - **Location**: `E:/Hermesproject/KiosAI`
 - **Live Worker**: `https://kiosai.dhanisepeda.workers.dev` (subdomain `dhanisepeda`, pakai `e`)
-- **Current Status**: Complete & Fully Verified (Phase 0 - 44)
+- **Current Status**: Complete & Fully Verified (Phase 0 - 45)
 - **Upstream Router**: 9Router local (`http://127.0.0.1:20128`) dengan 66 model aktif terverifikasi 5x audit (1 Free, 65 Pro)
 - **Database**: TiDB Cloud Serverless (`gateway01.ap-southeast-1.prod.aws.tidbcloud.com:4000/kiosai`)
-- **Last Commit**: `0e43d8d` — feat(models): integrate verified beatapi/deepseek-v4.1-flash-free into catalog, alias resolver, and failover router
+- **Last Commit**: `fd17d0d` — feat(dashboard): add sticky low balance warning banner with quick refill action
 
 ## Dokumen Navigasi Cepat
 - Aturan & perintah untuk agent: `AGENT.md`
@@ -254,6 +254,11 @@
     - Pasangan failover dua arah dengan `tokenharbor/deepseek-v4.1-flash:free` di `lib/failover-router.ts`.
     - Assertion pricing ditambahkan di `scripts/test-pricing.mjs` (18/18 checks pass).
     - 100% verifikasi lolos: 97/97 file kode sumber patuh $\le 200$ baris, tsc 0 error, E2E 11/11, pricing 18/18, billing 3/3, chaos PASS, UI 16/16.
+  - Phase 45: Sticky Low Balance Warning Banner:
+    - Menambahkan banner peringatan otomatis di `DashboardApp.tsx` (198 baris) saat saldo akun $< 50.000$ token.
+    - Tombol aksi instan "Isi Ulang" langsung memicu navigasi ke tab Beli Token.
+    - 100% verifikasi lolos: 97/97 file kode sumber patuh $\le 200$ baris, tsc 0 error, E2E 11/11, pricing 18/18, billing 3/3, chaos PASS, UI 16/16.
+
 
 
 

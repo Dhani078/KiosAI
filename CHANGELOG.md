@@ -7,6 +7,13 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `fd17d0d` — feat(dashboard): add sticky low balance warning banner with quick refill action
+
+**Banner Peringatan Saldo Menipis di Dashboard**
+- **Banner Peringatan Proaktif (`app/dashboard/DashboardApp.tsx`)**: Menampilkan peringatan visual di bagian atas dashboard ketika saldo token pengguna berada di bawah ambang batas 50.000 token, disertai tombol aksi instan "Isi Ulang" yang langsung mengarahkan pengguna ke tab Beli Token.
+- **Kepatuhan Modularitas**: `DashboardApp.tsx` tetap ringkas (198 baris, patuh aturan $\le 200$ baris per file).
+- **Hasil Verifikasi**: 97/97 file kode sumber patuh $\le 200$ baris per file, tsc 0 error, E2E 11/11, pricing 18/18, chaos test PASS, billing deduction 3/3, UI audit 16/16.
+
 ### `0e43d8d` — feat(models): integrate verified beatapi/deepseek-v4.1-flash-free into catalog, alias resolver, and failover router
 
 **Integrasi Model Baru BeatAPI DeepSeek V4.1 Flash Free**

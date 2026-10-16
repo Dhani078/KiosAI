@@ -202,6 +202,10 @@
   - Pasangan failover dua arah dengan `tokenharbor/deepseek-v4.1-flash:free` di `lib/failover-router.ts`
   - Assertion pricing di `scripts/test-pricing.mjs` (18/18 checks pass)
   - 100% lolos verifikasi: 97 file <= 200 LOC, tsc 0 error, 18/18 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
+- [x] Phase 45: Sticky Low Balance Warning Banner
+  - Banner peringatan dinamis di `DashboardApp.tsx` (198 baris) saat saldo token < 50.000
+  - Tombol aksi cepat "Isi Ulang" langsung ke tab Beli Token
+  - 100% lolos verifikasi: 97 file <= 200 LOC, tsc 0 error, 18/18 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
 
 
 
