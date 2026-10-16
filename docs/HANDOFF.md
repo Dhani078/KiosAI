@@ -13,9 +13,9 @@ Dokumen ini dirancang agar setiap sesi AI atau pengembang dapat melanjutkan peke
 | **Worker Live** | `healthy` | `https://kiosai.dhanisepeda.workers.dev` (Subdomain `dhanisepeda` dengan huruf 'e') |
 | **Database** | `connected` | TiDB Cloud Serverless (AWS Tokyo `ap-southeast-1` / `ap-northeast-1`) |
 | **Upstream 9Router** | `connected` | `http://127.0.0.1:20128` (65 model terverifikasi 5x audit, 1 Free, 64 Pro) |
-| **Batas Baris Kode** | 100% Patuh | 86 file sumber `.ts`/`.tsx`/`.mjs` `<= 200` baris |
+| **Batas Baris Kode** | 100% Patuh | 87 file sumber `.ts`/`.tsx`/`.mjs` `<= 200` baris |
 | **E2E Integration** | 10/10 Passed | `npm run test:e2e` lolos semua skenario |
-| **Pricing Unit Test** | 12/12 Passed | `npm run test:pricing` — rasio == harga $/1M di kartu model |
+| **Pricing Unit Test** | 13/13 Passed | `npm run test:pricing` — rasio == harga $/1M di kartu model |
 | **UI Audit** | 16/16 Passed | `npm run audit:ui` (4) + `npm run audit:dashboard` (12) — 0 overflow, 0 copy lama |
 | **Tier Database** | 2 tier bersih | `free: 1`, `pro: 46` — legacy `bronze`/`silver`/`gold` sudah dimigrasi |
 

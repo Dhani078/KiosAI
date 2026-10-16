@@ -27,11 +27,13 @@
 - **Statistik & Log Penggunaan**: Visualisasi riwayat pemakaian token, total request, rata-rata latensi, dan breakdown per model AI.
 - **Pemotongan Saldo Otomatis**: Setiap request AI otomatis memotong saldo token pengguna di database TiDB secara real-time.
 - **Top-Up Token (QRIS)**: Sistem paket token Pro (Pro 25K / 100K / 150K) dengan simulasi pembayaran instan.
-- **Live AI Playground**: Antarmuka dashboard untuk menguji endpoint dan streaming model AI secara langsung.
+- **Live AI Playground**: Antarmuka dashboard untuk menguji endpoint dan streaming model AI secara langsung dengan pesan error ramah pengguna dalam bahasa Indonesia.
+- **Resolusi Alias Komersial Otomatis**: Mendukung pemanggilan nama model industri standar (`claude-3.7-sonnet`, `gpt-4o`, `gemini-2.0-flash`, `deepseek-r1`, `llama-3.3-70b`, `deepseek-v4.1-flash`, `atria`) yang dipetakan secara cerdas ke rute aktif gateway.
 - **Billing Total**: Token ditagih dari `usage` upstream (prompt + completion) dikali rasio tarif model (`getCostRatio`), baik stream maupun non-stream. Overhead prompt upstream ikut ditagih (lihat PRD §9).
-- **Desain KiosAI Token Marketplace**: Antarmuka responsif (Desktop Sidebar + Mobile Bottom Nav), tema oranye hangat (`#F28C38`), tanpa komponen dummy — 100% data live dari TiDB & gateway.
-- **Katalog Model Publik**: Halaman muka menampilkan showcase model AI unggulan (DeepSeek, Claude, GPT, Gemini, Llama) dengan informasi tier akses, tarif `Input / Output ($ / 1M)`, context window, dan filter provider interaktif.
-- **Standar Kode Moduler**: Seluruh modul kode TypeScript/React dibatasi maksimal 200 baris per file demi keterbacaan dan pemeliharaan jangka panjang.
+- **Desain KiosAI Token Marketplace**: Antarmuka responsif (Desktop Sidebar + Mobile Bottom Nav), tema oranye hangat (`#F28C38`), logo vektor presisi resmi (`Logo.tsx`, `public/brand/`), tanpa komponen dummy — 100% data live dari database & gateway.
+- **Katalog Model Publik**: Halaman muka menampilkan showcase 65 model AI unggulan terverifikasi audit 5x dengan badge kode model monospace, tier akses, tarif `Input / Output ($ / 1M)`, context window, dan filter provider interaktif.
+- **Penyembunyian Branding Internal**: Label teknis database ("TiDB") dan router ("9Router") disembunyikan otomatis untuk publik/pengguna biasa, dan tetap tampil presisi untuk admin.
+- **Standar Kode Moduler**: Seluruh 87 modul kode TypeScript/React dibatasi maksimal 200 baris per file demi keterbacaan dan pemeliharaan jangka panjang.
 
 ---
 

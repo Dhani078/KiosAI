@@ -75,6 +75,16 @@ data: [DONE]
 Mengambil daftar model aktif dari 9Router beserta tier aksesnya.
 Field `id` memuat model ID sistem lengkap (misal `tokenharbor/deepseek-v4.1-flash:free`), sedangkan `name` memuat nama bersih untuk tampilan UI (`deepseek-v4.1-flash`).
 
+**Resolusi Alias Otomatis:**
+Gateway secara transparan memetakan nama model standar industri ke rute aktif terverifikasi:
+- `claude-3.7-sonnet` $\rightarrow$ `ag/claude-sonnet-4-6`
+- `gpt-4o` $\rightarrow$ `cx/gpt-6-luna`
+- `gemini-2.0-flash` $\rightarrow$ `ag/gemini-3.8-flash-high`
+- `deepseek-r1` $\rightarrow$ `cf/@cf/deepseek-ai/deepseek-r1-distill-qwen-32b`
+- `llama-3.3-70b` $\rightarrow$ `cf/@cf/meta/llama-3.3-70b-instruct-fp8-fast`
+- `deepseek-v4.1-flash` $\rightarrow$ `tokenharbor/deepseek-v4.1-flash:free`
+- `atria` $\rightarrow$ `atria/Atria-Dawn-Preview`
+
 **Response (HTTP 200):**
 ```json
 {

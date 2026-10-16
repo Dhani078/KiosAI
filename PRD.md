@@ -264,5 +264,46 @@ Desain prototype dari `KiosAI Token Marketplace Design` diterapkan sepenuhnya pa
 ## 19. Katalog Model di Dashboard
 
 - Menu **Model** (`Sidebar.tsx`, ikon `Cpu`) menampilkan `ModelsTab.tsx`.
-- Fitur: pencarian teks, filter tier (Semua/Bronze/Silver/Gold), indikator kunci untuk model yang belum accessible, dan tombol aksi kontekstual (Upgrade paket atau Coba di Playground).
+- Fitur: pencarian teks, filter tier (Semua/Free/Pro), counter dinamis, indikator kunci untuk model yang belum accessible, dan tombol aksi kontekstual (Beli Paket Pro atau Coba di Playground).
 - Menampilkan nama bersih via `formatModelName` (misal `deepseek-v4.1-flash`) tetapi tetap memakai `m.id` lengkap sebagai value.
+
+## 20. Arsitektur Billing 2-Tier & Rasio Tarif $/1M
+
+- **Struktur Tier**: Hanya 2 tier: `free` (bonus 2.500.000 token, model Atria Dawn) dan `pro` (seluruh model AI aktif).
+- **Rasio Biaya (`getCostRatio`)**: Diturunkan dari tarif Input + Output per 1M token dibagi baseline DeepSeek Flash ($1.37):
+  $$\text{Rasio} = \max\left(0.05,\ \frac{\text{Input } \$ + \text{Output } \$}{1.37}\right)$$
+- Tidak ada pengali `1.0×/2.0×/4.0×` tersembunyi. Angka yang tertera di kartu model persis sama dengan yang dipotong di TiDB.
+
+## 21. Maxxmode Statistik & Observabilitas
+
+- 4 Kartu KPI: Saldo Aktif, Konsumsi Token (In vs Out), Latensi Rata-Rata (Min/Max ms), dan Reliabilitas Gateway (HTTP 200 %).
+- Visualisasi Distribusi Model: Multi-segment visual bar berwarna proporsional per model AI.
+- Log Inferensi & Transaksi Real-Time: Filter pencarian, filter status HTTP, dan ekspor data CSV klien.
+
+## 22. Audit 5x & Pemangkasan Katalog Model
+
+- Pengujian nyata 746 model 5x berturut-turut ke gateway 9Router (`scripts/audit-all-models-5x.mjs`).
+- 679 model mati (scraper `cl/*` dan rute 503) dipangkas.
+- 65 model terbukti aktif didaftarkan di `lib/verified-models.ts` dan disaring di `/v1/models`.
+
+## 23. Role-Based Branding Database & Router
+
+- Kata teknis internal "TiDB" dan "9Router" disembunyikan untuk pengunjung publik dan pengguna reguler web.
+- Tampilan pengguna umum memakai label industri bersih: "Cloud Database", "database", "Gateway Live", "Gateway Aktif".
+- Sesi admin (`adminfordhani`) tetap mempertahankan label teknis lengkap untuk kebutuhan audit dan diagnostik.
+
+## 24. Resolusi Alias Komersial Otomatis
+
+- Fungsi `resolveModelAlias` di `lib/model-utils.ts` memetakan nama model industri standar secara transparan:
+  - `claude-3.7-sonnet` $\rightarrow$ `ag/claude-sonnet-4-6`
+  - `gpt-4o` $\rightarrow$ `cx/gpt-6-luna`
+  - `gemini-2.0-flash` $\rightarrow$ `ag/gemini-3.8-flash-high`
+  - `deepseek-r1` $\rightarrow$ `cf/@cf/deepseek-ai/deepseek-r1-distill-qwen-32b`
+  - `llama-3.3-70b` $\rightarrow$ `cf/@cf/meta/llama-3.3-70b-instruct-fp8-fast`
+  - `deepseek-v4.1-flash` $\rightarrow$ `tokenharbor/deepseek-v4.1-flash:free`
+  - `atria` $\rightarrow$ `atria/Atria-Dawn-Preview`
+
+## 25. Identitas Brand & Vektor Logo KiosAI Resmi
+
+- Simbol resmi: Monogram huruf "K" minimalis yang dibentuk dari kapsul pill vertikal kiri dan panah chevron kanan (`>`).
+- Format aset tak terbatas: SVG murni di `Logo.tsx`, `public/favicon.svg`, `public/kiosai-icon.svg`, dan varian HD PNG (2048/512/192/transparent) di `public/brand/`.
