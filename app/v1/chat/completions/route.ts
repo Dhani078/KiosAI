@@ -21,6 +21,14 @@ export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
   const startTime = Date.now();
+
+  // Strict Edge Security Guard: pastikan request produksi melalui Cloudflare Edge
+  const host = req.headers.get("host") || "";
+  const isLocalDev = host.includes("localhost") || host.includes("127.0.0.1");
+  if (!isLocalDev && !req.headers.get("cf-ray")) {
+    return errorResponse("Direct edge bypass forbidden. Request must pass Cloudflare Edge.", 403, "edge_required");
+  }
+
   const rawKey = (req.headers.get("authorization") || "").replace(/^Bearer\s+/i, "").trim();
   if (!rawKey) return errorResponse("Missing Authorization header. Use Bearer kios-...", 401, "missing_key");
 

@@ -59,9 +59,13 @@ export function canonicalizeJsonValue(value: unknown): unknown {
 
   const record = value as Record<string, unknown>;
   const sortedKeys = Object.keys(record).sort();
-  const result: Record<string, unknown> = {};
+  const result: Record<string, unknown> = Object.create(null);
 
   for (const key of sortedKeys) {
+    // Anti-prototype-pollution: filter dangerous prototype keys
+    if (key === "__proto__" || key === "constructor" || key === "prototype") {
+      continue;
+    }
     const val = record[key];
     if (val !== undefined) {
       result[key] = canonicalizeJsonValue(val);
