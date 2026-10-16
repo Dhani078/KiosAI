@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Search, Sparkles, CheckCircle2, Lock, X } from "lucide-react";
+import { Search, Sparkles, CheckCircle2, Lock, X, Code2 } from "lucide-react";
 import { Badge, Button } from "./ui";
 import { formatModelName } from "@/lib/model-utils";
 import { getModelPricing } from "@/lib/model-pricing";
 import { getEstimatedModelLatency } from "@/lib/model-latency";
+import ModelSnippetModal from "./ModelSnippetModal";
 
 function getProvider(id: string): string {
   const s = (id || "").toLowerCase();
@@ -23,18 +24,23 @@ function getProvider(id: string): string {
 export function ModelsTab({
   models,
   userTier,
+  activeKey = "",
   isAdmin = false,
   onNavigatePlayground,
   onNavigatePackages,
+  onCopy,
 }: {
   models: any[];
   userTier: string;
+  activeKey?: string;
   isAdmin?: boolean;
   onNavigatePlayground: (modelId?: string) => void;
   onNavigatePackages: () => void;
+  onCopy?: (t: string) => void;
 }) {
   const [search, setSearch] = useState("");
   const [tierFilter, setTierFilter] = useState<string>("all");
+  const [snippetTarget, setSnippetTarget] = useState<{ id: string; name: string } | null>(null);
 
   const isFreeTier = (userTier || "free").toLowerCase() === "free";
   const getModelTier = (m: any): "free" | "pro" => m.required_tier || ((m.id || "").toLowerCase().includes("atria") ? "free" : "pro");
@@ -147,13 +153,16 @@ export function ModelsTab({
                   )}
                 </div>
 
-                <div style={{ marginTop: "auto", paddingTop: "4px" }}>
+                <div style={{ marginTop: "auto", paddingTop: "4px", display: "flex", gap: "8px" }}>
+                  <Button kind="ghost" style={{ padding: "0 10px", height: "34px", fontSize: "12px" }} onClick={() => setSnippetTarget({ id: m.id, name: displayName })} title="Lihat Contoh Kode SDK">
+                    <Code2 size={14} />
+                  </Button>
                   {isAllowed ? (
-                    <Button kind="primary" style={{ width: "100%", height: "34px", fontSize: "12px" }} onClick={() => onNavigatePlayground(m.id)}>
+                    <Button kind="primary" style={{ flex: 1, height: "34px", fontSize: "12px" }} onClick={() => onNavigatePlayground(m.id)}>
                       <Sparkles size={14} /> Coba di Playground
                     </Button>
                   ) : (
-                    <Button kind="secondary" style={{ width: "100%", height: "34px", fontSize: "12px" }} onClick={onNavigatePackages}>
+                    <Button kind="secondary" style={{ flex: 1, height: "34px", fontSize: "12px" }} onClick={onNavigatePackages}>
                       Beli Paket Pro
                     </Button>
                   )}
@@ -163,6 +172,16 @@ export function ModelsTab({
           })
         )}
       </div>
+
+      {snippetTarget && (
+        <ModelSnippetModal
+          modelId={snippetTarget.id}
+          displayName={snippetTarget.name}
+          activeKey={activeKey}
+          onClose={() => setSnippetTarget(null)}
+          onCopy={(t) => onCopy?.(t)}
+        />
+      )}
     </div>
   );
 }

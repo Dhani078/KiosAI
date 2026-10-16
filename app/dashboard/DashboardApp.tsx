@@ -101,12 +101,13 @@ export default function Dashboard() {
             <ModelsTab
               models={data.availableModels}
               userTier={user.tier}
+              activeKey={data.keys[0]?.key_prefix ? `${data.keys[0].key_prefix}...` : ""}
               isAdmin={isAdmin}
               onNavigatePlayground={(mId) => {
                 if (mId && typeof window !== "undefined") sessionStorage.setItem("kios_selected_model", mId);
                 setPage("Playground");
               }}
-              onNavigatePackages={() => setPage("Beli Token")}
+              onNavigatePackages={() => setPage("Beli Token")} onCopy={copy}
             />
           )}
 
