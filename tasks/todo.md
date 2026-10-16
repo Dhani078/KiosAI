@@ -253,6 +253,11 @@
 - [x] Task 31.2: Add strict `cf-ray` header check in `app/v1/chat/completions/route.ts`
 - [x] Task 31.3: Verify 100% test pass: 95 files <= 200 LOC, 17/17 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
 
+## Phase 32 (Instant Printable Payment Receipt & Invoice Generator - Completed)
+- [x] Task 32.1: Implement `lib/receipt-generator.ts` with print-ready HTML layout and auto-print trigger
+- [x] Task 32.2: Add printer action button in `app/components/OrderHistoryTable.tsx` for paid orders
+- [x] Task 32.3: Verify 100% test pass: 96 files <= 200 LOC, 17/17 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
+
 
 
 

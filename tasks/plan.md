@@ -179,6 +179,10 @@
   - Sanitasi `Object.create(null)` & filter `__proto__`, `constructor`, `prototype` di `lib/prompt-normalizer.ts`
   - Validasi header `cf-ray` di `app/v1/chat/completions/route.ts` untuk memblokir direct edge bypass di lingkungan produksi
   - 100% lolos verifikasi: 95 file <= 200 LOC, tsc 0 error, 17/17 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
+- [x] Phase 40: Instant Printable Payment Receipt & Invoice Generator
+  - Generator bukti pembayaran resmi `lib/receipt-generator.ts` (79 baris) dengan template HTML auto-print
+  - Tombol aksi printer pada tabel `OrderHistoryTable.tsx` untuk cetak faktur digital instan
+  - 100% lolos verifikasi: 96 file <= 200 LOC, tsc 0 error, 17/17 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
 
 
 

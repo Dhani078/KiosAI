@@ -7,6 +7,13 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `d9ea368` — feat(billing): add instant printable payment receipt and invoice generator
+
+**Generator Faktur & Bukti Pembayaran Digital Cetak Instan**
+- **Generator Bukti Pembayaran (`lib/receipt-generator.ts`)**: Modul terpisah (79 baris) untuk memproduksi dokumen HTML faktur resmi dengan format cetak profesional (tata letak header KiosAI, detail order, badge LUNAS, rincian token, dan skrip auto-print `window.print()`).
+- **Integrasi Tombol Cetak (`app/components/OrderHistoryTable.tsx`)**: Setiap baris transaksi dengan status `paid` kini dilengkapi tombol ikon printer yang membuka dokumen faktur di jendela baru untuk klaim reimburse kantor atau pembukuan pajak.
+- **Hasil Verifikasi**: 96/96 file kode sumber patuh $\le 200$ baris per file, tsc 0 error, E2E 11/11, pricing 17/17, chaos test PASS, billing deduction 3/3, UI audit 16/16.
+
 ### `e014511` — feat(security): add prototype pollution protection and strict cloudflare edge guard
 
 **Proteksi Prototype Pollution di Edge V8 dan Kunci Header Strict Cloudflare Edge**

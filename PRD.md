@@ -349,3 +349,8 @@ Desain prototype dari `KiosAI Token Marketplace Design` diterapkan sepenuhnya pa
 
 - **Anti-Prototype-Pollution**: Objek normalisasi payload dibuat dengan `Object.create(null)` serta memfilter properti `__proto__`, `constructor`, `prototype`.
 - **Strict Cloudflare Edge Guard**: Endpoint `/v1/chat/completions` menolak request produksi yang tidak melewati edge resmi Cloudflare (memvalidasi header `cf-ray`), menutup celah bypass dan IP spoofing.
+
+## 32. Faktur Digital & Bukti Pembayaran Cetak Instan
+
+- **Generator Faktur Mandiri (`lib/receipt-generator.ts`)**: Memproduksi dokumen HTML faktur resmi siap cetak (auto-trigger `window.print()`) dengan rincian nomor order, nominal rupiah, jumlah token, status lunas, dan stempel digital KiosAI.
+- **Aksi Satu-Klik di Dashboard (`OrderHistoryTable.tsx`)**: Setiap transaksi berstatus `paid` memiliki tombol aksi cetak langsung untuk keperluan klaim reimburse kantor atau pembukuan pajak developer.
