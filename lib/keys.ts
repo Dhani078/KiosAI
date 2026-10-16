@@ -22,6 +22,8 @@ export interface UserRecord {
   full_name: string;
   tier: "free" | "pro" | string;
   balance_tokens: number;
+  locked_bonus_tokens?: number;
+  is_pro_unlocked?: number;
 }
 
 export function getRequiredTierForModel(modelId: string): "free" | "pro" {

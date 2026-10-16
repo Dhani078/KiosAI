@@ -9,12 +9,14 @@ import OrderHistoryTable from "./OrderHistoryTable";
 
 export function AnalyticsTab({
   balance,
+  lockedBonus = 0,
   analytics,
   orders,
   isAdmin = false,
   onNavigatePackages,
 }: {
   balance: number;
+  lockedBonus?: number;
   analytics: any;
   orders: any[];
   isAdmin?: boolean;
@@ -38,6 +40,7 @@ export function AnalyticsTab({
     <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
       <AnalyticsCards
         balance={balance}
+        lockedBonus={lockedBonus}
         summary={summary}
         isAdmin={isAdmin}
         onNavigatePackages={onNavigatePackages}

@@ -28,7 +28,7 @@ export function HeroSection() {
         }}
       >
         <Sparkles size={14} />
-        <span>OpenAI-Compatible AI Gateway & Token Marketplace</span>
+        <span>250K Token Instan + 2.25M Brankas Bonus · Mulai Rp 0</span>
       </div>
 
       <h1
@@ -79,7 +79,7 @@ export function HeroSection() {
             fontWeight: 600,
           }}
         >
-          Mulai Gratis (2.5 Juta Token)
+          Mulai Gratis (250K + 2.25M Bonus)
           <ArrowRight size={17} />
         </Link>
         <a

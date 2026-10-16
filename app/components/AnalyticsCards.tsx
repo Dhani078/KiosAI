@@ -5,11 +5,13 @@ import { Button } from "./ui";
 
 export function AnalyticsCards({
   balance,
+  lockedBonus = 0,
   summary,
   isAdmin = false,
   onNavigatePackages,
 }: {
   balance: number;
+  lockedBonus?: number;
   summary: {
     totalRequests: number;
     totalTokens: number;
@@ -40,7 +42,13 @@ export function AnalyticsCards({
         <div className="stat-number" style={{ fontSize: "28px", fontWeight: 700 }}>
           {balance.toLocaleString("id-ID")}
         </div>
-        <span className="muted" style={{ fontSize: "11px" }}>token tersedia di {isAdmin ? "TiDB" : "akun"}</span>
+        {lockedBonus > 0 ? (
+          <div style={{ fontSize: "11px", color: "var(--primary)", background: "rgba(242, 140, 56, 0.08)", padding: "4px 8px", borderRadius: "4px", border: "1px dashed rgba(242, 140, 56, 0.3)" }}>
+            🔒 +{lockedBonus.toLocaleString("id-ID")} di Brankas Bonus
+          </div>
+        ) : (
+          <span className="muted" style={{ fontSize: "11px" }}>token tersedia di {isAdmin ? "TiDB" : "akun"}</span>
+        )}
         <div style={{ marginTop: "auto", paddingTop: "8px" }}>
           <Button kind="primary" style={{ width: "100%", height: "32px", fontSize: "12px" }} onClick={onNavigatePackages}>
             Isi Saldo <Plus size={14} />

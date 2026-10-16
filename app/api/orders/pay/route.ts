@@ -31,10 +31,12 @@ export async function POST(req: NextRequest) {
       [orderId]
     );
 
-    // Add tokens to user and upgrade tier if higher
+    // Add tokens to user, unlock bonus vault if locked, and upgrade tier to Pro
     await db.execute(
       `UPDATE kiosai.users 
-       SET balance_tokens = balance_tokens + ?,
+       SET balance_tokens = balance_tokens + ? + CASE WHEN is_pro_unlocked = 0 THEN locked_bonus_tokens ELSE 0 END,
+           locked_bonus_tokens = CASE WHEN is_pro_unlocked = 0 THEN 0 ELSE locked_bonus_tokens END,
+           is_pro_unlocked = 1,
            tier = CASE 
              WHEN ? IN ('pro', 'pro_25k', 'pro_100k', 'pro_150k', 'bronze', 'silver', 'gold') THEN 'pro'
              ELSE tier

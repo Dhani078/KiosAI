@@ -2,7 +2,16 @@ import { useState, useEffect } from "react";
 
 export function useKiosData() {
   const [activeTab, setActiveTab] = useState<"keys" | "packages" | "playground" | "analytics" | "docs">("keys");
-  const [currentUser, setCurrentUser] = useState<{ id: string; email: string; username?: string | null; full_name: string; balance_tokens: number; tier: string } | null>(null);
+  const [currentUser, setCurrentUser] = useState<{
+    id: string;
+    email: string;
+    username?: string | null;
+    full_name: string;
+    balance_tokens: number;
+    locked_bonus_tokens?: number;
+    is_pro_unlocked?: number;
+    tier: string;
+  } | null>(null);
   const [keys, setKeys] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 

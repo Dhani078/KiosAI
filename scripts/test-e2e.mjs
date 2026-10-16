@@ -56,7 +56,8 @@ await test("POST /api/auth/register", async () => {
   const data = await res.json();
   assert(res.ok, `HTTP ${res.status}`);
   assert(data.user?.id, "No user ID returned");
-  assert(Number(data.user.balance_tokens) === 2500000, "Trial tokens mismatch");
+  assert(Number(data.user.balance_tokens) === 250000, "Initial active tokens mismatch");
+  assert(Number(data.user.locked_bonus_tokens) === 2250000, "Locked bonus mismatch");
   assert(data.user.tier === "free", "Initial tier should be free");
   testUser = data.user;
 });
@@ -111,9 +112,9 @@ await test("POST /v1/chat/completions (Stream SSE)", async () => {
     max_tokens: 10,
     stream: true,
   });
-  if (res.status === 503) {
+  if (res.status === 503 || res.status === 502) {
     const data = await res.json();
-    assert(data.error?.code === "upstream_error", "Expected upstream_error on 503");
+    assert(data.error?.code === "upstream_error", "Expected upstream_error on 503/502");
     return;
   }
   assert(res.ok, `HTTP ${res.status}`);
@@ -162,11 +163,12 @@ await test("POST /api/orders/pay (Payment Fulfillment)", async () => {
   assert(res.ok, `HTTP ${res.status}`);
   assert(data.success === true, "Payment not marked success");
 
-  // Verify user balance & tier upgraded to pro
+  // Verify user balance & tier upgraded to pro, and bonus vault unlocked
   const uRes = await fetch(`${BASE}/api/user?id=${testUser.id}`);
   const uData = await uRes.json();
   assert(uData.user.tier === "pro", `Expected pro tier, got ${uData.user.tier}`);
-  assert(Number(uData.user.balance_tokens) > 2500000, "Tokens not credited");
+  assert(Number(uData.user.locked_bonus_tokens) === 0, "Bonus vault not unlocked to 0");
+  assert(Number(uData.user.balance_tokens) >= 102500000, "Tokens not credited");
 });
 
 // 10. Pro Tier Access (Post-upgrade Pro Model with Alias)

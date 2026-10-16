@@ -5,40 +5,40 @@ import { checkRateLimit, acquireStreamSlot, releaseStreamSlot } from "@/lib/rate
 import { UPSTREAM_URL, UPSTREAM_KEY, errorResponse, parseUpstreamJson } from "@/lib/proxy-http";
 import { resolveModelAlias } from "@/lib/model-utils";
 import { createBilledStream } from "@/lib/stream-billing";
+import { buildQuotaExhaustedError } from "@/lib/bonus-vault";
+import { executeResilientStream } from "@/lib/failover-router";
+import {
+  isCacheEligible,
+  buildCanonicalCacheKey,
+  lookupEdgeCache,
+  wrapStreamForEdgeCaching,
+  CACHE_HIT_DISCOUNT_MULTIPLIER,
+} from "@/lib/edge-cache";
 
 export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
   const startTime = Date.now();
-  const authHeader = req.headers.get("authorization") || "";
-  const rawKey = authHeader.replace(/^Bearer\s+/i, "").trim();
+  const rawKey = (req.headers.get("authorization") || "").replace(/^Bearer\s+/i, "").trim();
+  if (!rawKey) return errorResponse("Missing Authorization header. Use Bearer kios-...", 401, "missing_key");
 
-  if (!rawKey) {
-    return errorResponse("Missing Authorization header. Use Bearer kios-...", 401, "missing_key");
-  }
-
-  // 1. Validate API Key
   const auth = await validateApiKey(rawKey);
   if (!auth.valid || !auth.user || !auth.key) {
-    const isQuota = Boolean(auth.error?.includes("exhausted"));
-    return errorResponse(auth.error || "Unauthorized", isQuota ? 402 : 401, isQuota ? "insufficient_quota" : "invalid_key");
+    if (auth.error?.includes("exhausted")) {
+      const errBody = buildQuotaExhaustedError(auth.user?.balance_tokens || 0, auth.user?.locked_bonus_tokens || 0);
+      return NextResponse.json(errBody, { status: 402 });
+    }
+    return errorResponse(auth.error || "Unauthorized", 401, "invalid_key");
   }
 
-  // 2. Check Rate Limit
   const rateLimit = checkRateLimit(auth.key.id, auth.key.rate_limit_per_min || 60);
   const rateHeaders = {
     "X-RateLimit-Limit": String(auth.key.rate_limit_per_min || 60),
     "X-RateLimit-Remaining": String(rateLimit.remaining),
     "X-RateLimit-Reset": String(rateLimit.resetSeconds),
   };
-
   if (!rateLimit.allowed) {
-    return errorResponse(
-      `Rate limit exceeded (${auth.key.rate_limit_per_min}/min). Tunggu ${rateLimit.resetSeconds}s.`,
-      429,
-      "rate_limit_exceeded",
-      { ...rateHeaders, "Retry-After": String(rateLimit.resetSeconds) }
-    );
+    return errorResponse(`Rate limit exceeded (${auth.key.rate_limit_per_min}/min). Tunggu ${rateLimit.resetSeconds}s.`, 429, "rate_limit_exceeded", { ...rateHeaders, "Retry-After": String(rateLimit.resetSeconds) });
   }
 
   let body: any;
@@ -49,117 +49,93 @@ export async function POST(req: NextRequest) {
   }
 
   const rawModel = body.model;
-  if (!rawModel) {
-    return errorResponse("Field 'model' is required", 400, "missing_model");
-  }
+  if (!rawModel) return errorResponse("Field 'model' is required", 400, "missing_model");
   const requestedModel = resolveModelAlias(rawModel);
   body.model = requestedModel;
 
-  // Validate Allowed Models (on Key)
   if (auth.key.allowed_models) {
     try {
       const allowed: string[] = JSON.parse(auth.key.allowed_models);
       if (Array.isArray(allowed) && allowed.length > 0 && !allowed.includes(requestedModel)) {
-        return errorResponse(
-          `Model '${requestedModel}' is not allowed for this API key. Allowed: ${allowed.join(", ")}`,
-          403,
-          "model_forbidden"
-        );
+        return errorResponse(`Model '${requestedModel}' is not allowed for this key.`, 403, "model_forbidden");
       }
     } catch {}
   }
 
-  // Validate Model Access
   if (!isModelAllowedForTier(auth.user.tier, requestedModel)) {
-    return errorResponse(
-      `Model '${rawModel}' tidak tersedia di tier FREE. Model gratis hanya Atria Dawn. Beli paket Pro untuk membuka seluruh model AI.`,
-      403,
-      "tier_restricted"
-    );
+    return errorResponse(`Model '${rawModel}' tidak tersedia di tier FREE. Model gratis hanya Atria Dawn.`, 403, "tier_restricted");
+  }
+
+  // Edge Exact Prompt Caching Lookup
+  const cacheEligible = isCacheEligible(body, req.headers.get("cache-control"));
+  const cacheKey = cacheEligible ? buildCanonicalCacheKey(auth.user.id, body) : null;
+  if (cacheKey) {
+    const cached = await lookupEdgeCache(cacheKey);
+    if (cached) {
+      const cost = Math.max(1, Math.round(calculateTokenCost(requestedModel, cached.meta.promptTokens, cached.meta.completionTokens) * CACHE_HIT_DISCOUNT_MULTIPLIER));
+      await deductTokens(auth.user.id, cost, 1.0);
+      await logUsage({
+        apiKeyId: auth.key.id, userId: auth.user.id, model: requestedModel,
+        promptTokens: cached.meta.promptTokens, completionTokens: cached.meta.completionTokens,
+        latencyMs: Date.now() - startTime, statusCode: 200,
+      });
+      return cached.response;
+    }
   }
 
   const isStream = Boolean(body.stream);
-  if (isStream && !acquireStreamSlot(auth.key.id, 3)) {
-    return errorResponse(
-      "Maksimal 3 stream simultan tercapai. Tunggu stream sebelumnya selesai.",
-      429,
-      "concurrent_stream_limit",
-      rateHeaders
-    );
+  if (isStream) {
+    if (!acquireStreamSlot(auth.key.id, 3)) {
+      return errorResponse("Maksimal 3 stream simultan tercapai. Tunggu stream selesai.", 429, "concurrent_stream_limit", rateHeaders);
+    }
+    try {
+      const result = await executeResilientStream(requestedModel, body);
+      let outStream = result.stream;
+      if (cacheKey) outStream = wrapStreamForEdgeCaching(outStream, cacheKey);
+
+      const billed = createBilledStream({
+        reader: outStream.getReader(), userId: auth.user.id, keyId: auth.key.id,
+        model: result.effectiveModel, startTime,
+      });
+
+      return new NextResponse(billed, {
+        headers: {
+          "Content-Type": "text/event-stream; charset=utf-8", "Cache-Control": "no-cache, no-transform", Connection: "keep-alive",
+          ...rateHeaders, ...(result.didFailover ? { "X-Kios-Failover": "true", "X-Kios-Model-Used": result.usedModel } : {}),
+        },
+      });
+    } catch (err: any) {
+      releaseStreamSlot(auth.key.id);
+      const match = String(err.message).match(/UPSTREAM_RETRYABLE_(\d+)/);
+      const statusCode = match ? Number(match[1]) : 502;
+      return errorResponse(`Upstream error: ${err.message}`, statusCode, "upstream_error");
+    }
   }
 
-  const targetUrl = `${UPSTREAM_URL}/v1/chat/completions`;
-
+  // Non-Streaming Request
   try {
-    const upstreamHeaders: Record<string, string> = {
-      "Content-Type": "application/json",
-      ...(UPSTREAM_KEY ? { Authorization: `Bearer ${UPSTREAM_KEY}` } : {}),
-    };
-
-    const upstreamRes = await fetch(targetUrl, {
+    const upstreamRes = await fetch(`${UPSTREAM_URL}/v1/chat/completions`, {
       method: "POST",
-      headers: upstreamHeaders,
-      body: JSON.stringify(isStream ? { ...body, stream_options: { ...(body.stream_options || {}), include_usage: true } } : body),
+      headers: { "Content-Type": "application/json", ...(UPSTREAM_KEY ? { Authorization: `Bearer ${UPSTREAM_KEY}` } : {}) },
+      body: JSON.stringify(body),
     });
 
     if (!upstreamRes.ok) {
-      if (isStream) releaseStreamSlot(auth.key.id);
       const errText = await upstreamRes.text();
-      const latency = Date.now() - startTime;
-      await logUsage({
-        apiKeyId: auth.key.id, userId: auth.user.id, model: requestedModel,
-        promptTokens: 0, completionTokens: 0, latencyMs: latency, statusCode: upstreamRes.status,
-      });
-      let upstreamMessage = errText.slice(0, 400);
-      try {
-        upstreamMessage = JSON.parse(errText)?.error?.message || upstreamMessage;
-      } catch {}
-      return errorResponse(`Upstream (${upstreamRes.status}): ${upstreamMessage}`, upstreamRes.status, "upstream_error");
+      await logUsage({ apiKeyId: auth.key.id, userId: auth.user.id, model: requestedModel, promptTokens: 0, completionTokens: 0, latencyMs: Date.now() - startTime, statusCode: upstreamRes.status });
+      return errorResponse(`Upstream (${upstreamRes.status}): ${errText.slice(0, 300)}`, upstreamRes.status, "upstream_error");
     }
 
-    // Handle Streaming Response with Abort Protection
-    if (isStream && upstreamRes.body) {
-      const billedStream = createBilledStream({
-        reader: upstreamRes.body.getReader(),
-        userId: auth.user.id,
-        keyId: auth.key.id,
-        model: requestedModel,
-        startTime,
-      });
-
-      return new NextResponse(billedStream, {
-        headers: {
-          "Content-Type": "text/event-stream; charset=utf-8",
-          "Cache-Control": "no-cache, no-transform",
-          Connection: "keep-alive",
-          ...rateHeaders,
-        },
-      });
-    }
-
-    // Handle Non-Streaming JSON Response
-    const rawText = await upstreamRes.text();
-    const data = parseUpstreamJson(rawText);
-    const promptTokens = data.usage?.prompt_tokens || 15;
-    const completionTokens = data.usage?.completion_tokens || 35;
-
-    const latency = Date.now() - startTime;
-    const actualCost = calculateTokenCost(requestedModel, promptTokens, completionTokens);
+    const data = parseUpstreamJson(await upstreamRes.text());
+    const pTokens = data.usage?.prompt_tokens || 15;
+    const cTokens = data.usage?.completion_tokens || 35;
+    const actualCost = calculateTokenCost(requestedModel, pTokens, cTokens);
     const deducted = await deductTokens(auth.user.id, actualCost, 1.0);
-    await logUsage({
-      apiKeyId: auth.key.id, userId: auth.user.id, model: requestedModel,
-      promptTokens, completionTokens, latencyMs: latency, statusCode: 200,
-    });
+    await logUsage({ apiKeyId: auth.key.id, userId: auth.user.id, model: requestedModel, promptTokens: pTokens, completionTokens: cTokens, latencyMs: Date.now() - startTime, statusCode: 200 });
 
-    const isLowBalance = Number(auth.user.balance_tokens) - deducted < 20000;
-    const finalHeaders = {
-      ...rateHeaders,
-      ...(isLowBalance ? { "X-Quota-Warning": "low_balance" } : {}),
-    };
-
-    return NextResponse.json(data, { headers: finalHeaders });
+    const isLow = Number(auth.user.balance_tokens) - deducted < 20000;
+    return NextResponse.json(data, { headers: { ...rateHeaders, ...(isLow ? { "X-Quota-Warning": "low_balance" } : {}) } });
   } catch (err: any) {
-    if (isStream) releaseStreamSlot(auth.key.id);
-    return errorResponse(`Upstream error: ${err.message}`, 502, "bad_gateway");
+    return errorResponse(`Upstream error: ${err.message}`, 502, "upstream_error");
   }
 }

@@ -168,7 +168,7 @@ export function AuthModal({
               loading={loading}
               style={{ width: "100%", marginTop: "20px" }}
             >
-              {tab === "login" ? "Masuk ke Akun" : "Daftar & Ambil 2.5 Juta Token"}
+              {tab === "login" ? "Masuk ke Akun" : "Daftar (250K Instan + 2.25M Bonus)"}
               <ArrowRight size={16} />
             </Button>
             <small className="modal-note">

@@ -119,6 +119,7 @@ export default function Dashboard() {
           {page === "Statistik" && (
             <AnalyticsTab
               balance={user.balance_tokens}
+              lockedBonus={user.locked_bonus_tokens || 0}
               analytics={data.analytics}
               orders={data.orders}
               isAdmin={isAdmin}

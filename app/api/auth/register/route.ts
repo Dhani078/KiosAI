@@ -30,12 +30,13 @@ export async function POST(req: NextRequest) {
 
     const userId = `usr_${crypto.randomUUID()}`;
     const passwordHash = hashPassword(password);
-    const initialTokens = 2500000; // 2.5M bonus token (Free tier)
+    const initialTokens = 250000; // 250K token instan (Free tier)
+    const lockedBonusTokens = 2250000; // 2.25M bonus brankas terkunci
 
     await db.execute(
-      `INSERT INTO kiosai.users (id, email, password_hash, full_name, tier, balance_tokens)
-       VALUES (?, ?, ?, ?, 'free', ?)`,
-      [userId, email.toLowerCase().trim(), passwordHash, fullName || "Pengguna KiosAI", initialTokens]
+      `INSERT INTO kiosai.users (id, email, password_hash, full_name, tier, balance_tokens, locked_bonus_tokens, is_pro_unlocked)
+       VALUES (?, ?, ?, ?, 'free', ?, ?, 0)`,
+      [userId, email.toLowerCase().trim(), passwordHash, fullName || "Pengguna KiosAI", initialTokens, lockedBonusTokens]
     );
 
     const orderId = crypto.randomUUID();
@@ -51,12 +52,14 @@ export async function POST(req: NextRequest) {
       full_name: fullName || "Pengguna KiosAI",
       tier: "free",
       balance_tokens: initialTokens,
+      locked_bonus_tokens: lockedBonusTokens,
+      is_pro_unlocked: 0,
     };
 
     return NextResponse.json({
       success: true,
       user,
-      message: "Pendaftaran berhasil! Anda mendapatkan 2.500.000 token gratis (Free tier).",
+      message: "Pendaftaran berhasil! Anda mendapatkan 250.000 token aktif instan + 2.250.000 token di Brankas Bonus (cair saat top-up pertama).",
     });
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
