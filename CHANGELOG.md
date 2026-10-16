@@ -7,6 +7,13 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `0f4b146` — feat(playground): add system prompt persona presets dropdown in playground toolbar
+
+**Preset Persona System Prompt Instan di Playground**
+- **Katalog Preset Prompt (`lib/prompt-presets.ts`)**: Modul terpisah (28 baris) mendefinisikan persona pengujian instan: Asisten Umum, Coding Specialist (solusi konkret tanpa basa-basi), Penerjemah Formal (KBBI/EYD baku), dan JSON Data Extractor.
+- **Integrasi Dropdown Persona (`app/components/PlaygroundTab.tsx`)**: Menambahkan pemilih preset persona tepat di samping label input instruksi sistem, memungkinkan pengguna menguji prompt engineering beragam persona dengan satu klik tanpa mengetik instruksi berulang.
+- **Hasil Verifikasi**: 97/97 file kode sumber patuh $\le 200$ baris per file (`PlaygroundTab.tsx` 199 baris), tsc 0 error, E2E 11/11, pricing 17/17, chaos test PASS, billing deduction 3/3, UI audit 16/16.
+
 ### `d9ea368` — feat(billing): add instant printable payment receipt and invoice generator
 
 **Generator Faktur & Bukti Pembayaran Digital Cetak Instan**

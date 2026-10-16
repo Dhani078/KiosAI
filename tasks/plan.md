@@ -183,6 +183,10 @@
   - Generator bukti pembayaran resmi `lib/receipt-generator.ts` (79 baris) dengan template HTML auto-print
   - Tombol aksi printer pada tabel `OrderHistoryTable.tsx` untuk cetak faktur digital instan
   - 100% lolos verifikasi: 96 file <= 200 LOC, tsc 0 error, 17/17 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
+- [x] Phase 41: Instant Playground Persona Presets
+  - Modul `lib/prompt-presets.ts` (28 baris) mendefinisikan preset: Coding Specialist, Formal ID, JSON Extractor, Default
+  - Dropdown pemilih preset instan di `PlaygroundTab.tsx` (199 baris)
+  - 100% lolos verifikasi: 97 file <= 200 LOC, tsc 0 error, 17/17 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
 
 
 

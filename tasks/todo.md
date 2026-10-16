@@ -258,6 +258,11 @@
 - [x] Task 32.2: Add printer action button in `app/components/OrderHistoryTable.tsx` for paid orders
 - [x] Task 32.3: Verify 100% test pass: 96 files <= 200 LOC, 17/17 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
 
+## Phase 33 (Instant Playground Persona Presets - Completed)
+- [x] Task 33.1: Implement `lib/prompt-presets.ts` with key personas (Coding Specialist, Formal ID, JSON Extractor, Default)
+- [x] Task 33.2: Integrate preset selector dropdown in `PlaygroundTab.tsx`
+- [x] Task 33.3: Verify 100% test pass: 97 files <= 200 LOC, 17/17 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
+
 
 
 

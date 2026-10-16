@@ -354,3 +354,7 @@ Desain prototype dari `KiosAI Token Marketplace Design` diterapkan sepenuhnya pa
 
 - **Generator Faktur Mandiri (`lib/receipt-generator.ts`)**: Memproduksi dokumen HTML faktur resmi siap cetak (auto-trigger `window.print()`) dengan rincian nomor order, nominal rupiah, jumlah token, status lunas, dan stempel digital KiosAI.
 - **Aksi Satu-Klik di Dashboard (`OrderHistoryTable.tsx`)**: Setiap transaksi berstatus `paid` memiliki tombol aksi cetak langsung untuk keperluan klaim reimburse kantor atau pembukuan pajak developer.
+
+## 33. Preset Persona System Prompt Instan
+
+- **Katalog Persona Terkurasi (`lib/prompt-presets.ts`)**: Persona spesialis bawaan siap pakai (Coding Specialist, Penerjemah Formal KBBI, JSON Data Extractor, dan Default) yang langsung menyuntikkan instruksi sistem presisi ke Playground tanpa perlu mengetik manual.
