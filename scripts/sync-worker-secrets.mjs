@@ -14,8 +14,17 @@ import { join } from "node:path";
 const ACCOUNT_ID = process.env.CF_ACCOUNT_ID || "c734e9afeed67d74624f8dcf9de3c6f8";
 const WORKER = process.env.CF_WORKER_NAME || "kiosai";
 
-// Hanya yang dibaca Worker saat runtime (lib/db.ts, lib/proxy-http.ts).
-const KEYS = ["DATABASE_URL", "NINEROUTER_URL", "NINEROUTER_API_KEY_2", "NINEROUTER_API_KEY"];
+// Kunci yang dibaca Worker saat runtime (lib/db.ts, lib/proxy-http.ts, lib/oauth.ts).
+const KEYS = [
+  "DATABASE_URL",
+  "NINEROUTER_URL",
+  "NINEROUTER_API_KEY_2",
+  "NINEROUTER_API_KEY",
+  "GITHUB_CLIENT_ID",
+  "GITHUB_CLIENT_SECRET",
+  "GOOGLE_CLIENT_ID",
+  "GOOGLE_CLIENT_SECRET",
+];
 
 async function wranglerOauthToken() {
   const paths = [
