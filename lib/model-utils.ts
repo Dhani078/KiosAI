@@ -68,6 +68,9 @@ export function resolveModelAlias(modelId: string): string {
   if (m === "deepseek-v4.1-flash") {
     return "tokenharbor/deepseek-v4.1-flash:free";
   }
+  if (m === "deepseek-v4.1-flash-free" || m === "beatapi/deepseek-v4.1-flash-free") {
+    return "beatapi/deepseek-v4.1-flash-free";
+  }
   if (lower === "atria-dawn-preview" || lower === "atria") {
     return "atria/Atria-Dawn-Preview";
   }

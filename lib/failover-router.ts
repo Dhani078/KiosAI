@@ -14,7 +14,12 @@ const MID_STREAM_WATCHDOG_MS = 15000;
 
 const FALLBACK_MAP: Record<string, string[]> = {
   "tokenharbor/deepseek-v4.1-flash:free": [
+    "beatapi/deepseek-v4.1-flash-free",
     "cf/@cf/deepseek-ai/deepseek-r1-distill-qwen-32b",
+    "ag/gemini-3.8-flash-high",
+  ],
+  "beatapi/deepseek-v4.1-flash-free": [
+    "tokenharbor/deepseek-v4.1-flash:free",
     "ag/gemini-3.8-flash-high",
   ],
   "ag/claude-sonnet-4-6": [
