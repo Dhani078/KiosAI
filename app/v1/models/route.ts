@@ -8,6 +8,7 @@ export const runtime = "nodejs";
 
 function isHiddenModel(id: string): boolean {
   const lower = (id || "").toLowerCase();
+  if (lower.startsWith("oc/")) return false;
   return (
     lower === "combomaut" ||
     lower === "free123" ||

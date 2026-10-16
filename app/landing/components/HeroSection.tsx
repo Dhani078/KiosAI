@@ -115,7 +115,7 @@ export function HeroSection() {
             <Zap size={20} />
           </div>
           <div>
-            <strong style={{ display: "block", fontSize: "14px" }}>65+ Model Terverifikasi</strong>
+            <strong style={{ display: "block", fontSize: "14px" }}>70+ Model Terverifikasi</strong>
             <small className="muted" style={{ fontSize: "12px" }}>DeepSeek, Claude, GPT, Gemini</small>
           </div>
         </div>

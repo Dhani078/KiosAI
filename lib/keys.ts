@@ -32,7 +32,7 @@ export interface UserRecord {
 
 export function getRequiredTierForModel(modelId: string): "free" | "pro" {
   const m = modelId.toLowerCase();
-  if (m.includes("atria")) {
+  if (m.includes("atria") || m.startsWith("oc/")) {
     return "free";
   }
   return "pro";
@@ -42,7 +42,7 @@ export function isModelAllowedForTier(tier: string, model: string): boolean {
   const t = (tier || "free").toLowerCase();
   if (t === "free") {
     const m = model.toLowerCase();
-    return m.includes("atria");
+    return m.includes("atria") || m.startsWith("oc/");
   }
   return true;
 }

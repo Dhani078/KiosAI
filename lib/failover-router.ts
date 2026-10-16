@@ -15,12 +15,34 @@ const MID_STREAM_WATCHDOG_MS = 15000;
 const FALLBACK_MAP: Record<string, string[]> = {
   "tokenharbor/deepseek-v4.1-flash:free": [
     "beatapi/deepseek-v4.1-flash-free",
+    "oc/deepseek-v4.1-flash-free(max)",
     "cf/@cf/deepseek-ai/deepseek-r1-distill-qwen-32b",
-    "ag/gemini-3.8-flash-high",
   ],
   "beatapi/deepseek-v4.1-flash-free": [
+    "oc/deepseek-v4.1-flash-free(max)",
     "tokenharbor/deepseek-v4.1-flash:free",
-    "ag/gemini-3.8-flash-high",
+  ],
+  "oc/deepseek-v4.1-flash-free(max)": [
+    "oc/deepseek-v4.1-flash-free",
+    "beatapi/deepseek-v4.1-flash-free",
+    "oc/mimo-v2.6-flash-free",
+  ],
+  "oc/deepseek-v4.1-flash-free": [
+    "oc/deepseek-v4.1-flash-free(max)",
+    "beatapi/deepseek-v4.1-flash-free",
+    "oc/mimo-v2.6-flash-free",
+  ],
+  "oc/mimo-v2.6-flash-free": [
+    "oc/deepseek-v4.1-flash-free(max)",
+    "atria/Atria-Dawn-Preview",
+  ],
+  "oc/nemotron-3.5-lightning-free": [
+    "oc/mimo-v2.6-flash-free",
+    "atria/Atria-Dawn-Preview",
+  ],
+  "oc/muse-spark-1.3-contributor-free": [
+    "oc/deepseek-v4.1-flash-free(max)",
+    "atria/Atria-Dawn-Preview",
   ],
   "ag/claude-sonnet-4-6": [
     "kr/claude-sonnet-4",

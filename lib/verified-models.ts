@@ -69,6 +69,11 @@ export const VERIFIED_MODEL_IDS = new Set<string>([
   "ag/claude-opus-4-6-thinking",
   "ag/gpt-oss-120b-medium",
   "beatapi/deepseek-v4.1-flash-free",
+  "oc/deepseek-v4.1-flash-free",
+  "oc/deepseek-v4.1-flash-free(max)",
+  "oc/muse-spark-1.3-contributor-free",
+  "oc/mimo-v2.6-flash-free",
+  "oc/nemotron-3.5-lightning-free",
 ]);
 
 export function isModelVerified(modelId: string): boolean {

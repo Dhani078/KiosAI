@@ -1,7 +1,7 @@
 export interface ModelItem {
   id: string;
   name: string;
-  provider: "Anthropic" | "OpenAI" | "DeepSeek" | "Google" | "Meta" | "Atria";
+  provider: "Anthropic" | "OpenAI" | "DeepSeek" | "Google" | "Meta" | "Atria" | "OpenCode";
   context: string;
   tier: "free" | "pro";
   pricing: string;
@@ -19,6 +19,26 @@ export const MODELS: ModelItem[] = [
     pricing: "Gratis",
     desc: "Model uji coba gratis untuk eksplorasi chat & prompt bagi semua pengguna baru.",
     strengths: ["Free Tier", "Trial Cepat", "Multi-turn Chat"],
+  },
+  {
+    id: "oc/deepseek-v4.1-flash-free(max)",
+    name: "DeepSeek V4.1 Flash Free (Max)",
+    provider: "OpenCode",
+    context: "200k",
+    tier: "free",
+    pricing: "Gratis",
+    desc: "Model reasoning kilat OpenCode gratis dengan 200k context window dan thinking max.",
+    strengths: ["Free Tier", "200k Context", "Thinking Max"],
+  },
+  {
+    id: "oc/mimo-v2.6-flash-free",
+    name: "MiMo V2.6 Flash Free",
+    provider: "OpenCode",
+    context: "200k",
+    tier: "free",
+    pricing: "Gratis",
+    desc: "Model efisien OpenCode untuk tugas coding cepat dan percakapan interaktif bebas kuota.",
+    strengths: ["Free Tier", "Coding Ringan", "Bebas Kuota"],
   },
   {
     id: "ag/gemini-3.8-flash-high",
