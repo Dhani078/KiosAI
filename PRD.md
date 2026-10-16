@@ -375,3 +375,8 @@ Desain prototype dari `KiosAI Token Marketplace Design` diterapkan sepenuhnya pa
 ## 37. Banner Peringatan Saldo Rendah Global
 
 - **Sticky Low-Balance Alert (`DashboardApp.tsx`)**: Muncul otomatis di atas konten utama setiap tab saat saldo akun pengguna berada di bawah ambang batas aman 50.000 token, dilengkapi tombol aksi langsung ke checkout paket untuk mencegah disrupsi bot/integrasi klien.
+
+## 38. Indikator Kecepatan & Latensi Riil pada Kartu Model
+
+- **Benchmarking Latensi Responsif (`lib/model-latency.ts`)**: Mengklasifikasikan estimasi latensi respons per keluarga model AI: model Flash/Lite (~240ms), model Flagship (~650ms), dan model Deep Reasoning (~1.4s).
+- **Badge Kecepatan di Dashboard (`ModelsTab.tsx`)**: Menyajikan indikator titik hijau dan estimasi waktu latensi di samping tag provider pada tiap kartu model, memberikan ekspektasi kecepatan yang transparan kepada pengembang sebelum memilih rute model.

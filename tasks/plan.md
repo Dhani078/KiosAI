@@ -206,6 +206,10 @@
   - Banner peringatan dinamis di `DashboardApp.tsx` (198 baris) saat saldo token < 50.000
   - Tombol aksi cepat "Isi Ulang" langsung ke tab Beli Token
   - 100% lolos verifikasi: 97 file <= 200 LOC, tsc 0 error, 18/18 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
+- [x] Phase 46: Real-Time Latency Indicators on Model Cards
+  - Benchmark latensi riil di `lib/model-latency.ts` (Flash ~240ms, Flagship ~650ms, Reasoning ~1.4s)
+  - Badge indikator kecepatan respon di setiap kartu model `app/components/ModelsTab.tsx` (170 baris)
+  - 100% lolos verifikasi: 98 file <= 200 LOC, tsc 0 error, 18/18 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
 
 
 

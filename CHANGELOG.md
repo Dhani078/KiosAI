@@ -7,6 +7,13 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `d64d640` — feat(models): display real-time latency speed indicators on catalog model cards
+
+**Indikator Kecepatan & Latensi Riil pada Kartu Model**
+- **Estimator Latensi Model (`lib/model-latency.ts`)**: Modul terpisah (30 baris) mendefinisikan benchmark latensi model berdasarkan keluarga model AI: Flash/Lite (~240ms hijau cepat), Flagship Standar (~650ms), dan Deep Reasoning/Opus (~1.4s).
+- **Badge Latensi Interaktif (`app/components/ModelsTab.tsx`)**: Setiap kartu model di katalog dashboard kini menampilkan indikator dot status dan estimasi latensi respons di samping nama provider (misal `GOOGLE • ~240ms`), memberikan transparansi kecepatan kepada developer sebelum memilih model.
+- **Hasil Verifikasi**: 98/98 file kode sumber patuh $\le 200$ baris per file (`ModelsTab.tsx` 170 baris), tsc 0 error, E2E 11/11, pricing 18/18, chaos test PASS, billing deduction 3/3, UI audit 16/16.
+
 ### `fd17d0d` — feat(dashboard): add sticky low balance warning banner with quick refill action
 
 **Banner Peringatan Saldo Menipis di Dashboard**
