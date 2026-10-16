@@ -405,3 +405,9 @@ Desain prototype dari `KiosAI Token Marketplace Design` diterapkan sepenuhnya pa
   - `oc/nemotron-3.5-lightning-free`: Model arsitektur lightning NVIDIA untuk inferensi terdistribusi.
 - **Akses Gratis & Tarif Nol**: Seluruh model OpenCode dibuka langsung untuk akun tier Free (`tier: "free"`) dengan tarif pemotongan $0.00 / 1M token (Gratis), memperluas pilihan model gratis di KiosAI menjadi 5 model terverifikasi.
 - **Redundansi Jaringan**: Terhubung dalam sistem failover multiarah bersama `beatapi` dan `tokenharbor`.
+
+## 43. Autentikasi Sosial Native (Sign in with GitHub & Google)
+
+- **Modul Sentral OAuth (`lib/oauth.ts`)**: Penukaran `code` ke `access_token` berbasis OpenID Connect dan OAuth 2.0 standar tanpa ketergantungan library eksternal berat (NextAuth/Passport).
+- **Onboarding Akun Otomatis**: Pengguna baru yang mendaftar via GitHub atau Google langsung otomatis dibuatkan ID pengguna di TiDB, dihadiahi 250.000 token aktif instan + 2.250.000 token brankas bonus, dan ditautkan ke akun permanen.
+- **UI Dialog Modern (`AuthModal.tsx`)**: Menyajikan tombol "Lanjutkan dengan GitHub" dan "Lanjutkan dengan Google" dengan ikon SVG presisi dan pemisah visual di atas formulir email konvensional.

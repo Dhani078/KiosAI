@@ -3,10 +3,10 @@
 - **Repository**: `https://github.com/Dhani078/KiosAI.git`
 - **Location**: `E:/Hermesproject/KiosAI`
 - **Live Worker**: `https://kiosai.dhanisepeda.workers.dev` (subdomain `dhanisepeda`, pakai `e`)
-- **Current Status**: Complete & Fully Verified (Phase 0 - 50)
+- **Current Status**: Complete & Fully Verified (Phase 0 - 51)
 - **Upstream Router**: 9Router local (`http://127.0.0.1:20128`) dengan 71 model aktif terverifikasi 5x audit (5 Free, 66 Pro)
 - **Database**: TiDB Cloud Serverless (`gateway01.ap-southeast-1.prod.aws.tidbcloud.com:4000/kiosai`)
-- **Last Commit**: `6ba1be5` — feat(models): integrate verified OpenCode models into free tier with failover and zero pricing
+- **Last Commit**: `4047b72` — feat(auth): implement native GitHub and Google OAuth social login and onboarding
 
 ## Dokumen Navigasi Cepat
 - Aturan & perintah untuk agent: `AGENT.md`
@@ -282,6 +282,13 @@
     - Klasifikasi otomatis model `oc/` sebagai tier "free" dengan tarif $0.00 (Gratis) di `lib/keys.ts`, `lib/model-pricing.ts`, dan endpoint `/v1/models`.
     - Konfigurasi failover router timbal-balik dan showcase katalog landing page ("70+ Model Terverifikasi").
     - 100% verifikasi lolos: 101/101 file kode sumber patuh $\le 200$ baris, tsc 0 error, E2E 11/11, pricing 22/22, billing 3/3, chaos PASS, UI 16/16.
+  - Phase 51: Native GitHub & Google OAuth Social Authentication:
+    - DDL TiDB: menambahkan kolom `oauth_provider`, `oauth_id`, `avatar_url` pada tabel `kiosai.users`.
+    - Modul `lib/oauth.ts` (151 baris) untuk otorisasi, code exchange, profile fetching, dan upsert user baru dengan 250K token instan + 2.25M brankas bonus.
+    - Endpoint `/api/auth/oauth/[provider]` (25 baris) dan callback handler `/api/auth/oauth/[provider]/callback` (69 baris).
+    - Tombol "Lanjutkan dengan GitHub" dan "Lanjutkan dengan Google" pada `app/components/AuthModal.tsx` (162 baris).
+    - 100% verifikasi lolos: 104/104 file kode sumber patuh $\le 200$ baris, tsc 0 error, E2E 11/11, pricing 22/22, billing 3/3, chaos PASS, UI 16/16.
+
 
 
 

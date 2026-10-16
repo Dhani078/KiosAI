@@ -7,6 +7,17 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `4047b72` — feat(auth): implement native GitHub and Google OAuth social login and onboarding
+
+**Autentikasi Sosial Native: Sign in with GitHub & Google**
+- **Modul OAuth Inti (`lib/oauth.ts`)**: Modul terpisah (151 baris) menangani pembuatan URL otorisasi, penukaran `code` ke `access_token`, pengambilan profil pengguna terverifikasi, dan upsert akun ke TiDB (`oauth_provider`, `oauth_id`, `avatar_url`).
+- **Skema Kolom Database TiDB**: Menambahkan kolom `oauth_provider` (VARCHAR 50), `oauth_id` (VARCHAR 255), dan `avatar_url` (VARCHAR 500) pada tabel `kiosai.users`.
+- **Endpoint Rute Terdistribusi**:
+  - `app/api/auth/oauth/[provider]/route.ts` (25 baris): Memvalidasi konfigurasi kredensial dan mengarahkan browser ke layar persetujuan OAuth.
+  - `app/api/auth/oauth/[provider]/callback/route.ts` (69 baris): Menukar token, mendaftarkan akun baru (250K token instan + 2.25M brankas bonus) atau mengaitkan akun lama, menyematkan sesi aman, dan mengalihkan ke `/dashboard`.
+- **Integrasi Dialog Autentikasi (`app/components/AuthModal.tsx`)**: Menambahkan tombol sosial interaktif "Lanjutkan dengan GitHub" dan "Lanjutkan dengan Google" dengan ikon SVG presisi dan pemisah visual di atas formulir email/password tradisional.
+- **Hasil Verifikasi**: tsc 0 error, 104/104 file patuh $\le 200$ baris, 22/22 pricing tests PASS, 11/11 E2E tests PASS, 3/3 billing deduction PASS, chaos test PASS, 16/16 UI audits PASS.
+
 ### `6ba1be5` — feat(models): integrate verified OpenCode models into free tier with failover and zero pricing
 
 **Integrasi Model OpenCode Terverifikasi ke Free Tier Tanpa Biaya**

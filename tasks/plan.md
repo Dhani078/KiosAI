@@ -230,6 +230,11 @@
   - Klasifikasi Free tier otomatis di `lib/keys.ts` dan tarif Rp0 (Gratis) di `lib/model-pricing.ts`
   - Konfigurasi failover router timbal-balik dan showcase model di katalog landing ("70+ Model Terverifikasi")
   - 100% lolos verifikasi: 101 file <= 200 LOC, tsc 0 error, 22/22 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
+- [x] Phase 51: Native GitHub & Google OAuth Social Authentication
+  - Modul OAuth `lib/oauth.ts` (151 baris), DDL kolom `oauth_provider`, `oauth_id`, `avatar_url` di `kiosai.users`
+  - Route handler redirect `/api/auth/oauth/[provider]` (25 baris) & callback handler (69 baris)
+  - Tombol sosial di `app/components/AuthModal.tsx` (162 baris) dengan fallback informatif
+  - 100% lolos verifikasi: 104 file <= 200 LOC, tsc 0 error, 22/22 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
 
 
 

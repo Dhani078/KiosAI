@@ -315,6 +315,13 @@
 - [x] Task 42.4: Setup failover routes in `lib/failover-router.ts` and update landing catalog showcase
 - [x] Task 42.5: Verify 100% test pass: 101 files <= 200 LOC, 22/22 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
 
+## Phase 43 (Native GitHub & Google OAuth Social Authentication - Completed)
+- [x] Task 43.1: DDL TiDB: add `oauth_provider`, `oauth_id`, `avatar_url` columns to `kiosai.users`
+- [x] Task 43.2: Implement `lib/oauth.ts` with code exchange, profile fetching, and user upsert with bonus tokens
+- [x] Task 43.3: Implement route handlers `/api/auth/oauth/[provider]` and `/api/auth/oauth/[provider]/callback`
+- [x] Task 43.4: Add GitHub and Google sign-in buttons to `AuthModal.tsx`
+- [x] Task 43.5: Verify 100% test pass: 104 files <= 200 LOC, 22/22 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
+
 
 
 
