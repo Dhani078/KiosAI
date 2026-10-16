@@ -203,6 +203,12 @@
 - [x] Task 23.3: Configure browser icons metadata in `app/layout.tsx`
 - [x] Task 23.4: Verify all 87 source files <= 200 lines, 10/10 E2E tests, 12/12 pricing tests, and 16/16 UI checks
 
+## Phase 24 (Landing Copy Harmonization & Clean Snippets - Completed)
+- [x] Task 24.1: Update hero CTA button in `HeroSection.tsx` from 100k to 2.5 Juta Token
+- [x] Task 24.2: Update hero verified models card in `HeroSection.tsx` from 765+ to 65+ Model Terverifikasi
+- [x] Task 24.3: Use clean commercial alias `deepseek-v4.1-flash` in `CodeSection.tsx` snippets
+- [x] Task 24.4: Verify all 87 files <= 200 lines, 10/10 E2E tests pass, 16/16 UI audits pass
+
 
 
 

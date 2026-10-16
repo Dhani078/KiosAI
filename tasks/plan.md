@@ -137,6 +137,11 @@
   - Pengorganisasian folder aset `public/brand/` dengan file master, lossless PNG 2048/512/192, dan transparent cutout
   - Integrasi favicon & Apple Touch Icon di `app/layout.tsx` metadata
   - Verifikasi 100% lulus pada semua pengujian E2E, pricing, billing, dan UI audit
+- [x] Phase 32: Landing Copy Harmonization & Clean Snippets
+  - Hero CTA diselaraskan ke bonus pendaftaran `2.5 Juta Token`
+  - Metrik hero diperbarui menjadi `65+ Model Terverifikasi`
+  - Contoh kode integrasi multi-bahasa di `CodeSection.tsx` menggunakan nama alias bersih
+  - 100% kelulusan E2E, audit UI, pricing, dan kepatuhan arsitektur <= 200 baris
 
 
 

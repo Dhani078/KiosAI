@@ -7,6 +7,14 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `6e79e58` — feat(landing): update hero CTA bonus to 2.5M, verified model count to 65+, and use clean model aliases in code snippets
+
+**Penyelarasan Copy Landing Page & Integrasi Kode Bersih**
+- **Koreksi CTA Tombol Hero (`HeroSection.tsx`)**: Mengubah teks tombol CTA utama dari copy lama (`Mulai Sekarang (+100.000 Token)`) menjadi `Mulai Gratis (2.5 Juta Token)`.
+- **Koreksi Metrik Model Terverifikasi (`HeroSection.tsx`)**: Memperbarui kartu ringkasan dari `765+ Model AI` menjadi `65+ Model Terverifikasi` (mencerminkan hasil audit 5x Phase 23).
+- **Snippet Kode Bersih (`CodeSection.tsx`)**: Mengganti rute internal `tokenharbor/deepseek-v4.1-flash:free` di contoh integrasi Python, Node.js, dan cURL menjadi alias bersih `deepseek-v4.1-flash` (memanfaatkan `resolveModelAlias`).
+- **Kepatuhan Modularitas**: `HeroSection.tsx` (146 baris) dan `CodeSection.tsx` (99 baris) patuh $\le 200$ baris per file.
+
 ### `b82acae` — feat(brand): apply official KiosAI vector logo across web, favicon, and brand assets
 
 **Integrasi Logo Resmi KiosAI & Folder Brand Aset**

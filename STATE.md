@@ -3,10 +3,10 @@
 - **Repository**: `https://github.com/Dhani078/KiosAI.git`
 - **Location**: `E:/Hermesproject/KiosAI`
 - **Live Worker**: `https://kiosai.dhanisepeda.workers.dev` (subdomain `dhanisepeda`, pakai `e`)
-- **Current Status**: Complete & Fully Verified (Phase 0 - 31)
+- **Current Status**: Complete & Fully Verified (Phase 0 - 32)
 - **Upstream Router**: 9Router local (`http://127.0.0.1:20128`) dengan 65 model aktif terverifikasi 5x audit (1 Free, 64 Pro)
 - **Database**: TiDB Cloud Serverless (`gateway01.ap-southeast-1.prod.aws.tidbcloud.com:4000/kiosai`)
-- **Last Commit**: `b82acae` — feat(brand): apply official KiosAI vector logo across web, favicon, and brand assets
+- **Last Commit**: `6e79e58` — feat(landing): update hero CTA bonus to 2.5M, verified model count to 65+, and use clean model aliases in code snippets
 
 ## Dokumen Navigasi Cepat
 - Aturan & perintah untuk agent: `AGENT.md`
@@ -189,4 +189,9 @@
     - Metadata browser favicon SVG & icons PNG di `layout.tsx`.
     - Pengorganisasian folder `public/brand/` dengan varian master, 2048px, 512px, 192px, transparan, dan SVG tak terbatas resolusi.
     - 100% verifikasi lolos (E2E 10/10, pricing 12/12, billing 3/3, UI 16/16).
+  - Phase 32: Landing Copy Harmonization & Clean Snippets:
+    - Hero CTA dikoreksi menjadi `Mulai Gratis (2.5 Juta Token)`.
+    - Kartu metrik hero diperbarui menjadi `65+ Model Terverifikasi`.
+    - Contoh kode SDK (Python, Node.js, cURL) di `CodeSection.tsx` menggunakan commercial alias bersih `deepseek-v4.1-flash`.
+    - 100% lulus audit modularitas, E2E, pricing, dan CDP UI.
 
