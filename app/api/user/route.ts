@@ -11,7 +11,8 @@ export async function GET(req: NextRequest) {
 
   try {
     const user = await db.queryOne<UserRecord>(
-      `SELECT id, email, username, full_name, tier, balance_tokens, locked_bonus_tokens, is_pro_unlocked FROM kiosai.users WHERE id = ?`,
+      `SELECT id, email, username, full_name, tier, balance_tokens, locked_bonus_tokens, is_pro_unlocked, alert_webhook_url, alert_threshold_tokens 
+       FROM kiosai.users WHERE id = ?`,
       [userId]
     );
 
@@ -31,6 +32,28 @@ export async function GET(req: NextRequest) {
       recentUsage: usage,
       playgroundKey: createPlaygroundToken(user.id),
     });
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message }, { status: 500 });
+  }
+}
+
+export async function PATCH(req: NextRequest) {
+  try {
+    const body = await req.json();
+    const { userId, alertWebhookUrl, alertThresholdTokens } = body;
+
+    if (!userId) {
+      return NextResponse.json({ error: "userId is required" }, { status: 400 });
+    }
+
+    await db.execute(
+      `UPDATE kiosai.users 
+       SET alert_webhook_url = ?, alert_threshold_tokens = ? 
+       WHERE id = ?`,
+      [alertWebhookUrl || null, Number(alertThresholdTokens) || 50000, userId]
+    );
+
+    return NextResponse.json({ success: true, message: "Pengaturan notifikasi berhasil diperbarui." });
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }

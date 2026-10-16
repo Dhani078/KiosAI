@@ -9,6 +9,7 @@ export interface BilledStreamOptions {
   model: string;
   startTime: number;
   rawPromptEstimate?: number;
+  onSettled?: (cost: number) => void;
 }
 
 /**
@@ -17,7 +18,7 @@ export interface BilledStreamOptions {
  * Handles TCP chunk boundary splits and extracts delta.content, reasoning_content, and tool_calls.
  */
 export function createBilledStream(options: BilledStreamOptions): ReadableStream {
-  const { reader, userId, keyId, model, startTime, rawPromptEstimate = 15 } = options;
+  const { reader, userId, keyId, model, startTime, rawPromptEstimate = 15, onSettled } = options;
   const decoder = new TextDecoder();
   let lineBuf = "";
   let usage: { prompt_tokens?: number; completion_tokens?: number } | null = null;
@@ -67,6 +68,7 @@ export function createBilledStream(options: BilledStreamOptions): ReadableStream
 
     try {
       await deductTokens(userId, actualCost, 1.0, keyId);
+      onSettled?.(actualCost);
       await logUsage({
         apiKeyId: keyId,
         userId,

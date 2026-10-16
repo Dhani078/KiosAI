@@ -26,6 +26,8 @@ export interface UserRecord {
   balance_tokens: number;
   locked_bonus_tokens?: number;
   is_pro_unlocked?: number;
+  alert_webhook_url?: string | null;
+  alert_threshold_tokens?: number;
 }
 
 export function getRequiredTierForModel(modelId: string): "free" | "pro" {

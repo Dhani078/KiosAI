@@ -9,6 +9,7 @@ import { buildQuotaExhaustedError } from "@/lib/bonus-vault";
 import { executeResilientStream } from "@/lib/failover-router";
 import { evaluatePriorityAdmission } from "@/lib/priority-scheduler";
 import { recordInferenceTelemetry } from "@/lib/edge-telemetry";
+import { sendLowBalanceWebhook } from "@/lib/balance-alerts";
 import {
   isCacheEligible,
   buildCanonicalCacheKey,
@@ -41,14 +42,17 @@ export async function POST(req: NextRequest) {
     return errorResponse(auth.error || "Unauthorized", 401, "invalid_key");
   }
 
-  const rateLimit = checkRateLimit(auth.key.id, auth.key.rate_limit_per_min || 60);
+  const user = auth.user;
+  const key = auth.key;
+
+  const rateLimit = checkRateLimit(key.id, key.rate_limit_per_min || 60);
   const rateHeaders = {
-    "X-RateLimit-Limit": String(auth.key.rate_limit_per_min || 60),
+    "X-RateLimit-Limit": String(key.rate_limit_per_min || 60),
     "X-RateLimit-Remaining": String(rateLimit.remaining),
     "X-RateLimit-Reset": String(rateLimit.resetSeconds),
   };
   if (!rateLimit.allowed) {
-    return errorResponse(`Rate limit exceeded (${auth.key.rate_limit_per_min}/min). Tunggu ${rateLimit.resetSeconds}s.`, 429, "rate_limit_exceeded", { ...rateHeaders, "Retry-After": String(rateLimit.resetSeconds) });
+    return errorResponse(`Rate limit exceeded (${key.rate_limit_per_min}/min). Tunggu ${rateLimit.resetSeconds}s.`, 429, "rate_limit_exceeded", { ...rateHeaders, "Retry-After": String(rateLimit.resetSeconds) });
   }
 
   let body: any;
@@ -107,7 +111,15 @@ export async function POST(req: NextRequest) {
       if (cacheKey) outStream = wrapStreamForEdgeCaching(outStream, cacheKey);
 
       recordInferenceTelemetry({ modelId: requestedModel, ttfbMs: Date.now() - startTime, statusCode: 200, didFailover: result.didFailover, cacheHit: false });
-      const billed = createBilledStream({ reader: outStream.getReader(), userId: auth.user.id, keyId: auth.key.id, model: result.effectiveModel, startTime });
+      const billed = createBilledStream({
+        reader: outStream.getReader(), userId: user.id, keyId: key.id, model: result.effectiveModel, startTime,
+        onSettled: (cost) => {
+          const rem = Number(user.balance_tokens) - cost;
+          if (user.alert_webhook_url && rem < (user.alert_threshold_tokens || 50000)) {
+            sendLowBalanceWebhook({ userId: user.id, email: user.email, webhookUrl: user.alert_webhook_url, balance: rem, threshold: user.alert_threshold_tokens || 50000 }).catch(() => {});
+          }
+        },
+      });
 
       return new NextResponse(billed, {
         headers: {
@@ -141,11 +153,16 @@ export async function POST(req: NextRequest) {
     const pTokens = data.usage?.prompt_tokens || 15;
     const cTokens = data.usage?.completion_tokens || 35;
     const actualCost = calculateTokenCost(requestedModel, pTokens, cTokens);
-    const deducted = await deductTokens(auth.user.id, actualCost, 1.0, auth.key.id);
-    await logUsage({ apiKeyId: auth.key.id, userId: auth.user.id, model: requestedModel, promptTokens: pTokens, completionTokens: cTokens, latencyMs: Date.now() - startTime, statusCode: 200 });
+    const deducted = await deductTokens(user.id, actualCost, 1.0, key.id);
+    await logUsage({ apiKeyId: key.id, userId: user.id, model: requestedModel, promptTokens: pTokens, completionTokens: cTokens, latencyMs: Date.now() - startTime, statusCode: 200 });
     recordInferenceTelemetry({ modelId: requestedModel, ttfbMs: Date.now() - startTime, statusCode: 200, didFailover: false, cacheHit: false });
 
-    const isLow = Number(auth.user.balance_tokens) - deducted < 20000;
+    const rem = Number(user.balance_tokens) - deducted;
+    if (user.alert_webhook_url && rem < (user.alert_threshold_tokens || 50000)) {
+      sendLowBalanceWebhook({ userId: user.id, email: user.email, webhookUrl: user.alert_webhook_url, balance: rem, threshold: user.alert_threshold_tokens || 50000 }).catch(() => {});
+    }
+
+    const isLow = rem < 20000;
     return NextResponse.json(data, { headers: { ...rateHeaders, "X-Kios-Lane": admission.lane, ...(isLow ? { "X-Quota-Warning": "low_balance" } : {}) } });
   } catch (err: any) {
     return errorResponse(`Upstream error: ${err.message}`, 502, "upstream_error");
