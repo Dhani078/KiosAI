@@ -244,6 +244,12 @@
   - Integrasi streaming di `PlaygroundTab.tsx` (187 baris) untuk balasan kata-per-kata instan
   - Buka kunci model OpenCode di Playground Free tier dan sorting dropdown `PlaygroundToolbar.tsx` (67 baris)
   - 100% lolos verifikasi: 105 file <= 200 LOC, tsc 0 error, 22/22 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
+- [x] Phase 54: User Profile Modal Redesign, Full Fallback Catalog & Tunnel Supervisor
+  - Modal profil eksklusif `app/components/UserProfileModal.tsx` (134 baris) dengan avatar profil Google/GitHub, pill provider badge, dual-wallet display, dan tombol cepat Top Up
+  - Menampilkan avatar pengguna di `Sidebar.tsx` dan `Header.tsx`
+  - Fallback katalog model di `app/v1/models/route.ts` (132 baris) memuat seluruh 71 model terverifikasi (termasuk keluarga Gemini di urutan teratas Pro)
+  - Supervisor reconnect otomatis di `scripts/tunnel-sync.mjs` (150 baris)
+  - 100% lolos verifikasi: 106 file <= 200 LOC, tsc 0 error, 22/22 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
 
 
 

@@ -3,10 +3,10 @@
 - **Repository**: `https://github.com/Dhani078/KiosAI.git`
 - **Location**: `E:/Hermesproject/KiosAI`
 - **Live Worker**: `https://kiosai.dhanisepeda.workers.dev` (subdomain `dhanisepeda`, pakai `e`)
-- **Current Status**: Complete & Fully Verified (Phase 0 - 53)
+- **Current Status**: Complete & Fully Verified (Phase 0 - 54)
 - **Upstream Router**: 9Router local (`http://127.0.0.1:20128`) dengan 71 model aktif terverifikasi 5x audit (5 Free, 66 Pro)
 - **Database**: TiDB Cloud Serverless (`gateway01.ap-southeast-1.prod.aws.tidbcloud.com:4000/kiosai`)
-- **Last Commit**: `4e70168` — feat(playground): add real-time SSE streaming chat and unlock OpenCode models in playground
+- **Last Commit**: `80e5d11` — feat(ui): add polished UserProfileModal with avatar, full models catalog fallback with Gemini, and tunnel auto-reconnect
 
 ## Dokumen Navigasi Cepat
 - Aturan & perintah untuk agent: `AGENT.md`
@@ -297,6 +297,13 @@
     - Integrasi chunk streaming di `PlaygroundTab.tsx` (187 baris) untuk pengalaman percakapan kata-per-kata seketika (~240ms TTFB).
     - Membuka kunci model OpenCode di Playground untuk akun tier Free (`isAllowedForFree`) dan grouping urutan dropdown teratas di `PlaygroundToolbar.tsx` (67 baris).
     - 100% verifikasi lolos: 105/105 file kode sumber patuh $\le 200$ baris, tsc 0 error, E2E 11/11, pricing 22/22, billing 3/3, chaos PASS, UI 16/16.
+  - Phase 54: User Profile Modal Redesign, Full Fallback Catalog & Tunnel Supervisor:
+    - Modul `app/components/UserProfileModal.tsx` (134 baris) dengan avatar profil asli Google/GitHub, pill provider badge, dual-wallet display, dan tombol cepat Top Up.
+    - Menampilkan avatar pengguna di `Sidebar.tsx` dan `Header.tsx`.
+    - Fallback katalog model di `app/v1/models/route.ts` (132 baris) memuat seluruh 71 model terverifikasi (termasuk keluarga Gemini di urutan teratas Pro).
+    - Supervisor reconnect otomatis di `scripts/tunnel-sync.mjs` (150 baris).
+    - 100% verifikasi lolos: 106/106 file kode sumber patuh $\le 200$ baris, tsc 0 error, E2E 11/11, pricing 22/22, billing 3/3, chaos PASS, UI 16/16.
+
 
 
 

@@ -334,6 +334,13 @@
 - [x] Task 45.3: Unlock OpenCode models in Playground for Free tier and update `PlaygroundToolbar.tsx`
 - [x] Task 45.4: Verify 100% test pass: 105 files <= 200 LOC, 22/22 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
 
+## Phase 46 (User Profile Modal Redesign, Full Fallback Catalog & Tunnel Supervisor - Completed)
+- [x] Task 46.1: Implement `app/components/UserProfileModal.tsx` with user avatar, connection pill, and dual wallet
+- [x] Task 46.2: Add user avatar image rendering to `Sidebar.tsx` and `Header.tsx`
+- [x] Task 46.3: Expand fallback catalog in `app/v1/models/route.ts` to include all 71 models with Gemini Pro priority
+- [x] Task 46.4: Add supervisor auto-reconnect loop to `scripts/tunnel-sync.mjs`
+- [x] Task 46.5: Verify 100% test pass: 106 files <= 200 LOC, 22/22 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
+
 
 
 

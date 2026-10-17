@@ -7,6 +7,15 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `80e5d11` — feat(ui): add polished UserProfileModal with avatar, full models catalog fallback with Gemini, and tunnel auto-reconnect
+
+**Dialog Profil Modern, Katalog Lengkap Termasuk Gemini, dan Tunnel Supervisor**
+- **Modal Profil Eksklusif (`app/components/UserProfileModal.tsx`)**: Modul terpisah (134 baris) menghadirkan kartu profil modern: avatar pengguna asli dari Google/GitHub, nama terverifikasi, pill badge koneksi ("Terhubung via Google Account" / "GitHub"), copy ID instan, ringkasan saldo terpisah (Saldo Aktif vs Brankas Bonus), tombol aksi pintas "Top Up Token", dan input Webhook Alert Saldo.
+- **Avatar di Navigasi (`Sidebar.tsx` & `Header.tsx`)**: Menampilkan foto profil Google/GitHub pengguna pada widget sidebar dan tombol avatar header navigasi.
+- **Katalog Lengkap Fallback Termasuk Gemini (`app/v1/models/route.ts`)**: Fallback katalog kini memuat seluruh 71 model terverifikasi (termasuk keluarga Google Gemini 3.8/2.0/3.5, Claude, GPT, DeepSeek, dan OpenCode) saat upstream sedang sinkronisasi, dengan Gemini diurutkan teratas untuk Pro tier.
+- **Cloudflare Tunnel Auto-Reconnect Supervisor (`scripts/tunnel-sync.mjs`)**: Menambahkan loop pengawas otomatis yang langsung mendeteksi koneksi terputus dan memutar ulang tunnel baru serta sinkronisasi secret Worker tanpa henti.
+- **Hasil Verifikasi**: tsc 0 error, 106/106 file patuh $\le 200$ baris (`DashboardApp.tsx` 198 baris), 22/22 pricing tests PASS, 11/11 E2E tests PASS, 3/3 billing deduction PASS, chaos test PASS, 16/16 UI audits PASS.
+
 ### `4e70168` — feat(playground): add real-time SSE streaming chat and unlock OpenCode models in playground
 
 **Streaming Chat Real-Time SSE & Akses Model OpenCode di Playground**

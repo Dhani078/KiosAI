@@ -417,3 +417,10 @@ Desain prototype dari `KiosAI Token Marketplace Design` diterapkan sepenuhnya pa
 
 - **Konsumsi Aliran Streaming SSE (`lib/playground-stream.ts`)**: Playground dashboard kini menggunakan SSE streaming secara asinkron; kata-kata balasan model AI muncul seketika secara bertahap begitu chunk pertama sampai (~240ms), mengeliminasi jeda tunggu penuh.
 - **Dukungan Penuh Model OpenCode di Playground**: Seluruh 5 model Free Tier (`atria/Atria-Dawn-Preview`, `oc/deepseek-v4.1-flash-free(max)`, `oc/muse-spark-1.3-contributor-free`, `oc/mimo-v2.6-flash-free`, `oc/nemotron-3.5-lightning-free`) terbuka penuh dan tidak lagi berstatus terkunci bagi pengguna akun Free.
+
+## 45. Redesain Modal Profil Pengguna & Ketahanan Katalog Penuh
+
+- **Modal Profil Eksklusif (`UserProfileModal.tsx`)**: Menampilkan foto avatar profil asli pengguna yang login via Google atau GitHub, pill indikator penyedia koneksi akun, copy ID instan, dan rincian saldo dual-wallet (Saldo Aktif vs Brankas Bonus).
+- **Avatar di Bar Navigasi**: Foto profil pengguna ditampilkan langsung di sidebar dan topbar header dashboard.
+- **Katalog Fallback Lengkap Termasuk Gemini**: Endpoint model (`/v1/models`) menyajikan seluruh 71 model terverifikasi (termasuk keluarga Google Gemini 3.8/2.0/3.5) meskipun upstream sedang mengalami jeda sinkronisasi, menjamin ketersediaan katalog 100%.
+- **Tunnel Reconnection Supervisor**: Mekanisme auto-recovery pada `tunnel-sync.mjs` memutar ulang tunnel otomatis dan menjaga sinkronisasi ke Edge Worker tanpa intervensi manual.
