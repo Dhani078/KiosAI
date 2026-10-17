@@ -7,6 +7,14 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `e0570d6` — feat(ui): add syntax-container code block with 1-click copy to playground and spend limit progress bar to api keys
+
+**Blok Kode Bersintaks di Playground & Indikator Batas Kuota API Key**
+- **Komponen Blok Kode Markdown (`app/components/MarkdownMessage.tsx`)**: Modul baru (59 baris) memisahkan teks biasa dan blok kode berpagar (code fence ```lang) secara native tanpa dependensi eksternal, lengkap dengan bar header bahasa dan tombol "Salin" 1-klik interaktif.
+- **Render Respon Playground yang Rapi (`app/components/PlaygroundChat.tsx`)**: Balasan model AI (kode Python, TypeScript, SQL, cURL) kini otomatis tertata rapi dalam kontainer bersintaksis monospaced dengan overflow scroll horizontal, memudahkan pengembang menyalin cuplikan kode.
+- **Visualisasi Kuota Spend Cap per Key (`app/components/KeysTab.tsx`)**: Kunci API yang memiliki batas pengeluaran (`max_spend_tokens`) kini menampilkan progress bar mikro proporsional (`spent_tokens` / `max_spend_tokens` beserta persentase), yang otomatis berubah warna menjadi merah saat pemakaian mencapai $\ge 90\%$.
+- **Hasil Verifikasi**: tsc 0 error, 107/107 file kode sumber patuh aturan $\le 200$ baris (`KeysTab.tsx` 162 baris, `PlaygroundChat.tsx` 89 baris, `MarkdownMessage.tsx` 59 baris), 22/22 pricing tests PASS, 11/11 E2E tests PASS, 3/3 billing deduction PASS, chaos test PASS, 16/16 UI audits PASS.
+
 ### `80e5d11` — feat(ui): add polished UserProfileModal with avatar, full models catalog fallback with Gemini, and tunnel auto-reconnect
 
 **Dialog Profil Modern, Katalog Lengkap Termasuk Gemini, dan Tunnel Supervisor**

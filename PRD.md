@@ -424,3 +424,8 @@ Desain prototype dari `KiosAI Token Marketplace Design` diterapkan sepenuhnya pa
 - **Avatar di Bar Navigasi**: Foto profil pengguna ditampilkan langsung di sidebar dan topbar header dashboard.
 - **Katalog Fallback Lengkap Termasuk Gemini**: Endpoint model (`/v1/models`) menyajikan seluruh 71 model terverifikasi (termasuk keluarga Google Gemini 3.8/2.0/3.5) meskipun upstream sedang mengalami jeda sinkronisasi, menjamin ketersediaan katalog 100%.
 - **Tunnel Reconnection Supervisor**: Mekanisme auto-recovery pada `tunnel-sync.mjs` memutar ulang tunnel otomatis dan menjaga sinkronisasi ke Edge Worker tanpa intervensi manual.
+
+## 46. Kontainer Blok Kode Playground & Visualisasi Spend Cap Kunci
+
+- **Kontainer Blok Kode Bersintaks (`MarkdownMessage.tsx`)**: Respon kode program (Python, Node.js, SQL, cURL, bash) yang dihasilkan AI di Playground kini dibungkus rapi dalam kontainer monospaced dengan bar bahasa dan tombol aksi "Salin" 1-klik.
+- **Visualisasi Progress Bar Batas Kuota Kunci (`KeysTab.tsx`)**: API key yang dikonfigurasikan dengan batas token pengeluaran (`max_spend_tokens`) kini menampilkan progress bar mikro interaktif yang memperlihatkan token yang telah digunakan terhadap kuota maksimal, lengkap dengan indikator warna merah saat mencapai ambang batas kritis $\ge 90\%$.
