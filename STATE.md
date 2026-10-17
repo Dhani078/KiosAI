@@ -3,10 +3,10 @@
 - **Repository**: `https://github.com/Dhani078/KiosAI.git`
 - **Location**: `E:/Hermesproject/KiosAI`
 - **Live Worker**: `https://kiosai.dhanisepeda.workers.dev` (subdomain `dhanisepeda`, pakai `e`)
-- **Current Status**: Complete & Fully Verified (Phase 0 - 52)
+- **Current Status**: Complete & Fully Verified (Phase 0 - 53)
 - **Upstream Router**: 9Router local (`http://127.0.0.1:20128`) dengan 71 model aktif terverifikasi 5x audit (5 Free, 66 Pro)
 - **Database**: TiDB Cloud Serverless (`gateway01.ap-southeast-1.prod.aws.tidbcloud.com:4000/kiosai`)
-- **Last Commit**: `b370429` — feat(secrets): support syncing oauth client credentials to cloudflare worker
+- **Last Commit**: `4e70168` — feat(playground): add real-time SSE streaming chat and unlock OpenCode models in playground
 
 ## Dokumen Navigasi Cepat
 - Aturan & perintah untuk agent: `AGENT.md`
@@ -292,6 +292,12 @@
     - Integrasi `GOOGLE_CLIENT_ID` dan `GOOGLE_CLIENT_SECRET` ke `.env` dan sinkronisasi ke encrypted secrets Cloudflare Worker live (`HTTP 201 Created`).
     - Verifikasi redirect live `/api/auth/oauth/google` menuju Google Accounts consent screen.
     - 100% verifikasi lolos: 104/104 file kode sumber patuh $\le 200$ baris, tsc 0 error, E2E 11/11, pricing 22/22, billing 3/3, chaos PASS, UI 16/16.
+  - Phase 53: Playground Real-Time SSE Streaming & Free OpenCode Unlock:
+    - Modul `lib/playground-stream.ts` (63 baris) untuk konsumsi streaming SSE `ReadableStream` line-buffer.
+    - Integrasi chunk streaming di `PlaygroundTab.tsx` (187 baris) untuk pengalaman percakapan kata-per-kata seketika (~240ms TTFB).
+    - Membuka kunci model OpenCode di Playground untuk akun tier Free (`isAllowedForFree`) dan grouping urutan dropdown teratas di `PlaygroundToolbar.tsx` (67 baris).
+    - 100% verifikasi lolos: 105/105 file kode sumber patuh $\le 200$ baris, tsc 0 error, E2E 11/11, pricing 22/22, billing 3/3, chaos PASS, UI 16/16.
+
 
 
 

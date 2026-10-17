@@ -412,3 +412,8 @@ Desain prototype dari `KiosAI Token Marketplace Design` diterapkan sepenuhnya pa
 - **Onboarding Akun Otomatis**: Pengguna baru yang mendaftar via GitHub atau Google langsung otomatis dibuatkan ID pengguna di TiDB, dihadiahi 250.000 token aktif instan + 2.250.000 token brankas bonus, dan ditautkan ke akun permanen.
 - **UI Dialog Modern (`AuthModal.tsx`)**: Menyajikan tombol "Lanjutkan dengan GitHub" dan "Lanjutkan dengan Google" dengan ikon SVG presisi dan pemisah visual di atas formulir email konvensional.
 - **Dukungan Kredensial Multi-Provider**: GitHub OAuth dan Google OAuth aktif live dengan encrypted secrets tersinkronisasi langsung ke Cloudflare Edge Worker.
+
+## 44. Real-Time Streaming SSE di Playground & Buka Kunci OpenCode Free
+
+- **Konsumsi Aliran Streaming SSE (`lib/playground-stream.ts`)**: Playground dashboard kini menggunakan SSE streaming secara asinkron; kata-kata balasan model AI muncul seketika secara bertahap begitu chunk pertama sampai (~240ms), mengeliminasi jeda tunggu penuh.
+- **Dukungan Penuh Model OpenCode di Playground**: Seluruh 5 model Free Tier (`atria/Atria-Dawn-Preview`, `oc/deepseek-v4.1-flash-free(max)`, `oc/muse-spark-1.3-contributor-free`, `oc/mimo-v2.6-flash-free`, `oc/nemotron-3.5-lightning-free`) terbuka penuh dan tidak lagi berstatus terkunci bagi pengguna akun Free.

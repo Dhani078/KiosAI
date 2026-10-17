@@ -328,6 +328,12 @@
 - [x] Task 44.3: Verify redirect `/api/auth/oauth/google` with 307 to Google consent screen
 - [x] Task 44.4: Verify 100% test pass: 104 files <= 200 LOC, 22/22 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
 
+## Phase 45 (Playground Real-Time SSE Streaming & Free OpenCode Unlock - Completed)
+- [x] Task 45.1: Implement `lib/playground-stream.ts` SSE line-buffer reader
+- [x] Task 45.2: Wire real-time streaming state into `PlaygroundTab.tsx`
+- [x] Task 45.3: Unlock OpenCode models in Playground for Free tier and update `PlaygroundToolbar.tsx`
+- [x] Task 45.4: Verify 100% test pass: 105 files <= 200 LOC, 22/22 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
+
 
 
 

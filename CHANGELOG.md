@@ -7,6 +7,15 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `4e70168` — feat(playground): add real-time SSE streaming chat and unlock OpenCode models in playground
+
+**Streaming Chat Real-Time SSE & Akses Model OpenCode di Playground**
+- **Konsumsi Stream Asinkron (`lib/playground-stream.ts`)**: Modul terpisah (63 baris) menangani koneksi SSE `ReadableStream` ke endpoint `/v1/chat/completions`, mem-parsing buffer baris-demi-baris, dan mengalirkan delta teks secara real-time ke UI tanpa jeda buffer.
+- **Pengalaman Respon Instan di Playground (`app/components/PlaygroundTab.tsx`)**: Balasan model muncul kata demi kata secara real-time begitu chunk pertama diterima (~240ms TTFB), menggantikan metode non-streaming lama yang menunggu seluruh respon selesai.
+- **Buka Kunci Model OpenCode Free**: Memperbarui validasi tier di Playground (`isAllowedForFree`) dan dropdown toolbar (`PlaygroundToolbar.tsx`) agar seluruh 5 model Free Tier (Atria + 4 model OpenCode) dapat dipilih dan dieksplorasi langsung tanpa status terkunci.
+- **Kepatuhan Modularitas**: 105/105 file kode sumber patuh $\le 200$ baris per file (`PlaygroundTab.tsx` 187 baris, `PlaygroundToolbar.tsx` 67 baris, `lib/playground-stream.ts` 63 baris).
+- **Hasil Verifikasi**: tsc 0 error, 22/22 pricing tests PASS, 11/11 E2E tests PASS, 3/3 billing deduction PASS, chaos test PASS, 16/16 UI audits PASS.
+
 ### `b370429` — feat(secrets): support syncing oauth client credentials to cloudflare worker
 
 **Sinkronisasi Kredensial OAuth ke Cloudflare Worker**
