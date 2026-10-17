@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { Search, Sparkles, CheckCircle2, Lock, X, Code2 } from "lucide-react";
+import { Sparkles, CheckCircle2, Lock, Code2 } from "lucide-react";
 import { Badge, Button } from "./ui";
 import { formatModelName } from "@/lib/model-utils";
 import { getModelPricing } from "@/lib/model-pricing";
 import { getEstimatedModelLatency } from "@/lib/model-latency";
 import ModelSnippetModal from "./ModelSnippetModal";
+import ModelFilters from "./ModelFilters";
 
 function getProvider(id: string): string {
   const s = (id || "").toLowerCase();
@@ -40,6 +41,7 @@ export function ModelsTab({
 }) {
   const [search, setSearch] = useState("");
   const [tierFilter, setTierFilter] = useState<string>("all");
+  const [providerFilter, setProviderFilter] = useState<string>("all");
   const [snippetTarget, setSnippetTarget] = useState<{ id: string; name: string } | null>(null);
 
   const isFreeTier = (userTier || "free").toLowerCase() === "free";
@@ -55,7 +57,9 @@ export function ModelsTab({
       const clean = formatModelName(m.name || m.id, isAdmin).toLowerCase();
       const raw = (m.id || "").toLowerCase();
       const match = !search || clean.includes(search.toLowerCase()) || raw.includes(search.toLowerCase());
-      return match && (tierFilter === "all" || getModelTier(m) === tierFilter);
+      const matchTier = tierFilter === "all" || getModelTier(m) === tierFilter;
+      const matchProvider = providerFilter === "all" || getProvider(m.id).toLowerCase() === providerFilter.toLowerCase();
+      return match && matchTier && matchProvider;
     })
     .sort((a, b) => {
       const aAllowed = checkAllowed(a) ? 1 : 0, bAllowed = checkAllowed(b) ? 1 : 0;
@@ -71,43 +75,23 @@ export function ModelsTab({
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
-      <section className="panel" style={{ padding: "16px 20px" }}>
-        <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between" }}>
-          <div style={{ position: "relative", minWidth: "260px", flex: 1 }}>
-            <Search size={15} style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "var(--text-muted)" }} />
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Cari model AI (Atria, DeepSeek, Claude, GPT, Gemini...)"
-              style={{ width: "100%", padding: "8px 34px", borderRadius: "var(--radius-input)", background: "var(--canvas)", border: "1px solid var(--border)", color: "var(--text)", fontSize: "13px" }}
-            />
-            {search && (
-              <button type="button" onClick={() => setSearch("")} style={{ position: "absolute", right: "10px", top: "50%", transform: "translateY(-50%)", color: "var(--text-muted)", padding: "2px" }}>
-                <X size={14} />
-              </button>
-            )}
-          </div>
-
-          <div style={{ display: "flex", gap: "6px" }}>
-            {[
-              { id: "all", label: `Semua (${validModels.length})` },
-              { id: "free", label: `Free Tier (${freeTotal})` },
-              { id: "pro", label: `Pro Tier (${proTotal})` },
-            ].map((t) => (
-              <button key={t.id} type="button" className={`button ${tierFilter === t.id ? "primary" : "ghost"}`} style={{ height: "32px", padding: "0 12px", fontSize: "12px" }} onClick={() => setTierFilter(t.id)}>
-                {t.label}
-              </button>
-            ))}
-          </div>
-        </div>
-      </section>
+      <ModelFilters
+        search={search}
+        onSearchChange={setSearch}
+        tierFilter={tierFilter}
+        onTierChange={setTierFilter}
+        providerFilter={providerFilter}
+        onProviderChange={setProviderFilter}
+        totalCount={validModels.length}
+        freeCount={freeTotal}
+        proCount={proTotal}
+      />
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "16px" }}>
         {filtered.length === 0 ? (
           <div className="panel" style={{ gridColumn: "1 / -1", padding: "48px 24px", textAlign: "center", color: "var(--text-muted)" }}>
-            <p style={{ fontSize: "14px", marginBottom: "12px" }}>Tidak ada model yang cocok dengan &quot;{search}&quot;</p>
-            <Button kind="secondary" onClick={() => { setSearch(""); setTierFilter("all"); }}>Reset Pencarian</Button>
+            <p style={{ fontSize: "14px", marginBottom: "12px" }}>Tidak ada model yang cocok dengan kriteria pencarian</p>
+            <Button kind="secondary" onClick={() => { setSearch(""); setTierFilter("all"); setProviderFilter("all"); }}>Reset Filter</Button>
           </div>
         ) : (
           filtered.map((m) => {
