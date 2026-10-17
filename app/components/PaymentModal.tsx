@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { X, Clock3, CheckCheck, ArrowRight, Gift } from "lucide-react";
+import { X, Clock3, CheckCheck, ArrowRight, Gift, Printer } from "lucide-react";
 import { Badge, Button } from "./ui";
 import { PACKAGES } from "./PackagesTab";
+import { generateInvoiceHtml } from "@/lib/receipt-generator";
 
 export function PaymentModal({
   selectedPkgIndex,
@@ -79,6 +80,24 @@ export function PaymentModal({
     }
   };
 
+  const handlePrintReceipt = () => {
+    if (!orderId) return;
+    const priceNum = Number(pkg.price.replace(/\D/g, "")) || 0;
+    const html = generateInvoiceHtml({
+      id: orderId,
+      created_at: new Date().toISOString(),
+      package_tier: pkg.tierKey,
+      amount_idr: priceNum,
+      tokens_purchased: tokensGranted,
+      status: "paid",
+    });
+    const printWindow = window.open("", "_blank");
+    if (printWindow) {
+      printWindow.document.write(html);
+      printWindow.document.close();
+    }
+  };
+
   return (
     <div className="modal-overlay" onClick={onClose}>
       <section role="dialog" aria-modal="true" className="modal" onClick={(e) => e.stopPropagation()}>
@@ -92,8 +111,15 @@ export function PaymentModal({
             <p><strong>{tokensGranted.toLocaleString("id-ID")} token</strong> berhasil ditambahkan{isAdmin ? " ke TiDB" : ""}.</p>
             <div className="success-summary"><span>Saldo sekarang</span><code>{(Number(userBalance) + Number(tokensGranted)).toLocaleString("id-ID")} token</code></div>
             <div className="success-summary"><span>Tier aktif</span><Badge tier={pkg.tierKey === "free" ? "FREE" : "PRO"} /></div>
-            <Button kind="primary" onClick={onNavigateKeys}>Lanjut ke API Keys <ArrowRight size={16} /></Button>
-            <Button kind="ghost" onClick={onNavigateStatistik}>Lihat riwayat transaksi</Button>
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginTop: "16px" }}>
+              <Button kind="primary" onClick={onNavigateKeys}>Lanjut ke API Keys <ArrowRight size={16} /></Button>
+              {!isFree && (
+                <Button kind="secondary" onClick={handlePrintReceipt} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "6px" }}>
+                  <Printer size={15} /> Cetak Faktur / Kwitansi Resmi
+                </Button>
+              )}
+              <Button kind="ghost" onClick={onNavigateStatistik}>Lihat riwayat transaksi</Button>
+            </div>
           </div>
         ) : isFree ? (
           <>
