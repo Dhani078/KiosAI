@@ -411,3 +411,4 @@ Desain prototype dari `KiosAI Token Marketplace Design` diterapkan sepenuhnya pa
 - **Modul Sentral OAuth (`lib/oauth.ts`)**: Penukaran `code` ke `access_token` berbasis OpenID Connect dan OAuth 2.0 standar tanpa ketergantungan library eksternal berat (NextAuth/Passport).
 - **Onboarding Akun Otomatis**: Pengguna baru yang mendaftar via GitHub atau Google langsung otomatis dibuatkan ID pengguna di TiDB, dihadiahi 250.000 token aktif instan + 2.250.000 token brankas bonus, dan ditautkan ke akun permanen.
 - **UI Dialog Modern (`AuthModal.tsx`)**: Menyajikan tombol "Lanjutkan dengan GitHub" dan "Lanjutkan dengan Google" dengan ikon SVG presisi dan pemisah visual di atas formulir email konvensional.
+- **Dukungan Kredensial Multi-Provider**: GitHub OAuth dan Google OAuth aktif live dengan encrypted secrets tersinkronisasi langsung ke Cloudflare Edge Worker.

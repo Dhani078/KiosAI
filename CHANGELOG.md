@@ -7,6 +7,14 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `b370429` — feat(secrets): support syncing oauth client credentials to cloudflare worker
+
+**Sinkronisasi Kredensial OAuth ke Cloudflare Worker**
+- **Ekstensi Secret Worker (`scripts/sync-worker-secrets.mjs`)**: Menambahkan kunci `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`, `GOOGLE_CLIENT_ID`, dan `GOOGLE_CLIENT_SECRET` ke daftar kunci yang otomatis disinkronkan ke Cloudflare Worker.
+- **Aktivasi Google OAuth Live**: Kredensial Google OAuth berhasil dipasang di `.env` dan tersinkronisasi langsung ke encrypted secrets Cloudflare Worker live (`HTTP 201 Created`).
+- **Verifikasi Alur Redirect**: Endpoint `GET /api/auth/oauth/google` terverifikasi merespons `HTTP 307 Temporary Redirect` menuju `accounts.google.com/o/oauth2/v2/auth`.
+- **Hasil Verifikasi**: tsc 0 error, 104/104 file patuh $\le 200$ baris, 22/22 pricing tests PASS, 11/11 E2E tests PASS, 3/3 billing deduction PASS, chaos test PASS, 16/16 UI audits PASS.
+
 ### `4047b72` — feat(auth): implement native GitHub and Google OAuth social login and onboarding
 
 **Autentikasi Sosial Native: Sign in with GitHub & Google**

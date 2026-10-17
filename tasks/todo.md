@@ -322,6 +322,12 @@
 - [x] Task 43.4: Add GitHub and Google sign-in buttons to `AuthModal.tsx`
 - [x] Task 43.5: Verify 100% test pass: 104 files <= 200 LOC, 22/22 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
 
+## Phase 44 (Google OAuth Credentials Live Sync - Completed)
+- [x] Task 44.1: Append Google OAuth credentials to `.env`
+- [x] Task 44.2: Update `scripts/sync-worker-secrets.mjs` and sync secrets to Cloudflare Worker
+- [x] Task 44.3: Verify redirect `/api/auth/oauth/google` with 307 to Google consent screen
+- [x] Task 44.4: Verify 100% test pass: 104 files <= 200 LOC, 22/22 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
+
 
 
 

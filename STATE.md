@@ -3,10 +3,10 @@
 - **Repository**: `https://github.com/Dhani078/KiosAI.git`
 - **Location**: `E:/Hermesproject/KiosAI`
 - **Live Worker**: `https://kiosai.dhanisepeda.workers.dev` (subdomain `dhanisepeda`, pakai `e`)
-- **Current Status**: Complete & Fully Verified (Phase 0 - 51)
+- **Current Status**: Complete & Fully Verified (Phase 0 - 52)
 - **Upstream Router**: 9Router local (`http://127.0.0.1:20128`) dengan 71 model aktif terverifikasi 5x audit (5 Free, 66 Pro)
 - **Database**: TiDB Cloud Serverless (`gateway01.ap-southeast-1.prod.aws.tidbcloud.com:4000/kiosai`)
-- **Last Commit**: `4047b72` — feat(auth): implement native GitHub and Google OAuth social login and onboarding
+- **Last Commit**: `b370429` — feat(secrets): support syncing oauth client credentials to cloudflare worker
 
 ## Dokumen Navigasi Cepat
 - Aturan & perintah untuk agent: `AGENT.md`
@@ -288,6 +288,11 @@
     - Endpoint `/api/auth/oauth/[provider]` (25 baris) dan callback handler `/api/auth/oauth/[provider]/callback` (69 baris).
     - Tombol "Lanjutkan dengan GitHub" dan "Lanjutkan dengan Google" pada `app/components/AuthModal.tsx` (162 baris).
     - 100% verifikasi lolos: 104/104 file kode sumber patuh $\le 200$ baris, tsc 0 error, E2E 11/11, pricing 22/22, billing 3/3, chaos PASS, UI 16/16.
+  - Phase 52: Google OAuth Credentials Live Sync:
+    - Integrasi `GOOGLE_CLIENT_ID` dan `GOOGLE_CLIENT_SECRET` ke `.env` dan sinkronisasi ke encrypted secrets Cloudflare Worker live (`HTTP 201 Created`).
+    - Verifikasi redirect live `/api/auth/oauth/google` menuju Google Accounts consent screen.
+    - 100% verifikasi lolos: 104/104 file kode sumber patuh $\le 200$ baris, tsc 0 error, E2E 11/11, pricing 22/22, billing 3/3, chaos PASS, UI 16/16.
+
 
 
 
