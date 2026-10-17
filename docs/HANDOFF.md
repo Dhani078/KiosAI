@@ -9,11 +9,11 @@ Dokumen ini dirancang agar setiap sesi AI atau pengembang dapat melanjutkan peke
 | Komponen | Status | Keterangan |
 |---|---|---|
 | **Repository** | Clean, Up-to-Date | `https://github.com/Dhani078/KiosAI.git` (Branch `main`) |
-| **Commit Terakhir** | `e0570d6` | Feat(ui): add syntax-container code block with 1-click copy to playground and spend limit progress bar to api keys |
+| **Commit Terakhir** | `aa91210` | Feat(ui): add interactive gateway health and latency diagnostics modal on topbar status click |
 | **Worker Live** | `healthy` | `https://kiosai.dhanisepeda.workers.dev` (Subdomain `dhanisepeda` dengan huruf 'e') |
 | **Database** | `connected` | TiDB Cloud Serverless (AWS Tokyo `ap-southeast-1` / `ap-northeast-1`) |
 | **Upstream 9Router** | `connected` | `http://127.0.0.1:20128` (71 model terverifikasi 5x audit, 5 Free, 66 Pro) |
-| **Batas Baris Kode** | 100% Patuh | 107 file sumber `.ts`/`.tsx`/`.mjs` `<= 200` baris |
+| **Batas Baris Kode** | 100% Patuh | 108 file sumber `.ts`/`.tsx`/`.mjs` `<= 200` baris |
 | **E2E Integration** | 11/11 Passed | `npm run test:e2e` lolos semua skenario |
 | **Pricing Unit Test** | 17/17 Passed | `npm run test:pricing` — rasio directional input vs output + harga $/1M |
 | **UI Audit** | 16/16 Passed | `npm run audit:ui` (4) + `npm run audit:dashboard` (12) — 0 overflow, 0 copy lama |

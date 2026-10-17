@@ -429,3 +429,8 @@ Desain prototype dari `KiosAI Token Marketplace Design` diterapkan sepenuhnya pa
 
 - **Kontainer Blok Kode Bersintaks (`MarkdownMessage.tsx`)**: Respon kode program (Python, Node.js, SQL, cURL, bash) yang dihasilkan AI di Playground kini dibungkus rapi dalam kontainer monospaced dengan bar bahasa dan tombol aksi "Salin" 1-klik.
 - **Visualisasi Progress Bar Batas Kuota Kunci (`KeysTab.tsx`)**: API key yang dikonfigurasikan dengan batas token pengeluaran (`max_spend_tokens`) kini menampilkan progress bar mikro interaktif yang memperlihatkan token yang telah digunakan terhadap kuota maksimal, lengkap dengan indikator warna merah saat mencapai ambang batas kritis $\ge 90\%$.
+
+## 47. Modal Diagnostik Status & Latensi Gateway Real-Time
+
+- **Panel Diagnostik Gateway (`GatewayHealthModal.tsx`)**: Menampilkan status latensi milidetik riil dari komponen infrastruktur KiosAI: konektivitas TiDB Serverless, status router upstream (71 model terverifikasi aktif), dan Cloudflare Edge CDN.
+- **Interaktivitas Header**: Pengguna dapat mengklik pill indikator status "Live Gateway" di navbar kapan saja untuk melihat diagnostik performa jaringan dan melakukan re-ping live.

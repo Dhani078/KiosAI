@@ -7,6 +7,14 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `aa91210` — feat(ui): add interactive gateway health and latency diagnostics modal on topbar status click
+
+**Modal Diagnostik Status & Latensi Gateway Real-Time**
+- **Modal Diagnostik Gateway (`app/components/GatewayHealthModal.tsx`)**: Modul baru (109 baris) menyediakan rincian status infrastruktur: latensi koneksi TiDB Cloud Serverless (ms), status konektivitas router upstream (ms & jumlah model aktif), serta kesiapan Cloudflare Edge CDN & proteksi DDoS.
+- **Pemicu Interaktif di Topbar (`app/components/Header.tsx`)**: Tombol pill status "Live Gateway" kini dapat diklik oleh pengguna untuk membuka modal diagnostik lengkap dengan tombol "Segarkan" live re-ping.
+- **Kepatuhan Modularitas**: 108/108 file kode sumber patuh batasan $\le 200$ baris per file (`Header.tsx` 107 baris, `GatewayHealthModal.tsx` 109 baris).
+- **Hasil Verifikasi**: tsc 0 error, 22/22 pricing tests PASS, 11/11 E2E tests PASS, 3/3 billing deduction PASS, chaos test PASS, 16/16 UI audits PASS.
+
 ### `e0570d6` — feat(ui): add syntax-container code block with 1-click copy to playground and spend limit progress bar to api keys
 
 **Blok Kode Bersintaks di Playground & Indikator Batas Kuota API Key**
