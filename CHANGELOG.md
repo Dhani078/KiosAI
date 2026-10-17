@@ -7,7 +7,7 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
-### `pending` — feat(ai): implement anti-prompt-leakage defense shield and add Cursor, Manus, and Claude Code persona presets
+### `1abbd79` — feat(ai): implement anti-prompt-leakage defense shield and add Cursor, Manus, and Claude Code persona presets
 
 **Guardrail Defensif Ekstraksi Prompt & Preset Arsitektur Agen**
 - **Mesin Proteksi Anti-Leakage (`lib/prompt-defense.ts`)**:
