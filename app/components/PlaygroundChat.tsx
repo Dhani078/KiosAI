@@ -2,6 +2,7 @@
 
 import { Terminal, ArrowUpRight } from "lucide-react";
 import { formatModelName } from "@/lib/model-utils";
+import MarkdownMessage from "./MarkdownMessage";
 
 export interface ChatMessage {
   text: string;
@@ -64,7 +65,7 @@ export function PlaygroundChat({
             <span className="message-label">
               {m.user ? "ANDA" : (m.model ? formatModelName(m.model, isAdmin).toUpperCase() : "AI")}
             </span>
-            <p style={{ whiteSpace: "pre-wrap" }}>{m.text}</p>
+            {m.user ? <p style={{ whiteSpace: "pre-wrap" }}>{m.text}</p> : <MarkdownMessage content={m.text} />}
             {!m.user && (
               <small>
                 {m.tokens ? `${m.tokens} token` : "Live response"}

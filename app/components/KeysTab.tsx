@@ -75,13 +75,28 @@ export function KeysTab({
                       })
                     : "Baru saja";
 
+                  const maxCap = Number(k.max_spend_tokens || 0);
+                  const spent = Number(k.spent_tokens || 0);
+                  const pct = maxCap > 0 ? Math.min(100, Math.round((spent / maxCap) * 100)) : 0;
+
                   return (
                     <TableRow key={k.id}>
                       <td>
                         <strong>{k.name || "Default Key"}</strong>
                         <small className="muted" style={{ display: "block" }}>
-                          {k.rate_limit_per_min || 60} req/m{k.max_spend_tokens && Number(k.max_spend_tokens) > 0 ? ` · Cap: ${Number(k.max_spend_tokens).toLocaleString("id-ID")}` : ""}
+                          {k.rate_limit_per_min || 60} req/m
                         </small>
+                        {maxCap > 0 && (
+                          <div style={{ marginTop: "4px", width: "160px" }}>
+                            <div style={{ display: "flex", justifyContent: "space-between", fontSize: "10px", color: pct >= 90 ? "var(--error)" : "var(--text-muted)" }}>
+                              <span>{spent.toLocaleString("id-ID")} / {maxCap.toLocaleString("id-ID")}</span>
+                              <span>{pct}%</span>
+                            </div>
+                            <div style={{ width: "100%", height: "3px", background: "var(--border)", borderRadius: "2px", overflow: "hidden", marginTop: "2px" }}>
+                              <div style={{ width: `${pct}%`, height: "100%", background: pct >= 90 ? "var(--error)" : "var(--primary)", transition: "width 0.3s ease" }} />
+                            </div>
+                          </div>
+                        )}
                       </td>
                       <td>
                         <code>{displayKey}</code>
