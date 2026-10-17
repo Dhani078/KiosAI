@@ -434,3 +434,7 @@ Desain prototype dari `KiosAI Token Marketplace Design` diterapkan sepenuhnya pa
 
 - **Panel Diagnostik Gateway (`GatewayHealthModal.tsx`)**: Menampilkan status latensi milidetik riil dari komponen infrastruktur KiosAI: konektivitas TiDB Serverless, status router upstream (71 model terverifikasi aktif), dan Cloudflare Edge CDN.
 - **Interaktivitas Header**: Pengguna dapat mengklik pill indikator status "Live Gateway" di navbar kapan saja untuk melihat diagnostik performa jaringan dan melakukan re-ping live.
+
+## 48. Filter Cepat Multi-Provider pada Katalog Model
+
+- **Komponen Filter Modular (`ModelFilters.tsx`)**: Menyediakan navigasi pencarian dan tombol pill filter multi-provider (Semua Provider, Google, DeepSeek, Anthropic, OpenAI, OpenCode, Meta) secara instan, memudahkan eksplorasi 71 model AI aktif tanpa keharusan mengetik manual.

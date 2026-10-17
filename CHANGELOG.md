@@ -7,6 +7,13 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `92c8e56` — feat(models): add multi-provider quick filter pills in model catalog
+
+**Filter Cepat Multi-Provider pada Katalog Model**
+- **Komponen Filter Modular (`app/components/ModelFilters.tsx`)**: Modul baru (90 baris) mengekstrak fungsionalitas pencarian, filter tier (Semua, Free, Pro), dan filter provider cepat (Semua Provider, Google, DeepSeek, Anthropic, OpenAI, OpenCode, Meta) secara rapi.
+- **Navigasi Model Instan (`app/components/ModelsTab.tsx`)**: Memangkas kompleksitas `ModelsTab.tsx` menjadi 173 baris (headroom 27 baris). Pengembang kini dapat memfilter keluarga model tertentu hanya dengan 1 klik tanpa perlu mengetik manual di kolom pencarian.
+- **Hasil Verifikasi**: tsc 0 error, 109/109 file kode sumber patuh batasan $\le 200$ baris per file (`ModelsTab.tsx` 173 baris, `ModelFilters.tsx` 90 baris), 22/22 pricing tests PASS, 11/11 E2E tests PASS, 3/3 billing deduction PASS, chaos test PASS, 16/16 UI audits PASS.
+
 ### `aa91210` — feat(ui): add interactive gateway health and latency diagnostics modal on topbar status click
 
 **Modal Diagnostik Status & Latensi Gateway Real-Time**
