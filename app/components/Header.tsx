@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { ChevronRight } from "lucide-react";
 import Logo from "./Logo";
+import GatewayHealthModal from "./GatewayHealthModal";
 
 export function Header({
   page,
@@ -18,6 +19,7 @@ export function Header({
     database: { status: string; latencyMs: number };
     upstream: { status: string; latencyMs: number };
   } | null>(null);
+  const [showHealthModal, setShowHealthModal] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -62,20 +64,22 @@ export function Header({
         <Logo />
       </div>
       <div className="topbar-right">
-        <span
-          className="status-dot"
-          style={{
-            backgroundColor: isOnline ? "var(--success)" : health?.status === "degraded" ? "var(--warning)" : "var(--error)",
-          }}
-          title={healthTooltip}
-        />
-        <span
-          className="demo-indicator"
-          style={{ cursor: "default" }}
-          title={healthTooltip}
+        <button
+          type="button"
+          onClick={() => setShowHealthModal(true)}
+          style={{ display: "inline-flex", alignItems: "center", gap: "8px", background: "none", border: "none", padding: "4px 8px", cursor: "pointer", borderRadius: "999px" }}
+          title="Klik untuk melihat diagnostik latensi gateway"
         >
-          {isOnline ? "Live Gateway" : health?.status === "degraded" ? "Degraded" : "Connecting"}
-        </span>
+          <span
+            className="status-dot"
+            style={{
+              backgroundColor: isOnline ? "var(--success)" : health?.status === "degraded" ? "var(--warning)" : "var(--error)",
+            }}
+          />
+          <span className="demo-indicator" style={{ cursor: "pointer" }}>
+            {isOnline ? "Live Gateway" : health?.status === "degraded" ? "Degraded" : "Connecting"}
+          </span>
+        </button>
         <span className="top-divider" />
         <button
           className="small-avatar"
@@ -90,6 +94,13 @@ export function Header({
           )}
         </button>
       </div>
+
+      <GatewayHealthModal
+        isOpen={showHealthModal}
+        onClose={() => setShowHealthModal(false)}
+        initialHealth={health}
+        isAdmin={isAdmin}
+      />
     </header>
   );
 }
