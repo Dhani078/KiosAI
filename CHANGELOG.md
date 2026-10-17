@@ -7,6 +7,13 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `a0d46db` — feat(billing): add instant printable receipt button in payment success modal
+
+**Tombol Cetak Faktur Instan pada Modal Pembayaran Berhasil**
+- **Cetak Faktur Langsung (`app/components/PaymentModal.tsx`)**: Menambahkan tombol aksi "Cetak Faktur / Kwitansi Resmi" (`<Printer />`) pada dialog sukses pembayaran yang langsung memicu generator HTML faktur resmi (`lib/receipt-generator.ts`) dan auto-print browser tanpa harus navigasi ke tabel riwayat order.
+- **Kepatuhan Modularitas**: `PaymentModal.tsx` tetap patuh batasan $\le 200$ baris per file (174 baris).
+- **Hasil Verifikasi**: tsc 0 error, 109/109 file kode sumber patuh batasan $\le 200$ baris, 22/22 pricing tests PASS, 11/11 E2E tests PASS, 3/3 billing deduction PASS, chaos test PASS, 16/16 UI audits PASS.
+
 ### `92c8e56` — feat(models): add multi-provider quick filter pills in model catalog
 
 **Filter Cepat Multi-Provider pada Katalog Model**

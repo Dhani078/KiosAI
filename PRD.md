@@ -438,3 +438,7 @@ Desain prototype dari `KiosAI Token Marketplace Design` diterapkan sepenuhnya pa
 ## 48. Filter Cepat Multi-Provider pada Katalog Model
 
 - **Komponen Filter Modular (`ModelFilters.tsx`)**: Menyediakan navigasi pencarian dan tombol pill filter multi-provider (Semua Provider, Google, DeepSeek, Anthropic, OpenAI, OpenCode, Meta) secara instan, memudahkan eksplorasi 71 model AI aktif tanpa keharusan mengetik manual.
+
+## 49. Tombol Cetak Faktur Langsung pada Penyelesaian Pembayaran
+
+- **Akses Cetak Cepat (`PaymentModal.tsx`)**: Pengguna yang baru saja menyelesaikan pembayaran QRIS dapat langsung mengklik tombol "Cetak Faktur / Kwitansi Resmi" untuk mengunduh bukti transaksi atau mencetak faktur PDF resmi klaim kantor tanpa perlu menuju tabel riwayat order terlebih dahulu.
