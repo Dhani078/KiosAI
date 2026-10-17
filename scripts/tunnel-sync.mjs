@@ -77,7 +77,7 @@ async function pushSecret(name, value) {
 function startTunnel() {
   writeFileSync(LOG, "");
   const out = createWriteStream(LOG, { flags: "a" });
-  const proc = spawn("cloudflared", ["tunnel", "--url", LOCAL_ROUTER, "--protocol", "http2", "--no-autoupdate"], {
+  const proc = spawn("cloudflared", ["tunnel", "--url", LOCAL_ROUTER, "--protocol", "http2", "--edge-ip-version", "4", "--no-autoupdate"], {
     stdio: ["ignore", "pipe", "pipe"],
   });
   proc.stdout.pipe(out);
