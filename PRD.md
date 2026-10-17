@@ -439,6 +439,8 @@ Desain prototype dari `KiosAI Token Marketplace Design` diterapkan sepenuhnya pa
 
 - **Komponen Filter Modular (`ModelFilters.tsx`)**: Menyediakan navigasi pencarian dan tombol pill filter multi-provider (Semua Provider, Google, DeepSeek, Anthropic, OpenAI, OpenCode, Meta) secara instan, memudahkan eksplorasi 71 model AI aktif tanpa keharusan mengetik manual.
 
-## 49. Tombol Cetak Faktur Langsung pada Penyelesaian Pembayaran
+## 50. Identitas Brand TokoAI & Logo Vektor Isometrik HD
 
-- **Akses Cetak Cepat (`PaymentModal.tsx`)**: Pengguna yang baru saja menyelesaikan pembayaran QRIS dapat langsung mengklik tombol "Cetak Faktur / Kwitansi Resmi" untuk mengunduh bukti transaksi atau mencetak faktur PDF resmi klaim kantor tanpa perlu menuju tabel riwayat order terlebih dahulu.
+- **Master Brand & Varian HD (`public/brand/`)**: Memproses gambar master `tokoai-logo-master.jfif` ke varian resolusi tinggi 2048x2048, 512x512, 192x192, dan versi transparan PNG.
+- **Vektor SVG Isometrik Huruf "T" (`Logo.tsx` & `favicon.svg`)**: Geometri modern dua bidang terpisah dengan celah diagonal 45 derajat warna oranye `#F5681A` di atas squircle gelap `#101116`.
+- **Rebranding Menyeluruh**: Mengganti identitas visual dan penamaan di seluruh antarmuka web, metadata title, FAQ, modal SDK, dan faktur cetak resmi menjadi **TokoAI** (domain: `tokoai.my.id`).

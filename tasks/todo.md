@@ -362,6 +362,13 @@
 - [x] Task 50.2: Connect `generateInvoiceHtml` from `lib/receipt-generator.ts` with auto-print
 - [x] Task 50.3: Verify 100% test pass: 109 files <= 200 LOC, 22/22 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
 
+## Phase 51 (TokoAI Brand Identity & Geometric Logo Overhaul - Completed)
+- [x] Task 51.1: Move and process master image into `public/brand/tokoai-logo-master.jfif`
+- [x] Task 51.2: Generate HD variants (2048, 512, 192, transparent) and clean SVG vector assets
+- [x] Task 51.3: Update `Logo.tsx` with geometric isometric letter "T" icon and TokoAI wordmark
+- [x] Task 51.4: Update site title, layout metadata, SDK integration snippets, and invoice texts to TokoAI
+- [x] Task 51.5: Verify 100% test pass: 109 files <= 200 LOC, 22/22 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
+
 
 
 

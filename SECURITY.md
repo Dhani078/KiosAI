@@ -1,6 +1,6 @@
 # Security Architecture 🛡️
 
-Standar keamanan KiosAI: enkripsi kredensial, isolasi environment, dan mitigasi risiko produksi.
+Standar keamanan TokoAI: enkripsi kredensial, isolasi environment, dan mitigasi risiko produksi.
 
 ---
 

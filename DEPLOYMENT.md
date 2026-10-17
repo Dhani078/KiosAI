@@ -1,6 +1,6 @@
-# KiosAI Deployment Guide 🚀
+# TokoAI Deployment Guide 🚀
 
-Panduan deploy produksi KiosAI: **Cloudflare Workers** (frontend + API) + **TiDB Cloud Serverless** + **Cloudflare Tunnel** ke 9Router.
+Panduan deploy produksi TokoAI: **Cloudflare Workers** (frontend + API) + **Custom Domain `tokoai.my.id`** + **TiDB Cloud Serverless** + **Cloudflare Tunnel** ke 9Router.
 
 ---
 
@@ -10,7 +10,7 @@ Panduan deploy produksi KiosAI: **Cloudflare Workers** (frontend + API) + **TiDB
 [Pengguna / SDK OpenAI]
        │ (HTTPS)
        ▼
-[Cloudflare Worker "kiosai"  —  kiosai.<subdomain>.workers.dev]
+[Cloudflare Edge: https://tokoai.my.id & https://kiosai.dhanisepeda.workers.dev]
   ├── Next.js 15 via @opennextjs/cloudflare (SSR + API routes)
   ├── Secret: DATABASE_URL        → TiDB Cloud Serverless (Tokyo)
   ├── Secret: NINEROUTER_URL      → URL tunnel HTTPS (diisi otomatis)

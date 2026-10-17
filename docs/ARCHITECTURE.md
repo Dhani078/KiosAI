@@ -1,6 +1,6 @@
-# KiosAI System Architecture 🏗️
+# TokoAI System Architecture 🏗️
 
-Dokumentasi arsitektur teknis mendalam untuk platform gateway AI dan pasar token KiosAI.
+Dokumentasi arsitektur teknis mendalam untuk platform gateway AI dan pasar token TokoAI (`https://tokoai.my.id`).
 
 ---
 

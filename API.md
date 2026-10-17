@@ -1,6 +1,6 @@
-# KiosAI API Reference 📖
+# TokoAI API Reference 📖
 
-Dokumentasi spesifikasi endpoint REST & OpenAI-Compatible Gateway KiosAI.
+Dokumentasi spesifikasi endpoint REST & OpenAI-Compatible Gateway TokoAI (`https://tokoai.my.id`).
 
 ---
 

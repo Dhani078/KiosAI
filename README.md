@@ -1,4 +1,4 @@
-# KiosAI ⚡
+# TokoAI ⚡
 
 [![CI](https://github.com/Dhani078/KiosAI/actions/workflows/ci.yml/badge.svg)](https://github.com/Dhani078/KiosAI/actions)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
@@ -12,28 +12,19 @@
 
 ## 🌟 Fitur Utama
 
+- **Domain Resmi Kustom (`https://tokoai.my.id`)**: Live di edge Cloudflare dengan sertifikat SSL otomatis dan perutean instan.
 - **OpenAI-Compatible Proxy (`/v1/chat/completions`)**: Mendukung streaming (SSE) dan JSON completion. Kompatibel dengan semua official OpenAI SDKs.
-- **Dynamic Model Discovery (`/v1/models`)**: Sinkronisasi otomatis dengan upstream 9Router dan anotasi tier akses model.
-- **TiDB Cloud Serverless**: Database MySQL-compatible berbasis HTTP fetch via `@tidbcloud/serverless`. Skalabel tanpa limit koneksi pool di serverless/Vercel.
-- **Model Gating 2 Tier**: Dua tier saja — `free` (hanya Atria Dawn) dan `pro` (seluruh model AI termasuk DeepSeek Flash, Claude, GPT, Gemini). Model di luar tier Free ditolak HTTP 403 `tier_restricted`.
+- **Dynamic Model Discovery (`/v1/models`)**: Sinkronisasi otomatis dengan upstream 9Router dan anotasi tier akses untuk 71 model terverifikasi (5 Free Tier termasuk OpenCode & Atria, 66 Pro Tier).
+- **TiDB Cloud Serverless**: Database MySQL-compatible berbasis HTTP fetch via `@tidbcloud/serverless`. Skalabel tanpa limit koneksi pool di serverless/Worker.
+- **Model Gating 2 Tier**: Dua tier — `free` (Atria Dawn + keluarga OpenCode) dan `pro` (seluruh model AI termasuk Google Gemini, DeepSeek Flash, Claude, GPT). Model Pro ditolak HTTP 403 `tier_restricted` untuk akun Free.
 - **Tarif Token Transparan ($/1M)**: Tidak ada multiplier tersembunyi. Kartu model menampilkan tarif `Input / Output ($ / 1M tokens)` apa adanya; rasio pemotongan saldo diturunkan dari angka yang sama via `getCostRatio()` di `lib/model-pricing.ts` (baseline DeepSeek Flash = 1.0).
-- **Low-Balance Alert**: Header otomatis `X-Quota-Warning: low_balance` dan peringatan di UI jika saldo < 20.000 token.
-- **Riwayat Transaksi & Invoice**: Endpoint `GET /api/orders` dan tabel riwayat order QRIS di antarmuka web.
-- **Manajemen API Key Aman**: Kunci format `kios-<hash32>` di-hash dengan SHA-256. Mendukung pembatasan model dan rate limiting per kunci.
-- **Rate Limiting Engine**: Menggunakan algoritma sliding-window per menit, mengembalikan header standar `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`.
-- **Autentikasi Pengguna**: Registrasi & login mandiri dengan keamanan `scrypt` hashing dan bonus 2.500.000 token otomatis (tier `free`).
-- **Gerbang Dashboard (`/dashboard`)**: Halaman dashboard dilindungi `AuthGuard` — pengguna anonim otomatis diarahkan ke landing page dan diminta login. Login mendukung email (user biasa) maupun username (admin).
-- **Payment Webhook & Idempotensi**: Menerima callback QRIS/VA dari payment gateway dengan pencegahan double-spending secara otomatis.
-- **Statistik & Log Penggunaan**: Visualisasi riwayat pemakaian token, total request, rata-rata latensi, dan breakdown per model AI.
-- **Pemotongan Saldo Otomatis**: Setiap request AI otomatis memotong saldo token pengguna di database TiDB secara real-time.
-- **Top-Up Token (QRIS)**: Sistem paket token Pro (Pro 25K / 100K / 150K) dengan simulasi pembayaran instan.
-- **Live AI Playground**: Antarmuka dashboard untuk menguji endpoint dan streaming model AI secara langsung dengan pesan error ramah pengguna dalam bahasa Indonesia.
-- **Resolusi Alias Komersial Otomatis**: Mendukung pemanggilan nama model industri standar (`claude-3.7-sonnet`, `gpt-4o`, `gemini-2.0-flash`, `deepseek-r1`, `llama-3.3-70b`, `deepseek-v4.1-flash`, `atria`) yang dipetakan secara cerdas ke rute aktif gateway.
-- **Billing Total**: Token ditagih dari `usage` upstream (prompt + completion) dikali rasio tarif model (`getCostRatio`), baik stream maupun non-stream. Overhead prompt upstream ikut ditagih (lihat PRD §9).
-- **Desain KiosAI Token Marketplace**: Antarmuka responsif (Desktop Sidebar + Mobile Bottom Nav), tema oranye hangat (`#F28C38`), logo vektor presisi resmi (`Logo.tsx`, `public/brand/`), tanpa komponen dummy — 100% data live dari database & gateway.
-- **Katalog Model Publik**: Halaman muka menampilkan showcase 65 model AI unggulan terverifikasi audit 5x dengan badge kode model monospace, tier akses, tarif `Input / Output ($ / 1M)`, context window, dan filter provider interaktif.
-- **Penyembunyian Branding Internal**: Label teknis database ("TiDB") dan router ("9Router") disembunyikan otomatis untuk publik/pengguna biasa, dan tetap tampil presisi untuk admin.
-- **Standar Kode Moduler**: Seluruh 87 modul kode TypeScript/React dibatasi maksimal 200 baris per file demi keterbacaan dan pemeliharaan jangka panjang.
+- **Low-Balance Alert & Webhook**: Peringatan visual banner di UI, header `X-Quota-Warning: low_balance`, serta dispatch HTTP webhook otomatis ke Discord/Telegram/Slack pengguna saat saldo < 50.000 token (dengan 30m debounce).
+- **Social Login Native (GitHub & Google)**: Onboarding instan dengan bonus 250.000 token aktif langsung + 2.250.000 token brankas bonus.
+- **Faktur Cetak Digital Instan**: Generator bukti transaksi resmi PDF/cetak langsung dari modal pembayaran sukses atau riwayat transaksi.
+- **Live AI Playground dengan SSE Streaming**: Balasan model muncul kata demi kata secara real-time (~240ms TTFB), dilengkapi kontainer blok kode bersintaks dan tombol salin 1-klik.
+- **Manajemen API Key Aman**: Kunci format `kios-<hash32>` di-hash dengan SHA-256. Mendukung visualisasi spend limit progress bar per kunci.
+- **Desain TokoAI Token Marketplace**: Antarmuka responsif dark tech, logo vektor isometrik huruf "T" resmi oranye `#F5681A` (`Logo.tsx`, `public/brand/`), tanpa komponen dummy — 100% data live dari database & gateway.
+- **Standar Kode Moduler**: Seluruh 109 modul kode TypeScript/React dibatasi maksimal 200 baris per file demi keterbacaan dan pemeliharaan jangka panjang.
 
 ---
 

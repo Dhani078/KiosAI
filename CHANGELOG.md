@@ -7,6 +7,19 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `0c50c3c` — feat(brand): apply official TokoAI geometric logo assets and update brand identity across application
+
+**Pembaruan Brand Identitas TokoAI & Aset Vektor Logo HD**
+- **Pengorganisasian Aset Brand (`public/brand/`)**:
+  - File master `Gemini_Generated_Image_gek4fsgek4fsgek4.jfif` dipindahkan dan dirapikan menjadi `public/brand/tokoai-logo-master.jfif`.
+  - Ekstraksi varian HD murni: `tokoai-logo-2048.png` (2048x2048), `tokoai-logo-512.png` (512x512), `tokoai-logo-192.png` (192x192), dan varian transparan `tokoai-logo-transparent.png`.
+  - Rekonstruksi vektor SVG presisi: `tokoai-logo.svg`, `tokoai-logo-symbol.svg`, dan `public/favicon.svg` dengan geometri isometrik huruf "T" modern warna oranye `#F5681A` di atas squircle `#101116`.
+- **Komponen Logo (`app/components/Logo.tsx`)**: Mengimplementasikan `LogoIcon` SVG murni dan memperbarui tipografi teks brand menjadi `TokoAI`.
+- **Pembaruan Identitas Aplikasi**:
+  - Judul metadata halaman: `TokoAI - AI Token Gateway & Marketplace` di `app/layout.tsx`, `Dashboard — TokoAI` di `app/dashboard/page.tsx`, dan `TokoAI — Gateway API & Pasar Token AI Indonesia` di `app/page.tsx`.
+  - Seluruh copy antarmuka, FAQ landing, modal autentikasi, dokumen integrasi SDK (cURL, Python, Node.js), generator faktur resmi (`lib/receipt-generator.ts`), dan URL webhook diperbarui serentak ke domain `tokoai.my.id` dan nama `TokoAI`.
+- **Hasil Verifikasi**: tsc 0 error, 109/109 file kode sumber patuh $\le 200$ baris per file, 22/22 pricing tests PASS, 11/11 E2E tests PASS, 3/3 billing deduction PASS, chaos test PASS, 16/16 UI audits PASS.
+
 ### `a0d46db` — feat(billing): add instant printable receipt button in payment success modal
 
 **Tombol Cetak Faktur Instan pada Modal Pembayaran Berhasil**

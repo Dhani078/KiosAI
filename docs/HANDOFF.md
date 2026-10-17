@@ -9,8 +9,8 @@ Dokumen ini dirancang agar setiap sesi AI atau pengembang dapat melanjutkan peke
 | Komponen | Status | Keterangan |
 |---|---|---|
 | **Repository** | Clean, Up-to-Date | `https://github.com/Dhani078/KiosAI.git` (Branch `main`) |
-| **Commit Terakhir** | `a0d46db` | Feat(billing): add instant printable receipt button in payment success modal |
-| **Worker Live** | `healthy` | `https://kiosai.dhanisepeda.workers.dev` (Subdomain `dhanisepeda` dengan huruf 'e') |
+| **Commit Terakhir** | `0c50c3c` | Feat(brand): apply official TokoAI geometric logo assets and update brand identity across application |
+| **Worker Live** | `healthy` | `https://kiosai.dhanisepeda.workers.dev` (Subdomain `dhanisepeda` dengan huruf 'e') & `https://tokoai.my.id` |
 | **Database** | `connected` | TiDB Cloud Serverless (AWS Tokyo `ap-southeast-1` / `ap-northeast-1`) |
 | **Upstream 9Router** | `connected` | `http://127.0.0.1:20128` (71 model terverifikasi 5x audit, 5 Free, 66 Pro) |
 | **Batas Baris Kode** | 100% Patuh | 109 file sumber `.ts`/`.tsx`/`.mjs` `<= 200` baris |
