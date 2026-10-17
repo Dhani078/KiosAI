@@ -9,6 +9,7 @@ import PlaygroundLocked from "./PlaygroundLocked";
 import { getModelPricing } from "@/lib/model-pricing";
 import { humanizeErrorMessage } from "@/lib/model-utils";
 import { PLAYGROUND_PRESETS } from "@/lib/prompt-presets";
+import { streamPlaygroundCompletion } from "@/lib/playground-stream";
 
 export function PlaygroundTab({
   models,
@@ -50,7 +51,7 @@ export function PlaygroundTab({
 
   const currentModelObj = models.find((m) => m.id === selectedModel);
   const isFreeTier = (userTier || "free").toLowerCase() === "free";
-  const isAllowedForFree = selectedModel.toLowerCase().includes("atria");
+  const isAllowedForFree = selectedModel.toLowerCase().includes("atria") || selectedModel.toLowerCase().startsWith("oc/");
   const isLocked = isFreeTier && !isAllowedForFree;
   const requiredTier = isAllowedForFree ? "free" : "pro";
   const pricing = getModelPricing(selectedModel);
@@ -64,7 +65,7 @@ export function PlaygroundTab({
     const userText = prompt.trim();
     setPrompt("");
     setErrorBanner(null);
-    setMessages((prev) => [...prev, { text: userText, user: true }]);
+    setMessages((prev) => [...prev, { text: userText, user: true }, { text: "", user: false, model: selectedModel }]);
     setReplying(true);
 
     const startTime = Date.now();
@@ -78,29 +79,32 @@ export function PlaygroundTab({
         { role: "user", content: userText },
       ];
 
-      const res = await fetch("/v1/chat/completions", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKeyToUse}` },
-        body: JSON.stringify({ model: selectedModel, messages: payloadMessages, stream: false }),
+      const { text, tokensEstimate } = await streamPlaygroundCompletion({
+        apiKey: apiKeyToUse, model: selectedModel, messages: payloadMessages,
+        onChunk: (delta) => {
+          setMessages((prev) => {
+            const next = [...prev];
+            const last = next[next.length - 1];
+            if (last && !last.user) next[next.length - 1] = { ...last, text: last.text + delta };
+            return next;
+          });
+        },
       });
 
-      const resText = await res.text();
-      let data: any;
-      try { data = JSON.parse(resText); } catch { throw new Error(resText.slice(0, 160) || `HTTP ${res.status}`); }
-      if (!res.ok) throw new Error(data.error?.message || `HTTP ${res.status}`);
-
-      const replyContent = data.choices?.[0]?.message?.content || "(Tidak ada balasan)";
-      const tokensUsed = data.usage?.total_tokens || 0;
-
-      setMessages((prev) => [
-        ...prev,
-        {
-          text: replyContent, user: false, model: selectedModel, tokens: tokensUsed,
-          rateInfo: `In: $${pricing.input} / Out: $${pricing.output}`, latencyMs: Date.now() - startTime,
-        },
-      ]);
+      setMessages((prev) => {
+        const next = [...prev];
+        const last = next[next.length - 1];
+        if (last && !last.user) {
+          next[next.length - 1] = {
+            ...last, text: text || "(Tidak ada balasan)", tokens: tokensEstimate,
+            rateInfo: `In: $${pricing.input} / Out: $${pricing.output}`, latencyMs: Date.now() - startTime,
+          };
+        }
+        return next;
+      });
       onRefreshUserData();
     } catch (err: any) {
+      setMessages((prev) => (prev.length > 0 && !prev[prev.length - 1].user && !prev[prev.length - 1].text ? prev.slice(0, -1) : prev));
       setErrorBanner(humanizeErrorMessage(err.message || "Gagal memanggil model AI.", isAdmin));
     } finally {
       setReplying(false);
@@ -110,25 +114,15 @@ export function PlaygroundTab({
   return (
     <section className="panel playground">
       <PlaygroundToolbar
-        models={models}
-        selectedModel={selectedModel}
-        requiredTier={requiredTier}
-        isAdmin={isAdmin}
+        models={models} selectedModel={selectedModel} requiredTier={requiredTier} isAdmin={isAdmin}
         onSelectModel={(m) => { setMessages([]); setErrorBanner(null); setSelectedModel(m); }}
-        onResetChat={() => {
-          setMessages([]);
-          if (typeof window !== "undefined") sessionStorage.removeItem("kios_playground_messages");
-        }}
+        onResetChat={() => { setMessages([]); if (typeof window !== "undefined") sessionStorage.removeItem("kios_playground_messages"); }}
       />
 
       <div className="playground-context">
         <span>Koneksi Live {isAdmin ? "TiDB & 9Router" : "Gateway Aktif"}</span>
         <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
-          <button
-            className="text-link"
-            onClick={() => setShowSystem(!showSystem)}
-            style={{ fontSize: "11px", gap: "4px" }}
-          >
+          <button className="text-link" onClick={() => setShowSystem(!showSystem)} style={{ fontSize: "11px", gap: "4px" }}>
             <SlidersHorizontal size={12} /> {showSystem ? "Tutup System Prompt" : "Atur System Prompt"}
           </button>
           <code>Saldo {balance.toLocaleString("id-ID")} token · In ${pricing.input} / Out ${pricing.output} (1M)</code>
@@ -138,9 +132,7 @@ export function PlaygroundTab({
       {showSystem && (
         <div style={{ padding: "12px 24px", background: "var(--canvas)", borderBottom: "1px solid var(--border)", display: "flex", flexDirection: "column", gap: "8px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <label htmlFor="sys-prompt" className="small-label">
-              SYSTEM PROMPT (INSTRUKSI SISTEM)
-            </label>
+            <label htmlFor="sys-prompt" className="small-label">SYSTEM PROMPT (INSTRUKSI SISTEM)</label>
             <select
               onChange={(e) => {
                 const found = PLAYGROUND_PRESETS.find((p) => p.id === e.target.value);
@@ -149,15 +141,11 @@ export function PlaygroundTab({
               style={{ fontSize: "11px", padding: "2px 8px", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "4px", color: "var(--text)" }}
             >
               <option value="">Pilih Preset Persona...</option>
-              {PLAYGROUND_PRESETS.map((p) => (
-                <option key={p.id} value={p.id}>{p.name}</option>
-              ))}
+              {PLAYGROUND_PRESETS.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
             </select>
           </div>
           <input
-            id="sys-prompt"
-            value={systemPrompt}
-            onChange={(e) => setSystemPrompt(e.target.value)}
+            id="sys-prompt" value={systemPrompt} onChange={(e) => setSystemPrompt(e.target.value)}
             placeholder="Contoh: Jawab selalu dalam bahasa Indonesia singkat dan to the point."
             style={{ width: "100%", padding: "8px 12px", borderRadius: "var(--radius-input)", background: "var(--surface)", border: "1px solid var(--border)", color: "var(--text)", fontSize: "13px" }}
           />

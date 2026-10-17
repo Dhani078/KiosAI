@@ -26,9 +26,10 @@ export function PlaygroundToolbar({
       const aAcc = a.accessible !== false ? 1 : 0;
       const bAcc = b.accessible !== false ? 1 : 0;
       if (aAcc !== bAcc) return bAcc - aAcc;
-      const aP = a.id.toLowerCase().includes("atria") ? 1 : 0;
-      const bP = b.id.toLowerCase().includes("atria") ? 1 : 0;
-      return bP - aP;
+      const aFree = (a.required_tier === "free" || a.id.startsWith("oc/") || a.id.includes("atria")) ? 1 : 0;
+      const bFree = (b.required_tier === "free" || b.id.startsWith("oc/") || b.id.includes("atria")) ? 1 : 0;
+      if (aFree !== bFree) return bFree - aFree;
+      return a.id.localeCompare(b.id);
     });
 
   const displayTier = (requiredTier === "free" ? "FREE" : "PRO");
