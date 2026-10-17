@@ -8,12 +8,12 @@ export function LandingFaq() {
 
   const faqs = [
     {
-      q: "Apa itu KiosAI dan bagaimana cara kerjanya?",
-      a: "KiosAI adalah gateway API OpenAI-compatible lokal Indonesia. Kami menghubungkan aplikasi Anda ke berbagai provider model AI kelas dunia melalui satu endpoint terpusat dengan pembayaran instan via QRIS Rupiah.",
+      q: "Apa itu TokoAI dan bagaimana cara kerjanya?",
+      a: "TokoAI adalah gateway API OpenAI-compatible lokal Indonesia. Kami menghubungkan aplikasi Anda ke berbagai provider model AI kelas dunia melalui satu endpoint terpusat dengan pembayaran instan via QRIS Rupiah.",
     },
     {
       q: "Bisa dipakai di Cursor, Cline, atau Claude Code?",
-      a: "Tentu saja! Cukup masukkan baseURL KiosAI dan API key Anda pada pengaturan OpenAI di Cursor, Cline, Roo Code, atau ekstensi AI coding editor lainnya.",
+      a: "Tentu saja! Cukup masukkan baseURL TokoAI dan API key Anda pada pengaturan OpenAI di Cursor, Cline, Roo Code, atau ekstensi AI coding editor lainnya.",
     },
     {
       q: "Apakah token yang saya beli memiliki masa kedaluwarsa?",

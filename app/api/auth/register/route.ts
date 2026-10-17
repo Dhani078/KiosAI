@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
     await db.execute(
       `INSERT INTO kiosai.users (id, email, password_hash, full_name, tier, balance_tokens, locked_bonus_tokens, is_pro_unlocked)
        VALUES (?, ?, ?, ?, 'free', ?, ?, 0)`,
-      [userId, email.toLowerCase().trim(), passwordHash, fullName || "Pengguna KiosAI", initialTokens, lockedBonusTokens]
+      [userId, email.toLowerCase().trim(), passwordHash, fullName || "Pengguna TokoAI", initialTokens, lockedBonusTokens]
     );
 
     const orderId = crypto.randomUUID();
@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
     const user = {
       id: userId,
       email: email.toLowerCase().trim(),
-      full_name: fullName || "Pengguna KiosAI",
+      full_name: fullName || "Pengguna TokoAI",
       tier: "free",
       balance_tokens: initialTokens,
       locked_bonus_tokens: lockedBonusTokens,

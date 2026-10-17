@@ -24,7 +24,7 @@ export function EnvExportModal({
 
   if (!isOpen) return null;
 
-  const envContent = `# KiosAI Production Environment Config
+  const envContent = `# TokoAI Production Environment Config
 OPENAI_BASE_URL="${baseUrl}"
 OPENAI_API_KEY="${displayKey}"
 AI_MODEL="${selectedModel}"

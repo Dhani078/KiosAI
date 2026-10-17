@@ -129,7 +129,7 @@ async function runTunnelSupervisor() {
       console.log(`Verifikasi tunnel -> 9Router: ${check}`);
       const status = await pushSecret("NINEROUTER_URL", url);
       console.log(`NINEROUTER_URL terpasang di Worker "${WORKER}" (HTTP ${status})`);
-      console.log(`\nWorker live: https://${WORKER}.<subdomain>.workers.dev`);
+      console.log(`\nWorker live: https://${WORKER}.dhanisepeda.workers.dev dan https://tokoai.my.id`);
 
       await new Promise((resolve) => {
         proc.on("exit", resolve);

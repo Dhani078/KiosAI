@@ -48,7 +48,7 @@ export function PlaygroundChat({
           </div>
           <h2>Apa yang ingin Anda tanyakan?</h2>
           <p>
-            Uji prompt ke model AI nyata melalui gateway KiosAI secara live.
+            Uji prompt ke model AI nyata melalui gateway TokoAI secara live.
           </p>
           <div className="prompt-suggestions">
             {suggestions.map((p) => (

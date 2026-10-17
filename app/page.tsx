@@ -11,7 +11,7 @@ import LandingFooter from "./landing/components/LandingFooter";
 import LandingAuthWatcher from "./landing/components/LandingAuthWatcher";
 
 export const metadata: Metadata = {
-  title: "KiosAI — Gateway API & Pasar Token AI Indonesia",
+  title: "TokoAI — Gateway API & Pasar Token AI Indonesia",
   description:
     "Akses model AI kelas dunia (Claude, GPT, Gemini, DeepSeek) dengan pembayaran instan via QRIS Rupiah. Kompatibel 100% dengan OpenAI SDK.",
 };

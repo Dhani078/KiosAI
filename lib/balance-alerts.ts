@@ -37,7 +37,7 @@ export async function sendLowBalanceWebhook(params: {
     currentBalance: balance,
     threshold,
     timestamp: new Date().toISOString(),
-    actionUrl: "https://kiosai.dhanisepeda.workers.dev/dashboard",
+    actionUrl: "https://tokoai.my.id/dashboard",
   };
 
   try {
@@ -45,7 +45,7 @@ export async function sendLowBalanceWebhook(params: {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "User-Agent": "KiosAI-Alert-Webhook/1.0",
+        "User-Agent": "TokoAI-Alert-Webhook/1.0",
       },
       body: JSON.stringify(payload),
       signal: AbortSignal.timeout(5000),

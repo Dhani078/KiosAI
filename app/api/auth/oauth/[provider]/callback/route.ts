@@ -33,7 +33,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ prov
 
     const html = `<!DOCTYPE html>
 <html>
-<head><title>Menghubungkan ke KiosAI...</title></head>
+<head><title>Menghubungkan ke TokoAI...</title></head>
 <body style="background:#0b0d10;color:#fff;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;">
   <p>Berhasil masuk! Mengalihkan ke Dashboard...</p>
   <script>

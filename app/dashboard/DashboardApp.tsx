@@ -144,7 +144,7 @@ export default function Dashboard() {
           )}
 
           <footer>
-            <span>© 2026 KiosAI. Dibangun untuk ide Anda.</span>
+            <span>© 2026 TokoAI. Dibangun untuk ide Anda.</span>
             <div><span className="status-dot" /> Live {isAdmin ? "TiDB" : "Cloud"} Serverless</div>
           </footer>
         </main>

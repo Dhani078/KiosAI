@@ -27,18 +27,18 @@ export function ModelSnippetModal({
   -H "Content-Type: application/json" \\
   -d '{
     "model": "${modelId}",
-    "messages": [{"role": "user", "content": "Halo KiosAI!"}]
+    "messages": [{"role": "user", "content": "Halo TokoAI!"}]
   }'`,
     Python: `from openai import OpenAI
 
 client = OpenAI(
-    api_key="${displayKey}",
-    base_url="${baseUrl}"
+  api_key="${displayKey}",
+  base_url="${baseUrl}"
 )
 
 response = client.chat.completions.create(
-    model="${modelId}",
-    messages=[{"role": "user", "content": "Halo KiosAI!"}]
+  model="${modelId}",
+  messages=[{"role": "user", "content": "Halo TokoAI!"}]
 )
 
 print(response.choices[0].message.content)`,
@@ -51,7 +51,7 @@ const client = new OpenAI({
 
 const response = await client.chat.completions.create({
   model: "${modelId}",
-  messages: [{ role: "user", content: "Halo KiosAI!" }]
+  messages: [{ role: "user", content: "Halo TokoAI!" }]
 });
 
 console.log(response.choices[0].message.content);`,

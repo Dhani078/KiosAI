@@ -31,7 +31,7 @@ export function DocsTab({
   -H "Content-Type: application/json" \\
   -d '{
     "model": "${selectedDocModel}",
-    "messages": [{"role": "user", "content": "Halo KiosAI!"}]
+    "messages": [{"role": "user", "content": "Halo TokoAI!"}]
   }'`,
     Python: `from openai import OpenAI
 
@@ -42,7 +42,7 @@ client = OpenAI(
 
 response = client.chat.completions.create(
     model="${selectedDocModel}",
-    messages=[{"role": "user", "content": "Halo KiosAI!"}]
+    messages=[{"role": "user", "content": "Halo TokoAI!"}]
 )
 
 print(response.choices[0].message.content)`,
@@ -55,7 +55,7 @@ const client = new OpenAI({
 
 const response = await client.chat.completions.create({
   model: "${selectedDocModel}",
-  messages: [{ role: "user", content: "Halo KiosAI!" }]
+  messages: [{ role: "user", content: "Halo TokoAI!" }]
 });
 
 console.log(response.choices[0].message.content);`,

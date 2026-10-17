@@ -50,7 +50,7 @@ export function LandingFooter() {
             <span>{isAdmin ? "TiDB Serverless & 9Router Live" : "Cloud Database & Gateway Live"}</span>
           </div>
           <span className="muted" style={{ display: "block", marginTop: "4px" }}>
-            © 2026 KiosAI. Dikembangkan oleh Dhani078.
+            © 2026 TokoAI. Dikembangkan oleh Dhani078.
           </span>
         </div>
       </div>

@@ -43,7 +43,7 @@ export function generateInvoiceHtml(order: {
 <body>
   <div class="header">
     <div>
-      <div class="logo">KiosAI</div>
+      <div class="logo">TokoAI</div>
       <div class="receipt-title">Gateway API & Pasar Token AI Indonesia</div>
     </div>
     <div class="badge">LUNAS / PAID</div>
@@ -63,7 +63,7 @@ export function generateInvoiceHtml(order: {
     </thead>
     <tbody>
       <tr>
-        <td>Paket Langganan KiosAI <strong>${tierName}</strong></td>
+        <td>Paket Langganan TokoAI <strong>${tierName}</strong></td>
         <td style="text-align: right; font-family: monospace;">${tokens.toLocaleString("id-ID")}</td>
         <td style="text-align: right;">Rp ${amount.toLocaleString("id-ID")}</td>
       </tr>
@@ -71,7 +71,7 @@ export function generateInvoiceHtml(order: {
   </table>
   <div class="total">Total Bayar: Rp ${amount.toLocaleString("id-ID")}</div>
   <div class="footer">
-    Dokumen ini adalah bukti pembayaran digital yang sah dari platform KiosAI (kiosai.dhanisepeda.workers.dev).
+    Dokumen ini adalah bukti pembayaran digital yang sah dari platform TokoAI (tokoai.my.id).
   </div>
   <script>window.onload = function() { window.print(); };</script>
 </body>

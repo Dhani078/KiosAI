@@ -125,13 +125,13 @@ if (!secrets) {
   }
 }
 
-console.log("\n[6/6] Ringkasan...");
+console.log("[6/6] Ringkasan...");
 console.log(`  Worker target : ${WORKER}`);
 console.log(`  Akun CF       : ${ACCOUNT_ID}`);
-console.log(`  URL live      : https://${WORKER}.dhanisepeda.workers.dev`);
+console.log(`  URL live      : https://${WORKER}.dhanisepeda.workers.dev (dan https://tokoai.my.id)`);
 
 if (failures === 0) {
-  console.log("\n=== Semua Pengecekan Lolos! KiosAI Siap Deploy! ===\n");
+  console.log("\n=== Semua Pengecekan Lolos! TokoAI Siap Deploy! ===\n");
 } else {
   console.log(`\n=== ${failures} pengecekan GAGAL — perbaiki sebelum deploy. ===\n`);
   process.exit(1);

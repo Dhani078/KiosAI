@@ -81,7 +81,7 @@ export function AuthModal({
 
         <form onSubmit={handleSubmit}>
           <Logo />
-          <h2>{tab === "login" ? "Selamat datang kembali." : "Daftar akun KiosAI."}</h2>
+          <h2>{tab === "login" ? "Selamat datang kembali." : "Daftar akun TokoAI."}</h2>
           <p>{tab === "login" ? "Masuk untuk mengelola saldo token dan API key Anda." : "Daftar sekarang dan dapatkan bonus 2.500.000 token!"}</p>
           <div style={{ display: "flex", gap: "8px", margin: "16px 0 14px" }}>
             <button type="button" className={`button ${tab === "login" ? "primary" : "ghost"}`} style={{ flex: 1, height: "36px" }} onClick={() => { setTab("login"); setError(null); }}>Masuk</button>

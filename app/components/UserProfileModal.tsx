@@ -60,7 +60,7 @@ export function UserProfileModal({
           </div>
           <div style={{ minWidth: 0, flex: 1 }}>
             <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-              <h2 style={{ margin: 0, fontSize: "17px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{user?.full_name || "Pengguna KiosAI"}</h2>
+              <h2 style={{ margin: 0, fontSize: "17px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{user?.full_name || "Pengguna TokoAI"}</h2>
               <ShieldCheck size={16} style={{ color: "var(--primary)", flexShrink: 0 }} />
             </div>
             <p className="muted" style={{ margin: "2px 0 0", fontSize: "12px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{user?.email}</p>

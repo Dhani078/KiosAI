@@ -15,7 +15,7 @@ export const PAGE_HEADINGS: Record<
   Model: {
     eyebrow: "WORKSPACE / KATALOG MODEL",
     title: "Katalog Model AI",
-    desc: "Daftar model AI yang tersedia di gateway KiosAI dengan tier dan tarif Input / Output.",
+    desc: "Daftar model AI yang tersedia di gateway TokoAI dengan tier dan tarif Input / Output.",
   },
   Playground: {
     eyebrow: "WORKSPACE / PLAYGROUND",

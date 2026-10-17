@@ -11,15 +11,15 @@ export function CodeSection() {
   const snippets = {
     Python: `from openai import OpenAI
 
-# Cukup arahkan baseURL ke KiosAI dan gunakan API key Anda
+# Cukup arahkan baseURL ke TokoAI dan gunakan API key Anda
 client = OpenAI(
-    api_key="kios-xxxxxxxxxxxxxxxxxxxxxxxx",
-    base_url="https://api.kios.ai/v1"
+    api_key="toko-xxxxxxxxxxxxxxxxxxxxxxxx",
+    base_url="https://tokoai.my.id/v1"
 )
 
 response = client.chat.completions.create(
     model="deepseek-v4.1-flash",
-    messages=[{"role": "user", "content": "Halo KiosAI, buatkan fungsi sorting!"}],
+    messages=[{"role": "user", "content": "Halo TokoAI, buatkan fungsi sorting!"}],
     stream=True
 )
 
@@ -28,25 +28,25 @@ for chunk in response:
     "Node.js": `import OpenAI from "openai";
 
 const client = new OpenAI({
-  apiKey: "kios-...xx",
-  baseURL: "https://api.kios.ai/v1"
+  apiKey: ***
+  baseURL: "https://tokoai.my.id/v1"
 });
 
 const stream = await client.chat.completions.create({
   model: "deepseek-v4.1-flash",
-  messages: [{ role: "user", content: "Halo KiosAI!" }],
+  messages: [{ role: "user", content: "Halo TokoAI!" }],
   stream: true
 });
 
 for await (const chunk of stream) {
   process.stdout.write(chunk.choices[0]?.delta?.content || "");
 }`,
-    cURL: `curl https://api.kios.ai/v1/chat/completions \\
-  -H "Authorization: Bearer kios-x...xxxx" \\
+    cURL: `curl https://tokoai.my.id/v1/chat/completions \\
+  -H "Authorization: Bearer ***" \\
   -H "Content-Type: application/json" \\
   -d '{
     "model": "deepseek-v4.1-flash",
-    "messages": [{"role": "user", "content": "Halo KiosAI!"}],
+    "messages": [{"role": "user", "content": "Halo TokoAI!"}],
     "stream": true
   }'`,
   };
