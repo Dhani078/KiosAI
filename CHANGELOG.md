@@ -7,7 +7,7 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
-### `pending` — feat(security): server-side HttpOnly cookie sessions, IDOR elimination, fail-closed payment webhook, and admin credential rotation
+### `1f4a28a` — feat(security): server-side HttpOnly cookie sessions, IDOR elimination, fail-closed payment webhook, and admin credential rotation
 
 **Penguatan Keamanan Penuh & Eliminasi Kerentanan Autentikasi**
 - **Sesi Server-Side HttpOnly (`lib/session.ts` & `app/api/auth/logout/route.ts`)**:
