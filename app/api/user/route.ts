@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
 
   try {
     const user = await db.queryOne<UserRecord>(
-      `SELECT id, email, username, full_name, tier, balance_tokens, locked_bonus_tokens, is_pro_unlocked, alert_webhook_url, alert_threshold_tokens 
+      `SELECT id, email, username, full_name, tier, balance_tokens, locked_bonus_tokens, is_pro_unlocked, alert_webhook_url, alert_threshold_tokens, oauth_provider, avatar_url 
        FROM kiosai.users WHERE id = ?`,
       [userId]
     );

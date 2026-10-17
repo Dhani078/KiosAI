@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { validateApiKey, getRequiredTierForModel, isModelAllowedForTier } from "@/lib/keys";
 import { UPSTREAM_URL, UPSTREAM_KEY } from "@/lib/proxy-http";
 import { formatModelName } from "@/lib/model-utils";
-import { isModelVerified } from "@/lib/verified-models";
+import { isModelVerified, VERIFIED_MODEL_IDS } from "@/lib/verified-models";
 
 export const runtime = "nodejs";
 
@@ -86,9 +86,12 @@ export async function GET(req: NextRequest) {
         const aAcc = a.accessible ? 1 : 0;
         const bAcc = b.accessible ? 1 : 0;
         if (aAcc !== bAcc) return bAcc - aAcc;
-        const aP = a.id.toLowerCase().includes("atria") ? 1 : 0;
-        const bP = b.id.toLowerCase().includes("atria") ? 1 : 0;
-        return bP - aP;
+        const aGemini = a.id.toLowerCase().includes("gemini") ? 1 : 0;
+        const bGemini = b.id.toLowerCase().includes("gemini") ? 1 : 0;
+        if (aGemini !== bGemini) return bGemini - aGemini;
+        const aFree = a.required_tier === "free" ? 1 : 0;
+        const bFree = b.required_tier === "free" ? 1 : 0;
+        return bFree - aFree;
       });
 
     return NextResponse.json({
@@ -97,27 +100,32 @@ export async function GET(req: NextRequest) {
       user_tier: userTier,
     });
   } catch {
-    // Fallback model list if 9router unreachable
-    const fallbacks = [
-      { id: "atria/Atria-Dawn-Preview", tier: "free" },
-      { id: "tokenharbor/deepseek-v4.1-flash:free", tier: "pro" },
-      { id: "kr/claude-haiku-4.5-thinking-agentic", tier: "pro" },
-      { id: "kr/deepseek-3.2-thinking", tier: "pro" },
-      { id: "kr/claude-sonnet-4.5-thinking-agentic", tier: "pro" },
-      { id: "openai/gpt-5", tier: "pro" },
-    ];
-
-    return NextResponse.json({
-      object: "list",
-      data: fallbacks.map((f) => ({
-        id: f.id,
-        name: formatModelName(f.id, isAdmin),
+    const allFallback = Array.from(VERIFIED_MODEL_IDS)
+      .filter((id) => !isHiddenModel(id))
+      .map((id) => ({
+        id,
+        name: formatModelName(id, isAdmin),
         object: "model",
         created: 1700000000,
         owned_by: "kiosai",
-        required_tier: f.tier,
-        accessible: isModelAllowedForTier(userTier, f.id),
-      })),
+        required_tier: getRequiredTierForModel(id),
+        accessible: isModelAllowedForTier(userTier, id),
+      }))
+      .sort((a, b) => {
+        const aAcc = a.accessible ? 1 : 0;
+        const bAcc = b.accessible ? 1 : 0;
+        if (aAcc !== bAcc) return bAcc - aAcc;
+        const aGemini = a.id.toLowerCase().includes("gemini") ? 1 : 0;
+        const bGemini = b.id.toLowerCase().includes("gemini") ? 1 : 0;
+        if (aGemini !== bGemini) return bGemini - aGemini;
+        const aFree = a.required_tier === "free" ? 1 : 0;
+        const bFree = b.required_tier === "free" ? 1 : 0;
+        return bFree - aFree;
+      });
+
+    return NextResponse.json({
+      object: "list",
+      data: allFallback,
       user_tier: userTier,
     });
   }

@@ -28,6 +28,8 @@ export interface UserRecord {
   is_pro_unlocked?: number;
   alert_webhook_url?: string | null;
   alert_threshold_tokens?: number;
+  oauth_provider?: string | null;
+  avatar_url?: string | null;
 }
 
 export function getRequiredTierForModel(modelId: string): "free" | "pro" {

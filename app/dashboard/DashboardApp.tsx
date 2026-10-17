@@ -159,10 +159,7 @@ export default function Dashboard() {
               userBalance={user.balance_tokens}
               isAdmin={isAdmin}
               onClose={() => setModal(null)}
-              onPaymentSuccess={() => {
-                data.fetchUserData(); data.fetchOrders();
-                setToast("Pembayaran berhasil! Token telah ditambahkan ke database.");
-              }}
+              onPaymentSuccess={() => { data.fetchUserData(); data.fetchOrders(); setToast("Pembayaran berhasil! Token telah ditambahkan ke database."); }}
               onNavigateKeys={() => { setModal(null); setPage("API Keys"); }}
               onNavigateStatistik={() => { setModal(null); setPage("Statistik"); }}
             />
@@ -185,6 +182,8 @@ export default function Dashboard() {
         <AuthModal
           currentUser={data.currentUser}
           onClose={() => setModal(null)}
+          onNavigatePackages={() => { setModal(null); setPage("Beli Token"); }}
+          onCopy={copy}
           onAuthSuccess={(u) => {
             data.setCurrentUser(u); data.refreshAll(); setModal(null);
             setToast(`Selamat datang, ${u.full_name || u.name}!`);

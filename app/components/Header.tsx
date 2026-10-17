@@ -81,8 +81,13 @@ export function Header({
           className="small-avatar"
           aria-label="Profil Akun"
           onClick={onOpenAuth}
+          style={{ overflow: "hidden", padding: 0 }}
         >
-          {initials}
+          {user?.avatar_url ? (
+            <img src={user.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          ) : (
+            initials
+          )}
         </button>
       </div>
     </header>

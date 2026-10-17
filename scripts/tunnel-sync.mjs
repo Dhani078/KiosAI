@@ -118,26 +118,34 @@ async function verify(tunnelUrl) {
   return "HTTP provisional";
 }
 
-const proc = startTunnel();
+async function runTunnelSupervisor() {
+  while (true) {
+    let proc = null;
+    try {
+      proc = startTunnel();
+      const url = await waitForUrl(proc);
+      console.log(`\nTunnel aktif: ${url}`);
+      const check = await verify(url);
+      console.log(`Verifikasi tunnel -> 9Router: ${check}`);
+      const status = await pushSecret("NINEROUTER_URL", url);
+      console.log(`NINEROUTER_URL terpasang di Worker "${WORKER}" (HTTP ${status})`);
+      console.log(`\nWorker live: https://${WORKER}.<subdomain>.workers.dev`);
 
-try {
-  const url = await waitForUrl(proc);
-  console.log(`\nTunnel aktif: ${url}`);
-  const check = await verify(url);
-  console.log(`Verifikasi tunnel -> 9Router: ${check}`);
-  const status = await pushSecret("NINEROUTER_URL", url);
-  console.log(`NINEROUTER_URL terpasang di Worker "${WORKER}" (HTTP ${status})`);
-  console.log(`\nWorker live: https://${WORKER}.<subdomain>.workers.dev`);
-  console.log("Tunnel berjalan di depan. Tekan Ctrl+C untuk berhenti.\n");
-  await new Promise(() => {}); // Keep process alive
-} catch (err) {
-  console.error("Gagal:", err.message);
-  proc.kill();
-  process.exit(1);
+      await new Promise((resolve) => {
+        proc.on("exit", resolve);
+      });
+      console.warn("Tunnel terputus. Mencoba reconnect otomatis dalam 5 detik...");
+    } catch (err) {
+      console.error("Tunnel error:", err.message);
+      if (proc) try { proc.kill(); } catch {}
+    }
+    await new Promise((r) => setTimeout(r, 5000));
+  }
 }
+
+runTunnelSupervisor();
 
 process.on("SIGINT", () => {
   console.log("\nMenghentikan tunnel...");
-  proc.kill();
   process.exit(0);
 });

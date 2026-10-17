@@ -64,7 +64,13 @@ export function Sidebar({
         aria-label="Profil Akun"
         onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") onOpenAuth(); }}
       >
-        <div className="workspace-avatar">{initials[0] || "K"}</div>
+        <div className="workspace-avatar" style={{ overflow: "hidden" }}>
+          {user?.avatar_url ? (
+            <img src={user.avatar_url} alt={userName} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          ) : (
+            initials[0] || "K"
+          )}
+        </div>
         <div>
           <strong>{userName}</strong>
           <small>{userEmail}</small>
