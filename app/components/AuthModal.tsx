@@ -33,6 +33,8 @@ export function AuthModal({
   const handleLogout = () => {
     localStorage.removeItem("kiosai_user_id");
     try { localStorage.removeItem("kiosai_is_admin"); } catch {}
+    // Hapus juga cookie sesi server-side, kalau tidak sesi tetap hidup di server.
+    fetch("/api/auth/logout", { method: "POST" }).catch(() => {});
     if (onLogout) onLogout();
     window.location.href = "/";
   };

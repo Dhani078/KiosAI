@@ -5,8 +5,6 @@
 export const VERIFIED_MODEL_IDS = new Set<string>([
   "atria/Atria-Dawn-Preview",
   "kr/claude-haiku-4.5",
-  "kr/claude-sonnet-4",
-  "kr/claude-sonnet-4-agentic",
   "kr/claude-sonnet-4.5-agentic",
   "kr/deepseek-3.2-thinking",
   "kr/claude-sonnet-4.5",

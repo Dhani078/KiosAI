@@ -369,6 +369,15 @@
 - [x] Task 51.4: Update site title, layout metadata, SDK integration snippets, and invoice texts to TokoAI
 - [x] Task 51.5: Verify 100% test pass: 109 files <= 200 LOC, 22/22 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
 
+## Phase 52 (Full Security Hardening, Cookie Sessions & IDOR Elimination - Completed)
+- [x] Task 52.1: Server-side HMAC-SHA256 signed HttpOnly session cookie (`lib/session.ts`) & logout endpoint (`/api/auth/logout`)
+- [x] Task 52.2: Eliminate IDOR across `/api/user`, `/api/keys`, `/api/keys/[id]`, `/api/orders`, `/api/orders/pay`, `/api/analytics`
+- [x] Task 52.3: Fail-closed payment webhook signature check (`PAYMENT_WEBHOOK_SECRET`)
+- [x] Task 52.4: Admin password rotation and credential scrubbing from git-tracked docs to `backups/ADMIN-CREDENTIALS.txt`
+- [x] Task 52.5: Prune dead models from `lib/verified-models.ts` and sync secrets to Cloudflare Worker
+- [x] Task 52.6: Security regression test suite (`scripts/test-security.mjs`, 14/14 PASS)
+- [x] Task 52.7: Verify 100% compliance: 112 source files <= 200 LOC, all test suites pass (pricing, e2e, billing, chaos, security, UI)
+
 
 
 

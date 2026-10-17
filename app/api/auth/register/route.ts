@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { hashPassword } from "@/lib/auth";
+import { attachSession } from "@/lib/session";
 import crypto from "crypto";
 
 export const runtime = "nodejs";
@@ -56,11 +57,14 @@ export async function POST(req: NextRequest) {
       is_pro_unlocked: 0,
     };
 
-    return NextResponse.json({
-      success: true,
-      user,
-      message: "Pendaftaran berhasil! Anda mendapatkan 250.000 token aktif instan + 2.250.000 token di Brankas Bonus (cair saat top-up pertama).",
-    });
+    return attachSession(
+      NextResponse.json({
+        success: true,
+        user,
+        message: "Pendaftaran berhasil! Anda mendapatkan 250.000 token aktif instan + 2.250.000 token di Brankas Bonus (cair saat top-up pertama).",
+      }),
+      userId
+    );
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }

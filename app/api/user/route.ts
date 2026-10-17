@@ -2,12 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { UserRecord } from "@/lib/keys";
 import { createPlaygroundToken } from "@/lib/session-key";
+import { readSessionUserId, unauthorized } from "@/lib/session";
 
 export const runtime = "nodejs";
 
 export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
-  const userId = searchParams.get("id") || "usr_kiosai_demo";
+  // Sesi cookie bertanda tangan — tidak ada lagi lookup by ?id= dari klien.
+  const userId = readSessionUserId(req);
+  if (!userId) return unauthorized();
 
   try {
     const user = await db.queryOne<UserRecord>(
@@ -38,13 +40,12 @@ export async function GET(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
+  const userId = readSessionUserId(req);
+  if (!userId) return unauthorized();
+
   try {
     const body = await req.json();
-    const { userId, alertWebhookUrl, alertThresholdTokens } = body;
-
-    if (!userId) {
-      return NextResponse.json({ error: "userId is required" }, { status: 400 });
-    }
+    const { alertWebhookUrl, alertThresholdTokens } = body;
 
     await db.execute(
       `UPDATE kiosai.users 

@@ -9,15 +9,16 @@ Dokumen ini dirancang agar setiap sesi AI atau pengembang dapat melanjutkan peke
 | Komponen | Status | Keterangan |
 |---|---|---|
 | **Repository** | Clean, Up-to-Date | `https://github.com/Dhani078/KiosAI.git` (Branch `main`) |
-| **Commit Terakhir** | `0c50c3c` | Feat(brand): apply official TokoAI geometric logo assets and update brand identity across application |
+| **Commit Terakhir** | `1b01350` | docs: synchronize all markdown documentation for TokoAI rebranding, geometric logo, and custom domain |
 | **Worker Live** | `healthy` | `https://kiosai.dhanisepeda.workers.dev` (Subdomain `dhanisepeda` dengan huruf 'e') & `https://tokoai.my.id` |
 | **Database** | `connected` | TiDB Cloud Serverless (AWS Tokyo `ap-southeast-1` / `ap-northeast-1`) |
-| **Upstream 9Router** | `connected` | `http://127.0.0.1:20128` (71 model terverifikasi 5x audit, 5 Free, 66 Pro) |
-| **Batas Baris Kode** | 100% Patuh | 109 file sumber `.ts`/`.tsx`/`.mjs` `<= 200` baris |
+| **Upstream 9Router** | `connected` | `http://127.0.0.1:20128` (69 model aktif terverifikasi 5x audit, 5 Free, 64 Pro) |
+| **Batas Baris Kode** | 100% Patuh | 112 file sumber `.ts`/`.tsx`/`.mjs` `<= 200` baris |
 | **E2E Integration** | 11/11 Passed | `npm run test:e2e` lolos semua skenario |
-| **Pricing Unit Test** | 17/17 Passed | `npm run test:pricing` — rasio directional input vs output + harga $/1M |
+| **Security Regression** | 14/14 Passed | `npm run test:security` — IDOR eliminated, HttpOnly HMAC cookie session, fail-closed webhook |
+| **Pricing Unit Test** | 22/22 Passed | `npm run test:pricing` — rasio directional input vs output + harga $/1M |
 | **UI Audit** | 16/16 Passed | `npm run audit:ui` (4) + `npm run audit:dashboard` (12) — 0 overflow, 0 copy lama |
-| **Tier Database** | 2 tier bersih | `free: 1`, `pro: 46` — legacy `bronze`/`silver`/`gold` sudah dimigrasi |
+| **Tier Database** | 2 tier bersih | `free: 35`, `pro: 109` — saldo terlindungi non-negatif |
 
 ---
 
@@ -44,12 +45,8 @@ Jika ketiga perintah di atas menghasilkan status hijau / lulus, aplikasi dalam k
 
 - **Admin Account**:
   - Identifier: `adminfordhani`
-  - Password: `dhaniforadmin`
-  - Tier: `pro` | Saldo: `100.000.000` token (berkurang nyata saat uji coba di Playground)
-- **User Biasa (Contoh yang sudah terdaftar di TiDB)**:
-  - Email: `live_test1@gmail.com`
-  - Password: `rahasia123`
-  - Tier: `pro` (dimigrasi dari `bronze`) | Bonus 2.500.000 token otomatis saat daftar (tier `free`)
+  - Password: **tidak ada di repo** — lihat `backups/ADMIN-CREDENTIALS.txt` (gitignored) atau `ADMIN_PASSWORD` di `.env`
+- **User Uji**: buat sendiri via `POST /api/auth/register` (skrip e2e/chaos/billing melakukannya otomatis). Bonus 2.500.000 token saat daftar (tier `free`).
 
 ---
 

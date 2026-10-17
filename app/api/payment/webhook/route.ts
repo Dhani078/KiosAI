@@ -4,10 +4,11 @@ import crypto from "crypto";
 
 export const runtime = "nodejs";
 
-const WEBHOOK_SECRET = process.env.PAYMENT_WEBHOOK_SECRET || "kiosai_webhook_secret_key";
+// Fail-closed: tanpa secret yang valid, webhook menolak semua request.
+const WEBHOOK_SECRET = process.env.PAYMENT_WEBHOOK_SECRET || "";
 
 function verifySignature(payload: string, signature: string): boolean {
-  if (!signature) return false;
+  if (!signature || !WEBHOOK_SECRET) return false;
   const expected = crypto
     .createHmac("sha256", WEBHOOK_SECRET)
     .update(payload)
@@ -21,11 +22,17 @@ function verifySignature(payload: string, signature: string): boolean {
 
 export async function POST(req: NextRequest) {
   try {
+    if (!WEBHOOK_SECRET) {
+      return NextResponse.json(
+        { error: "PAYMENT_WEBHOOK_SECRET belum dikonfigurasi — webhook dinonaktifkan." },
+        { status: 503 }
+      );
+    }
+
     const rawBody = await req.text();
     const signature = req.headers.get("x-callback-signature") || req.headers.get("x-signature") || "";
 
-    // If production secret configured, verify HMAC signature
-    if (process.env.PAYMENT_WEBHOOK_SECRET && !verifySignature(rawBody, signature)) {
+    if (!verifySignature(rawBody, signature)) {
       return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
     }
 

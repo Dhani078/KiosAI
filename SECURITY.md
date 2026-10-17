@@ -81,11 +81,10 @@ hanya bisa dibaca user lokal — jangan pernah disalin ke dalam project.
 - Kolom `username` (untuk admin) **NULL** bagi user biasa — tidak bisa dipakai login.
 
 ### Sesi Browser
-- Dashboard memakai `localStorage.kiosai_user_id` (ID user, bukan token rahasia).
-- `AuthGuard` memblokir `/dashboard` bila ID kosong; re-check pada event `focus`/`pageshow`.
-- **Batasan yang diketahui:** tidak ada token sesi server-side (JWT/cookie HttpOnly), jadi ID
-  di localStorage bisa dipalsukan oleh orang yang punya akses fisik ke browser tersebut.
-  Untuk produksi komersial, ganti ke cookie sesi HttpOnly + tanda tangan server.
+- Sesi server-side menggunakan **cookie HttpOnly bertanda tangan HMAC-SHA256** (`kiosai_session`), ditandatangani dengan `SESSION_SECRET` (disinkronkan ke Cloudflare Worker).
+- Seluruh endpoint privat (`/api/user`, `/api/keys`, `/api/orders`, `/api/orders/pay`, `/api/analytics`) membaca `userId` dari cookie sesi terverifikasi, bukan dari query parameter atau request body klien (mencegah IDOR).
+- `AuthGuard` di frontend memblokir `/dashboard` jika sesi tidak ada, dan re-check pada event `focus`/`pageshow`.
+- Logout (`POST /api/auth/logout`) mencabut cookie sesi dengan `maxAge: 0`.
 
 ---
 

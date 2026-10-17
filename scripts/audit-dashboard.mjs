@@ -8,7 +8,32 @@ import { launch, connect, sleep, REPORT_EXPR } from "./cdp.mjs";
 
 const BASE = process.env.AUDIT_BASE || "http://127.0.0.1:3000";
 const PORT = 9335;
-const USER_ID = process.env.AUDIT_USER_ID || "usr_admin_dhani";
+const IDENTIFIER = process.env.ADMIN_IDENTIFIER || "adminfordhani";
+const PASSWORD = process.env.ADMIN_PASSWORD || "";
+
+// Sesi server-side wajib: ambil cookie HttpOnly via login admin, atau register akun uji.
+async function seedSession() {
+  const grab = (res, user) => {
+    const raw = res.headers.get("set-cookie") || "";
+    const [name, ...rest] = raw.split(";")[0].split("=");
+    return { name, value: rest.join("="), userId: user?.id };
+  };
+  if (PASSWORD) {
+    const res = await fetch(BASE + "/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ identifier: IDENTIFIER, password: PASSWORD }),
+    });
+    if (res.ok) return grab(res, (await res.json()).user);
+    console.log(`[WARN] login admin gagal (HTTP ${res.status}) — fallback ke akun uji baru`);
+  }
+  const reg = await fetch(BASE + "/api/auth/register", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email: `uiaudit_${Date.now()}@kiosai.id`, password: "UiAuditPass123!", name: "UI Audit" }),
+  });
+  return grab(reg, (await reg.json()).user);
+}
 
 const TABS = ["Beli Token", "Model", "Playground", "API Keys", "Statistik", "Dokumentasi"];
 const VIEWPORTS = [
@@ -21,6 +46,8 @@ const BANNED = ["1.0×", "2.0×", "4.0×", "Bansos", "bansos", "multiplier", "Mu
 const child = await launch(PORT);
 let failures = 0;
 const summaries = [];
+const session = await seedSession();
+const USER_ID = session.userId || process.env.AUDIT_USER_ID || "";
 
 try {
   for (const vp of VIEWPORTS) {
@@ -34,6 +61,14 @@ try {
     });
 
     // Seed the session on the app origin, then load the guard-protected route.
+    await c.send("Network.enable");
+    await c.send("Network.setCookie", {
+      name: session.name,
+      value: session.value,
+      url: BASE,
+      path: "/",
+      httpOnly: true,
+    });
     await c.goto(BASE + "/", 2500);
     await c.evaluate(`localStorage.setItem("kiosai_user_id", ${JSON.stringify(USER_ID)}); true`);
     await c.goto(BASE + "/dashboard", 5000);

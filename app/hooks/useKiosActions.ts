@@ -41,9 +41,9 @@ export function useKiosActions(d: ReturnType<typeof useKiosData>) {
   const handleLogout = () => {
     localStorage.removeItem("kiosai_user_id");
     try { localStorage.removeItem("kiosai_is_admin"); } catch {}
-    // Switch to demo user
-    fetchUserData();
-    fetchKeys();
+    fetch("/api/auth/logout", { method: "POST" }).catch(() => {});
+    // Sesi server sudah dicabut; state user lokal dibersihkan.
+    setCurrentUser(null);
   };
 
   const handleCreateKey = async (e: React.FormEvent) => {

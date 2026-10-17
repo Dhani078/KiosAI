@@ -129,15 +129,17 @@ npm run test:e2e    # 10 alur gateway
 
 Uji alur live dari luar:
 ```bash
-# 1. Login
+# 1. Login (password diambil dari .env lokal — nilainya tidak ada di repo)
 curl -X POST https://kiosai.dhanisepeda.workers.dev/api/auth/login \
   -H "Content-Type: application/json" \
-  -d '{"identifier":"adminfordhani","password":"dhaniforadmin"}'
+  -c cookies.txt \
+  -d "{\"identifier\":\"adminfordhani\",\"password\":\"$ADMIN_PASSWORD\"}"
 
-# 2. Buat API key (pakai id dari respons di atas)
+# 2. Buat API key (sesi cookie dari langkah 1 dikirim, bukan userId)
 curl -X POST https://kiosai.dhanisepeda.workers.dev/api/keys \
   -H "Content-Type: application/json" \
-  -d '{"userId":"usr_admin_dhani","name":"Test","rateLimit":60}'
+  -b cookies.txt \
+  -d '{"name":"Test","rateLimit":60}'
 
 # 3. Chat completion
 curl -X POST https://kiosai.dhanisepeda.workers.dev/v1/chat/completions \

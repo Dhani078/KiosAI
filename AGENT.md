@@ -60,8 +60,8 @@ Dokumen ini adalah sumber kebenaran (source of truth) utama bagi AI agent untuk 
 - **Admin Account**:
   - Username: `adminfordhani` (Login bisa pakai username langsung)
   - Email: `adminfordhani@kiosai.id`
-  - Password: `dhaniforadmin` (Tersimpan via hash `scrypt` di TiDB)
-  - Tier: `pro` | Saldo: `100.000.000` token
+  - Password: **tidak disimpan di repo** — hasil rotasi ada di `backups/ADMIN-CREDENTIALS.txt` (folder gitignored) dan `ADMIN_PASSWORD` di `.env` lokal. Rotasi ulang: `node --env-file=.env scripts/rotate-admin-password.mjs`
+  - Tier: `pro`
 - **User Biasa**:
   - Login & Register via format email standar (`budi@gmail.com`).
   - Bonus pendaftaran baru otomatis: `2.500.000` token tier `free`.

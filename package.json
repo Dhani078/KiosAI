@@ -13,9 +13,10 @@
     "test:e2e": "node --env-file=.env scripts/test-e2e.mjs",
     "test:pricing": "node scripts/test-pricing.mjs",
     "test:billing": "node scripts/verify-billing.cjs",
+    "test:security": "node --env-file=.env scripts/test-security.mjs",
     "migrate:tiers": "node --env-file=.env scripts/migrate-tiers.mjs",
     "audit:ui": "node scripts/audit-ui.mjs",
-    "audit:dashboard": "node scripts/audit-dashboard.mjs",
+    "audit:dashboard": "node --env-file=.env scripts/audit-dashboard.mjs",
     "test:chaos": "node --env-file=.env scripts/chaos-load-test.mjs",
     "tunnel": "node scripts/tunnel-sync.mjs"
   },

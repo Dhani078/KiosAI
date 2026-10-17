@@ -25,6 +25,7 @@ function assert(condition, message) {
 let testUser = null;
 let testKey = null;
 let testOrderId = null;
+let testCookie = "";
 
 // 1. Health check
 await test("GET /api/health", async () => {
@@ -60,6 +61,7 @@ await test("POST /api/auth/register", async () => {
   assert(Number(data.user.locked_bonus_tokens) === 2250000, "Locked bonus mismatch");
   assert(data.user.tier === "free", "Initial tier should be free");
   testUser = data.user;
+  testCookie = res.headers.get("set-cookie")?.split(";")[0] || "";
 });
 
 // 4. API Key Creation
@@ -67,8 +69,8 @@ await test("POST /api/keys", async () => {
   assert(testUser, "No test user");
   const res = await fetch(`${BASE}/api/keys`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ userId: testUser.id, name: "E2E Test Key", rateLimit: 60 }),
+    headers: { "Content-Type": "application/json", Cookie: testCookie },
+    body: JSON.stringify({ name: "E2E Test Key", rateLimit: 60 }),
   });
   const data = await res.json();
   assert(res.ok, `HTTP ${res.status}`);
@@ -141,8 +143,8 @@ await test("POST /api/orders (Create QRIS)", async () => {
   assert(testUser, "No test user");
   const res = await fetch(`${BASE}/api/orders`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ userId: testUser.id, tier: "pro_25k" }),
+    headers: { "Content-Type": "application/json", Cookie: testCookie },
+    body: JSON.stringify({ tier: "pro_25k" }),
   });
   const data = await res.json();
   assert(res.ok, `HTTP ${res.status}`);
@@ -156,7 +158,7 @@ await test("POST /api/orders/pay (Payment Fulfillment)", async () => {
   assert(testOrderId, "No test order");
   const res = await fetch(`${BASE}/api/orders/pay`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", Cookie: testCookie },
     body: JSON.stringify({ orderId: testOrderId }),
   });
   const data = await res.json();
@@ -164,7 +166,7 @@ await test("POST /api/orders/pay (Payment Fulfillment)", async () => {
   assert(data.success === true, "Payment not marked success");
 
   // Verify user balance & tier upgraded to pro, and bonus vault match-vested
-  const uRes = await fetch(`${BASE}/api/user?id=${testUser.id}`);
+  const uRes = await fetch(`${BASE}/api/user`, { headers: { Cookie: testCookie } });
   const uData = await uRes.json();
   assert(uData.user.tier === "pro", `Expected pro tier, got ${uData.user.tier}`);
   assert(Number(uData.user.locked_bonus_tokens) === 0, "Bonus vault not fully vested for 100M purchase");
@@ -186,7 +188,7 @@ await test("POST /v1/chat/completions (Pro Model Accessible)", async () => {
 // 11. Analytics & Usage Logs
 await test("GET /api/analytics", async () => {
   assert(testUser, "No test user");
-  const res = await fetch(`${BASE}/api/analytics?userId=${testUser.id}`);
+  const res = await fetch(`${BASE}/api/analytics`, { headers: { Cookie: testCookie } });
   const data = await res.json();
   assert(res.ok, `HTTP ${res.status}`);
   assert(data.summary?.totalRequests >= 2, "Requests count mismatch");

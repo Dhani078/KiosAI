@@ -35,6 +35,43 @@ function isHiddenModel(id: string): boolean {
   );
 }
 
+function buildEntry(rawId: string, displayName: string, userTier: string, isAdmin: boolean) {
+  return {
+    id: rawId,
+    name: formatModelName(displayName || rawId, isAdmin),
+    object: "model",
+    created: 1700000000,
+    owned_by: "kiosai",
+    required_tier: getRequiredTierForModel(rawId),
+    accessible: isModelAllowedForTier(userTier, rawId),
+  };
+}
+
+type CatalogEntry = ReturnType<typeof buildEntry>;
+
+function sortCatalog(list: CatalogEntry[]) {
+  return list.sort((a, b) => {
+    const aAcc = a.accessible ? 1 : 0;
+    const bAcc = b.accessible ? 1 : 0;
+    if (aAcc !== bAcc) return bAcc - aAcc;
+    const aGemini = a.id.toLowerCase().includes("gemini") ? 1 : 0;
+    const bGemini = b.id.toLowerCase().includes("gemini") ? 1 : 0;
+    if (aGemini !== bGemini) return bGemini - aGemini;
+    const aFree = a.required_tier === "free" ? 1 : 0;
+    const bFree = b.required_tier === "free" ? 1 : 0;
+    return bFree - aFree;
+  });
+}
+
+/** Katalog lengkap dari daftar ID kurasi (dipakai saat upstream mati). */
+function catalogFromIds(userTier: string, isAdmin: boolean) {
+  return sortCatalog(
+    Array.from(VERIFIED_MODEL_IDS)
+      .filter((id) => !isHiddenModel(id))
+      .map((id) => buildEntry(id, id, userTier, isAdmin))
+  );
+}
+
 export async function GET(req: NextRequest) {
   const authHeader = req.headers.get("authorization") || "";
   const rawKey = authHeader.replace(/^Bearer\s+/i, "").trim();
@@ -67,65 +104,24 @@ export async function GET(req: NextRequest) {
     const data = await res.json();
     const rawList: any[] = Array.isArray(data.data) ? data.data : [];
 
-    const enhanced = rawList
+    const live = rawList
       .filter((m) => isModelVerified(m.id) && !isHiddenModel(m.id))
-      .map((m) => {
-        const tier = getRequiredTierForModel(m.id);
-        const accessible = isModelAllowedForTier(userTier, m.id);
-        return {
-          id: m.id,
-          name: formatModelName(m.name || m.id, isAdmin),
-          object: "model",
-          created: m.created || 1700000000,
-          owned_by: "kiosai",
-          required_tier: tier,
-          accessible,
-        };
-      })
-      .sort((a, b) => {
-        const aAcc = a.accessible ? 1 : 0;
-        const bAcc = b.accessible ? 1 : 0;
-        if (aAcc !== bAcc) return bAcc - aAcc;
-        const aGemini = a.id.toLowerCase().includes("gemini") ? 1 : 0;
-        const bGemini = b.id.toLowerCase().includes("gemini") ? 1 : 0;
-        if (aGemini !== bGemini) return bGemini - aGemini;
-        const aFree = a.required_tier === "free" ? 1 : 0;
-        const bFree = b.required_tier === "free" ? 1 : 0;
-        return bFree - aFree;
-      });
+      .map((m) => buildEntry(m.id, m.name, userTier, isAdmin));
+
+    // 9Router tidak selalu mendaftarkan rute yang sebenarnya jalan di /v1/models
+    // (mis. oc/...-free(max)), jadi model kurasi yang belum ada di daftar upstream tetap ditambahkan.
+    const liveIds = new Set(live.map((m) => m.id));
+    const curatedOnly = catalogFromIds(userTier, isAdmin).filter((m) => !liveIds.has(m.id));
 
     return NextResponse.json({
       object: "list",
-      data: enhanced,
+      data: sortCatalog([...live, ...curatedOnly]),
       user_tier: userTier,
     });
   } catch {
-    const allFallback = Array.from(VERIFIED_MODEL_IDS)
-      .filter((id) => !isHiddenModel(id))
-      .map((id) => ({
-        id,
-        name: formatModelName(id, isAdmin),
-        object: "model",
-        created: 1700000000,
-        owned_by: "kiosai",
-        required_tier: getRequiredTierForModel(id),
-        accessible: isModelAllowedForTier(userTier, id),
-      }))
-      .sort((a, b) => {
-        const aAcc = a.accessible ? 1 : 0;
-        const bAcc = b.accessible ? 1 : 0;
-        if (aAcc !== bAcc) return bAcc - aAcc;
-        const aGemini = a.id.toLowerCase().includes("gemini") ? 1 : 0;
-        const bGemini = b.id.toLowerCase().includes("gemini") ? 1 : 0;
-        if (aGemini !== bGemini) return bGemini - aGemini;
-        const aFree = a.required_tier === "free" ? 1 : 0;
-        const bFree = b.required_tier === "free" ? 1 : 0;
-        return bFree - aFree;
-      });
-
     return NextResponse.json({
       object: "list",
-      data: allFallback,
+      data: catalogFromIds(userTier, isAdmin),
       user_tier: userTier,
     });
   }

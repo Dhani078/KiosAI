@@ -5,8 +5,9 @@
 - **Live Worker**: `https://kiosai.dhanisepeda.workers.dev` (subdomain `dhanisepeda`, pakai `e`)
 - **Current Status**: Complete & Fully Verified (Phase 0 - 59)
 - **Upstream Router**: 9Router local (`http://127.0.0.1:20128`) dengan 71 model aktif terverifikasi 5x audit (5 Free, 66 Pro)
-- **Database**: TiDB Cloud Serverless (`gateway01.ap-southeast-1.prod.aws.tidbcloud.com:4000/kiosai`)
-- **Last Commit**: `0c50c3c` — feat(brand): apply official TokoAI geometric logo assets and update brand identity across application
+- **Database**: TiDB Cloud Serverless (region Tokyo/Singapore, MySQL-compatible HTTP). Host & kredensial HANYA di `.env` lokal `DATABASE_URL` (jangan ditulis di dokumen repo).
+- **Last Commit**: `1b01350` — docs: synchronize all markdown documentation for TokoAI rebranding, geometric logo, and custom domain
+- **Security Baseline**: Sesi cookie HttpOnly bertanda tangan HMAC-SHA256, IDOR dibasmi, webhook fail-closed, admin password dirotasi.
 
 ## Dokumen Navigasi Cepat
 - Aturan & perintah untuk agent: `AGENT.md`

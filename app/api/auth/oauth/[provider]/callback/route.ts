@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { exchangeCodeForProfile, upsertOAuthUser } from "@/lib/oauth";
+import { attachSession } from "@/lib/session";
 
 export const runtime = "nodejs";
 
@@ -46,10 +47,13 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ prov
 </body>
 </html>`;
 
-    return new NextResponse(html, {
-      headers: { "Content-Type": "text/html; charset=utf-8" },
-      status: 200,
-    });
+    return attachSession(
+      new NextResponse(html, {
+        headers: { "Content-Type": "text/html; charset=utf-8" },
+        status: 200,
+      }),
+      user.id
+    );
   } catch (err: any) {
     const htmlErr = `<!DOCTYPE html>
 <html>

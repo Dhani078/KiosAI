@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { verifyPassword } from "@/lib/auth";
+import { attachSession } from "@/lib/session";
 
 export const runtime = "nodejs";
 
@@ -25,24 +26,29 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Email/username atau password salah" }, { status: 401 });
     }
 
-    if (user.password_hash) {
-      const isValid = verifyPassword(password, user.password_hash);
-      if (!isValid) {
-        return NextResponse.json({ error: "Email/username atau password salah" }, { status: 401 });
-      }
+    // Akun OAuth (tanpa password_hash) tidak boleh login lewat form password.
+    if (!user.password_hash) {
+      return NextResponse.json({ error: "Akun ini terdaftar via OAuth. Masuk dengan tombol GitHub/Google." }, { status: 401 });
     }
 
-    return NextResponse.json({
-      success: true,
-      user: {
-        id: user.id,
-        email: user.email,
-        username: user.username,
-        full_name: user.full_name,
-        tier: user.tier,
-        balance_tokens: user.balance_tokens,
-      },
-    });
+    if (!verifyPassword(password, user.password_hash)) {
+      return NextResponse.json({ error: "Email/username atau password salah" }, { status: 401 });
+    }
+
+    return attachSession(
+      NextResponse.json({
+        success: true,
+        user: {
+          id: user.id,
+          email: user.email,
+          username: user.username,
+          full_name: user.full_name,
+          tier: user.tier,
+          balance_tokens: user.balance_tokens,
+        },
+      }),
+      user.id
+    );
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }

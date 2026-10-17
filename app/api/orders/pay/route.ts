@@ -1,9 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { readSessionUserId, unauthorized } from "@/lib/session";
 
 export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
+  // Hanya pemilik order (dari sesi cookie) yang boleh melunasi ordernya sendiri.
+  const sessionUserId = readSessionUserId(req);
+  if (!sessionUserId) return unauthorized();
+
   try {
     const body = await req.json();
     const orderId = body.orderId;
@@ -17,7 +22,7 @@ export async function POST(req: NextRequest) {
       [orderId]
     );
 
-    if (!order) {
+    if (!order || order.user_id !== sessionUserId) {
       return NextResponse.json({ error: "Order not found" }, { status: 404 });
     }
 

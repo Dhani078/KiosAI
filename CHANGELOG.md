@@ -7,6 +7,28 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `pending` — feat(security): server-side HttpOnly cookie sessions, IDOR elimination, fail-closed payment webhook, and admin credential rotation
+
+**Penguatan Keamanan Penuh & Eliminasi Kerentanan Autentikasi**
+- **Sesi Server-Side HttpOnly (`lib/session.ts` & `app/api/auth/logout/route.ts`)**:
+  - Mengimplementasikan cookie sesi bertanda tangan HMAC-SHA256 (`kiosai_session`) berbasis secret environment `SESSION_SECRET`.
+  - Mengeliminasi IDOR pada seluruh endpoint pengguna (`/api/user`, `/api/keys`, `/api/keys/[id]`, `/api/orders`, `/api/orders/pay`, `/api/analytics`). Parameter `userId` atau `id` dari klien diabaikan; server selalu memverifikasi identitas pemilik dari token sesi yang sah.
+  - Endpoint logout aman mencabut cookie dengan `maxAge: 0`.
+- **Proteksi Webhook Pembayaran Fail-Closed (`app/api/payment/webhook/route.ts`)**:
+  - Menghilangkan fallback default hardcoded. Jika `PAYMENT_WEBHOOK_SECRET` belum diset, webhook menolak seluruh panggilan dengan HTTP 503 (fail-closed).
+  - Panggilan tanpa signature atau dengan hash HMAC yang tidak valid ditolak dengan HTTP 401.
+- **Rotasi Kredensial & Pembersihan Repositori**:
+  - Merotasi password admin `adminfordhani` di database TiDB menggunakan scrypt salt 16-byte yang baru.
+  - Menghapus seluruh kredensial plaintext dari file dokumentasi (`AGENT.md`, `DEPLOYMENT.md`, `docs/HANDOFF.md`, `STATE.md`) dan mengisolasinya ke file lokal ter-gitignore (`backups/ADMIN-CREDENTIALS.txt` dan `.env`).
+- **Pruning Model Tidak Aktif (`lib/verified-models.ts` & `app/v1/models/route.ts`)**:
+  - Menghapus route model yang tidak lagi didukung oleh upstream (`kr/claude-sonnet-4`, `kr/claude-sonnet-4-agentic`).
+- **Sinkronisasi Secret Cloudflare Worker**:
+  - `SESSION_SECRET` dan `PAYMENT_WEBHOOK_SECRET` otomatis dipasang ke Worker `kiosai` via `scripts/sync-worker-secrets.mjs`.
+- **Hasil Verifikasi**:
+  - Suite regresi keamanan baru (`scripts/test-security.mjs` / `npm run test:security`): 14/14 checks PASSED.
+  - 112/112 file kode sumber patuh $\le 200$ baris per file.
+  - 11/11 E2E tests PASS, 22/22 pricing tests PASS, 3/3 billing deduction PASS, chaos test PASS, 16/16 UI audits PASS.
+
 ### `0c50c3c` — feat(brand): apply official TokoAI geometric logo assets and update brand identity across application
 
 **Pembaruan Brand Identitas TokoAI & Aset Vektor Logo HD**
