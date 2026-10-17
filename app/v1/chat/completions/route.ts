@@ -10,6 +10,7 @@ import { executeResilientStream } from "@/lib/failover-router";
 import { evaluatePriorityAdmission } from "@/lib/priority-scheduler";
 import { recordInferenceTelemetry } from "@/lib/edge-telemetry";
 import { sendLowBalanceWebhook } from "@/lib/balance-alerts";
+import { hardenSystemPrompt, inspectMessagesForExtraction, DEFENSIVE_BOUNDARY_CLAUSE } from "@/lib/prompt-defense";
 import {
   isCacheEligible,
   buildCanonicalCacheKey,
@@ -78,6 +79,16 @@ export async function POST(req: NextRequest) {
 
   if (!isModelAllowedForTier(auth.user.tier, requestedModel)) {
     return errorResponse(`Model '${rawModel}' tidak tersedia di tier FREE. Model gratis hanya Atria Dawn.`, 403, "tier_restricted");
+  }
+
+  // Anti-Prompt-Leak Guard: lindungi instruksi sistem dari serangan ekstraksi prompt
+  if (Array.isArray(body.messages)) {
+    const sysIdx = body.messages.findIndex((m: any) => m?.role === "system");
+    if (sysIdx !== -1) {
+      body.messages[sysIdx].content = hardenSystemPrompt(body.messages[sysIdx].content);
+    } else if (inspectMessagesForExtraction(body.messages).hasExtractionAttempt) {
+      body.messages.unshift({ role: "system", content: DEFENSIVE_BOUNDARY_CLAUSE });
+    }
   }
 
   // Priority Scheduler & Edge Micro-Pacing

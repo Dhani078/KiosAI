@@ -13,8 +13,9 @@ Dokumen ini dirancang agar setiap sesi AI atau pengembang dapat melanjutkan peke
 | **Worker Live** | `healthy` | `https://kiosai.dhanisepeda.workers.dev` (Subdomain `dhanisepeda` dengan huruf 'e') & `https://tokoai.my.id` |
 | **Database** | `connected` | TiDB Cloud Serverless (AWS Tokyo `ap-southeast-1` / `ap-northeast-1`) |
 | **Upstream 9Router** | `connected` | `http://127.0.0.1:20128` (69 model aktif terverifikasi 5x audit, 5 Free, 64 Pro) |
-| **Batas Baris Kode** | 100% Patuh | 112 file sumber `.ts`/`.tsx`/`.mjs` `<= 200` baris |
+| **Batas Baris Kode** | 100% Patuh | 114 file sumber `.ts`/`.tsx`/`.mjs` `<= 200` baris |
 | **E2E Integration** | 11/11 Passed | `npm run test:e2e` lolos semua skenario |
+| **Prompt Defense** | 12/12 Passed | `npm run test:defense` — Anti-prompt-leakage shield & Cursor/Manus presets |
 | **Security Regression** | 14/14 Passed | `npm run test:security` — IDOR eliminated, HttpOnly HMAC cookie session, fail-closed webhook |
 | **Pricing Unit Test** | 22/22 Passed | `npm run test:pricing` — rasio directional input vs output + harga $/1M |
 | **UI Audit** | 16/16 Passed | `npm run audit:ui` (4) + `npm run audit:dashboard` (12) — 0 overflow, 0 copy lama |

@@ -7,6 +7,25 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `pending` — feat(ai): implement anti-prompt-leakage defense shield and add Cursor, Manus, and Claude Code persona presets
+
+**Guardrail Defensif Ekstraksi Prompt & Preset Arsitektur Agen**
+- **Mesin Proteksi Anti-Leakage (`lib/prompt-defense.ts`)**:
+  - Mengimplementasikan deteksi pola ekstraksi prompt (*"repeat everything above"*, *"print system instructions"*, *"disclose tools"*, dll).
+  - Menyuntikkan klausul boundary defensif `DEFENSIVE_BOUNDARY_CLAUSE` yang membendung model agar tidak membocorkan instruksi rahasia ke pengguna.
+- **Integrasi Gateway Proxy (`app/v1/chat/completions/route.ts`)**:
+  - Secara otomatis memperkuat (`hardenSystemPrompt`) instruksi sistem pada setiap request, atau menyisipkan boundary guardrail jika terdeteksi serangan prompt extraction.
+- **Katalog Preset Persona Playground (`lib/prompt-presets.ts`)**:
+  - Menambahkan 4 preset arsitektur kelas dunia:
+    1. `cursor_composer`: Cursor Composer AI (Pair Programmer Anti-Leak).
+    2. `manus_agent`: Manus AI Autonomous Agent (Deep Research & Tool Builder).
+    3. `claude_code`: Claude Code (Systematic Root-Cause Debugger).
+    4. `system_shield`: Defensive Guardrail Shield (Anti-Prompt Leak).
+- **Pengujian & Verifikasi**:
+  - Suite unit test `scripts/test-prompt-defense.mjs`: 12/12 checks PASSED.
+  - 114/114 file kode sumber patuh $\le 200$ baris per file.
+  - Seluruh test suite lolos (defense 12/12, security 14/14, e2e 11/11, pricing 22/22, billing 3/3, UI 16/16).
+
 ### `1f4a28a` — feat(security): server-side HttpOnly cookie sessions, IDOR elimination, fail-closed payment webhook, and admin credential rotation
 
 **Penguatan Keamanan Penuh & Eliminasi Kerentanan Autentikasi**
