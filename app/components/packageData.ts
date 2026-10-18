@@ -1,3 +1,16 @@
+export const ADMIN_TEST_PACKAGE = {
+  tierKey: "test_100",
+  name: "Test Admin",
+  price: "100",
+  tokens: "1.000.000",
+  desc: "Uji coba QRIS dinamis khusus akun admin (Rp 100 pas).",
+  features: [
+    "Nominal pas Rp 100 (Tag 54 EMVCo)",
+    "QRIS Dinamis resmi DANA Dhani",
+    "1 Juta token uji coba",
+  ],
+};
+
 export const PACKAGES = [
   {
     tierKey: "free",
@@ -48,3 +61,7 @@ export const PACKAGES = [
     ],
   },
 ];
+
+export function getPackages(isAdmin?: boolean) {
+  return isAdmin ? [ADMIN_TEST_PACKAGE, ...PACKAGES] : PACKAGES;
+}

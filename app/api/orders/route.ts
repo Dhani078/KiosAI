@@ -9,6 +9,7 @@ export const runtime = "nodejs";
 
 const PACKAGES: Record<string, { amountIdr: number; tokens: number; name: string; tier: string }> = {
   free: { amountIdr: 0, tokens: 2500000, name: "Free", tier: "free" },
+  test_100: { amountIdr: 100, tokens: 1000000, name: "Test Admin", tier: "pro" },
   pro_25k: { amountIdr: 25000, tokens: 100000000, name: "Pro 25K", tier: "pro" },
   pro_100k: { amountIdr: 100000, tokens: 600000000, name: "Pro 100K", tier: "pro" },
   pro_150k: { amountIdr: 150000, tokens: 1000000000, name: "Pro 150K", tier: "pro" },
@@ -62,17 +63,18 @@ export async function POST(req: NextRequest) {
     }
 
     const orderId = crypto.randomUUID();
-    const uniqueCode = pkg.amountIdr > 0 ? Math.floor(Math.random() * 800) + 101 : 0;
+    const isTest100 = requestedTier === "test_100";
+    const uniqueCode = (pkg.amountIdr > 0 && !isTest100) ? Math.floor(Math.random() * 800) + 101 : 0;
     const finalAmount = pkg.amountIdr > 0 ? pkg.amountIdr + uniqueCode : 0;
 
     await db.execute(
       `INSERT INTO kiosai.orders (id, user_id, amount_idr, tokens_purchased, package_tier, payment_method, status)
        VALUES (?, ?, ?, ?, ?, 'qris', 'pending')`,
-      [orderId, userId, finalAmount, pkg.tokens, pkg.tier]
+      [orderId, userId, finalAmount, pkg.tokens, requestedTier]
     );
 
     let dokuPaymentUrl: string | null = null;
-    if (pkg.amountIdr > 0) {
+    if (pkg.amountIdr > 0 && !isTest100) {
       const doku = await createDokuCheckout({
         orderId,
         amountIdr: finalAmount,

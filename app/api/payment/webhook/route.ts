@@ -95,7 +95,7 @@ export async function POST(req: NextRequest) {
            locked_bonus_tokens = GREATEST(0, locked_bonus_tokens - ?),
            is_pro_unlocked = 1,
            tier = CASE 
-             WHEN ? IN ('pro', 'pro_25k', 'pro_100k', 'pro_150k', 'bronze', 'silver', 'gold') THEN 'pro'
+             WHEN ? IN ('pro', 'pro_25k', 'pro_100k', 'pro_150k', 'bronze', 'silver', 'gold', 'test_100') THEN 'pro'
              ELSE tier
            END
        WHERE id = ?`,

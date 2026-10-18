@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { X, Gift, CheckCheck } from "lucide-react";
 import { Badge, Button } from "./ui";
-import { PACKAGES } from "./PackagesTab";
+import { PACKAGES, getPackages } from "./PackagesTab";
 import { generateInvoiceHtml } from "@/lib/receipt-generator";
 import { PaymentSuccess } from "./PaymentSuccess";
 import { PaymentQrContent } from "./PaymentQrContent";
@@ -27,7 +27,8 @@ export function PaymentModal({
   onNavigateKeys: () => void;
   onNavigateStatistik: () => void;
 }) {
-  const pkg = PACKAGES[selectedPkgIndex] || PACKAGES[0];
+  const packages = getPackages(isAdmin);
+  const pkg = packages[selectedPkgIndex] || packages[0];
   const isFree = pkg.price === "0" || pkg.tierKey === "free";
   const [orderId, setOrderId] = useState<string | null>(null);
   const [exactAmount, setExactAmount] = useState<number | null>(null);

@@ -11,11 +11,11 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { Badge, Button } from "./ui";
-import { PACKAGES } from "./packageData";
+import { PACKAGES, ADMIN_TEST_PACKAGE, getPackages } from "./packageData";
 import PackageComparison from "./PackageComparison";
 import PackageFaq from "./PackageFaq";
 
-export { PACKAGES };
+export { PACKAGES, ADMIN_TEST_PACKAGE, getPackages };
 
 export function PackagesTab({
   balance,
@@ -32,7 +32,8 @@ export function PackagesTab({
   onNavigateStatistik: () => void;
   onNavigateDocs: () => void;
 }) {
-  const [selected, setSelected] = useState(1);
+  const packages = getPackages(isAdmin);
+  const [selected, setSelected] = useState(isAdmin ? 0 : 1);
 
   return (
     <>
@@ -70,7 +71,7 @@ export function PackagesTab({
       </div>
 
       <div className="packages">
-        {PACKAGES.map((p, i) => (
+        {packages.map((p, i) => (
           <article
             key={p.name}
             className={`package-card ${selected === i ? "selected" : ""}`}
@@ -78,6 +79,7 @@ export function PackagesTab({
           >
             <div className="package-top">
               <Badge tier={p.tierKey === "free" ? "FREE" : "PRO"} />
+              {p.tierKey === "test_100" && <span className="popular" style={{ color: "var(--warning)" }}>TEST ADMIN</span>}
               {p.tierKey === "pro_25k" && <span className="popular">PALING POPULER</span>}
               {p.tierKey === "free" && <span className="popular">GRATIS</span>}
             </div>

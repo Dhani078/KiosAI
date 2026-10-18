@@ -7,6 +7,14 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `[uncommitted]` - feat(payment): add admin test package Rp 100 with dynamic QRIS EMVCo Tag 54
+
+**Paket Uji Coba QRIS Dinamis Khusus Admin (Rp 100)**
+- `ADMIN_TEST_PACKAGE`: Rp 100 pas tanpa kode unik acak, khusus akun admin `adminfordhani`.
+- QRIS dinamis EMVCo menyematkan Tag 54 dengan nominal pas `100` (`5403100`), saat discan via m-Banking/DANA nominal langsung terkunci Rp 100.
+- `app/api/orders/route.ts`: Tangani tier `test_100` dengan amount Rp 100 pas.
+- `app/api/orders/pay/route.ts` & `verify-receipt/route.ts`: Mendukung pelunasan dan validasi nominal struk Rp 100.
+
 ### `49d86ad` - refactor(prompt): strip throat-clearing and AI-isms from receipt OCR prompt
 
 **Pembersihan AI-isms & Slop pada Prompt Vision OCR (`lib/receipt-verifier.ts`)**

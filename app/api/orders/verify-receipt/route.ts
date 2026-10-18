@@ -6,6 +6,7 @@ import { verifyReceiptWithAI } from "@/lib/receipt-verifier";
 export const runtime = "nodejs";
 
 const BASE_AMOUNTS: Record<string, number> = {
+  test_100: 100,
   pro_25k: 25000,
   pro_100k: 100000,
   pro_150k: 150000,
