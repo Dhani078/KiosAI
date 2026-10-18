@@ -7,7 +7,7 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
-### `pending` — docs: synchronize all documentation suites across repository
+### `755a738` — docs: synchronize all documentation suites across repository
 
 **Sinkronisasi Dokumentasi Menyeluruh (README, AGENT, API, DEPLOYMENT, SECURITY, PRD, ARCHITECTURE, plan)**
 - **README & AGENT (`README.md`, `AGENT.md`)**:
