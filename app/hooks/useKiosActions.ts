@@ -57,7 +57,7 @@ export function useKiosActions(d: ReturnType<typeof useKiosData>) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          userId: currentUser?.id || "usr_kiosai_demo",
+          userId: currentUser?.id || "",
           name: newKeyName || "My Key",
           rateLimit: newKeyRateLimit,
           allowedModels: models,
@@ -84,28 +84,6 @@ export function useKiosActions(d: ReturnType<typeof useKiosData>) {
       await fetchKeys();
     } catch (e) {
       alert("Gagal menghapus key");
-    }
-  };
-
-  const handleSimulatePayment = async () => {
-    if (!selectedOrder) return;
-    setPayingOrder(true);
-    try {
-      const res = await fetch("/api/orders/pay", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ orderId: selectedOrder.orderId }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        alert(data.message);
-        setSelectedOrder(null);
-        await refreshAll();
-      }
-    } catch (e) {
-      alert("Gagal memproses pembayaran");
-    } finally {
-      setPayingOrder(false);
     }
   };
 
@@ -170,5 +148,5 @@ export function useKiosActions(d: ReturnType<typeof useKiosData>) {
     }
   };
 
-  return { handleAuthSubmit, handleLogout, handleCreateKey, handleDeleteKey, handleSimulatePayment, handleRunPlayground };
+  return { handleAuthSubmit, handleLogout, handleCreateKey, handleDeleteKey, handleRunPlayground };
 }

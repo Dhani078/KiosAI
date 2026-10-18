@@ -73,7 +73,7 @@ Dokumen ini adalah sumber kebenaran (source of truth) utama bagi AI agent untuk 
 - `/` : Landing Page publik (Navbar, Hero, Fitur, Katalog Model, Paket Harga, Sandbox Kode, FAQ, Footer).
 - `/dashboard` : Workspace pengguna terlindungi `AuthGuard` (Redirect ke `/?login=1` jika belum login).
   - Tab 1: **API Keys** (`KeysTab.tsx`) — Generate key `kios-xxxx` (SHA-256), rate limit 30/60/120.
-  - Tab 2: **Beli Token** (`PackagesTab.tsx`) — Checkout paket Free & Pro (25K/100K/150K) via QRIS simulasi.
+  - Tab 2: **Beli Token** (`PackagesTab.tsx`) — Checkout paket Free & Pro via QRIS Dinamis & verifikasi AI Vision OCR.
   - Tab 3: **Model** (`ModelsTab.tsx`) — Katalog model AI dengan filter tier & tombol uji Playground.
   - Tab 4: **Playground** (`PlaygroundTab.tsx`) — Chatbot uji coba live, terikat HMAC session key.
   - Tab 5: **Statistik** (`AnalyticsTab.tsx`) — Grafik konsumsi per model & tabel riwayat 20 log TiDB.

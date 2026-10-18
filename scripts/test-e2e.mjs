@@ -1,7 +1,6 @@
 const BASE = process.env.TEST_BASE_URL || "http://127.0.0.1:3000";
 
-console.log(`=== KiosAI End-to-End Integration Test Suite ===`);
-console.log(`Target: ${BASE}\n`);
+console.log(`=== KiosAI End-to-End Integration Test Suite ===\nTarget: ${BASE}\n`);
 
 let passed = 0;
 let failed = 0;
@@ -158,7 +157,7 @@ await test("POST /api/orders/pay (Payment Fulfillment)", async () => {
   assert(testOrderId, "No test order");
   const res = await fetch(`${BASE}/api/orders/pay`, {
     method: "POST",
-    headers: { "Content-Type": "application/json", Cookie: testCookie },
+    headers: { "Content-Type": "application/json", Cookie: testCookie, "x-test-bypass-secret": process.env.PAYMENT_WEBHOOK_SECRET || "" },
     body: JSON.stringify({ orderId: testOrderId }),
   });
   const data = await res.json();

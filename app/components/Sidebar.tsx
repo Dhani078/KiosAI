@@ -43,8 +43,8 @@ export function Sidebar({
   user: any;
   onOpenAuth: () => void;
 }) {
-  const userName = user?.full_name || user?.name || "Demo User";
-  const userEmail = user?.email || "demo@kiosai.id";
+  const userName = user?.full_name || user?.name || "Pengguna";
+  const userEmail = user?.email || "";
   const initials = userName
     .split(" ")
     .map((w: string) => w[0])

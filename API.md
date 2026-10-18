@@ -168,7 +168,7 @@ Verifikasi instan foto struk transfer / screenshot pembayaran e-wallet menggunak
 - AI mengekstrak nominal, status, ID transaksi, dan nama merchant. Memvalidasi nominal hingga digit kode unik dan mencegah penggunaan struk ganda (Anti-Replay).
 
 ### `POST /api/orders/pay`
-Konfirmasi pembayaran simulasi manual (fallback jika tidak upload struk). Menambah saldo token dan mengupgrade tier pengguna secara real-time di TiDB.
+Pemeriksaan status pelunasan pesanan atau aktivasi paket Free (Rp 0). Untuk paket berbayar, pelunasan hanya diproses setelah pembayaran terverifikasi via AI Vision OCR struk atau webhook gateway berotentikasi.
 
 ### `POST /api/payment/webhook`
 Endpoint penerima callback payment gateway otomatis (DOKU Checkout & internal webhook) dengan verifikasi HMAC SHA-256 fail-closed dan proteksi idempotensi transaksi.

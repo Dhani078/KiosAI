@@ -118,7 +118,7 @@ export function PaymentQrContent({
       )}
 
       <Button kind={paymentUrl ? "secondary" : "primary"} loading={loading} disabled={!orderId || countdown <= 0} onClick={onConfirmPay}>
-        Saya sudah bayar <CheckCheck size={17} />
+        Cek Status Pembayaran <CheckCheck size={17} />
       </Button>
     </>
   );

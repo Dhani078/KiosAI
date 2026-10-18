@@ -40,7 +40,7 @@ export function Header({
     };
   }, []);
 
-  const userName = user?.full_name || user?.name || "Demo User";
+  const userName = user?.full_name || user?.name || "Pengguna";
   const initials = userName
     .split(" ")
     .map((w: string) => w[0])

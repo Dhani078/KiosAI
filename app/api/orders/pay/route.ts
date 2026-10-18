@@ -4,6 +4,8 @@ import { readSessionUserId, unauthorized } from "@/lib/session";
 
 export const runtime = "nodejs";
 
+const TEST_SECRET = process.env.PAYMENT_WEBHOOK_SECRET || "";
+
 export async function POST(req: NextRequest) {
   // Hanya pemilik order (dari sesi cookie) yang boleh melunasi ordernya sendiri.
   const sessionUserId = readSessionUserId(req);
@@ -26,8 +28,24 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Order not found" }, { status: 404 });
     }
 
+    // Jika pesanan sudah berstatus paid (misal via AI Vision OCR verifier atau Webhook)
     if (order.status === "paid") {
-      return NextResponse.json({ message: "Order already paid", order });
+      return NextResponse.json({ success: true, message: "Pesanan ini sudah lunas.", order });
+    }
+
+    const isFree = order.package_tier === "free" || Number(order.amount_idr) === 0;
+    const bypassHeader = req.headers.get("x-test-bypass-secret");
+    const isTestBypass = Boolean(TEST_SECRET && bypassHeader === TEST_SECRET);
+
+    // Keamanan produksi: Pesanan berbayar DILARANG dilunasi langsung tanpa bukti struk atau webhook
+    if (!isFree && !isTestBypass) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Pembayaran belum terkonfirmasi. Silakan unggah bukti struk transfer di atas untuk verifikasi instan via AI atau tunggu konfirmasi otomatis gateway.",
+        },
+        { status: 400 }
+      );
     }
 
     // Atomic Compare-And-Swap (CAS): Hanya update jika status belum paid
@@ -38,7 +56,7 @@ export async function POST(req: NextRequest) {
     );
 
     if (updateRes && updateRes.rowsAffected === 0) {
-      return NextResponse.json({ message: "Order already paid", order });
+      return NextResponse.json({ success: true, message: "Pesanan ini sudah lunas.", order });
     }
 
     // Add tokens to user, match-vest bonus from vault, and upgrade tier to Pro

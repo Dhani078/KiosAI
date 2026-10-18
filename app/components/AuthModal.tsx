@@ -28,7 +28,7 @@ export function AuthModal({
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const isCustomUser = currentUser && currentUser.id !== "usr_kiosai_demo";
+  const isCustomUser = Boolean(currentUser);
 
   const handleLogout = () => {
     localStorage.removeItem("kiosai_user_id");

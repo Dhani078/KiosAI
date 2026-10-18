@@ -64,9 +64,12 @@ const orderId = order.data?.orderId;
 const steal = await call("/api/orders/pay", { method: "POST", body: { orderId }, cookie: b.cookie });
 check("user lain tidak bisa melunasi order orang lain", steal.status === 404, `got ${steal.status}`);
 
-const pay = await call("/api/orders/pay", { method: "POST", body: { orderId }, cookie: a.cookie });
+const rejected = await call("/api/orders/pay", { method: "POST", body: { orderId }, cookie: a.cookie });
+check("pelunasan tanpa struk/webhook ditolak", rejected.status === 400, `got ${rejected.status}`);
+
+const pay = await call("/api/orders/pay", { method: "POST", body: { orderId }, cookie: a.cookie, headers: { "x-test-bypass-secret": SECRET || "" } });
 const after = await call("/api/user", { cookie: a.cookie });
-check("pemilik bisa melunasi ordernya", pay.status === 200 && Number(after.data?.user?.balance_tokens) > 100000000, `saldo=${after.data?.user?.balance_tokens}`);
+check("pemilik bisa melunasi order dengan verifikasi", pay.status === 200 && Number(after.data?.user?.balance_tokens) > 100000000, `saldo=${after.data?.user?.balance_tokens}`);
 
 const foreignKey = await call("/api/keys", { method: "POST", body: { userId: b.userId, name: "hijack" }, cookie: a.cookie });
 const bKeysAfter = await call("/api/keys", { cookie: b.cookie });

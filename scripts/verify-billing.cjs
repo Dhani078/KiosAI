@@ -17,7 +17,11 @@ const B = "http://127.0.0.1:3000";
   })).json();
   await fetch(`${B}/api/orders/pay`, {
     method: "POST",
-    headers: { "Content-Type": "application/json", Cookie: cookie },
+    headers: {
+      "Content-Type": "application/json",
+      Cookie: cookie,
+      "x-test-bypass-secret": process.env.PAYMENT_WEBHOOK_SECRET || "",
+    },
     body: JSON.stringify({ orderId: order.orderId }),
   });
 
