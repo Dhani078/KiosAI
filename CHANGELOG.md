@@ -7,7 +7,7 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
-### `pending` — feat(ai): implement dual-key pool and 6-tier model waterfall for AI receipt engine
+### `bbbbe1c` — feat(ai): implement dual-key pool and 6-tier model waterfall for AI receipt engine
 
 **Pool Kunci Ganda & Hirarki Air Terjun 6-Model untuk Engine Verifikasi Struk AI**
 - **Pool Kredensial Ganda (`lib/receipt-verifier.ts`)**:
