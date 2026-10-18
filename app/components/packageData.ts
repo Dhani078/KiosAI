@@ -3,9 +3,9 @@ export const ADMIN_TEST_PACKAGE = {
   name: "Test Admin",
   price: "100",
   tokens: "1.000.000",
-  desc: "Uji coba QRIS dinamis khusus akun admin (Rp 100 pas).",
+  desc: "Uji coba QRIS dinamis khusus akun admin (Rp 100 + kode unik acak).",
   features: [
-    "Nominal pas Rp 100 (Tag 54 EMVCo)",
+    "Nominal Rp 100 + kode unik acak",
     "QRIS Dinamis resmi DANA Dhani",
     "1 Juta token uji coba",
   ],
