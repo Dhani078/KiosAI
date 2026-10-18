@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, Download, Receipt, Printer } from "lucide-react";
+import { Check, Download, Receipt, Printer, Clock3 } from "lucide-react";
 import { Badge, TableRow } from "./ui";
 import { exportToCsv } from "@/lib/export-csv";
 import { generateInvoiceHtml } from "@/lib/receipt-generator";
@@ -94,9 +94,15 @@ export function OrderHistoryTable({ orders, isAdmin = false }: { orders: any[]; 
                     <td><code>{Number(o.tokens_purchased || 0).toLocaleString("id-ID")}</code></td>
                     <td>
                       <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                        <span className="success-tag" style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}>
-                          <Check size={12} /> {o.status === "paid" ? "Berhasil" : o.status}
-                        </span>
+                        {o.status === "paid" ? (
+                          <span className="success-tag" style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                            <Check size={12} /> Berhasil
+                          </span>
+                        ) : (
+                          <span style={{ color: "var(--warning)", display: "inline-flex", alignItems: "center", gap: "4px", fontSize: "11px" }}>
+                            <Clock3 size={12} /> Menunggu
+                          </span>
+                        )}
                         {o.status === "paid" && (
                           <button
                             onClick={() => handlePrintReceipt(o)}

@@ -82,15 +82,9 @@ export function PaymentQrContent({
             style={{ width: "210px", height: "210px", objectFit: "contain", background: "#ffffff", padding: "8px", borderRadius: "10px", margin: "6px auto", display: "block" }}
           />
         ) : (
-          <svg viewBox="0 0 210 210" aria-label="QRIS Code">
-            {Array.from({ length: 29 * 29 }, (_, i) => {
-              const x = i % 29, y = Math.floor(i / 29);
-              const isCorner = (x < 7 && y < 7) || (x > 21 && y < 7) || (x < 7 && y > 21);
-              return (isCorner || (x * 13 + y * 7 + x * y) % 5 < 2) ? (
-                <rect key={i} x={x * 7 + 3} y={y * 7 + 3} width="7" height="7" />
-              ) : null;
-            })}
-          </svg>
+          <div style={{ width: "210px", height: "210px", display: "grid", placeItems: "center", color: "var(--text-muted)", fontSize: "12px", margin: "6px auto", border: "1px dashed var(--border)", borderRadius: "10px" }}>
+            <span>Menyiapkan QRIS...</span>
+          </div>
         )}
         <small>MERCHANT: DHANI (DANA) · ORDER: {orderId ? orderId.slice(0, 16) : "Membuat order..."}</small>
       </div>

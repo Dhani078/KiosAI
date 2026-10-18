@@ -85,19 +85,8 @@ async function runMigration() {
   `);
   console.log('Table usage_logs verified.');
 
-  // Insert default test user if empty
-  const users = await conn.execute(`SELECT COUNT(*) as cnt FROM kiosai.users`);
-  const count = Number(users[0]?.cnt || 0);
-  if (count === 0) {
-    const defaultUserId = 'usr_kiosai_demo';
-    await conn.execute(`
-      INSERT INTO kiosai.users (id, email, full_name, tier, balance_tokens)
-      VALUES ('${defaultUserId}', 'demo@kiosai.id', 'Demo User', 'pro', 1000000)
-    `);
-    console.log('Seeded demo user:', defaultUserId);
-  }
-
-  console.log('Migration finished successfully!');
+  // Schema migration completed
+  console.log('Migration finished successfully! Jalankan `npm run seed:admin` jika tabel users masih kosong.');
 }
 
 runMigration().catch((err) => {

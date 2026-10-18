@@ -98,7 +98,7 @@ export async function POST(req: NextRequest) {
       uniqueCode,
       tokensPurchased: pkg.tokens,
       paymentUrl: dokuPaymentUrl,
-      qrisUrl: qrisUrl || dokuPaymentUrl || `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=KIOSAI-QRIS-${orderId}`,
+      qrisUrl: qrisUrl || dokuPaymentUrl || "",
       qrisString: dynamicQris,
       status: "pending",
     });

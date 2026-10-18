@@ -19,7 +19,9 @@ export function buildQuotaExhaustedError(
   activeBalance: number,
   lockedBonusBalance: number = 0
 ): QuotaExhaustedResponse {
-  const dashUrl = "https://kiosai.dhanisepeda.workers.dev/dashboard";
+  const dashUrl = process.env.NEXT_PUBLIC_APP_URL
+    ? `${process.env.NEXT_PUBLIC_APP_URL}/dashboard`
+    : "https://tokoai.my.id/dashboard";
 
   if (lockedBonusBalance > 0) {
     return {
