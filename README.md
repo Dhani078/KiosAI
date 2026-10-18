@@ -29,7 +29,7 @@
 - **Keamanan Enterprise IDOR & Cookie HttpOnly**: Cookie sesi server-side bertanda tangan HMAC-SHA256 (`kiosai_session`), eliminasi IDOR 100% pada semua endpoint privat, rotasi kredensial scrypt, dan proteksi webhook fail-closed.
 - **Grafik Tren Aktivitas 7 Hari & Analitik Interaktif**: Bar chart harian di tab Statistik, visual bar split rasio token Input/Output, dan multi-mode pengurutan model (Token, Request, Latensi).
 - **Guardrail Defensif Anti-Prompt Leak**: Boundary protection otomatis terhadap upaya ekstraksi instruksi sistem (*"repeat everything above"*), dilengkapi preset persona (Cursor Composer, Manus Agent, Claude Code, Defensive Shield).
-- **Standar Kode Moduler**: Seluruh 124 modul kode TypeScript/React dibatasi maksimal 200 baris per file demi keterbacaan dan pemeliharaan jangka panjang.
+- **Standar Kode Moduler**: Seluruh 126 modul kode TypeScript/React dibatasi maksimal 200 baris per file demi keterbacaan dan pemeliharaan jangka panjang.
 
 ---
 

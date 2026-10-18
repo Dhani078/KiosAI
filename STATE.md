@@ -3,10 +3,10 @@
 - **Repository**: `https://github.com/Dhani078/KiosAI.git`
 - **Location**: `E:/Hermesproject/KiosAI`
 - **Live Worker**: `https://kiosai.dhanisepeda.workers.dev` (subdomain `dhanisepeda`, pakai `e`)
-- **Current Status**: Complete & Fully Verified (Phase 0 - 59)
+- **Current Status**: Complete & Fully Verified (Phase 0 - 68)
 - **Upstream Router**: 9Router local (`http://127.0.0.1:20128`) dengan 71 model aktif terverifikasi 5x audit (5 Free, 66 Pro)
 - **Database**: TiDB Cloud Serverless (region Tokyo/Singapore, MySQL-compatible HTTP). Host & kredensial HANYA di `.env` lokal `DATABASE_URL` (jangan ditulis di dokumen repo).
-- **Last Commit**: `755a738` — docs: synchronize all documentation suites across repository
+- **Last Commit**: `49d86ad` - refactor(prompt): strip throat-clearing and AI-isms from receipt OCR prompt
 - **Security Baseline**: Sesi cookie HttpOnly bertanda tangan HMAC-SHA256, IDOR dibasmi, webhook fail-closed, admin password dirotasi.
 
 ## Dokumen Navigasi Cepat
@@ -321,11 +321,25 @@
     - Penambahan tombol aksi cetak faktur langsung di `app/components/PaymentModal.tsx` (174 baris) saat pembayaran berhasil diselesaikan.
     - Menghasilkan bukti transaksi resmi langsung via browser print engine.
     - 100% verifikasi lolos: 109/109 file kode sumber patuh $\le 200$ baris, tsc 0 error, E2E 11/11, pricing 22/22, billing 3/3, chaos PASS, UI 16/16.
-  - Phase 59: TokoAI Brand Identity & Geometric Logo Overhaul:
-    - Pengorganisasian aset brand master `public/brand/tokoai-logo-master.jfif` dan varian HD (2048, 512, 192, transparent).
-    - Implementasi `LogoIcon` SVG vektor murni huruf "T" isometrik oranye `#F5681A` di `app/components/Logo.tsx` dan `public/favicon.svg`.
-    - Pembaruan nama brand menyeluruh menjadi `TokoAI` di seluruh halaman web, metadata layout, FAQ, modal SDK, dan invoice cetak resmi.
-    - 100% verifikasi lolos: 109/109 file kode sumber patuh $\le 200$ baris, tsc 0 error, E2E 11/11, pricing 22/22, billing 3/3, chaos PASS, UI 16/16.
+  - Phase 60: Bulletproof Payment Engine (Anti-Replay, Tolerance & 1-Click Copy UX):
+    - Penambahan `payment_ref VARCHAR(128)` dan indeks pada `kiosai.orders` untuk eliminasi replay struk.
+    - Toleransi nominal cerdas di `lib/receipt-verifier.ts` (kode unik, harga dasar, pemisah titik rupiah).
+    - Tombol salin nominal 1-klik di `PaymentQrContent.tsx`.
+    - 100% verifikasi lolos: 124 file <= 200 LOC, test receipt 3/3 PASS.
+  - Phase 61: UI-Craft Design System Contract & Hero Terminal:
+    - Kontrak desain formal di `DESIGN.md`.
+    - Pembersihan total karakter em-dash (—) dan en-dash (–) di seluruh file UI dan copy.
+    - Hero Terminal interaktif di landing page dengan status ping real-time tokyo-hnd1 18ms.
+    - Asymmetric Bento Grid di `FeaturesSection.tsx`.
+    - 100% verifikasi lolos: 126 file <= 200 LOC, audit UI desktop & mobile 16/16 lolos 0 overflow.
+  - Phase 62: System Design Spec, Archify Verified Diagrams & Atomic CAS Concurrency:
+    - Spesifikasi sistem formal `docs/SYSTEM_DESIGN.md`.
+    - Diagram Archify arsitektur dan sequence terverifikasi (4/4 gates pass).
+    - Hardening konkurensi Atomic CAS di `lib/db.ts` (`{ fullResult: true }`), `orders/pay`, `verify-receipt`, dan `payment/webhook`.
+    - 100% verifikasi lolos: 126 file <= 200 LOC, seluruh 6 test suites pass (pricing, defense, qris, doku, security, e2e).
+  - Phase 63: Clean-Prose Prompt Refactor:
+    - Pembersihan AI-isms, slop, dan preambul persona pada prompt OCR receipt di `lib/receipt-verifier.ts`.
+    - 100% verifikasi lolos: test receipt 2/2 PASS.
 
 
 

@@ -7,6 +7,35 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `49d86ad` - refactor(prompt): strip throat-clearing and AI-isms from receipt OCR prompt
+
+**Pembersihan AI-isms & Slop pada Prompt Vision OCR (`lib/receipt-verifier.ts`)**
+- Hapus persona buatan dan filler pembuka.
+- Ubah kontras negatif berbelit menjadi instruksi operasional langsung.
+- Validasi via `npm run test:receipt` (2/2 PASS).
+
+### `e89aa14` - feat(system-design): add system design spec, archify verified diagrams, and atomic CAS payment hardening
+
+**Spesifikasi Desain Sistem & Hardening Konkurensi Pembayaran**
+- **Spesifikasi Formal (`docs/SYSTEM_DESIGN.md`)**: Arsitektur, concurrency model, token match-vesting, boundaries.
+- **Diagram Archify Terverifikasi**:
+  - Arsitektur Gateway: `.archify/architecture-kiosai-gateway-20261018-152500/kiosai-architecture.html` (4/4 gates PASS).
+  - Sequence Pelunasan Atomik: `.archify/sequence-atomic-payment-20261018-152500/atomic-payment-sequence.html` (4/4 gates PASS).
+- **Atomic Compare-And-Swap (CAS)**:
+  - `lib/db.ts`: Teruskan options `{ fullResult: true }` untuk cek `rowsAffected`.
+  - `app/api/orders/pay/route.ts`: `WHERE status != 'paid'` dan evaluasi `rowsAffected === 1`.
+  - `app/api/orders/verify-receipt/route.ts`: Kunci atomik sebelum kredit token.
+  - `app/api/payment/webhook/route.ts`: Cegah kredit saldo ganda pada webhook simultan.
+
+### `a2078d1` - feat(design): implement ui-craft design contract, hero terminal, bento grid, and zero em-dash
+
+**Penerapan Kontrak Desain UI-Craft & Eliminasi AI Tells**
+- Kontrak desain formal `DESIGN.md`.
+- Bersihkan 100% karakter em-dash (`—`) dan en-dash (`–`) dari file kode dan UI.
+- Komponen Hero Terminal interaktif (`HeroTerminal.tsx`) dengan switcher bahasa dan ping status.
+- Bento Grid asimetris pada fitur utama (`FeaturesSection.tsx`).
+- Fisika taktil `button:active { transform: scale(0.98); }` di `globals.css`.
+
 ### `755a738` — docs: synchronize all documentation suites across repository
 
 **Sinkronisasi Dokumentasi Menyeluruh (README, AGENT, API, DEPLOYMENT, SECURITY, PRD, ARCHITECTURE, plan)**
