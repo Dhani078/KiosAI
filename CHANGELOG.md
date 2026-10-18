@@ -7,7 +7,7 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
-### `pending` — feat(ui): enhance UserProfileModal design, typography, tier badges, and webhook test ping
+### `acc6b86` — feat(ui): enhance UserProfileModal design, typography, tier badges, and webhook test ping
 
 **Poles Visual Premium Modal Profil & Tindakan Uji Ping Webhook**
 - **Tipografi & Desain Kartu Dompet (`app/components/UserProfileModal.tsx`)**:
