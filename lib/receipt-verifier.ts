@@ -41,13 +41,22 @@ export async function verifyReceiptWithAI(params: ReceiptVerifyParams): Promise<
     return { valid: false, error: "Kredensial Gemini API belum dikonfigurasi di server." };
   }
 
-  const prompt = `Ekstrak data bukti transfer bank, e-wallet, atau QRIS dari gambar ini ke JSON.
+  const prompt = `Ekstrak data bukti transaksi pembayaran (struk transfer bank, e-wallet, atau QRIS) dari gambar ini ke format JSON.
 
-Aturan pembacaan:
-1. Nominal: gunakan angka bulat rupiah bersih ke penerima. Titik (.) adalah pemisah ribuan (25.143 dibaca 25143). Koma (,) adalah sen, buang desimalnya. Abaikan biaya admin dan saldo sisa.
-2. Status: isSuccess bernilai true jika status transaksi Berhasil, Sukses, atau Selesai. Jika gagal, pending, atau menunggu, beri nilai false.
-3. ID Transaksi: ambil nomor referensi atau ID transaksi yang tertera. Jika tidak ada, isi string kosong.
-4. Penerima: catat nama pemilik rekening atau nama merchant tujuan.
+PANDUAN PEMBACAAN:
+1. Nominal (amount):
+   - Ambil angka total pembayaran atau nominal transfer bersih yang ditujukan ke penerima.
+   - Format Indonesia: titik (.) adalah pemisah ribuan (contoh: 25.143 dibaca 25143, 100 dibaca 100). Koma (,) adalah desimal sen, abaikan digit di belakang koma.
+   - PENTING: Jangan tertukar dengan nomor rekening, nomor ponsel tujuan (misal 0812... / 3901...), nomor referensi transaksi, biaya admin, atau sisa saldo pengirim.
+2. Status (isSuccess):
+   - Bernilai true HANYA jika status tertulis "Berhasil", "Sukses", "Selesai", atau ada ikon centang hijau berhasil.
+   - Bernilai false jika transaksi bertuliskan "Menunggu", "Pending", "Dalam Proses", "Kedaluwarsa", atau "Gagal".
+3. Nomor Transaksi (transactionId):
+   - Ambil string ID Transaksi, No. Referensi, Ref ID, atau Order ID jika tertera. Jika tidak ada, isi string kosong "".
+4. Penerima (recipient):
+   - Ambil nama pemilik rekening atau merchant tujuan yang tertera (contoh: "Dhani", "TokoAI").
+5. Validitas Dokumen:
+   - Jika gambar bukan bukti transfer atau teks tidak terbaca/buram, set amount: 0 dan isSuccess: false.
 
 Format JSON:
 {
@@ -56,7 +65,7 @@ Format JSON:
   "isSuccess": true,
   "recipient": "Dhani"
 }
-Kembalikan JSON murni tanpa pembungkus markdown.`;
+Kembalikan HANYA objek JSON tanpa pembungkus markdown dan tanpa teks pembuka/penutup.`;
 
   const cleanBase64 = params.imageBase64.replace(/^data:[^;]+;base64,/, "").trim();
   const mime = params.mimeType || "image/jpeg";
