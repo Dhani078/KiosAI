@@ -7,7 +7,7 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
-### `pending` — feat(payment): implement AI Vision OCR receipt verification and dynamic unique codes
+### `7504aa2` — feat(payment): implement AI Vision OCR receipt verification and dynamic unique codes
 
 **Verifikasi Struk Pembayaran Cerdas via AI Vision (Gemini 3.8 Flash) & Smart QRIS Kode Unik**
 - **Mesin OCR AI Vision Multimodal (`lib/receipt-verifier.ts`)**:
