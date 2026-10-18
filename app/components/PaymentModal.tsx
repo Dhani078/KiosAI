@@ -28,6 +28,7 @@ export function PaymentModal({
   const pkg = PACKAGES[selectedPkgIndex] || PACKAGES[0];
   const isFree = pkg.price === "0" || pkg.tierKey === "free";
   const [orderId, setOrderId] = useState<string | null>(null);
+  const [paymentUrl, setPaymentUrl] = useState<string | null>(null);
   const [countdown, setCountdown] = useState(899);
   const [loading, setLoading] = useState(false);
   const [paid, setPaid] = useState(false);
@@ -45,6 +46,7 @@ export function PaymentModal({
         if (active && d.orderId) {
           setOrderId(d.orderId);
           setTokensGranted(d.tokensPurchased || 0);
+          if (d.paymentUrl) setPaymentUrl(d.paymentUrl);
         }
       })
       .catch((e) => console.error("Order creation failed", e));
@@ -160,7 +162,12 @@ export function PaymentModal({
               <Clock3 size={16} />
               Selesaikan dalam <code>{Math.floor(countdown / 60).toString().padStart(2, "0")}:{(countdown % 60).toString().padStart(2, "0")}</code>
             </div>
-            <Button kind="primary" loading={loading} disabled={!orderId || countdown <= 0} onClick={handleConfirmPay}>
+            {paymentUrl && (
+              <a href={paymentUrl} target="_blank" rel="noreferrer" className="button primary" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "6px", marginBottom: "8px", textDecoration: "none" }}>
+                Bayar via DOKU Checkout (QRIS) &rarr;
+              </a>
+            )}
+            <Button kind={paymentUrl ? "secondary" : "primary"} loading={loading} disabled={!orderId || countdown <= 0} onClick={handleConfirmPay}>
               Saya sudah bayar <CheckCheck size={17} />
             </Button>
             <small className="modal-note">Simulasi pembayaran langsung mengupdate status order dan saldo token di database{isAdmin ? " TiDB" : ""}.</small>

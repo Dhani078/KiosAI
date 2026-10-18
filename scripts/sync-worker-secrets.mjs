@@ -26,6 +26,8 @@ const KEYS = [
   "GOOGLE_CLIENT_SECRET",
   "SESSION_SECRET",
   "PAYMENT_WEBHOOK_SECRET",
+  "DOKU_CLIENT_ID",
+  "DOKU_SECRET_KEY",
 ];
 
 async function wranglerOauthToken() {

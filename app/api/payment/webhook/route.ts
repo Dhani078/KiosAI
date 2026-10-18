@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { verifyDokuNotification } from "@/lib/doku";
 import crypto from "crypto";
 
 export const runtime = "nodejs";
 
-// Fail-closed: tanpa secret yang valid, webhook menolak semua request.
 const WEBHOOK_SECRET = process.env.PAYMENT_WEBHOOK_SECRET || "";
 
-function verifySignature(payload: string, signature: string): boolean {
+function verifyInternalSignature(payload: string, signature: string): boolean {
   if (!signature || !WEBHOOK_SECRET) return false;
   const expected = crypto
     .createHmac("sha256", WEBHOOK_SECRET)
@@ -22,17 +22,20 @@ function verifySignature(payload: string, signature: string): boolean {
 
 export async function POST(req: NextRequest) {
   try {
-    if (!WEBHOOK_SECRET) {
-      return NextResponse.json(
-        { error: "PAYMENT_WEBHOOK_SECRET belum dikonfigurasi — webhook dinonaktifkan." },
-        { status: 503 }
-      );
-    }
-
     const rawBody = await req.text();
     const signature = req.headers.get("x-callback-signature") || req.headers.get("x-signature") || "";
 
-    if (!verifySignature(rawBody, signature)) {
+    const isDoku = Boolean(req.headers.get("client-id") && req.headers.get("signature"));
+    const isDokuValid = isDoku && verifyDokuNotification(rawBody, req.headers, "/api/payment/webhook");
+    const isInternalValid = !isDoku && verifyInternalSignature(rawBody, signature);
+
+    if (!isDokuValid && !isInternalValid) {
+      if (!isDoku && !WEBHOOK_SECRET) {
+        return NextResponse.json(
+          { error: "PAYMENT_WEBHOOK_SECRET belum dikonfigurasi — webhook dinonaktifkan." },
+          { status: 503 }
+        );
+      }
       return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
     }
 
@@ -43,15 +46,22 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
     }
 
-    const orderId = payload.order_id || payload.orderId || payload.reference;
-    const status = payload.status || payload.transaction_status;
+    const orderId =
+      payload.order?.invoice_number ||
+      payload.order_id ||
+      payload.orderId ||
+      payload.reference;
+    const rawStatus =
+      payload.transaction?.status ||
+      payload.status ||
+      payload.transaction_status;
 
     if (!orderId) {
       return NextResponse.json({ error: "Missing order_id" }, { status: 400 });
     }
 
-    // Only process paid / settlement statuses
-    if (!["paid", "settlement", "success"].includes(status?.toLowerCase())) {
+    const status = String(rawStatus || "").toLowerCase();
+    if (!["paid", "settlement", "success"].includes(status)) {
       return NextResponse.json({ message: "Ignored non-success status", status });
     }
 
@@ -64,19 +74,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Order not found" }, { status: 404 });
     }
 
-    // Idempotency: Prevent duplicate execution
     if (order.status === "paid") {
       return NextResponse.json({ success: true, message: "Order already fulfilled (idempotent)" });
     }
 
-    // Mark order paid
     await db.execute(
       `UPDATE kiosai.orders SET status = 'paid', paid_at = NOW() WHERE id = ?`,
       [orderId]
     );
 
-    // Credit tokens to user, match-vest bonus from vault (100% match), and upgrade tier to Pro
-    // Prevents F-01 arbitrage: bonus unlocks proportionally with purchased tokens
     await db.execute(
       `UPDATE kiosai.users 
        SET balance_tokens = balance_tokens + ? + LEAST(locked_bonus_tokens, ?),

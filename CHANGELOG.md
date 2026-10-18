@@ -7,6 +7,26 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `pending` — feat(payment): integrate DOKU Checkout API and HMAC-SHA256 notification webhook verification
+
+**Integrasi Payment Gateway Resmi DOKU Checkout & Verifikasi Webhook HMAC**
+- **Modul Integrasi DOKU (`lib/doku.ts`)**:
+  - Implementasi generator header dan kalkulasi signature `HMACSHA256=` DOKU berbasis `Client-Id`, `Request-Id`, `Request-Timestamp`, `Request-Target`, dan SHA-256 base64 digest body.
+  - Implementasi verifikasi notifikasi webhook DOKU (`verifyDokuNotification`) dengan `crypto.timingSafeEqual` untuk mencegah timing attack.
+- **Dukungan Checkout Order (`app/api/orders/route.ts`)**:
+  - Menginisiasi sesi pembayaran resmi DOKU (`/checkout/v1/payment`) untuk order berbayar.
+  - Mengembalikan URL pembayaran DOKU (`paymentUrl`) dan tetap menyediakan fallback QRIS simulasi jika layanan sedang proses review/updating.
+- **Webhook Multiguna (`app/api/payment/webhook/route.ts`)**:
+  - Mendukung autentikasi notifikasi resmi DOKU (channel QRIS/VA) dan internal testing webhook secara simultan.
+- **Antarmuka Pengguna (`app/components/PaymentModal.tsx`)**:
+  - Menampilkan tombol aksi "Bayar via DOKU Checkout (QRIS)" yang mengarahkan pembeli langsung ke halaman pembayaran DOKU resmi.
+- **Sinkronisasi Secret Cloudflare Worker**:
+  - `DOKU_CLIENT_ID` dan `DOKU_SECRET_KEY` tersinkron ke Worker `kiosai` via `scripts/sync-worker-secrets.mjs`.
+- **Hasil Pengujian**:
+  - Unit test `scripts/test-doku.mjs` (7/7 PASS).
+  - 116/116 file kode sumber patuh $\le 200$ baris per file.
+  - Seluruh test suite lolos (doku, defense, security, e2e, pricing, billing, UI).
+
 ### `1abbd79` — feat(ai): implement anti-prompt-leakage defense shield and add Cursor, Manus, and Claude Code persona presets
 
 **Guardrail Defensif Ekstraksi Prompt & Preset Arsitektur Agen**

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { readSessionUserId, unauthorized } from "@/lib/session";
+import { createDokuCheckout } from "@/lib/doku";
 import crypto from "crypto";
 
 export const runtime = "nodejs";
@@ -67,13 +68,25 @@ export async function POST(req: NextRequest) {
       [orderId, userId, pkg.amountIdr, pkg.tokens, pkg.tier]
     );
 
+    let dokuPaymentUrl: string | null = null;
+    if (pkg.amountIdr > 0) {
+      const doku = await createDokuCheckout({
+        orderId,
+        amountIdr: pkg.amountIdr,
+      });
+      if (doku.success && doku.paymentUrl) {
+        dokuPaymentUrl = doku.paymentUrl;
+      }
+    }
+
     return NextResponse.json({
       orderId,
       tier: pkg.tier,
       packageName: pkg.name,
       amountIdr: pkg.amountIdr,
       tokensPurchased: pkg.tokens,
-      qrisUrl: `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=KIOSAI-QRIS-${orderId}`,
+      paymentUrl: dokuPaymentUrl,
+      qrisUrl: dokuPaymentUrl || `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=KIOSAI-QRIS-${orderId}`,
       status: "pending",
     });
   } catch (err: any) {

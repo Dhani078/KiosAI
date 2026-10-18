@@ -15,6 +15,7 @@
     "test:billing": "node scripts/verify-billing.cjs",
     "test:security": "node --env-file=.env scripts/test-security.mjs",
     "test:defense": "node scripts/test-prompt-defense.mjs",
+    "test:doku": "node --env-file=.env scripts/test-doku.mjs",
     "migrate:tiers": "node --env-file=.env scripts/migrate-tiers.mjs",
     "audit:ui": "node scripts/audit-ui.mjs",
     "audit:dashboard": "node --env-file=.env scripts/audit-dashboard.mjs",

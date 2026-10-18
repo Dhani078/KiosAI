@@ -385,6 +385,15 @@
 - [x] Task 53.4: Add prompt defense test suite (`scripts/test-prompt-defense.mjs`, 12/12 PASS)
 - [x] Task 53.5: Verify 100% compliance: 114 source files <= 200 LOC, all test suites pass (defense, security, e2e, pricing, billing, UI)
 
+## Phase 54 (DOKU Checkout & HMAC-SHA256 Payment Webhook Integration - Completed)
+- [x] Task 54.1: Implement DOKU integration module (`lib/doku.ts`) with signature generation & notification verification
+- [x] Task 54.2: Connect DOKU Checkout API in `app/api/orders/route.ts` with graceful fallback
+- [x] Task 54.3: Support authentic DOKU HMAC notification in `app/api/payment/webhook/route.ts` alongside internal test signatures
+- [x] Task 54.4: Add DOKU payment redirect action in `app/components/PaymentModal.tsx`
+- [x] Task 54.5: Add DOKU integration test suite (`scripts/test-doku.mjs`, 7/7 PASS)
+- [x] Task 54.6: Sync `DOKU_CLIENT_ID` and `DOKU_SECRET_KEY` to Cloudflare Worker
+- [x] Task 54.7: Verify 100% compliance: 116 source files <= 200 LOC, all test suites pass (doku, defense, security, e2e, pricing, billing, UI)
+
 
 
 

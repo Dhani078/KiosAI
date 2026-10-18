@@ -111,9 +111,11 @@ hanya bisa dibaca user lokal — jangan pernah disalin ke dalam project.
 
 ## 6. Webhook Pembayaran
 
-- Endpoint `POST /api/payment/webhook` memvalidasi **HMAC signature** dari `PAYMENT_WEBHOOK_SECRET`.
+- Endpoint `POST /api/payment/webhook` mendukung validasi ganda:
+  1. **DOKU Checkout Webhook**: Memvalidasi signature HMAC-SHA256 (`HMACSHA256=...`) berbasis `Client-Id`, `Request-Id`, `Request-Timestamp`, `Request-Target`, dan SHA-256 base64 digest dari request body menggunakan `DOKU_SECRET_KEY`.
+  2. **Internal/Test Webhook**: Memvalidasi `x-callback-signature` menggunakan `PAYMENT_WEBHOOK_SECRET` dengan penolakan fail-closed.
 - **Idempotency**: order dengan status `paid` tidak diproses dua kali (mencegah double-credit).
-- **Batasan yang diketahui:** pembayaran masih **simulasi**. Belum terhubung Midtrans/Tripay.
+- **Match-Vesting**: Bonus brankas dibuka secara proporsional sesuai nominal token yang dibeli (mencegah eksploitasi arbitrage).
 
 ---
 
