@@ -7,7 +7,7 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
-### `pending` — feat(payment): add anti-replay protection, amount tolerance, and 1-click copy for frictionless checkout
+### `cec8c82` — feat(payment): add anti-replay protection, amount tolerance, and 1-click copy for frictionless checkout
 
 **Penguatan Proteksi Pembayaran Bebas Celah & Pengalaman Pengguna Tanpa Komplain**
 - **Proteksi Anti-Replay / Double-Spending (`app/api/orders/verify-receipt/route.ts`)**:
