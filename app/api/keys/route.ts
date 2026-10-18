@@ -28,10 +28,10 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json();
-    const name = body.name || "Default Key";
-    const allowedModels = body.allowedModels || null;
-    const rateLimit = Number(body.rateLimit) || 60;
-    const maxSpendTokens = Number(body.maxSpendTokens) || 0;
+    const name = String(body.name || "Default Key").slice(0, 64).trim() || "Default Key";
+    const allowedModels = Array.isArray(body.allowedModels) ? body.allowedModels : null;
+    const rateLimit = Math.max(10, Math.min(1000, Number(body.rateLimit) || 60));
+    const maxSpendTokens = Math.max(0, Math.min(10_000_000_000, Number(body.maxSpendTokens) || 0));
 
     const { rawKey, keyRecord } = await createApiKey({
       userId,

@@ -315,6 +315,18 @@
   - Diagram sequence Archify (`.archify/sequence-atomic-payment-20261018-152500/atomic-payment-sequence.html`, 4/4 gates lolos)
   - Atomic Compare-And-Swap (CAS) di `lib/db.ts`, `app/api/orders/pay`, `app/api/orders/verify-receipt`, dan `app/api/payment/webhook` (`WHERE status != 'paid'` dan evaluasi `rowsAffected === 1`)
   - 100% patuh batas baris: 126 file <= 200 LOC, semua pengujian integrasi lulus sempurna
+- [x] Phase 69: Payment Bypass Elimination, Pseudo-QR Removal & Input Hardening
+  - Penutupan celah pelunasan manual pada `app/api/orders/pay/route.ts` (wajib struk AI OCR atau webhook gateway berotentikasi)
+  - Tombol modal pembayaran diubah menjadi "Cek Status Pembayaran" dengan pesan panduan upload struk
+  - Penghapusan total pseudo-QR SVG acak di `PaymentQrContent.tsx` diganti state loading bersih
+  - Pembersihan URL dummy `KIOSAI-QRIS-${orderId}` di `app/api/orders/route.ts`
+  - Perbaikan badge order history status pending (oranye clock, bukan hijau centang)
+  - Pembersihan akun dummy `usr_kiosai_demo` dari `scripts/migrate.mjs` dan database TiDB
+  - Validasi batas ukuran file upload 5MB dan filter MIME type di `verify-receipt/route.ts`
+  - Proteksi SSRF pemblokiran loopback dan IP privat di `lib/balance-alerts.ts`
+  - Sanitasi dan clamping parameter pembuatan API key di `app/api/keys/route.ts`
+  - 100% lolos verifikasi: 126 file <= 200 LOC, security suite 15/15 PASS, E2E 11/11 PASS
+
 
 
 

@@ -22,6 +22,11 @@ export async function sendLowBalanceWebhook(params: {
   const { userId, email, webhookUrl, balance, threshold } = params;
   if (!webhookUrl || !webhookUrl.startsWith("http")) return false;
 
+  // SSRF guard: blokir target localhost dan rentang IP privat/internal
+  if (/^(http|https):\/\/(localhost|127\.|10\.|192\.168\.|172\.(1[6-9]|2[0-9]|3[0-1])\.|169\.254\.)/i.test(webhookUrl)) {
+    return false;
+  }
+
   const now = Date.now();
   const lastSent = recentAlerts.get(userId) || 0;
   if (now - lastSent < ALERT_COOLDOWN_MS) {

@@ -3,11 +3,11 @@
 - **Repository**: `https://github.com/Dhani078/KiosAI.git`
 - **Location**: `E:/Hermesproject/KiosAI`
 - **Live Worker**: `https://kiosai.dhanisepeda.workers.dev` (subdomain `dhanisepeda`, pakai `e`)
-- **Current Status**: Complete & Fully Verified (Phase 0 - 68)
+- **Current Status**: Complete & Fully Verified (Phase 0 - 69)
 - **Upstream Router**: 9Router local (`http://127.0.0.1:20128`) dengan 71 model aktif terverifikasi 5x audit (5 Free, 66 Pro)
 - **Database**: TiDB Cloud Serverless (region Tokyo/Singapore, MySQL-compatible HTTP). Host & kredensial HANYA di `.env` lokal `DATABASE_URL` (jangan ditulis di dokumen repo).
-- **Last Commit**: `49d86ad` - refactor(prompt): strip throat-clearing and AI-isms from receipt OCR prompt
-- **Security Baseline**: Sesi cookie HttpOnly bertanda tangan HMAC-SHA256, IDOR dibasmi, webhook fail-closed, admin password dirotasi.
+- **Last Commit**: `e058fa5` - fix(cleanup): remove fake pseudo-QR SVG, remove KIOSAI-QRIS dummy url, fix pending badge in order history, clean demo user in migration, and update domain in bonus vault
+- **Security Baseline**: Sesi cookie HttpOnly bertanda tangan HMAC-SHA256, IDOR dibasmi, unverified payment bypass ditutup, webhook fail-closed, admin password dirotasi.
 
 ## Dokumen Navigasi Cepat
 - Aturan & perintah untuk agent: `AGENT.md`

@@ -441,6 +441,28 @@
 - [x] Task 61.7: Atomic conditional update in `app/api/payment/webhook/route.ts` (`WHERE id = ? AND status != 'paid'`)
 - [x] Task 61.8: Verify 100% compliance: 126 source files <= 200 LOC, all test suites pass (pricing, defense, qris, doku, security, e2e)
 
+## Phase 62 (Admin Dynamic QRIS Rp 100 with Random Unique Code - Completed)
+- [x] Task 62.1: Implement `ADMIN_TEST_PACKAGE` in `app/components/packageData.ts` for admin `adminfordhani`
+- [x] Task 62.2: Add 2-digit random unique code (11-99) in `app/api/orders/route.ts` and Tag 54 dynamic amount injection
+- [x] Task 62.3: Support instant payment & AI receipt tolerance for base 100 in `orders/pay` & `verify-receipt`
+
+## Phase 63 (Receipt OCR Prompt Hardening & AI-isms Cleanup - Completed)
+- [x] Task 63.1: Clean throat-clearing persona from `lib/receipt-verifier.ts` prompt
+- [x] Task 63.2: Add strict boundary disambiguation (prevent confusion with phone/account numbers, admin fee, balance)
+- [x] Task 63.3: Verify receipt OCR suite (`test:receipt`, 2/2 PASS)
+
+## Phase 64 (Eliminate Payment Bypass, Pseudo-QR SVG, and Legacy Simulation Relics - Completed)
+- [x] Task 64.1: Close manual payment bypass in `app/api/orders/pay/route.ts`: require verified receipt or webhook signature
+- [x] Task 64.2: Update UI button to "Cek Status Pembayaran" with guidance toast to upload receipt
+- [x] Task 64.3: Delete fake random pseudo-QR SVG in `PaymentQrContent.tsx` in favor of clean loading state
+- [x] Task 64.4: Remove dummy `KIOSAI-QRIS-${orderId}` URL fallback from `app/api/orders/route.ts`
+- [x] Task 64.5: Fix pending order status badge in `OrderHistoryTable.tsx` (amber clock instead of green check)
+- [x] Task 64.6: Delete legacy `usr_kiosai_demo` seed from `migrate.mjs` and clean database
+- [x] Task 64.7: Boundary validation: image upload size limit 5MB + MIME filter in `verify-receipt/route.ts`
+- [x] Task 64.8: SSRF protection in `lib/balance-alerts.ts` blocking private/loopback IP ranges
+- [x] Task 64.9: Input clamping on API key creation (rate limit 10-1000, max spend cap, trimmed name)
+- [x] Task 64.10: 100% test pass: security 15/15, e2e 11/11, pricing 22/22, qris 7/7, doku 7/7, receipt 2/2
+
 
 
 

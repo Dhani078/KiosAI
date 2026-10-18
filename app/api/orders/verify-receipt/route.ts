@@ -27,6 +27,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "orderId dan bukti struk (imageBase64) wajib diisi." }, { status: 400 });
     }
 
+    if (typeof imageBase64 !== "string" || imageBase64.length > 7_000_000) {
+      return NextResponse.json({ error: "Ukuran file bukti transfer maksimal 5 MB." }, { status: 413 });
+    }
+
+    const safeMime = String(mimeType || "image/jpeg").toLowerCase();
+    if (!["image/jpeg", "image/png", "image/webp"].includes(safeMime)) {
+      return NextResponse.json({ error: "Format gambar harus JPEG, PNG, atau WebP." }, { status: 400 });
+    }
+
     const order = await db.queryOne<any>(
       `SELECT * FROM kiosai.orders WHERE id = ?`,
       [orderId]

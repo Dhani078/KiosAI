@@ -9,19 +9,19 @@ Dokumen ini dirancang agar setiap sesi AI atau pengembang dapat melanjutkan peke
 | Komponen | Status | Keterangan |
 |---|---|---|
 | **Repository** | Clean, Up-to-Date | `https://github.com/Dhani078/KiosAI.git` (Branch `main`) |
-| **Commit Terakhir** | `49d86ad` | refactor(prompt): strip throat-clearing and AI-isms from receipt OCR prompt |
+| **Commit Terakhir** | `e058fa5` | fix(cleanup): remove fake pseudo-QR SVG, remove KIOSAI-QRIS dummy url, fix pending badge in order history, clean demo user in migration, and update domain in bonus vault |
 | **Worker Live** | `healthy` | `https://kiosai.dhanisepeda.workers.dev` (Subdomain `dhanisepeda` dengan huruf 'e') & `https://tokoai.my.id` |
 | **Database** | `connected` | TiDB Cloud Serverless (AWS Tokyo `ap-southeast-1` / `ap-northeast-1`) |
 | **Upstream 9Router** | `connected` | `http://127.0.0.1:20128` (69 model aktif terverifikasi 5x audit, 5 Free, 64 Pro) |
 | **Batas Baris Kode** | 100% Patuh | 126 file sumber `.ts`/`.tsx`/`.mjs` `<= 200` baris |
 | **UI Craft & Design** | Complete | `DESIGN.md`, 0 em-dash, Bento Grid, Hero Terminal, tactile physics |
 | **Dynamic QRIS DANA** | 7/7 Passed | `npm run test:qris` - EMVCo tag 54 nominal lock & CRC16-CCITT |
-| **AI Receipt Verify** | 3/3 Passed | `npm run test:receipt` — Gemini 3.8 Flash Vision OCR + anti-replay & tolerance |
+| **AI Receipt Verify** | 2/2 Passed | `npm run test:receipt` - Gemini 3.8 Flash Vision OCR + anti-replay & tolerance |
 | **E2E Integration** | 11/11 Passed | `npm run test:e2e` lolos semua skenario |
 | **Trend Analytics** | Complete | 7-day visual activity chart & Input/Output token split ratio |
 | **DOKU Checkout** | 7/7 Passed | `npm run test:doku` — DOKU headers, signature HMAC-SHA256, and webhook verification |
 | **Prompt Defense** | 12/12 Passed | `npm run test:defense` — Anti-prompt-leakage shield & Cursor/Manus presets |
-| **Security Regression** | 14/14 Passed | `npm run test:security` — IDOR eliminated, HttpOnly HMAC cookie session, fail-closed webhook |
+| **Security Regression** | 15/15 Passed | `npm run test:security` - IDOR eliminated, payment bypass closed, HttpOnly HMAC session |
 | **Pricing Unit Test** | 22/22 Passed | `npm run test:pricing` — rasio directional input vs output + harga $/1M |
 | **UI Audit** | 16/16 Passed | `npm run audit:ui` (4) + `npm run audit:dashboard` (12) — 0 overflow, 0 copy lama |
 | **Tier Database** | 2 tier bersih | `free: 35`, `pro: 109` — saldo terlindungi non-negatif |

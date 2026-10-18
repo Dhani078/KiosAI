@@ -7,7 +7,26 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
-### `e63b5e9` - feat(payment): add admin test package Rp 100 with dynamic QRIS EMVCo Tag 54
+### `e058fa5` - fix(cleanup): remove fake pseudo-QR SVG, remove KIOSAI-QRIS dummy url, fix pending badge in order history, clean demo user in migration, and update domain in bonus vault
+
+**Pembersihan Sisa Mock/Simulasi dan Penguatan Batas Input**
+- Hapus pseudo-QR SVG acak dari `PaymentQrContent.tsx` diganti state loading bersih.
+- Hapus fallback URL dummy `KIOSAI-QRIS-${orderId}` di `app/api/orders/route.ts`.
+- Perbaiki indikator status `pending` di `OrderHistoryTable.tsx` (oranye clock, bukan hijau centang).
+- Bersihkan akun dummy `usr_kiosai_demo` dari `scripts/migrate.mjs` dan database TiDB.
+- Perbarui domain dashboard di `lib/bonus-vault.ts` ke `https://tokoai.my.id/dashboard`.
+- Batasi ukuran upload struk maks 5MB dan MIME image di `verify-receipt/route.ts`.
+- Proteksi SSRF pemblokiran loopback dan IP privat di `lib/balance-alerts.ts`.
+- Clamping parameter API key creation (rate limit 10-1000, max spend cap, trimmed name).
+
+### `fd2e68b` - feat(security): close unverified payment bypass, require receipt or webhook, and clean legacy simulation code
+
+**Penutupan Celah Bypass Pelunasan & Pembersihan Kode Simulasi Lama**
+- Kunci `POST /api/orders/pay`: Tolak pelunasan manual pada paket berbayar (`amount_idr > 0`) tanpa verifikasi struk AI OCR atau webhook gateway berotentikasi.
+- Ubah tombol checkout di UI menjadi "Cek Status Pembayaran" dengan pesan panduan upload struk.
+- Hapus dead code `handleSimulatePayment` di `app/hooks/useKiosActions.ts`.
+- Bersihkan fallback `usr_kiosai_demo` dari `AuthModal.tsx` dan `useKiosActions.ts`.
+- Seluruh 15 skenario security regression lolos (`npm run test:security`).
 
 **Paket Uji Coba QRIS Dinamis Khusus Admin (Rp 100)**
 - `ADMIN_TEST_PACKAGE`: Rp 100 pas tanpa kode unik acak, khusus akun admin `adminfordhani`.
