@@ -61,18 +61,20 @@ export async function POST(req: NextRequest) {
     }
 
     const orderId = crypto.randomUUID();
+    const uniqueCode = pkg.amountIdr > 0 ? Math.floor(Math.random() * 800) + 101 : 0;
+    const finalAmount = pkg.amountIdr > 0 ? pkg.amountIdr + uniqueCode : 0;
 
     await db.execute(
       `INSERT INTO kiosai.orders (id, user_id, amount_idr, tokens_purchased, package_tier, payment_method, status)
        VALUES (?, ?, ?, ?, ?, 'qris', 'pending')`,
-      [orderId, userId, pkg.amountIdr, pkg.tokens, pkg.tier]
+      [orderId, userId, finalAmount, pkg.tokens, pkg.tier]
     );
 
     let dokuPaymentUrl: string | null = null;
     if (pkg.amountIdr > 0) {
       const doku = await createDokuCheckout({
         orderId,
-        amountIdr: pkg.amountIdr,
+        amountIdr: finalAmount,
       });
       if (doku.success && doku.paymentUrl) {
         dokuPaymentUrl = doku.paymentUrl;
@@ -83,7 +85,9 @@ export async function POST(req: NextRequest) {
       orderId,
       tier: pkg.tier,
       packageName: pkg.name,
-      amountIdr: pkg.amountIdr,
+      amountIdr: finalAmount,
+      baseAmountIdr: pkg.amountIdr,
+      uniqueCode,
       tokensPurchased: pkg.tokens,
       paymentUrl: dokuPaymentUrl,
       qrisUrl: dokuPaymentUrl || `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=KIOSAI-QRIS-${orderId}`,

@@ -407,6 +407,15 @@
 - [x] Task 56.3: Upgrade dual-wallet cards styling with subtle amber glow and clean contrast
 - [x] Task 56.4: Verify 100% compliance: 117 source files <= 200 LOC, all test suites pass (security, e2e, pricing, billing, UI)
 
+## Phase 57 (AI Vision Receipt Verification & Smart QRIS Unique Code - Completed)
+- [x] Task 57.1: Implement multimodal OCR receipt verification engine (`lib/receipt-verifier.ts`) with Gemini 3.8 Flash Vision structured JSON
+- [x] Task 57.2: Implement verification endpoint `POST /api/orders/verify-receipt` with strict nominal, status, and anti-fraud checks
+- [x] Task 57.3: Assign 3-digit random unique codes on order creation in `app/api/orders/route.ts`
+- [x] Task 57.4: Add 1-click photo upload and AI verification state in `PaymentModal.tsx` & `PaymentQrContent.tsx`
+- [x] Task 57.5: Add AI receipt verification unit test (`scripts/test-ai-receipt.mjs`, 2/2 PASS)
+- [x] Task 57.6: Sync `GEMINI_API_KEY` to Cloudflare Worker secrets
+- [x] Task 57.7: Verify 100% compliance: 122 source files <= 200 LOC, all test suites pass (receipt, security, e2e, pricing, billing, UI)
+
 
 
 

@@ -28,6 +28,7 @@ const KEYS = [
   "PAYMENT_WEBHOOK_SECRET",
   "DOKU_CLIENT_ID",
   "DOKU_SECRET_KEY",
+  "GEMINI_API_KEY",
 ];
 
 async function wranglerOauthToken() {

@@ -13,7 +13,8 @@ Dokumen ini dirancang agar setiap sesi AI atau pengembang dapat melanjutkan peke
 | **Worker Live** | `healthy` | `https://kiosai.dhanisepeda.workers.dev` (Subdomain `dhanisepeda` dengan huruf 'e') & `https://tokoai.my.id` |
 | **Database** | `connected` | TiDB Cloud Serverless (AWS Tokyo `ap-southeast-1` / `ap-northeast-1`) |
 | **Upstream 9Router** | `connected` | `http://127.0.0.1:20128` (69 model aktif terverifikasi 5x audit, 5 Free, 64 Pro) |
-| **Batas Baris Kode** | 100% Patuh | 117 file sumber `.ts`/`.tsx`/`.mjs` `<= 200` baris |
+| **Batas Baris Kode** | 100% Patuh | 122 file sumber `.ts`/`.tsx`/`.mjs` `<= 200` baris |
+| **AI Receipt Verify** | 2/2 Passed | `npm run test:receipt` — Gemini 3.8 Flash Vision OCR verification |
 | **E2E Integration** | 11/11 Passed | `npm run test:e2e` lolos semua skenario |
 | **Trend Analytics** | Complete | 7-day visual activity chart & Input/Output token split ratio |
 | **DOKU Checkout** | 7/7 Passed | `npm run test:doku` — DOKU headers, signature HMAC-SHA256, and webhook verification |

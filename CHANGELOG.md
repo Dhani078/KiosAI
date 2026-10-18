@@ -7,6 +7,22 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `pending` — feat(payment): implement AI Vision OCR receipt verification and dynamic unique codes
+
+**Verifikasi Struk Pembayaran Cerdas via AI Vision (Gemini 3.8 Flash) & Smart QRIS Kode Unik**
+- **Mesin OCR AI Vision Multimodal (`lib/receipt-verifier.ts`)**:
+  - Memanfaatkan Gemini 3.8 Flash Vision dengan mode JSON terstruktur untuk mengekstrak nominal, status, ID transaksi/referensi, dan nama penerima dari bukti foto/screenshot transfer.
+  - Memvalidasi kecocokan nominal hingga digit kode unik dan memastikan transaksi sukses.
+- **Endpoint Verifikasi Otomatis (`app/api/orders/verify-receipt/route.ts`)**:
+  - Menandai order `paid` otomatis dan menambahkan saldo token + membuka bonus brankas segera setelah AI memvalidasi keaslian struk.
+- **Smart QRIS Kode Unik (`app/api/orders/route.ts`)**:
+  - Menambahkan kode unik acak 3-digit (Rp 101 – Rp 900) pada setiap order baru untuk rekonsiliasi instan anti-bentrok antar pembeli.
+- **Antarmuka Unggah Struk (`PaymentModal.tsx` & `PaymentQrContent.tsx`)**:
+  - Menyediakan input unggah foto langsung dengan status feedback instan tanpa perlu menunggu verifikasi manual.
+- **Hasil Verifikasi**:
+  - 122/122 file kode sumber patuh $\le 200$ baris per file.
+  - Test suite lolos: `test:receipt` (2/2 PASS), `test:security` (14/14 PASS), `test:e2e` (11/11 PASS), `audit:ui` & `audit:dashboard` (16/16 PASS).
+
 ### `acc6b86` — feat(ui): enhance UserProfileModal design, typography, tier badges, and webhook test ping
 
 **Poles Visual Premium Modal Profil & Tindakan Uji Ping Webhook**
