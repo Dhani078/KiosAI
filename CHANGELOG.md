@@ -7,6 +7,21 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `pending` — feat(ai): implement dual-key pool and 6-tier model waterfall for AI receipt engine
+
+**Pool Kunci Ganda & Hirarki Air Terjun 6-Model untuk Engine Verifikasi Struk AI**
+- **Pool Kredensial Ganda (`lib/receipt-verifier.ts`)**:
+  - Mendukung `GEMINI_API_KEY` dan `GEMINI_API_KEY_2` secara bergantian. Jika salah satu kunci terkena batas kuota 429 atau lonjakan 503, sistem langsung mengalihkan request ke kunci cadangan secara otomatis.
+- **Hirarki Model Air Terjun (Waterfall Fallback)**:
+  - Urutan otomatis dari model tercerdas hingga model throughput tinggi:
+    `gemini-3.8-flash` $\to$ `gemini-3.7-flash` $\to$ `gemini-3.6-flash` $\to$ `gemini-3.5-flash` $\to$ `gemini-3.1-flash-lite` $\to$ `gemini-3.5-flash-lite`.
+  - Mengoptimalkan kuota harian: seri Flash Lite menyediakan tambahan 500 RPD per key (total kapasitas mencapai 1.160+ request/hari).
+- **Proteksi Lonjakan Bersamaan (200+ Pengguna)**:
+  - Mengimplementasikan micro-jitter backoff pada respon rate-limiting (429/503) sehingga request bersamaan tidak saling memblokir dan transaksi tersimpan aman di database TiDB.
+- **Hasil Verifikasi**:
+  - 122/122 file kode sumber patuh $\le 200$ baris per file (`receipt-verifier.ts` 138 baris).
+  - 2/2 receipt tests PASS, 14/14 security tests PASS, 11/11 E2E tests PASS, 16/16 UI audits PASS.
+
 ### `7504aa2` — feat(payment): implement AI Vision OCR receipt verification and dynamic unique codes
 
 **Verifikasi Struk Pembayaran Cerdas via AI Vision (Gemini 3.8 Flash) & Smart QRIS Kode Unik**

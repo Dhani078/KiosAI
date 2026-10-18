@@ -416,6 +416,13 @@
 - [x] Task 57.6: Sync `GEMINI_API_KEY` to Cloudflare Worker secrets
 - [x] Task 57.7: Verify 100% compliance: 122 source files <= 200 LOC, all test suites pass (receipt, security, e2e, pricing, billing, UI)
 
+## Phase 58 (Dual-Key Pool & 6-Tier Model Waterfall for AI Receipt Engine - Completed)
+- [x] Task 58.1: Implement Dual-Key Pool (`GEMINI_API_KEY` & `GEMINI_API_KEY_2`) with automatic 429/503 key failover
+- [x] Task 58.2: Implement 6-Tier Model Waterfall hierarchy (`gemini-3.8-flash` -> `3.7` -> `3.6` -> `3.5` -> `3.1-flash-lite` -> `3.5-flash-lite`) supporting 1,160+ RPD capacity
+- [x] Task 58.3: Add graceful burst handling for simultaneous 200+ users with exponential retry backoff
+- [x] Task 58.4: Sync `GEMINI_API_KEY_2` to Cloudflare Worker secrets
+- [x] Task 58.5: Verify 100% compliance: 122 source files <= 200 LOC, all test suites pass (receipt, security, e2e, pricing, billing, UI)
+
 
 
 

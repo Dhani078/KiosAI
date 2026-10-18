@@ -29,6 +29,7 @@ const KEYS = [
   "DOKU_CLIENT_ID",
   "DOKU_SECRET_KEY",
   "GEMINI_API_KEY",
+  "GEMINI_API_KEY_2",
 ];
 
 async function wranglerOauthToken() {
