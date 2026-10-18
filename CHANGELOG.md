@@ -7,7 +7,7 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
-### `pending` — feat(analytics): add 7-day usage trend chart, token input/output ratio bar, and multi-mode model sorting
+### `37dd2ba` — feat(analytics): add 7-day usage trend chart, token input/output ratio bar, and multi-mode model sorting
 
 **Pembaruan Visual & Analisis Mendalam Tab Statistik**
 - **Grafik Tren Aktivitas 7 Hari (`app/components/UsageTrendChart.tsx`)**:

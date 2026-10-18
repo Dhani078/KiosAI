@@ -6,7 +6,7 @@
 - **Current Status**: Complete & Fully Verified (Phase 0 - 59)
 - **Upstream Router**: 9Router local (`http://127.0.0.1:20128`) dengan 71 model aktif terverifikasi 5x audit (5 Free, 66 Pro)
 - **Database**: TiDB Cloud Serverless (region Tokyo/Singapore, MySQL-compatible HTTP). Host & kredensial HANYA di `.env` lokal `DATABASE_URL` (jangan ditulis di dokumen repo).
-- **Last Commit**: `dbfb341` — feat(payment): integrate DOKU Checkout API and HMAC-SHA256 notification webhook verification
+- **Last Commit**: `37dd2ba` — feat(analytics): add 7-day usage trend chart, token input/output ratio bar, and multi-mode model sorting
 - **Security Baseline**: Sesi cookie HttpOnly bertanda tangan HMAC-SHA256, IDOR dibasmi, webhook fail-closed, admin password dirotasi.
 
 ## Dokumen Navigasi Cepat
