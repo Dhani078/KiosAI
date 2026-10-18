@@ -7,6 +7,19 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `pending` — feat(ui): enhance UserProfileModal design, typography, tier badges, and webhook test ping
+
+**Poles Visual Premium Modal Profil & Tindakan Uji Ping Webhook**
+- **Tipografi & Desain Kartu Dompet (`app/components/UserProfileModal.tsx`)**:
+  - Format angka saldo aktif dan brankas bonus menggunakan font monospaced JetBrains Mono dengan pemisah titik ribuan (`id-ID`).
+  - Efek subtle amber glow pada avatar akun dan border oranye `#F28C38` yang elegan.
+  - Penambahan badge pill status tier aktif (`PRO` / `FREE`).
+- **Aksi Uji Cepat Webhook Alert**:
+  - Menambahkan tombol aksi 1-klik "Test Ping" di samping label input webhook Discord/Slack untuk memastikan URL notifikasi pengguna benar-benar aktif dan menerima pesan.
+- **Hasil Verifikasi**:
+  - 117/117 file kode sumber patuh $\le 200$ baris per file (`UserProfileModal.tsx` 167 baris).
+  - 14/14 security tests PASS, 11/11 E2E tests PASS, 16/16 UI audits PASS (0 overflow).
+
 ### `37dd2ba` — feat(analytics): add 7-day usage trend chart, token input/output ratio bar, and multi-mode model sorting
 
 **Pembaruan Visual & Analisis Mendalam Tab Statistik**
