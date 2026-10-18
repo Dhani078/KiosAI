@@ -12,6 +12,7 @@ export function PaymentQrContent({
   aiLoading,
   aiError,
   paymentUrl,
+  qrisUrl,
   loading,
   onUploadReceipt,
   onConfirmPay,
@@ -24,6 +25,7 @@ export function PaymentQrContent({
   aiLoading: boolean;
   aiError: string;
   paymentUrl: string | null;
+  qrisUrl?: string | null;
   loading: boolean;
   onUploadReceipt: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onConfirmPay: () => void;
@@ -52,15 +54,23 @@ export function PaymentQrContent({
 
       <div className="qr-wrap">
         <div className="qris-word">QRIS <span>PEMBAYARAN INSTAN</span></div>
-        <svg viewBox="0 0 210 210" aria-label="QRIS Code">
-          {Array.from({ length: 29 * 29 }, (_, i) => {
-            const x = i % 29, y = Math.floor(i / 29);
-            const isCorner = (x < 7 && y < 7) || (x > 21 && y < 7) || (x < 7 && y > 21);
-            return (isCorner || (x * 13 + y * 7 + x * y) % 5 < 2) ? (
-              <rect key={i} x={x * 7 + 3} y={y * 7 + 3} width="7" height="7" />
-            ) : null;
-          })}
-        </svg>
+        {qrisUrl ? (
+          <img
+            src={qrisUrl}
+            alt="QRIS Dhani"
+            style={{ width: "210px", height: "210px", objectFit: "contain", background: "#ffffff", padding: "8px", borderRadius: "10px", margin: "6px auto", display: "block" }}
+          />
+        ) : (
+          <svg viewBox="0 0 210 210" aria-label="QRIS Code">
+            {Array.from({ length: 29 * 29 }, (_, i) => {
+              const x = i % 29, y = Math.floor(i / 29);
+              const isCorner = (x < 7 && y < 7) || (x > 21 && y < 7) || (x < 7 && y > 21);
+              return (isCorner || (x * 13 + y * 7 + x * y) % 5 < 2) ? (
+                <rect key={i} x={x * 7 + 3} y={y * 7 + 3} width="7" height="7" />
+              ) : null;
+            })}
+          </svg>
+        )}
         <small>ORDER ID: {orderId ? orderId.slice(0, 18) : "Membuat order..."}</small>
       </div>
 

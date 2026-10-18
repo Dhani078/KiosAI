@@ -33,6 +33,7 @@ export function PaymentModal({
   const [exactAmount, setExactAmount] = useState<number | null>(null);
   const [uniqueCode, setUniqueCode] = useState(0);
   const [paymentUrl, setPaymentUrl] = useState<string | null>(null);
+  const [qrisUrl, setQrisUrl] = useState<string | null>(null);
   const [countdown, setCountdown] = useState(899);
   const [loading, setLoading] = useState(false);
   const [aiLoading, setAiLoading] = useState(false);
@@ -55,6 +56,7 @@ export function PaymentModal({
         setUniqueCode(d.uniqueCode || 0);
         setTokensGranted(d.tokensPurchased || 0);
         if (d.paymentUrl) setPaymentUrl(d.paymentUrl);
+        if (d.qrisUrl) setQrisUrl(d.qrisUrl);
       })
       .catch((e) => console.error("Order creation failed", e));
     return () => { active = false; };
@@ -174,6 +176,7 @@ export function PaymentModal({
             aiLoading={aiLoading}
             aiError={aiError}
             paymentUrl={paymentUrl}
+            qrisUrl={qrisUrl}
             loading={loading}
             onUploadReceipt={handleUploadReceipt}
             onConfirmPay={handleConfirmPay}

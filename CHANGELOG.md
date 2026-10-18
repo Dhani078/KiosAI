@@ -7,6 +7,22 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `pending` — feat(payment): implement EMVCo Dynamic QRIS Generator for DANA with tag 54 nominal locking
+
+**Generator QRIS Dinamis Standar EMVCo Resmi Merchant DANA "Dhani"**
+- **Ekstraksi & Dekoder QRIS Asli**:
+  - Mengekstrak string QRIS resmi DANA dari poster merchant NMID `ID1026500560192` atas nama `Dhani`.
+- **Engine Konversi EMVCo Dinamis (`lib/qris.ts`)**:
+  - Mengubah Point of Initiation Method dari `010211` (statis) menjadi `010212` (dinamis).
+  - Menyisipkan Tag 54 (Transaction Amount) dengan nominal pasti plus kode unik 3-digit.
+  - Menghitung ulang checksum CRC16-CCITT (polinomial 0x1021) standar nasional Bank Indonesia / ASPI.
+- **Tampilan Kode QR Tajam (`PaymentQrContent.tsx`)**:
+  - Merender QRIS dinamis berkualitas tinggi langsung di dalam modal checkout. Pembeli yang memindai QRIS via m-Banking atau e-wallet (BCA, Mandiri, DANA, GoPay, OVO) langsung melihat nominal pas tanpa perlu mengetik manual.
+- **Hasil Verifikasi**:
+  - Unit test `scripts/test-qris-generator.mjs`: 7/7 checks PASSED.
+  - 124/124 file kode sumber patuh $\le 200$ baris per file.
+  - Seluruh test suite lolos (qris, receipt, security, e2e, pricing, billing, UI).
+
 ### `bbbbe1c` — feat(ai): implement dual-key pool and 6-tier model waterfall for AI receipt engine
 
 **Pool Kunci Ganda & Hirarki Air Terjun 6-Model untuk Engine Verifikasi Struk AI**

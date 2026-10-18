@@ -423,6 +423,14 @@
 - [x] Task 58.4: Sync `GEMINI_API_KEY_2` to Cloudflare Worker secrets
 - [x] Task 58.5: Verify 100% compliance: 122 source files <= 200 LOC, all test suites pass (receipt, security, e2e, pricing, billing, UI)
 
+## Phase 59 (EMVCo Dynamic QRIS Generator for DANA Merchant - Completed)
+- [x] Task 59.1: Decode real DANA QRIS string from merchant poster (`00020101021126570011ID.DANA.WWW...`)
+- [x] Task 59.2: Implement EMVCo dynamic QRIS generator (`lib/qris.ts`) with tag 54 amount injection and CRC16-CCITT recalculation
+- [x] Task 59.3: Connect dynamic QRIS generation into `app/api/orders/route.ts` with nominal and unique code locking
+- [x] Task 59.4: Render crisp dynamic QRIS barcode in `PaymentQrContent.tsx`
+- [x] Task 59.5: Add QRIS generator unit test suite (`scripts/test-qris-generator.mjs`, 7/7 PASS)
+- [x] Task 59.6: Verify 100% compliance: 124 source files <= 200 LOC, all test suites pass (qris, receipt, security, e2e, pricing, billing, UI)
+
 
 
 

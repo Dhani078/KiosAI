@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { readSessionUserId, unauthorized } from "@/lib/session";
 import { createDokuCheckout } from "@/lib/doku";
+import { generateDynamicQris, getQrisRenderUrl } from "@/lib/qris";
 import crypto from "crypto";
 
 export const runtime = "nodejs";
@@ -81,6 +82,9 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    const dynamicQris = pkg.amountIdr > 0 ? generateDynamicQris(finalAmount) : "";
+    const qrisUrl = dynamicQris ? getQrisRenderUrl(dynamicQris, 280) : "";
+
     return NextResponse.json({
       orderId,
       tier: pkg.tier,
@@ -90,7 +94,8 @@ export async function POST(req: NextRequest) {
       uniqueCode,
       tokensPurchased: pkg.tokens,
       paymentUrl: dokuPaymentUrl,
-      qrisUrl: dokuPaymentUrl || `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=KIOSAI-QRIS-${orderId}`,
+      qrisUrl: qrisUrl || dokuPaymentUrl || `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=KIOSAI-QRIS-${orderId}`,
+      qrisString: dynamicQris,
       status: "pending",
     });
   } catch (err: any) {
