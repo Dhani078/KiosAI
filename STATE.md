@@ -6,7 +6,7 @@
 - **Current Status**: Complete & Fully Verified (Phase 0 - 59)
 - **Upstream Router**: 9Router local (`http://127.0.0.1:20128`) dengan 71 model aktif terverifikasi 5x audit (5 Free, 66 Pro)
 - **Database**: TiDB Cloud Serverless (region Tokyo/Singapore, MySQL-compatible HTTP). Host & kredensial HANYA di `.env` lokal `DATABASE_URL` (jangan ditulis di dokumen repo).
-- **Last Commit**: `1abbd79` — feat(ai): implement anti-prompt-leakage defense shield and add Cursor, Manus, and Claude Code persona presets
+- **Last Commit**: `dbfb341` — feat(payment): integrate DOKU Checkout API and HMAC-SHA256 notification webhook verification
 - **Security Baseline**: Sesi cookie HttpOnly bertanda tangan HMAC-SHA256, IDOR dibasmi, webhook fail-closed, admin password dirotasi.
 
 ## Dokumen Navigasi Cepat

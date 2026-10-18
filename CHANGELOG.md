@@ -7,7 +7,7 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
-### `pending` — feat(payment): integrate DOKU Checkout API and HMAC-SHA256 notification webhook verification
+### `dbfb341` — feat(payment): integrate DOKU Checkout API and HMAC-SHA256 notification webhook verification
 
 **Integrasi Payment Gateway Resmi DOKU Checkout & Verifikasi Webhook HMAC**
 - **Modul Integrasi DOKU (`lib/doku.ts`)**:
