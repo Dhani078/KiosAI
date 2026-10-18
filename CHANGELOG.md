@@ -7,7 +7,7 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
-### `pending` — feat(payment): implement EMVCo Dynamic QRIS Generator for DANA with tag 54 nominal locking
+### `ed04d30` — feat(payment): implement EMVCo Dynamic QRIS Generator for DANA with tag 54 nominal locking
 
 **Generator QRIS Dinamis Standar EMVCo Resmi Merchant DANA "Dhani"**
 - **Ekstraksi & Dekoder QRIS Asli**:

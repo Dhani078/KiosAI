@@ -6,7 +6,7 @@
 - **Current Status**: Complete & Fully Verified (Phase 0 - 59)
 - **Upstream Router**: 9Router local (`http://127.0.0.1:20128`) dengan 71 model aktif terverifikasi 5x audit (5 Free, 66 Pro)
 - **Database**: TiDB Cloud Serverless (region Tokyo/Singapore, MySQL-compatible HTTP). Host & kredensial HANYA di `.env` lokal `DATABASE_URL` (jangan ditulis di dokumen repo).
-- **Last Commit**: `bbbbe1c` — feat(ai): implement dual-key pool and 6-tier model waterfall for AI receipt engine
+- **Last Commit**: `ed04d30` — feat(payment): implement EMVCo Dynamic QRIS Generator for DANA with tag 54 nominal locking
 - **Security Baseline**: Sesi cookie HttpOnly bertanda tangan HMAC-SHA256, IDOR dibasmi, webhook fail-closed, admin password dirotasi.
 
 ## Dokumen Navigasi Cepat
