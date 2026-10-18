@@ -59,9 +59,11 @@ async function runMigration() {
       package_tier VARCHAR(20) NOT NULL,
       payment_method VARCHAR(32) DEFAULT 'qris',
       status VARCHAR(20) DEFAULT 'pending',
+      payment_ref VARCHAR(128) NULL,
       paid_at TIMESTAMP NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      INDEX idx_status (status)
+      INDEX idx_status (status),
+      INDEX idx_orders_payment_ref (payment_ref)
     )
   `);
   console.log('Table orders verified.');

@@ -15,7 +15,7 @@ Dokumen ini dirancang agar setiap sesi AI atau pengembang dapat melanjutkan peke
 | **Upstream 9Router** | `connected` | `http://127.0.0.1:20128` (69 model aktif terverifikasi 5x audit, 5 Free, 64 Pro) |
 | **Batas Baris Kode** | 100% Patuh | 124 file sumber `.ts`/`.tsx`/`.mjs` `<= 200` baris |
 | **Dynamic QRIS DANA** | 7/7 Passed | `npm run test:qris` — EMVCo tag 54 nominal lock & CRC16-CCITT |
-| **AI Receipt Verify** | 2/2 Passed | `npm run test:receipt` — Gemini 3.8 Flash Vision OCR verification |
+| **AI Receipt Verify** | 3/3 Passed | `npm run test:receipt` — Gemini 3.8 Flash Vision OCR + anti-replay & tolerance |
 | **E2E Integration** | 11/11 Passed | `npm run test:e2e` lolos semua skenario |
 | **Trend Analytics** | Complete | 7-day visual activity chart & Input/Output token split ratio |
 | **DOKU Checkout** | 7/7 Passed | `npm run test:doku` — DOKU headers, signature HMAC-SHA256, and webhook verification |

@@ -1,7 +1,7 @@
 /**
  * AI Receipt Verifier with Resilient Multi-Key & Waterfall Model Pool.
  * Pool: Gemini 3.8 -> 3.7 -> 3.6 -> 3.5 -> 3.1 Flash Lite (500 RPD) x 2 API Keys.
- * Menjamin ketersediaan tinggi saat banyak user checkout bersamaan.
+ * Mendukung parsing angka rupiah, validasi toleransi nominal, dan anti-fraud.
  */
 
 const FALLBACK_MODELS = [
@@ -17,6 +17,7 @@ export interface ReceiptVerifyParams {
   imageBase64: string;
   mimeType: string;
   expectedAmount: number;
+  expectedBaseAmount?: number;
 }
 
 export interface ReceiptVerifyResult {
@@ -41,12 +42,16 @@ export async function verifyReceiptWithAI(params: ReceiptVerifyParams): Promise<
   }
 
   const prompt = `Anda adalah sistem audit keuangan cerdas (OCR Receipt Validator).
-Tugas Anda adalah memverifikasi bukti struk transfer/pembayaran QRIS atau e-wallet (DANA, BCA, GoPay, OVO, dll).
+Tugas Anda adalah memeriksa bukti struk transfer/pembayaran QRIS atau e-wallet (DANA, BCA, GoPay, OVO, ShopeePay, Mandiri, BRI, dll).
+PENTING DALAM MEMBACA RUPIAH:
+- Tanda titik (.) adalah pemisah ribuan (contoh: 25.143 artinya 25143).
+- Tanda koma (,) adalah desimal sen. Hiraukan desimal sen jika ada.
+- Jangan tertukar antara biaya admin/biaya layanan dengan total transfer bersih ke penerima.
 Ekstrak data transaksi dengan teliti dalam format JSON murni:
 {
-  "amount": <angka bulat integer total nominal rupiah yang ditransfer/dibayar, tanpa titik atau Rp, contoh 25143>,
+  "amount": <angka bulat integer total nominal rupiah yang dibayar/ditransfer, tanpa titik atau Rp, contoh 25143>,
   "transactionId": "<nomor referensi / ID transaksi / No. Transaksi jika tertera>",
-  "isSuccess": <boolean true jika status transaksi sukses/berhasil/selesai, false jika gagal/pending>,
+  "isSuccess": <boolean true jika status transaksi sukses/berhasil/selesai, false jika gagal/pending/menunggu>,
   "recipient": "<nama penerima atau nama toko penerima jika ada>"
 }
 Jawab HANYA objek JSON tersebut tanpa pembungkus markdown dan tanpa komentar tambahan.`;
@@ -68,7 +73,6 @@ Jawab HANYA objek JSON tersebut tanpa pembungkus markdown dan tanpa komentar tam
   let lastStatus = 0;
   let lastErrorText = "";
 
-  // Waterfall: loop through model hierarchy and dual keys pool
   for (const model of FALLBACK_MODELS) {
     for (const key of keys) {
       try {
@@ -82,9 +86,8 @@ Jawab HANYA objek JSON tersebut tanpa pembungkus markdown dan tanpa komentar tam
         lastStatus = res.status;
         if (!res.ok) {
           lastErrorText = await res.text().catch(() => "");
-          // Jika terkena limit (429/503), lanjut ke key berikutnya atau model berikutnya
           if (res.status === 429 || res.status === 503) {
-            await new Promise((r) => setTimeout(r, 400));
+            await new Promise((r) => setTimeout(r, 350));
             continue;
           }
           continue;
@@ -105,11 +108,35 @@ Jawab HANYA objek JSON tersebut tanpa pembungkus markdown dan tanpa komentar tam
           return { valid: false, error: "Nominal pembayaran tidak terbaca dengan jelas pada bukti transfer." };
         }
 
-        if (extractedAmount !== params.expectedAmount) {
+        // Cek penerima jika terdeteksi (nama QRIS resmi = 'Dhani')
+        const rec = String(parsed.recipient || "").toLowerCase();
+        if (rec && !rec.includes("dhani") && !rec.includes("tokoai") && !rec.includes("qris") && !rec.includes("dana")) {
           return {
             valid: false,
             amount: extractedAmount,
-            error: `Nominal pada struk (Rp ${extractedAmount.toLocaleString("id-ID")}) tidak cocok dengan tagihan (Rp ${params.expectedAmount.toLocaleString("id-ID")}). Pastikan transfer tepat sampai digit kode unik.`,
+            recipient: parsed.recipient,
+            error: `Penerima pada bukti transfer (${parsed.recipient}) tidak cocok dengan merchant resmi (Dhani).`,
+          };
+        }
+
+        // Validasi nominal cerdas: cocok dengan tagihan unik ATAU harga dasar paket
+        const baseAmount = params.expectedBaseAmount || params.expectedAmount;
+        const matchesExact = extractedAmount === params.expectedAmount;
+        const matchesBase = extractedAmount === baseAmount;
+        const withinTolerance = extractedAmount >= baseAmount && extractedAmount <= params.expectedAmount + 50;
+
+        if (!matchesExact && !matchesBase && !withinTolerance) {
+          if (extractedAmount < baseAmount) {
+            return {
+              valid: false,
+              amount: extractedAmount,
+              error: `Nominal pada struk (Rp ${extractedAmount.toLocaleString("id-ID")}) kurang dari harga paket (Rp ${baseAmount.toLocaleString("id-ID")}).`,
+            };
+          }
+          return {
+            valid: false,
+            amount: extractedAmount,
+            error: `Nominal pada struk (Rp ${extractedAmount.toLocaleString("id-ID")}) tidak cocok dengan tagihan (Rp ${params.expectedAmount.toLocaleString("id-ID")}).`,
           };
         }
 
@@ -126,11 +153,10 @@ Jawab HANYA objek JSON tersebut tanpa pembungkus markdown dan tanpa komentar tam
     }
   }
 
-  // Jika seluruh pool model & keys limit karena lonjakan bersamaan
   if (lastStatus === 429 || lastStatus === 503) {
     return {
       valid: false,
-      error: "Antrean verifikasi AI sedang padat (lonjakan request bersamaan). Coba klik tombol unggah sekali lagi, atau gunakan tombol 'Saya sudah bayar'.",
+      error: "Antrean verifikasi AI sedang padat. Coba klik tombol verifikasi sekali lagi atau gunakan tombol 'Saya sudah bayar'.",
     };
   }
 

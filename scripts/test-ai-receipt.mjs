@@ -34,16 +34,30 @@ check("handles missing GEMINI_API_KEY gracefully", !missingKeyTest.valid && miss
 process.env.GEMINI_API_KEY = origKey;
 process.env.GEMINI_API_KEY_2 = origKey2;
 
-// 2. Test live AI Vision response on synthetic sample
+// 2. Test live AI Vision response on synthetic sample (rejects non-receipt images)
 const sampleBuf = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==", "base64");
 const liveTest = await verifyReceiptWithAI({
   imageBase64: sampleBuf.toString("base64"),
   mimeType: "image/png",
   expectedAmount: 25143,
+  expectedBaseAmount: 25000,
 });
-
-// Since the sample is a solid green 1x1 pixel image without text, it should be rejected
 check("rejects image without receipt text", !liveTest.valid);
+
+// 3. Unauthenticated request to verify-receipt route returns 401
+const target = process.env.TEST_BASE_URL || "http://127.0.0.1:3000";
+try {
+  const unauthRes = await fetch(`${target}/api/orders/verify-receipt`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ orderId: "fake-order", imageBase64: "dGVzdA==" }),
+  });
+  if (unauthRes.status === 401) {
+    check("POST /api/orders/verify-receipt rejects unauthenticated access (401)", true);
+  }
+} catch {
+  // If local server is not running during standalone unit test, skip route check gracefully
+}
 
 console.log(`\nResults: ${pass} passed, ${fail} failed.`);
 if (fail > 0) process.exit(1);

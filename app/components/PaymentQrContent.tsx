@@ -1,6 +1,7 @@
 "use client";
 
-import { Clock3, CheckCheck, Camera } from "lucide-react";
+import { useState } from "react";
+import { Clock3, CheckCheck, Camera, Copy, Check } from "lucide-react";
 import { Badge, Button } from "./ui";
 
 export function PaymentQrContent({
@@ -30,25 +31,45 @@ export function PaymentQrContent({
   onUploadReceipt: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onConfirmPay: () => void;
 }) {
+  const [copiedAmount, setCopiedAmount] = useState(false);
   const displayAmount = exactAmount || Number(basePrice.replace(/\D/g, "")) || 0;
+
+  const handleCopyAmount = () => {
+    navigator.clipboard?.writeText(String(displayAmount));
+    setCopiedAmount(true);
+    setTimeout(() => setCopiedAmount(false), 2000);
+  };
 
   return (
     <>
       <span className="eyebrow">CHECKOUT / QRIS</span>
       <h2>Scan. Bayar. Mulai.</h2>
-      <p>Transfer tepat sampai 3 digit terakhir agar AI memverifikasi otomatis.</p>
+      <p style={{ margin: "4px 0 12px", fontSize: "12px", color: "var(--text-muted)" }}>
+        Scan dengan aplikasi perbankan atau e-wallet apa saja (BCA, Mandiri, BRI, DANA, GoPay, OVO, ShopeePay).
+      </p>
 
-      <div className="payment-summary">
+      <div className="payment-summary" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <Badge tier="PRO" />
-        <div style={{ textAlign: "right" }}>
-          <strong style={{ color: "var(--primary)", fontSize: "16px", fontFamily: "JetBrains Mono" }}>
-            Rp {displayAmount.toLocaleString("id-ID")}
-          </strong>
-          {uniqueCode > 0 && (
-            <small style={{ display: "block", fontSize: "10px", color: "var(--text-muted)" }}>
-              Termasuk kode unik +{uniqueCode}
-            </small>
-          )}
+        <div style={{ textAlign: "right", display: "flex", alignItems: "center", gap: "8px" }}>
+          <div>
+            <strong style={{ color: "var(--primary)", fontSize: "16px", fontFamily: "JetBrains Mono" }}>
+              Rp {displayAmount.toLocaleString("id-ID")}
+            </strong>
+            {uniqueCode > 0 && (
+              <small style={{ display: "block", fontSize: "10px", color: "var(--text-muted)" }}>
+                Termasuk kode unik +{uniqueCode}
+              </small>
+            )}
+          </div>
+          <button
+            type="button"
+            onClick={handleCopyAmount}
+            title="Salin nominal pembayaran"
+            style={{ padding: "4px 8px", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "4px", fontSize: "11px", color: "var(--text)", cursor: "pointer", display: "inline-flex", alignItems: "center", gap: "4px" }}
+          >
+            {copiedAmount ? <Check size={12} style={{ color: "var(--success)" }} /> : <Copy size={12} />}
+            {copiedAmount ? "Disalin" : "Salin"}
+          </button>
         </div>
       </div>
 
@@ -71,7 +92,7 @@ export function PaymentQrContent({
             })}
           </svg>
         )}
-        <small>ORDER ID: {orderId ? orderId.slice(0, 18) : "Membuat order..."}</small>
+        <small>MERCHANT: DHANI (DANA) · ORDER: {orderId ? orderId.slice(0, 16) : "Membuat order..."}</small>
       </div>
 
       <div className="countdown">
@@ -79,12 +100,15 @@ export function PaymentQrContent({
       </div>
 
       {/* AI Receipt Upload Card */}
-      <div style={{ margin: "8px 0", padding: "10px 12px", background: "var(--canvas)", border: "1px dashed var(--primary)", borderRadius: "var(--radius-input)", textAlign: "center" }}>
+      <div style={{ margin: "8px 0", padding: "12px", background: "var(--canvas)", border: "1px dashed var(--primary)", borderRadius: "var(--radius-input)", textAlign: "center" }}>
         <label style={{ cursor: aiLoading ? "wait" : "pointer", display: "inline-flex", alignItems: "center", gap: "6px", fontSize: "12px", color: "var(--primary)", fontWeight: 600 }}>
           <Camera size={15} /> {aiLoading ? "AI Sedang Memeriksa Struk..." : "Unggah Bukti Struk (AI Auto-Verify)"}
           <input type="file" accept="image/*" disabled={aiLoading || !orderId} onChange={onUploadReceipt} style={{ display: "none" }} />
         </label>
-        {aiError && <p style={{ color: "var(--danger, #ef4444)", fontSize: "11px", margin: "4px 0 0" }}>{aiError}</p>}
+        <p style={{ margin: "4px 0 0", fontSize: "11px", color: "var(--text-muted)" }}>
+          Foto struk transfer Anda. AI memverifikasi nominal & status dalam 1–2 detik.
+        </p>
+        {aiError && <p style={{ color: "var(--danger, #ef4444)", fontSize: "11px", margin: "6px 0 0" }}>{aiError}</p>}
       </div>
 
       {paymentUrl && (

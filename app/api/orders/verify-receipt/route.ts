@@ -5,6 +5,15 @@ import { verifyReceiptWithAI } from "@/lib/receipt-verifier";
 
 export const runtime = "nodejs";
 
+const BASE_AMOUNTS: Record<string, number> = {
+  pro_25k: 25000,
+  pro_100k: 100000,
+  pro_150k: 150000,
+  bronze: 25000,
+  silver: 100000,
+  gold: 150000,
+};
+
 export async function POST(req: NextRequest) {
   const sessionUserId = readSessionUserId(req);
   if (!sessionUserId) return unauthorized();
@@ -14,7 +23,7 @@ export async function POST(req: NextRequest) {
     const { orderId, imageBase64, mimeType } = body;
 
     if (!orderId || !imageBase64) {
-      return NextResponse.json({ error: "orderId dan gambar bukti struk (imageBase64) wajib diisi." }, { status: 400 });
+      return NextResponse.json({ error: "orderId dan bukti struk (imageBase64) wajib diisi." }, { status: 400 });
     }
 
     const order = await db.queryOne<any>(
@@ -23,31 +32,47 @@ export async function POST(req: NextRequest) {
     );
 
     if (!order || order.user_id !== sessionUserId) {
-      return NextResponse.json({ error: "Order tidak ditemukan pada akun ini." }, { status: 404 });
+      return NextResponse.json({ error: "Pesanan tidak ditemukan pada akun ini." }, { status: 404 });
     }
 
     if (order.status === "paid") {
-      return NextResponse.json({ success: true, message: "Order sudah terverifikasi dan berstatus lunas.", order });
+      return NextResponse.json({ success: true, message: "Pesanan ini sudah lunas.", order });
     }
 
-    // Panggil AI Vision OCR
+    const baseAmount = BASE_AMOUNTS[order.package_tier] || Number(order.amount_idr);
+
+    // Verifikasi via AI Multimodal OCR
     const verification = await verifyReceiptWithAI({
       imageBase64,
       mimeType: mimeType || "image/jpeg",
       expectedAmount: Number(order.amount_idr),
+      expectedBaseAmount: baseAmount,
     });
 
     if (!verification.valid) {
       return NextResponse.json({ error: verification.error || "Bukti transfer tidak valid." }, { status: 400 });
     }
 
-    // Tandai order paid di database
+    // Anti-Replay: Cek apakah ID transaksi ini sudah pernah digunakan untuk pesanan lain
+    if (verification.transactionId && verification.transactionId.length >= 5) {
+      const existing = await db.queryOne<any>(
+        `SELECT id FROM kiosai.orders WHERE payment_ref = ? AND status = 'paid' LIMIT 1`,
+        [verification.transactionId]
+      );
+      if (existing) {
+        return NextResponse.json({
+          error: "Bukti transfer ini sudah pernah digunakan untuk pesanan lain (Anti-Duplicate Protection).",
+        }, { status: 400 });
+      }
+    }
+
+    // Tandai pesanan lunas dan simpan nomor referensi
     await db.execute(
-      `UPDATE kiosai.orders SET status = 'paid', paid_at = NOW() WHERE id = ?`,
-      [orderId]
+      `UPDATE kiosai.orders SET status = 'paid', paid_at = NOW(), payment_ref = ? WHERE id = ?`,
+      [verification.transactionId || null, orderId]
     );
 
-    // Tambah saldo token, cairkan locked bonus dari brankas, dan upgrade tier ke Pro
+    // Kredit token, buka bonus brankas, dan upgrade tier ke Pro
     await db.execute(
       `UPDATE kiosai.users 
        SET balance_tokens = balance_tokens + ? + LEAST(locked_bonus_tokens, ?),
@@ -60,9 +85,9 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: `Bukti transfer Rp ${Number(order.amount_idr).toLocaleString("id-ID")} terverifikasi oleh AI Vision! ${Number(order.tokens_purchased).toLocaleString("id-ID")} token telah ditambahkan.`,
+      message: `Bukti transfer Rp ${Number(verification.amount || order.amount_idr).toLocaleString("id-ID")} berhasil diverifikasi! ${Number(order.tokens_purchased).toLocaleString("id-ID")} token telah ditambahkan.`,
       tokensAdded: order.tokens_purchased,
-      verifiedBy: "gemini-3.8-flash",
+      verifiedBy: verification.modelUsed || "gemini-vision",
       transactionId: verification.transactionId || null,
     });
   } catch (err: any) {

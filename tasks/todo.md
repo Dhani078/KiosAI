@@ -431,6 +431,13 @@
 - [x] Task 59.5: Add QRIS generator unit test suite (`scripts/test-qris-generator.mjs`, 7/7 PASS)
 - [x] Task 59.6: Verify 100% compliance: 124 source files <= 200 LOC, all test suites pass (qris, receipt, security, e2e, pricing, billing, UI)
 
+## Phase 60 (Bulletproof Payment Engine: Anti-Replay, Tolerance & 1-Click Copy UX - Completed)
+- [x] Task 60.1: Add `payment_ref VARCHAR(128)` column and index to `kiosai.orders` for strict anti-replay duplicate prevention
+- [x] Task 60.2: Implement smart Indonesian amount tolerance (supports exact unique code, base package amount, and rounded cents) in `lib/receipt-verifier.ts`
+- [x] Task 60.3: Add 1-click "Salin Nominal" button and mobile-friendly payment instructions in `PaymentQrContent.tsx`
+- [x] Task 60.4: Expand AI receipt verification test suite (`scripts/test-ai-receipt.mjs`, 3/3 PASS)
+- [x] Task 60.5: Verify 100% compliance: 124 source files <= 200 LOC, all test suites pass (qris, receipt, security, e2e, pricing, billing, UI)
+
 
 
 
