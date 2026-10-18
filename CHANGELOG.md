@@ -7,7 +7,7 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
-### `[uncommitted]` - feat(payment): add admin test package Rp 100 with dynamic QRIS EMVCo Tag 54
+### `e63b5e9` - feat(payment): add admin test package Rp 100 with dynamic QRIS EMVCo Tag 54
 
 **Paket Uji Coba QRIS Dinamis Khusus Admin (Rp 100)**
 - `ADMIN_TEST_PACKAGE`: Rp 100 pas tanpa kode unik acak, khusus akun admin `adminfordhani`.
