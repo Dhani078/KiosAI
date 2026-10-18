@@ -54,7 +54,7 @@ export function useKiosData() {
   // Orders History State
   const [orders, setOrders] = useState<any[]>([]);
 
-  // Active user id — set by AuthModal on login. No demo fallback: AuthGuard gates /dashboard.
+  // Active user id: set by AuthModal on login. No demo fallback: AuthGuard gates /dashboard.
   const getActiveUserId = () => {
     if (typeof window === "undefined") return "";
     return localStorage.getItem("kiosai_user_id") || "";

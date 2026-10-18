@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
     if (!isDokuValid && !isInternalValid) {
       if (!isDoku && !WEBHOOK_SECRET) {
         return NextResponse.json(
-          { error: "PAYMENT_WEBHOOK_SECRET belum dikonfigurasi — webhook dinonaktifkan." },
+          { error: "PAYMENT_WEBHOOK_SECRET belum dikonfigurasi: webhook dinonaktifkan." },
           { status: 503 }
         );
       }

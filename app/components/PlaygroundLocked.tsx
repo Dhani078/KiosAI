@@ -17,7 +17,7 @@ export function PlaygroundLocked({
       <LockKeyhole size={32} />
       <h2>Model ini khusus Pro Tier.</h2>
       <p>
-        403 · tier_restricted — Free tier hanya membuka Atria Dawn. Beli salah satu paket Pro untuk membuka {model} dan seluruh model AI lainnya.
+        403 · tier_restricted: Free tier hanya membuka Atria Dawn. Beli salah satu paket Pro untuk membuka {model} dan seluruh model AI lainnya.
       </p>
       <Button kind="primary" onClick={onNavigatePackages}>
         Beli Paket Pro <ArrowRight size={16} />

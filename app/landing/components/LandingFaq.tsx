@@ -21,7 +21,7 @@ export function LandingFaq() {
     },
     {
       q: "Bagaimana cara kerja tarif token?",
-      a: "Tiap model punya tarif Input / Output ($ per 1 juta token) yang tampil di katalog. Token terpotong mengikuti tarif model yang Anda pakai — model murah hemat saldo, model flagship memakai lebih banyak.",
+      a: "Tiap model punya tarif Input / Output ($ per 1 juta token) yang tampil di katalog. Token terpotong mengikuti tarif model yang Anda pakai. Model hemat saldo, model flagship memakai proporsional.",
     },
     {
       q: "Apakah ada bonus untuk pendaftaran akun baru?",
@@ -31,11 +31,13 @@ export function LandingFaq() {
 
   return (
     <section id="faq" style={{ padding: "80px 24px", maxWidth: "800px", margin: "0 auto" }}>
-      <div style={{ textAlign: "center", marginBottom: "48px" }}>
-        <span className="eyebrow" style={{ color: "var(--primary)" }}>PERTANYAAN UMUM</span>
-        <h2 style={{ fontSize: "clamp(24px, 3.5vw, 36px)", marginTop: "8px", fontWeight: 700 }}>
-          Kerap Ditanyakan oleh Developer
+      <div style={{ textAlign: "center", marginBottom: "40px" }}>
+        <h2 style={{ fontSize: "clamp(26px, 3.5vw, 38px)", letterSpacing: "-0.8px", fontWeight: 700 }}>
+          Pertanyaan Kerap Ditanyakan Developer
         </h2>
+        <p className="muted" style={{ maxWidth: "560px", margin: "12px auto 0", fontSize: "15px" }}>
+          Jawaban langsung seputar akun, gateway, dan pembayaran token.
+        </p>
       </div>
 
       <div className="questions">
@@ -55,4 +57,5 @@ export function LandingFaq() {
     </section>
   );
 }
+
 export default LandingFaq;

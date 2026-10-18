@@ -7,7 +7,7 @@ import { readSessionUserId, unauthorized } from "@/lib/session";
 export const runtime = "nodejs";
 
 export async function GET(req: NextRequest) {
-  // Sesi cookie bertanda tangan — tidak ada lagi lookup by ?id= dari klien.
+  // Sesi cookie bertanda tangan: tidak ada lagi lookup by ?id= dari klien.
   const userId = readSessionUserId(req);
   if (!userId) return unauthorized();
 

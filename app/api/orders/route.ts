@@ -12,7 +12,7 @@ const PACKAGES: Record<string, { amountIdr: number; tokens: number; name: string
   pro_25k: { amountIdr: 25000, tokens: 100000000, name: "Pro 25K", tier: "pro" },
   pro_100k: { amountIdr: 100000, tokens: 600000000, name: "Pro 100K", tier: "pro" },
   pro_150k: { amountIdr: 150000, tokens: 1000000000, name: "Pro 150K", tier: "pro" },
-  // Legacy aliases — orders created before the 2-tier rename.
+  // Legacy aliases: orders created before the 2-tier rename.
   bronze: { amountIdr: 25000, tokens: 100000000, name: "Pro 25K", tier: "pro" },
   silver: { amountIdr: 100000, tokens: 600000000, name: "Pro 100K", tier: "pro" },
   gold: { amountIdr: 150000, tokens: 1000000000, name: "Pro 150K", tier: "pro" },

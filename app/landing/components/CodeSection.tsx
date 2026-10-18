@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Terminal, Copy, Check } from "lucide-react";
+import { Copy, Check } from "lucide-react";
 import { Button } from "@/app/components/ui";
 
 export function CodeSection() {
-  const [tab, setTab] = useState<"cURL" | "Python" | "Node.js">("Python");
+  const [tab, setTab] = useState<"Python" | "Node.js" | "cURL">("Python");
   const [copied, setCopied] = useState(false);
 
   const snippets = {
@@ -13,7 +13,7 @@ export function CodeSection() {
 
 # Cukup arahkan baseURL ke TokoAI dan gunakan API key Anda
 client = OpenAI(
-    api_key="toko-xxxxxxxxxxxxxxxxxxxxxxxx",
+    api_key="kios-live-xxxx",
     base_url="https://tokoai.my.id/v1"
 )
 
@@ -28,7 +28,7 @@ for chunk in response:
     "Node.js": `import OpenAI from "openai";
 
 const client = new OpenAI({
-  apiKey: ***
+  apiKey: "kios-live-xxxx",
   baseURL: "https://tokoai.my.id/v1"
 });
 
@@ -42,7 +42,7 @@ for await (const chunk of stream) {
   process.stdout.write(chunk.choices[0]?.delta?.content || "");
 }`,
     cURL: `curl https://tokoai.my.id/v1/chat/completions \\
-  -H "Authorization: Bearer ***" \\
+  -H "Authorization: Bearer kios-live-xxxx" \\
   -H "Content-Type: application/json" \\
   -d '{
     "model": "deepseek-v4.1-flash",
@@ -59,13 +59,13 @@ for await (const chunk of stream) {
 
   return (
     <section id="integrasi" style={{ padding: "80px 24px", maxWidth: "1000px", margin: "0 auto" }}>
-      <div style={{ textAlign: "center", marginBottom: "40px" }}>
-        <span className="eyebrow" style={{ color: "var(--primary)" }}>INTEGRASI SUPER MUDAH</span>
-        <h2 style={{ fontSize: "clamp(24px, 3.5vw, 36px)", marginTop: "8px", fontWeight: 700 }}>
+      <div style={{ textAlign: "center", marginBottom: "36px" }}>
+        <span className="eyebrow" style={{ color: "var(--primary)" }}>INTEGRASI SDK</span>
+        <h2 style={{ fontSize: "clamp(26px, 3.5vw, 38px)", letterSpacing: "-0.8px", marginTop: "8px", fontWeight: 700 }}>
           Hanya Perlu 3 Baris Perubahan Kode
         </h2>
         <p className="muted" style={{ maxWidth: "560px", margin: "12px auto 0", fontSize: "15px" }}>
-          Tidak perlu menginstall SDK baru. Library OpenAI yang sudah Anda miliki langsung kompatibel.
+          Tidak perlu menginstall library tambahan. SDK resmi OpenAI yang sudah Anda pakai langsung terhubung.
         </p>
       </div>
 
@@ -96,4 +96,5 @@ for await (const chunk of stream) {
     </section>
   );
 }
+
 export default CodeSection;

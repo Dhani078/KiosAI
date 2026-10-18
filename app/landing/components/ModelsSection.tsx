@@ -2,19 +2,25 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Cpu } from "lucide-react";
+import { ArrowRight, Cpu, Copy, Check } from "lucide-react";
 import { MODELS, TIER_COLORS } from "./modelCatalogData";
 
 export function ModelsSection() {
   const [filter, setFilter] = useState<string>("Semua");
+  const [copiedId, setCopiedId] = useState<string | null>(null);
   const providers = ["Semua", "Atria", "DeepSeek", "Anthropic", "OpenAI", "Google", "Meta"];
   const filtered = filter === "Semua" ? MODELS : MODELS.filter((m) => m.provider === filter);
 
+  const handleCopyId = (id: string) => {
+    navigator.clipboard.writeText(id);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 1800);
+  };
+
   return (
     <section id="model" style={{ padding: "80px 24px", maxWidth: "1100px", margin: "0 auto" }}>
-      <div style={{ textAlign: "center", marginBottom: "40px" }}>
-        <span className="eyebrow" style={{ color: "var(--primary)" }}>KATALOG MODEL AI</span>
-        <h2 style={{ fontSize: "clamp(24px, 3.5vw, 36px)", marginTop: "8px", fontWeight: 700 }}>
+      <div style={{ textAlign: "center", marginBottom: "36px" }}>
+        <h2 style={{ fontSize: "clamp(26px, 3.5vw, 38px)", letterSpacing: "-0.8px", fontWeight: 700 }}>
           Satu Gateway untuk Beragam Model Mutakhir
         </h2>
         <p className="muted" style={{ maxWidth: "620px", margin: "12px auto 0", fontSize: "15px" }}>
@@ -22,7 +28,7 @@ export function ModelsSection() {
         </p>
       </div>
 
-      <div style={{ display: "flex", gap: "8px", justifyContent: "center", flexWrap: "wrap", marginBottom: "36px" }}>
+      <div style={{ display: "flex", gap: "8px", justifyContent: "center", flexWrap: "wrap", marginBottom: "32px" }}>
         {providers.map((p) => (
           <button
             key={p}
@@ -36,7 +42,7 @@ export function ModelsSection() {
         ))}
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(310px, 1fr))", gap: "18px", marginBottom: "40px" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(310px, 1fr))", gap: "18px", marginBottom: "36px" }}>
         {filtered.map((m) => {
           const tc = TIER_COLORS[m.tier];
           return (
@@ -59,7 +65,27 @@ export function ModelsSection() {
                     {m.provider}
                   </span>
                   <h3 style={{ fontSize: "17px", fontWeight: 600, marginTop: "2px" }}>{m.name}</h3>
-                  <code style={{ fontSize: "11px", color: "var(--text-muted)", display: "block", marginTop: "2px" }}>{m.id}</code>
+                  <button
+                    type="button"
+                    onClick={() => handleCopyId(m.id)}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      padding: 0,
+                      marginTop: "3px",
+                      cursor: "pointer",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "5px",
+                      color: copiedId === m.id ? "var(--success)" : "var(--text-muted)",
+                      fontSize: "11px",
+                      fontFamily: "'JetBrains Mono', monospace",
+                    }}
+                    title="Klik untuk salin model ID"
+                  >
+                    <code>{m.id}</code>
+                    {copiedId === m.id ? <Check size={12} /> : <Copy size={12} />}
+                  </button>
                 </div>
                 <span
                   style={{
@@ -73,7 +99,7 @@ export function ModelsSection() {
                     textTransform: "uppercase",
                   }}
                 >
-                  {m.tier} • {m.pricing}
+                  {m.tier} · {m.pricing}
                 </span>
               </div>
 
@@ -118,4 +144,5 @@ export function ModelsSection() {
     </section>
   );
 }
+
 export default ModelsSection;

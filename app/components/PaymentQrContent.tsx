@@ -106,7 +106,7 @@ export function PaymentQrContent({
           <input type="file" accept="image/*" disabled={aiLoading || !orderId} onChange={onUploadReceipt} style={{ display: "none" }} />
         </label>
         <p style={{ margin: "4px 0 0", fontSize: "11px", color: "var(--text-muted)" }}>
-          Foto struk transfer Anda. AI memverifikasi nominal & status dalam 1–2 detik.
+          Foto struk transfer Anda. AI memverifikasi nominal & status dalam 1-2 detik.
         </p>
         {aiError && <p style={{ color: "var(--danger, #ef4444)", fontSize: "11px", margin: "6px 0 0" }}>{aiError}</p>}
       </div>

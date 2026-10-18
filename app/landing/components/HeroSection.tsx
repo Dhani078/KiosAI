@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { ArrowRight, ShieldCheck, Zap, Terminal, Sparkles } from "lucide-react";
+import HeroTerminal from "./HeroTerminal";
 
 export function HeroSection() {
   return (
     <section
       style={{
-        padding: "80px 24px 60px",
-        maxWidth: "1000px",
+        padding: "60px 24px 40px",
+        maxWidth: "1040px",
         margin: "0 auto",
         textAlign: "center",
       }}
@@ -24,7 +25,7 @@ export function HeroSection() {
           border: "1px solid var(--border)",
           fontSize: "12px",
           color: "var(--primary)",
-          marginBottom: "24px",
+          marginBottom: "20px",
         }}
       >
         <Sparkles size={14} />
@@ -37,7 +38,7 @@ export function HeroSection() {
           letterSpacing: "-1.5px",
           lineHeight: 1.15,
           fontWeight: 700,
-          marginBottom: "20px",
+          marginBottom: "16px",
         }}
       >
         Satu Kunci untuk Semua Model AI.{" "}
@@ -46,10 +47,10 @@ export function HeroSection() {
 
       <p
         style={{
-          fontSize: "clamp(15px, 2vw, 18px)",
+          fontSize: "clamp(15px, 2vw, 17px)",
           color: "var(--text-muted)",
-          maxWidth: "680px",
-          margin: "0 auto 36px",
+          maxWidth: "640px",
+          margin: "0 auto 30px",
           lineHeight: 1.6,
         }}
       >
@@ -62,7 +63,7 @@ export function HeroSection() {
           gap: "14px",
           justifyContent: "center",
           flexWrap: "wrap",
-          marginBottom: "48px",
+          marginBottom: "36px",
         }}
       >
         <Link
@@ -70,8 +71,8 @@ export function HeroSection() {
           className="button primary"
           style={{
             fontSize: "15px",
-            height: "48px",
-            padding: "0 28px",
+            height: "46px",
+            padding: "0 26px",
             textDecoration: "none",
             display: "inline-flex",
             alignItems: "center",
@@ -87,8 +88,8 @@ export function HeroSection() {
           className="button secondary"
           style={{
             fontSize: "15px",
-            height: "48px",
-            padding: "0 24px",
+            height: "46px",
+            padding: "0 22px",
             textDecoration: "none",
             display: "inline-flex",
             alignItems: "center",
@@ -96,9 +97,11 @@ export function HeroSection() {
           }}
         >
           <Terminal size={16} />
-          Contoh Kode Integrasi
+          Dokumentasi Integrasi
         </a>
       </div>
+
+      <HeroTerminal />
 
       <div
         style={{
@@ -106,7 +109,8 @@ export function HeroSection() {
           gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
           gap: "16px",
           borderTop: "1px solid var(--border)",
-          paddingTop: "32px",
+          paddingTop: "28px",
+          marginTop: "32px",
           textAlign: "left",
         }}
       >
@@ -143,4 +147,5 @@ export function HeroSection() {
     </section>
   );
 }
+
 export default HeroSection;

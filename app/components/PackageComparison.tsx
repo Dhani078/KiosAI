@@ -88,7 +88,7 @@ export function PackageComparison({
                 </td>
                 <td className="muted">{m.use}</td>
                 <td className="check-cell">
-                  {m.tier === 0 ? <Check size={17} /> : <span className="dash">—</span>}
+                  {m.tier === 0 ? <Check size={17} /> : <span className="dash">-</span>}
                 </td>
                 <td className="check-cell">
                   <Check size={17} />

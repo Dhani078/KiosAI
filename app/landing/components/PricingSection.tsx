@@ -8,9 +8,8 @@ import { PACKAGES } from "@/app/components/packageData";
 export function PricingSection() {
   return (
     <section id="paket" style={{ padding: "80px 24px", maxWidth: "1100px", margin: "0 auto" }}>
-      <div style={{ textAlign: "center", marginBottom: "48px" }}>
-        <span className="eyebrow" style={{ color: "var(--primary)" }}>PILIHAN PAKET TOKEN</span>
-        <h2 style={{ fontSize: "clamp(24px, 3.5vw, 36px)", marginTop: "8px", fontWeight: 700 }}>
+      <div style={{ textAlign: "center", marginBottom: "44px" }}>
+        <h2 style={{ fontSize: "clamp(26px, 3.5vw, 38px)", letterSpacing: "-0.8px", fontWeight: 700 }}>
           Bayar Sekali. Pakai Kapan Saja Tanpa Kedaluwarsa.
         </h2>
         <p className="muted" style={{ maxWidth: "580px", margin: "12px auto 0", fontSize: "15px" }}>
@@ -80,11 +79,12 @@ export function PricingSection() {
         <ShieldCheck size={16} />
         <span>Konfirmasi otomatis 24/7</span>
         <span className="note-dot">·</span>
-        <span>Harga transparan sudah termasuk pajak</span>
+        <span>Harga transparan tanpa biaya tersembunyi</span>
         <span className="note-dot">·</span>
         <span>Bonus 2.500.000 token gratis untuk akun baru</span>
       </div>
     </section>
   );
 }
+
 export default PricingSection;
