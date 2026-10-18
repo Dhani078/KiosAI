@@ -41,20 +41,22 @@ export async function verifyReceiptWithAI(params: ReceiptVerifyParams): Promise<
     return { valid: false, error: "Kredensial Gemini API belum dikonfigurasi di server." };
   }
 
-  const prompt = `Anda adalah sistem audit keuangan cerdas (OCR Receipt Validator).
-Tugas Anda adalah memeriksa bukti struk transfer/pembayaran QRIS atau e-wallet (DANA, BCA, GoPay, OVO, ShopeePay, Mandiri, BRI, dll).
-PENTING DALAM MEMBACA RUPIAH:
-- Tanda titik (.) adalah pemisah ribuan (contoh: 25.143 artinya 25143).
-- Tanda koma (,) adalah desimal sen. Hiraukan desimal sen jika ada.
-- Jangan tertukar antara biaya admin/biaya layanan dengan total transfer bersih ke penerima.
-Ekstrak data transaksi dengan teliti dalam format JSON murni:
+  const prompt = `Ekstrak data bukti transfer bank, e-wallet, atau QRIS dari gambar ini ke JSON.
+
+Aturan pembacaan:
+1. Nominal: gunakan angka bulat rupiah bersih ke penerima. Titik (.) adalah pemisah ribuan (25.143 dibaca 25143). Koma (,) adalah sen, buang desimalnya. Abaikan biaya admin dan saldo sisa.
+2. Status: isSuccess bernilai true jika status transaksi Berhasil, Sukses, atau Selesai. Jika gagal, pending, atau menunggu, beri nilai false.
+3. ID Transaksi: ambil nomor referensi atau ID transaksi yang tertera. Jika tidak ada, isi string kosong.
+4. Penerima: catat nama pemilik rekening atau nama merchant tujuan.
+
+Format JSON:
 {
-  "amount": <angka bulat integer total nominal rupiah yang dibayar/ditransfer, tanpa titik atau Rp, contoh 25143>,
-  "transactionId": "<nomor referensi / ID transaksi / No. Transaksi jika tertera>",
-  "isSuccess": <boolean true jika status transaksi sukses/berhasil/selesai, false jika gagal/pending/menunggu>,
-  "recipient": "<nama penerima atau nama toko penerima jika ada>"
+  "amount": 25143,
+  "transactionId": "DN2026101899123",
+  "isSuccess": true,
+  "recipient": "Dhani"
 }
-Jawab HANYA objek JSON tersebut tanpa pembungkus markdown dan tanpa komentar tambahan.`;
+Kembalikan JSON murni tanpa pembungkus markdown.`;
 
   const cleanBase64 = params.imageBase64.replace(/^data:[^;]+;base64,/, "").trim();
   const mime = params.mimeType || "image/jpeg";
