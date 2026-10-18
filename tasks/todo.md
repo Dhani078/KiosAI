@@ -431,12 +431,16 @@
 - [x] Task 59.5: Add QRIS generator unit test suite (`scripts/test-qris-generator.mjs`, 7/7 PASS)
 - [x] Task 59.6: Verify 100% compliance: 124 source files <= 200 LOC, all test suites pass (qris, receipt, security, e2e, pricing, billing, UI)
 
-## Phase 60 (Bulletproof Payment Engine: Anti-Replay, Tolerance & 1-Click Copy UX - Completed)
-- [x] Task 60.1: Add `payment_ref VARCHAR(128)` column and index to `kiosai.orders` for strict anti-replay duplicate prevention
-- [x] Task 60.2: Implement smart Indonesian amount tolerance (supports exact unique code, base package amount, and rounded cents) in `lib/receipt-verifier.ts`
-- [x] Task 60.3: Add 1-click "Salin Nominal" button and mobile-friendly payment instructions in `PaymentQrContent.tsx`
-- [x] Task 60.4: Expand AI receipt verification test suite (`scripts/test-ai-receipt.mjs`, 3/3 PASS)
-- [x] Task 60.5: Verify 100% compliance: 124 source files <= 200 LOC, all test suites pass (qris, receipt, security, e2e, pricing, billing, UI)
+## Phase 61 (System Design Spec, Archify Diagrams & Atomic CAS Concurrency - Completed)
+- [x] Task 61.1: Author formal System Design Specification (`docs/SYSTEM_DESIGN.md`) covering architecture, concurrency model, and boundaries
+- [x] Task 61.2: Author and finalize Archify Architecture Diagram (`.archify/architecture-kiosai-gateway-20261018-152500/kiosai-architecture.html`, 4/4 gates PASS)
+- [x] Task 61.3: Author and finalize Archify Sequence Diagram (`.archify/sequence-atomic-payment-20261018-152500/atomic-payment-sequence.html`, 4/4 gates PASS)
+- [x] Task 61.4: Enable `options` forwarding (`{ fullResult: true }`) in `lib/db.ts` for TiDB Serverless `rowsAffected` checks
+- [x] Task 61.5: Atomic conditional update in `app/api/orders/pay/route.ts` (`WHERE id = ? AND status != 'paid'`)
+- [x] Task 61.6: Atomic conditional update in `app/api/orders/verify-receipt/route.ts` (`WHERE id = ? AND status != 'paid'`)
+- [x] Task 61.7: Atomic conditional update in `app/api/payment/webhook/route.ts` (`WHERE id = ? AND status != 'paid'`)
+- [x] Task 61.8: Verify 100% compliance: 126 source files <= 200 LOC, all test suites pass (pricing, defense, qris, doku, security, e2e)
+
 
 
 

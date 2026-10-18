@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "finalize",
+  "status": "pass",
+  "type": "sequence",
+  "quality": "showcase",
+  "specification": {
+    "path": "E:\\Hermesproject\\KiosAI\\.archify\\sequence-atomic-payment-20261018-152500\\candidate.json",
+    "sha256": "453e6a36a90c47ee5da9f63c9f65f339e784e7be4fcd806b3bbcb15e561b7ea6",
+    "bytes": 4546
+  },
+  "artifact": {
+    "path": "E:\\Hermesproject\\KiosAI\\.archify\\sequence-atomic-payment-20261018-152500\\atomic-payment-sequence.html",
+    "sha256": "1b0292c5b69076a932223a0524022a4f6e7c5b9ab4e170f606a775ddb3f850bc",
+    "bytes": 821662
+  },
+  "gates": {
+    "validate": "pass",
+    "deliver": "pass",
+    "check": "pass",
+    "browser-check": "pass"
+  },
+  "diagnostics": [],
+  "diagnosticSummary": {
+    "total": 0,
+    "shown": 0,
+    "truncated": false
+  },
+  "evidence": {
+    "receipt": "E:\\Hermesproject\\KiosAI\\.archify\\sequence-atomic-payment-20261018-152500\\atomic-payment-sequence.finalize.json",
+    "summaryReceipt": "E:\\Hermesproject\\KiosAI\\.archify\\sequence-atomic-payment-20261018-152500\\atomic-payment-sequence.finalize-summary.json",
+    "browserCheckReceipt": "E:\\Hermesproject\\KiosAI\\.archify\\sequence-atomic-payment-20261018-152500\\atomic-payment-sequence.browser-check.json"
+  },
+  "update": {
+    "status": "current",
+    "installedVersion": "3.1.0",
+    "availableVersion": "3.1.0",
+    "releaseNotes": null,
+    "checkedAt": "2026-10-18T07:21:00.453Z",
+    "source": "cache",
+    "noticeRequired": false,
+    "noticeText": null
+  },
+  "visualReview": "not-requested",
+  "durationMs": 7412
+}

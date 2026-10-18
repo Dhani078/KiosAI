@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "9c7a305e-cda9-4a64-991c-ca5bce69e4a5",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "E:\\Hermesproject\\KiosAI\\.archify\\architecture-kiosai-gateway-20261018-152500\\candidate.json",
+  "output": "E:\\Hermesproject\\KiosAI\\.archify\\architecture-kiosai-gateway-20261018-152500\\kiosai-architecture.html",
+  "specification": {
+    "sha256": "f77765fb34d4d225599d56fa8ec2ae4769350e9b77d8ce974d20d8c92870fcb3",
+    "bytes": 4195
+  },
+  "artifact": {
+    "sha256": "b5fe15a07c83ad15101d3328293ccbdce9f3fd70219189ea509ff8c0f4605bf8",
+    "bytes": 830283
+  }
+}

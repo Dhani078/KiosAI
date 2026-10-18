@@ -18,8 +18,8 @@ export const db = {
     const rows = await this.query<T>(sql, params);
     return rows[0] || null;
   },
-  async execute(sql: string, params?: any[]) {
+  async execute(sql: string, params?: any[], options?: any) {
     const client = getClient();
-    return await client.execute(sql, params);
+    return await client.execute(sql, params, options);
   },
 };

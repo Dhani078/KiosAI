@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "KiosAI Atomic Payment Settlement & Token Vesting Sequence",
+    "output": ".archify/sequence-atomic-payment-20261018-152500/atomic-payment-sequence.html",
+    "column_fit": "spread",
+    "animation": "trace",
+    "quality_profile": "showcase"
+  },
+  "participants": [
+    { "id": "user", "type": "external", "label": "Buyer", "sublabel": "developer session" },
+    { "id": "web", "type": "frontend", "label": "Checkout UI", "sublabel": "Next.js Modal" },
+    { "id": "api", "type": "backend", "label": "Order API", "sublabel": "POST /api/orders" },
+    { "id": "qris", "type": "backend", "label": "QRIS Engine", "sublabel": "EMVCo Tag 54" },
+    { "id": "verifier", "type": "backend", "label": "OCR & Webhook", "sublabel": "Gemini 3.8 / DOKU" },
+    { "id": "tidb", "type": "database", "label": "TiDB Store", "sublabel": "Atomic CAS Engine" },
+    { "id": "vault", "type": "database", "label": "Token Vault", "sublabel": "Match-Vesting" }
+  ],
+  "segments": [
+    { "from": 155, "to": 310, "label": "1. Order Creation & Dynamic QRIS" },
+    { "from": 325, "to": 490, "label": "2. Payment Proof Verification" },
+    { "from": 500, "to": 660, "label": "3. Atomic CAS Settlement & Vesting" }
+  ],
+  "messages": [
+    { "id": "select-pack", "from": "user", "to": "web", "y": 165, "label": "Pilih Paket Pro 25K", "variant": "default" },
+    { "id": "create-order", "from": "web", "to": "api", "y": 198, "label": "POST /api/orders", "variant": "emphasis" },
+    { "id": "gen-qris", "from": "api", "to": "qris", "y": 232, "label": "generateDynamicQRIS(25143)", "variant": "default" },
+    { "id": "return-qris", "from": "qris", "to": "api", "y": 266, "label": "EMVCo Payload + CRC16", "variant": "return" },
+    { "id": "render-qr", "from": "api", "to": "web", "y": 300, "label": "Order Created (Rp 25.143)", "variant": "return" },
+    { "id": "upload-proof", "from": "user", "to": "web", "y": 338, "label": "Upload Bukti Transfer", "variant": "default" },
+    { "id": "verify-req", "from": "web", "to": "verifier", "y": 372, "label": "POST /api/orders/verify-receipt", "variant": "emphasis" },
+    { "id": "check-replay", "from": "verifier", "to": "tidb", "y": 406, "label": "SELECT payment_ref WHERE status='paid'", "variant": "security" },
+    { "id": "replay-ok", "from": "tidb", "to": "verifier", "y": 440, "label": "No Duplicate Ref Found", "variant": "return" },
+    { "id": "ocr-pass", "from": "verifier", "to": "tidb", "y": 474, "label": "OCR Valid: Rp 25.143 ke Dhani", "variant": "default" },
+    { "id": "cas-update", "from": "verifier", "to": "tidb", "y": 512, "label": "UPDATE orders SET status='paid' WHERE status!='paid'", "variant": "security" },
+    { "id": "cas-result", "from": "tidb", "to": "verifier", "y": 546, "label": "rowsAffected: 1 (Acquired Lock)", "variant": "return" },
+    { "id": "vest-tokens", "from": "verifier", "to": "vault", "y": 580, "label": "Credit 100M + Match-Vest Locked Bonus", "variant": "emphasis" },
+    { "id": "vest-ok", "from": "vault", "to": "verifier", "y": 614, "label": "Balance Updated + Pro Unlocked", "variant": "return" },
+    { "id": "settle-done", "from": "verifier", "to": "web", "y": 648, "label": "200 Success: Instant Token Credit", "variant": "return" }
+  ],
+  "activations": [
+    { "participant": "web", "from": 165, "to": 655, "type": "frontend" },
+    { "participant": "api", "from": 198, "to": 305, "type": "backend" },
+    { "participant": "qris", "from": 232, "to": 270, "type": "backend" },
+    { "participant": "verifier", "from": 372, "to": 650, "type": "backend" },
+    { "participant": "tidb", "from": 406, "to": 552, "type": "database" },
+    { "participant": "vault", "from": 580, "to": 620, "type": "database" }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Nominal Locking",
+      "items": [
+        "Tag 54 EMVCo standard locks nominal Rp 25.143",
+        "Payer does not need to enter amount manually on m-Banking or e-Wallet"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Anti-Replay & OCR",
+      "items": [
+        "Gemini 3.8 Flash Vision parses Indonesian rupiah separators accurately",
+        "Unique payment_ref check prevents submitting the same receipt twice"
+      ]
+    },
+    {
+      "dot": "orange",
+      "title": "Atomic CAS Safety",
+      "items": [
+        "Conditional UPDATE WHERE status != 'paid' guarantees single fulfillment",
+        "Zero risk of duplicate token crediting under concurrent webhook/user requests"
+      ]
+    }
+  ]
+}

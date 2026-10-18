@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "9d9275d6-9f3f-44b1-8590-abf3b5c87f58",
+  "status": "current",
+  "command": "deliver",
+  "type": "sequence",
+  "input": "E:\\Hermesproject\\KiosAI\\.archify\\sequence-atomic-payment-20261018-152500\\candidate.json",
+  "output": "E:\\Hermesproject\\KiosAI\\.archify\\sequence-atomic-payment-20261018-152500\\atomic-payment-sequence.html",
+  "specification": {
+    "sha256": "453e6a36a90c47ee5da9f63c9f65f339e784e7be4fcd806b3bbcb15e561b7ea6",
+    "bytes": 4546
+  },
+  "artifact": {
+    "sha256": "1b0292c5b69076a932223a0524022a4f6e7c5b9ab4e170f606a775ddb3f850bc",
+    "bytes": 821662
+  }
+}

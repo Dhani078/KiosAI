@@ -30,14 +30,18 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: "Order already paid", order });
     }
 
-    // Update order status
-    await db.execute(
-      `UPDATE kiosai.orders SET status = 'paid', paid_at = NOW() WHERE id = ?`,
-      [orderId]
+    // Atomic Compare-And-Swap (CAS): Hanya update jika status belum paid
+    const updateRes: any = await db.execute(
+      `UPDATE kiosai.orders SET status = 'paid', paid_at = NOW() WHERE id = ? AND status != 'paid'`,
+      [orderId],
+      { fullResult: true }
     );
 
-    // Add tokens to user, match-vest bonus from vault (up to 100% of tokens purchased), and upgrade tier to Pro
-    // Prevents F-01 arbitrage: bonus unlocks proportionally with purchased tokens
+    if (updateRes && updateRes.rowsAffected === 0) {
+      return NextResponse.json({ message: "Order already paid", order });
+    }
+
+    // Add tokens to user, match-vest bonus from vault, and upgrade tier to Pro
     await db.execute(
       `UPDATE kiosai.users 
        SET balance_tokens = balance_tokens + ? + LEAST(locked_bonus_tokens, ?),
@@ -53,7 +57,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: `Pembayaran berhasil! ${order.tokens_purchased.toLocaleString()} token telah ditambahkan.`,
+      message: `Pembayaran berhasil! ${Number(order.tokens_purchased).toLocaleString("id-ID")} token telah ditambahkan.`,
       tokensAdded: order.tokens_purchased,
     });
   } catch (err: any) {

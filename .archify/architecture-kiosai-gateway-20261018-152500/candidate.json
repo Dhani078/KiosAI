@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "KiosAI High-Concurrency Edge Gateway & Settlement Architecture",
+    "output": ".archify/architecture-kiosai-gateway-20261018-152500/kiosai-architecture.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    { "id": "users", "type": "external", "label": "Dev Clients", "sublabel": "Cursor, Cline, SDK", "pos": [40, 240], "size": [130, 60] },
+    { "id": "browser", "type": "frontend", "label": "Web Dashboard", "sublabel": "Next.js 15 UI", "pos": [40, 380], "size": [130, 60] },
+    { "id": "cf_edge", "type": "cloud", "label": "Cloudflare Edge", "sublabel": "Workers Anycast", "pos": [240, 310], "size": [130, 60] },
+    { "id": "auth_guard", "type": "security", "label": "Auth & Security", "sublabel": "HMAC + Prompt Shield", "pos": [240, 150], "size": [130, 60] },
+    { "id": "api_proxy", "type": "backend", "label": "API Proxy Engine", "sublabel": "/v1/chat/completions", "pos": [450, 200], "size": [140, 60] },
+    { "id": "order_engine", "type": "backend", "label": "Settlement Engine", "sublabel": "Atomic CAS & QRIS", "pos": [450, 380], "size": [140, 60] },
+    { "id": "tidb", "type": "database", "label": "TiDB Serverless", "sublabel": "Tokyo Serverless SQL", "pos": [680, 280], "size": [140, 60], "tag": "Atomic CAS" },
+    { "id": "gemini_ocr", "type": "backend", "label": "Gemini Vision OCR", "sublabel": "3.8 Flash Multimodal", "pos": [680, 440], "size": [140, 60] },
+    { "id": "cf_tunnel", "type": "cloud", "label": "Cloudflare Tunnel", "sublabel": "Encrypted Ingress", "pos": [680, 120], "size": [140, 60] },
+    { "id": "router", "type": "backend", "label": "9Router Gateway", "sublabel": "Local Master :20128", "pos": [890, 160], "size": [130, 60] },
+    { "id": "models", "type": "external", "label": "Model Upstream", "sublabel": "DeepSeek, Claude, GPT", "pos": [890, 320], "size": [130, 60] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "Cloudflare Edge & Serverless Tier", "wraps": ["cf_edge", "auth_guard", "api_proxy", "order_engine"] },
+    { "kind": "security-group", "label": "Upstream Local Host Environment", "wraps": ["cf_tunnel", "router"] }
+  ],
+  "connections": [
+    { "id": "users-to-edge", "from": "users", "to": "cf_edge", "label": "OpenAI API", "variant": "emphasis" },
+    { "id": "browser-to-edge", "from": "browser", "to": "cf_edge", "label": "Web Traffic" },
+    { "id": "edge-to-auth", "from": "cf_edge", "to": "auth_guard", "label": "HMAC Verify", "variant": "security" },
+    { "id": "auth-to-proxy", "from": "auth_guard", "to": "api_proxy", "label": "Authorized", "variant": "default" },
+    { "id": "edge-to-order", "from": "cf_edge", "to": "order_engine", "label": "Checkout & Pay" },
+    { "id": "proxy-to-tidb", "from": "api_proxy", "to": "tidb", "label": "Quota & Deduct" },
+    { "id": "order-to-tidb", "from": "order_engine", "to": "tidb", "label": "Atomic Settlement", "variant": "emphasis" },
+    { "id": "order-to-ocr", "from": "order_engine", "to": "gemini_ocr", "label": "Receipt OCR", "variant": "dashed" },
+    { "id": "proxy-to-tunnel", "from": "api_proxy", "to": "cf_tunnel", "label": "Tunnel Proxy", "variant": "emphasis" },
+    { "id": "tunnel-to-router", "from": "cf_tunnel", "to": "router", "label": "Local Forward" },
+    { "id": "router-to-models", "from": "router", "to": "models", "label": "Inference Call", "variant": "emphasis" }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Edge & Security",
+      "items": [
+        "Cloudflare Edge Anycast fronts all API & web traffic",
+        "HMAC signed cookies and prompt defense shields block unauthorized requests"
+      ]
+    },
+    {
+      "dot": "orange",
+      "title": "Concurrency & Storage",
+      "items": [
+        "TiDB Cloud Serverless executes atomic CAS statements to eliminate double-spend",
+        "Bonus tokens match-vested in vault with zero arbitrage exposure"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Upstream & Vision",
+      "items": [
+        "9Router clusters 840+ verified AI models via secure Cloudflare Tunnel",
+        "Gemini Flash Vision OCR verifies EMVCo dynamic QRIS payments"
+      ]
+    }
+  ]
+}

@@ -309,6 +309,13 @@
   - Konversi dinamis EMVCo (`lib/qris.ts`) dengan penyisipan Tag 54 dan kalkulasi ulang CRC16-CCITT
   - Render QR code dinamis berkualitas tinggi di modal pembayaran dan proteksi anti-replay via `payment_ref`
   - 100% lolos verifikasi: 124 file <= 200 LOC, QRIS suite 7/7 PASS, seluruh audit lolos tanpa celah
+- [x] Phase 68: System Design Spec, Archify Verified Diagrams & Atomic CAS Concurrency
+  - Spesifikasi sistem formal `docs/SYSTEM_DESIGN.md` (Objective, Stack, Protocols, Boundaries, Success Criteria)
+  - Diagram arsitektur Archify (`.archify/architecture-kiosai-gateway-20261018-152500/kiosai-architecture.html`, 4/4 gates lolos)
+  - Diagram sequence Archify (`.archify/sequence-atomic-payment-20261018-152500/atomic-payment-sequence.html`, 4/4 gates lolos)
+  - Atomic Compare-And-Swap (CAS) di `lib/db.ts`, `app/api/orders/pay`, `app/api/orders/verify-receipt`, dan `app/api/payment/webhook` (`WHERE status != 'paid'` dan evaluasi `rowsAffected === 1`)
+  - 100% patuh batas baris: 126 file <= 200 LOC, semua pengujian integrasi lulus sempurna
+
 
 
 

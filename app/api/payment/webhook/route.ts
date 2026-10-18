@@ -78,10 +78,16 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: true, message: "Order already fulfilled (idempotent)" });
     }
 
-    await db.execute(
-      `UPDATE kiosai.orders SET status = 'paid', paid_at = NOW() WHERE id = ?`,
-      [orderId]
+    // Atomic Compare-And-Swap (CAS): Hanya update jika status belum paid
+    const updateRes: any = await db.execute(
+      `UPDATE kiosai.orders SET status = 'paid', paid_at = NOW() WHERE id = ? AND status != 'paid'`,
+      [orderId],
+      { fullResult: true }
     );
+
+    if (updateRes && updateRes.rowsAffected === 0) {
+      return NextResponse.json({ success: true, message: "Order already fulfilled (idempotent)" });
+    }
 
     await db.execute(
       `UPDATE kiosai.users 

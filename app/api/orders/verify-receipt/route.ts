@@ -66,11 +66,16 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Tandai pesanan lunas dan simpan nomor referensi
-    await db.execute(
-      `UPDATE kiosai.orders SET status = 'paid', paid_at = NOW(), payment_ref = ? WHERE id = ?`,
-      [verification.transactionId || null, orderId]
+    // Atomic CAS: Kunci pesanan dan simpan nomor referensi
+    const updateRes: any = await db.execute(
+      `UPDATE kiosai.orders SET status = 'paid', paid_at = NOW(), payment_ref = ? WHERE id = ? AND status != 'paid'`,
+      [verification.transactionId || null, orderId],
+      { fullResult: true }
     );
+
+    if (updateRes && updateRes.rowsAffected === 0) {
+      return NextResponse.json({ success: true, message: "Pesanan ini sudah lunas.", order });
+    }
 
     // Kredit token, buka bonus brankas, dan upgrade tier ke Pro
     await db.execute(
