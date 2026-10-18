@@ -30,6 +30,11 @@
 | `admin-auth` | Admin login via username, user biasa via email, seed script | Selesai |
 | `models-tab` | Tab eksplorasi model AI di dashboard dan menu sidebar | Selesai |
 | `session-key` | HMAC playground session key untuk pemotongan saldo real di web | Selesai |
+| `cookie-auth` | Sesi server-side HttpOnly bertanda tangan HMAC-SHA256 (`lib/session.ts`) & eliminasi IDOR | Selesai |
+| `qris-emvco` | EMVCo Dynamic QRIS generator (`lib/qris.ts`) berbasis merchant DANA "Dhani" (Tag 54) | Selesai |
+| `receipt-ocr` | Multimodal AI Vision receipt verifier (`lib/receipt-verifier.ts`) via Gemini Dual-Key Pool | Selesai |
+| `trend-analytics`| Grafik tren penggunaan 7 hari (`UsageTrendChart.tsx`) & visual rasio input/output | Selesai |
+| `prompt-defense` | Guardrail proteksi anti-prompt-leak (`lib/prompt-defense.ts`) & preset arsitektur agen | Selesai |
 
 ## 4. Database Schema (TiDB DDL)
 
@@ -74,10 +79,12 @@ CREATE TABLE IF NOT EXISTS orders (
   package_tier ENUM('free', 'pro') NOT NULL,
   payment_method VARCHAR(32) DEFAULT 'qris',
   status ENUM('pending', 'paid', 'expired', 'failed') DEFAULT 'pending',
+  payment_ref VARCHAR(128) NULL,
   paid_at TIMESTAMP NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(id),
-  INDEX idx_status (status)
+  INDEX idx_status (status),
+  INDEX idx_orders_payment_ref (payment_ref)
 );
 
 CREATE TABLE IF NOT EXISTS usage_logs (

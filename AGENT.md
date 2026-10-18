@@ -109,12 +109,17 @@ Dokumen ini adalah sumber kebenaran (source of truth) utama bagi AI agent untuk 
 # 1. Audit Kesiapan Produksi (Env, TiDB, 9Router, Batas 200 baris, Secret Worker)
 npm run verify
 
-# 2. Pengujian Integrasi Otomatis (10 Skenario Gateway)
+# 2. Pengujian Integrasi Otomatis & Keamanan (E2E & Security)
 npm run test:e2e
+npm run test:security
+npm run test:defense
 
-# 3. Pengujian Billing & Pricing
+# 3. Pengujian Billing, QRIS Dinamis & Verifikasi Struk AI
 npm run test:pricing
 npm run test:billing
+npm run test:qris
+npm run test:receipt
+npm run test:doku
 
 # 4. Audit UI & Dashboard (0 Horizontal Overflow pada 390px Mobile & Desktop)
 npm run audit:ui
@@ -138,10 +143,11 @@ npm start
 
 ## 8. Status Terkini (Session Continuity)
 
-- **Total File Sumber**: 109 file TypeScript/MJS (100% patuh `<= 200` baris).
-- **Katalog Model Aktif**: 71 model terverifikasi via audit 5x (`lib/verified-models.ts`), 5 Free Tier (`Atria-Dawn-Preview`, `oc/deepseek-v4.1-flash-free(max)`, `oc/muse-spark-1.3-contributor-free`, `oc/mimo-v2.6-flash-free`, `oc/nemotron-3.5-lightning-free`), 66 Pro Tier.
-- **E2E Integration Test**: 11 Lolos, 0 Gagal (`test:e2e`).
+- **Total File Sumber**: 124 file TypeScript/MJS (100% patuh `<= 200` baris).
+- **Katalog Model Aktif**: 69 model terverifikasi via audit 5x (`lib/verified-models.ts`), 5 Free Tier (`Atria-Dawn-Preview`, `oc/deepseek-v4.1-flash-free(max)`, `oc/muse-spark-1.3-contributor-free`, `oc/mimo-v2.6-flash-free`, `oc/nemotron-3.5-lightning-free`), 64 Pro Tier.
+- **E2E & Security Suite**: 11/11 E2E PASS (`test:e2e`), 14/14 Security PASS (`test:security`), 12/12 Prompt Defense PASS (`test:defense`).
+- **Payment & Vision Suite**: 7/7 Dynamic QRIS PASS (`test:qris`), 3/3 AI Receipt OCR PASS (`test:receipt`), 7/7 DOKU PASS (`test:doku`).
 - **Pricing & Billing Test**: 22/22 PASS (`test:pricing`), live deduction PASS (`test:billing`).
 - **UI & Dashboard Audit**: 16/16 PASS (0 horizontal overflow pada mobile 390px & PC).
-- **Git Branch**: `main` ter-push sinkron dengan `origin` (Commit `0c50c3c`).
+- **Git Branch**: `main` ter-push sinkron dengan `origin` (Commit `cec8c82`).
 - **Status Layanan**: Worker `kiosai.dhanisepeda.workers.dev` & domain kustom `tokoai.my.id` live dan sehat (`/api/health` status `healthy`).

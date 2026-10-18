@@ -7,6 +7,19 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `pending` — docs: synchronize all documentation suites across repository
+
+**Sinkronisasi Dokumentasi Menyeluruh (README, AGENT, API, DEPLOYMENT, SECURITY, PRD, ARCHITECTURE, plan)**
+- **README & AGENT (`README.md`, `AGENT.md`)**:
+  - Memperbarui total file modul patuh $\le 200$ baris (124 modul).
+  - Mendokumentasikan Dynamic QRIS DANA (Tag 54 EMVCo), AI Vision OCR Verifier, proteksi anti-replay `payment_ref`, dan cheat-sheet pengujian lengkap.
+- **API Reference (`API.md`)**:
+  - Menambahkan endpoint `POST /api/orders/verify-receipt` (AI Vision OCR) dan dokumentasi autentikasi cookie HttpOnly server-side.
+- **Spesifikasi & Arsitektur (`PRD.md`, `docs/ARCHITECTURE.md`)**:
+  - Menyelaraskan skema DDL tabel `kiosai.orders` (`payment_ref VARCHAR(128)` & index), modul arsitektur baru, dan formula toleransi rupiah.
+- **Keamanan & Deployment (`SECURITY.md`, `DEPLOYMENT.md`)**:
+  - Memperbarui checklist keamanan produksi (IDOR eliminated, cookie HttpOnly, rotasi scrypt admin, fail-closed webhook) dan secret Worker Cloudflare (`GEMINI_API_KEY`, `DOKU_CLIENT_ID`, dll).
+
 ### `cec8c82` — feat(payment): add anti-replay protection, amount tolerance, and 1-click copy for frictionless checkout
 
 **Penguatan Proteksi Pembayaran Bebas Celah & Pengalaman Pengguna Tanpa Komplain**

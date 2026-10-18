@@ -6,11 +6,15 @@ Dokumentasi spesifikasi endpoint REST & OpenAI-Compatible Gateway TokoAI (`https
 
 ## 1. Otentikasi & Header Standar
 
+### Gateway AI (`/v1/*`)
 Semua pemanggilan gateway AI mewajibkan header:
 ```http
-Authorization: Bearer kios-<token_rahasia>
+Authorization: Bearer kios-<...32hex>
 Content-Type: application/json
 ```
+
+### Dashboard REST API (`/api/*`)
+Semua endpoint privat (`/api/user`, `/api/keys`, `/api/orders`, `/api/analytics`) diotentikasi secara aman menggunakan **Cookie HttpOnly bertanda tangan HMAC-SHA256** (`kiosai_session`). Parameter `userId` dari klien tidak lagi diperlukan/diabaikan server untuk mengeliminasi celah IDOR.
 
 ### Header Respons Rate Limit
 | Header | Tipe | Deskripsi |
@@ -154,14 +158,20 @@ Mencabut (soft-delete) API key agar tidak dapat digunakan lagi.
 ## 4. Pembelian & Order (`/api/orders`)
 
 ### `POST /api/orders`
-Membuat tagihan pembelian paket token baru.
-- Paket: `free` (Rp 0 / 2.5M token bonus akun baru), `pro_25k` (Rp 25.000 / 100M token), `pro_100k` (Rp 100.000 / 600M token), `pro_150k` (Rp 150.000 / 1.000M token). Alias lama `bronze`/`silver`/`gold` masih diterima untuk order sebelum rename 2-tier.
+Membuat tagihan pembelian paket token baru dengan Smart QRIS & Kode Unik.
+- Paket: `free` (Rp 0 / 2.5M token bonus akun baru), `pro_25k` (Rp 25.000 / 100M token), `pro_100k` (Rp 100.000 / 600M token), `pro_150k` (Rp 150.000 / 1.000M token).
+- Respons menyertakan `amountIdr` (nominal pasti dengan kode unik), `qrisUrl` (gambar QRIS dinamis EMVCo), dan `paymentUrl` (DOKU Checkout resmi jika aktif).
+
+### `POST /api/orders/verify-receipt`
+Verifikasi instan foto struk transfer / screenshot pembayaran e-wallet menggunakan Gemini 3.8 Flash Vision OCR.
+- Request Body: `{ "orderId": "uuid", "imageBase64": "data:image/jpeg;base64,...", "mimeType": "image/jpeg" }`
+- AI mengekstrak nominal, status, ID transaksi, dan nama merchant. Memvalidasi nominal hingga digit kode unik dan mencegah penggunaan struk ganda (Anti-Replay).
 
 ### `POST /api/orders/pay`
-Konfirmasi pembayaran simulasi. Menambah saldo token dan mengupgrade tier pengguna secara real-time di TiDB.
+Konfirmasi pembayaran simulasi manual (fallback jika tidak upload struk). Menambah saldo token dan mengupgrade tier pengguna secara real-time di TiDB.
 
 ### `POST /api/payment/webhook`
-Endpoint penerima callback payment gateway otomatis (Midtrans/Tripay) dengan verifikasi HMAC SHA-256 dan proteksi idempotensi transaksi.
+Endpoint penerima callback payment gateway otomatis (DOKU Checkout & internal webhook) dengan verifikasi HMAC SHA-256 fail-closed dan proteksi idempotensi transaksi.
 
 ---
 

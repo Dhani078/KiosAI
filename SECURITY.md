@@ -132,11 +132,12 @@ hanya bisa dibaca user lokal — jangan pernah disalin ke dalam project.
 
 ## 8. Checklist Sebelum Produksi Komersial
 
-- [ ] Repo sudah **private**, atau dipastikan tidak ada kredensial di history
-- [ ] Rotasi `DATABASE_URL`, `TIDB_PASSWORD`, dan master key 9Router bila pernah tampil di chat/log
-- [ ] Ganti sesi `localStorage` → cookie HttpOnly bertanda tangan
-- [ ] Pindahkan rate limit dari in-memory → Durable Object / Redis
-- [ ] Integrasi payment gateway nyata (Midtrans/Tripay) + verifikasi signature produksi
+- [x] Ganti sesi `localStorage` → cookie HttpOnly bertanda tangan HMAC-SHA256 (`kiosai_session`) & pembasmian IDOR
+- [x] Rotasi password admin `adminfordhani` dengan scrypt salt 16-byte dan isolasi kredensial dari git
+- [x] Proteksi anti-replay bukti transfer (`payment_ref` column di TiDB)
+- [x] Guardrail defensif anti-prompt extraction (`lib/prompt-defense.ts`)
+- [ ] Repo dijadikan **private**, atau dipastikan tidak ada kredensial sensitif di git log publik
+- [ ] Pindahkan rate limit dari in-memory → Durable Object / Redis untuk cluster multi-region
 - [ ] Aktifkan Cloudflare Access di belakang tunnel agar 9Router tidak terbuka publik
 - [ ] Pasang uptime monitor pada `GET /api/health`
 - [ ] Batasi `allowed_models` per key bila menjual paket terbatas

@@ -272,6 +272,43 @@
   - Vektor SVG presisi isometrik huruf "T" oranye `#F5681A` di `Logo.tsx` dan `favicon.svg`
   - Pembaruan nama brand TokoAI di seluruh layout, copy, SDK doc snippets, dan invoice
   - 100% lolos verifikasi: 109 file <= 200 LOC, tsc 0 error, 22/22 pricing, 11/11 E2E, chaos PASS, 3/3 billing, 16/16 UI audits
+- [x] Phase 60: Full Security Hardening, Cookie Sessions & IDOR Elimination
+  - Cookie sesi server-side bertanda tangan HMAC-SHA256 (`lib/session.ts`) & endpoint logout (`/api/auth/logout`)
+  - Pembasmian celah IDOR di seluruh endpoint privat (`/api/user`, `/api/keys`, `/api/orders`, `/api/orders/pay`, `/api/analytics`)
+  - Webhook pembayaran fail-closed (`PAYMENT_WEBHOOK_SECRET`) & rotasi password admin scrypt
+  - 100% lolos verifikasi: 112 file <= 200 LOC, security suite 14/14 PASS
+- [x] Phase 61: Anti-Prompt-Extraction Guardrail & Persona Presets
+  - Mesin proteksi ekstraksi prompt (`lib/prompt-defense.ts`) & penyuntikan otomatis di `/v1/chat/completions`
+  - 4 preset persona Playground (Cursor Composer, Manus Agent, Claude Code, Defensive Shield)
+  - 100% lolos verifikasi: 114 file <= 200 LOC, defense suite 12/12 PASS
+- [x] Phase 62: DOKU Checkout & HMAC-SHA256 Webhook Integration
+  - Modul DOKU (`lib/doku.ts`) dengan kalkulasi signature SHA-256 Digest & HMACSHA256
+  - Integrasi di `app/api/orders/route.ts` dan validasi notifikasi di webhook
+  - 100% lolos verifikasi: 116 file <= 200 LOC, DOKU suite 7/7 PASS
+- [x] Phase 63: Interactive 7-Day Usage Trend Chart & Advanced Analytics
+  - Bar chart harian 7 hari (`app/components/UsageTrendChart.tsx`) dengan hover tooltips
+  - Visual progress bar rasio split token Input/Output di `AnalyticsCards.tsx`
+  - Multi-mode sorting model (Token, Request, Latensi) di `ModelUsageBreakdown.tsx`
+  - 100% lolos verifikasi: 117 file <= 200 LOC
+- [x] Phase 64: User Profile Modal Premium Redesign & Webhook Ping Action
+  - Desain ulang `UserProfileModal.tsx` dengan glowing avatar halo, tier badges (PRO/FREE), dan JetBrains Mono numbers
+  - Tombol aksi 1-klik "Test Ping" webhook Discord/Slack
+  - 100% lolos verifikasi: 117 file <= 200 LOC
+- [x] Phase 65: AI Vision Receipt Verification & Smart QRIS Unique Code
+  - Multimodal OCR verifier (`lib/receipt-verifier.ts`) menggunakan Gemini 3.8 Flash Vision mode JSON
+  - Endpoint verifikasi `POST /api/orders/verify-receipt` dengan verifikasi nominal & anti-fraud
+  - Kode unik acak 3-digit di `app/api/orders/route.ts` dan tombol upload foto di `PaymentModal.tsx`
+  - 100% lolos verifikasi: 122 file <= 200 LOC, receipt suite 3/3 PASS
+- [x] Phase 66: Dual-Key Pool & 6-Tier Model Waterfall for AI Receipt Engine
+  - Kredensial ganda Google AI Studio (`GEMINI_API_KEY` & `GEMINI_API_KEY_2`) dengan auto-failover 429/503
+  - Hirarki 6-model (`gemini-3.8-flash` -> `3.7` -> `3.6` -> `3.5` -> `3.1-flash-lite` -> `3.5-flash-lite`) berkapasitas 2.160+ RPD
+  - Jittered micro-retry untuk menangani lonjakan 200+ pengguna bersamaan
+  - 100% lolos verifikasi: 122 file <= 200 LOC
+- [x] Phase 67: EMVCo Dynamic QRIS Generator for DANA Merchant
+  - Dekoder QRIS statis DANA merchant poster (`0002010102112657...`) atas nama `Dhani` (NMID `ID1026500560192`)
+  - Konversi dinamis EMVCo (`lib/qris.ts`) dengan penyisipan Tag 54 dan kalkulasi ulang CRC16-CCITT
+  - Render QR code dinamis berkualitas tinggi di modal pembayaran dan proteksi anti-replay via `payment_ref`
+  - 100% lolos verifikasi: 124 file <= 200 LOC, QRIS suite 7/7 PASS, seluruh audit lolos tanpa celah
 
 
 

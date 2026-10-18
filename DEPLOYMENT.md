@@ -14,7 +14,10 @@ Panduan deploy produksi TokoAI: **Cloudflare Workers** (frontend + API) + **Cust
   ├── Next.js 15 via @opennextjs/cloudflare (SSR + API routes)
   ├── Secret: DATABASE_URL        → TiDB Cloud Serverless (Tokyo)
   ├── Secret: NINEROUTER_URL      → URL tunnel HTTPS (diisi otomatis)
-  └── Secret: NINEROUTER_API_KEY_2
+  ├── Secret: NINEROUTER_API_KEY_2
+  ├── Secret: SESSION_SECRET      → HMAC cookie signing
+  ├── Secret: GEMINI_API_KEY & 2  → AI Vision OCR verifier pool
+  └── Secret: DOKU_CLIENT_ID & KEY
        │
        ▼ (HTTPS, Cloudflare Tunnel)
 [cloudflared di komputer/STB]

@@ -120,6 +120,7 @@ orders (
   package_tier ENUM('free', 'pro') NOT NULL,
   payment_method VARCHAR(32) DEFAULT 'qris',
   status ENUM('pending', 'paid', 'expired', 'failed') DEFAULT 'pending',
+  payment_ref VARCHAR(128) NULL,
   paid_at TIMESTAMP NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 )
@@ -169,7 +170,9 @@ Pemotongan saldo dieksekusi secara atomik di TiDB menggunakan `GREATEST(0, balan
 
 ## 5. Keamanan & Kepatuhan Arsitektur
 
-1. **Aturan 200 Baris Kode**: Setiap file komponen TypeScript/MJS dipecah menjadi modul fungsional kecil.
-2. **Timing Safe Verification**: Password verifikasi scrypt memakai `crypto.timingSafeEqual` untuk mencegah side-channel timing attacks.
-3. **Sliding Window Rate Limiter**: Rate limit per menit menghalangi DoS & konsumsi kuota berlebih.
-4. **Isolasi Lingkungan**: Edge Cloudflare tidak menyimpan file `.env`, melainkan encrypted secrets terkelola.
+1. **Aturan 200 Baris Kode**: Setiap file komponen TypeScript/MJS dipecah menjadi modul fungsional kecil (124 modul patuh).
+2. **Sesi Server-Side HttpOnly & Anti-IDOR**: Cookie `kiosai_session` bertanda tangan HMAC-SHA256 mengeliminasi ketergantungan pada client-side `userId`.
+3. **Smart EMVCo QRIS & AI Vision OCR**: Konversi dinamis QRIS DANA Tag 54 + verifikasi struk otomatis Gemini Vision Multi-Key Pool dengan anti-replay `payment_ref`.
+4. **Timing Safe Verification**: Password verifikasi scrypt memakai `crypto.timingSafeEqual` untuk mencegah side-channel timing attacks.
+5. **Sliding Window Rate Limiter**: Rate limit per menit menghalangi DoS & konsumsi kuota berlebih.
+6. **Isolasi Lingkungan**: Edge Cloudflare tidak menyimpan file `.env`, melainkan encrypted secrets terkelola.
