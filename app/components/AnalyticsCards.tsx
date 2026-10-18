@@ -64,6 +64,10 @@ export function AnalyticsCards({
         <div className="stat-number" style={{ fontSize: "28px", fontWeight: 700 }}>
           {totalTokens.toLocaleString("id-ID")}
         </div>
+        <div style={{ width: "100%", height: "4px", background: "var(--border)", borderRadius: "2px", overflow: "hidden", display: "flex", margin: "2px 0 4px" }}>
+          <div style={{ width: `${totalTokens > 0 ? Math.round((promptTokens / totalTokens) * 100) : 50}%`, background: "#4DA8DA" }} title={`Input: ${promptTokens.toLocaleString("id-ID")}`} />
+          <div style={{ width: `${totalTokens > 0 ? Math.round((completionTokens / totalTokens) * 100) : 50}%`, background: "var(--primary)" }} title={`Output: ${completionTokens.toLocaleString("id-ID")}`} />
+        </div>
         <div style={{ fontSize: "11px", color: "var(--text-muted)", display: "flex", justifyContent: "space-between" }}>
           <span>In: {promptTokens.toLocaleString("id-ID")}</span>
           <span>Out: {completionTokens.toLocaleString("id-ID")}</span>

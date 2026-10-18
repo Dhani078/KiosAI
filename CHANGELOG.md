@@ -7,6 +7,23 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `pending` — feat(analytics): add 7-day usage trend chart, token input/output ratio bar, and multi-mode model sorting
+
+**Pembaruan Visual & Analisis Mendalam Tab Statistik**
+- **Grafik Tren Aktivitas 7 Hari (`app/components/UsageTrendChart.tsx`)**:
+  - Modul grafik batang interaktif (145 baris) menampilkan volume konsumsi token harian dan frekuensi request AI 7 hari terakhir.
+  - Hover tooltip interaktif menampilkan rincian tanggal, jumlah token, dan jumlah request.
+  - Ringkasan rata-rata konsumsi per hari dan total akumulasi 7 hari.
+- **Rasio Visual Token Input vs Output (`app/components/AnalyticsCards.tsx`)**:
+  - Menambahkan progress bar split 2 warna (Prompt Tokens vs Completion Tokens) pada kartu Konsumsi Token.
+- **Pengurutan Fleksibel Model (`app/components/ModelUsageBreakdown.tsx`)**:
+  - Menambahkan 3 tombol sorting cepat: berdasarkan Volume Token, Jumlah Request, dan Rata-rata Latensi ms.
+- **Agregasi Data Harian (`app/api/analytics/route.ts`)**:
+  - Menambahkan query agregasi `dailyTrend` per hari dengan interval 7 hari ke database TiDB.
+- **Hasil Verifikasi**:
+  - 117/117 file kode sumber patuh $\le 200$ baris per file.
+  - 14/14 security tests PASS, 11/11 E2E tests PASS, 22/22 pricing tests PASS, 16/16 UI audits PASS (0 overflow).
+
 ### `dbfb341` — feat(payment): integrate DOKU Checkout API and HMAC-SHA256 notification webhook verification
 
 **Integrasi Payment Gateway Resmi DOKU Checkout & Verifikasi Webhook HMAC**

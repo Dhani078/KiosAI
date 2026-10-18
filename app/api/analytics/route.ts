@@ -50,6 +50,18 @@ export async function GET(req: NextRequest) {
       [userId]
     );
 
+    // 4. Daily 7-day trend
+    const dailyTrend = await db.query<any>(
+      `SELECT DATE_FORMAT(created_at, '%Y-%m-%d') as day,
+        COUNT(*) as requests,
+        COALESCE(SUM(total_tokens), 0) as tokens
+       FROM kiosai.usage_logs
+       WHERE user_id = ? AND created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+       GROUP BY day
+       ORDER BY day ASC`,
+      [userId]
+    );
+
     const totalReqs = Number(totals?.total_requests || 0);
     const successReqs = Number(totals?.success_requests || 0);
     const successRate = totalReqs > 0 ? Math.round((successReqs / totalReqs) * 1000) / 10 : 100;
@@ -66,6 +78,7 @@ export async function GET(req: NextRequest) {
         successRate,
       },
       perModel,
+      dailyTrend,
       recentLogs: logs,
     });
   } catch (err: any) {

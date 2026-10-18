@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { PieChart, Cpu } from "lucide-react";
 import { formatModelName } from "@/lib/model-utils";
 
@@ -23,18 +24,40 @@ export function ModelUsageBreakdown({
   totalTokens: number;
   isAdmin?: boolean;
 }) {
+  const [sortBy, setSortBy] = useState<"tokens" | "requests" | "latency">("tokens");
   const models = perModel || [];
   const safeTotal = totalTokens > 0 ? totalTokens : 1;
 
+  const sortedModels = [...models].sort((a, b) => {
+    if (sortBy === "requests") return Number(b.requests || 0) - Number(a.requests || 0);
+    if (sortBy === "latency") return Number(a.avg_latency || 0) - Number(b.avg_latency || 0);
+    return Number(b.tokens || 0) - Number(a.tokens || 0);
+  });
+
   return (
     <section className="panel usage-panel" style={{ padding: "20px 24px" }}>
-      <div className="section-heading" style={{ marginBottom: "16px" }}>
+      <div className="section-heading" style={{ marginBottom: "16px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "12px" }}>
         <div>
           <h2>Distribusi Penggunaan per Model</h2>
           <span>Analisis konsumsi token & latensi dari {isAdmin ? "database TiDB" : "database"}</span>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "6px", color: "var(--text-muted)", fontSize: "12px" }}>
-          <PieChart size={15} /> {models.length} Model Terpakai
+        <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+          <div style={{ display: "flex", gap: "4px" }}>
+            {(["tokens", "requests", "latency"] as const).map((s) => (
+              <button
+                key={s}
+                type="button"
+                className={`button ${sortBy === s ? "primary" : "ghost"}`}
+                style={{ height: "26px", padding: "0 8px", fontSize: "11px" }}
+                onClick={() => setSortBy(s)}
+              >
+                {s === "tokens" ? "Token" : s === "requests" ? "Request" : "Latensi"}
+              </button>
+            ))}
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: "6px", color: "var(--text-muted)", fontSize: "12px" }}>
+            <PieChart size={15} /> {models.length} Model
+          </div>
         </div>
       </div>
 
@@ -76,7 +99,7 @@ export function ModelUsageBreakdown({
 
           {/* Model rows */}
           <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-            {models.map((item, idx) => {
+            {sortedModels.map((item, idx) => {
               const pct = (Number(item.tokens) / safeTotal) * 100;
               const color = PALETTE[idx % PALETTE.length];
               const cleanName = formatModelName(item.model);

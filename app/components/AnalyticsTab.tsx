@@ -3,6 +3,7 @@
 import { AlertTriangle, ArrowRight } from "lucide-react";
 import { Button } from "./ui";
 import AnalyticsCards from "./AnalyticsCards";
+import UsageTrendChart from "./UsageTrendChart";
 import ModelUsageBreakdown from "./ModelUsageBreakdown";
 import RecentLogsTable from "./RecentLogsTable";
 import OrderHistoryTable from "./OrderHistoryTable";
@@ -45,6 +46,8 @@ export function AnalyticsTab({
         isAdmin={isAdmin}
         onNavigatePackages={onNavigatePackages}
       />
+
+      <UsageTrendChart dailyTrend={analytics?.dailyTrend || []} isAdmin={isAdmin} />
 
       {balance < 20000 && (
         <div className="warning-banner" role="alert" style={{ margin: 0 }}>
