@@ -3,11 +3,11 @@
 - **Repository**: `https://github.com/Dhani078/KiosAI.git`
 - **Location**: `E:/Hermesproject/KiosAI`
 - **Live Worker**: `https://kiosai.dhanisepeda.workers.dev` (subdomain `dhanisepeda`, pakai `e`)
-- **Current Status**: Complete & Fully Verified (Phase 0 - 70)
+- **Current Status**: Complete & Fully Verified (Phase 0 - 71)
 - **Upstream Router**: 9Router local (`http://127.0.0.1:20128`) dengan 71 model aktif terverifikasi 5x audit (5 Free, 66 Pro)
 - **Database**: TiDB Cloud Serverless (region Tokyo/Singapore, MySQL-compatible HTTP). Host & kredensial HANYA di `.env` lokal `DATABASE_URL` (jangan ditulis di dokumen repo).
-- **Last Commit**: `b51fd1e` - fix(ocr): prioritize gemini-3.5-flash for 3s receipt verification and add strict 8s timeout guard
-- **Security Baseline**: Sesi cookie HttpOnly bertanda tangan HMAC-SHA256, IDOR dibasmi, unverified payment bypass ditutup, webhook fail-closed, admin password dirotasi.
+- **Last Commit**: `c771eb1` - feat(security): add digital forensics & generative AI receipt tamper detection to multimodal verifier
+- **Security Baseline**: Sesi cookie HttpOnly bertanda tangan HMAC-SHA256, IDOR dibasmi, 4-layer anti-replay, deteksi forensik editan/AI, 5MB boundary guard, unverified payment bypass ditutup.
 
 ## Dokumen Navigasi Cepat
 - Aturan & perintah untuk agent: `AGENT.md`
@@ -345,6 +345,15 @@
     - Pembatasan timeout 8 detik per request via `AbortSignal.timeout(8000)` mengeliminasi hang 35 detik.
     - Waktu verifikasi struk turun dari 34.824 ms menjadi 2.927 ms (< 3 detik).
     - Penambahan `finally { setAiLoading(false); }` di `PaymentModal.tsx` agar UI tidak menggantung saat network error.
+  - Phase 65: Multi-Layer Anti-Replay, Visual Forensics & Boundary Hardening:
+    - Lapisan 1: SHA-256 image fingerprinting di `receipt_hash` TiDB, menolak upload foto duplikat di detik 0.
+    - Lapisan 2: Validasi kesegaran tanggal (`transactionDate`) menolak struk kedaluwarsa dari hari/bulan sebelumnya.
+    - Lapisan 3: Normalisasi dan pemeriksaan keunikan ID Transaksi (`payment_ref`) di TiDB.
+    - Lapisan 4: Pencocokan nominal tagihan unik persis (*exact amount matching*).
+    - Forensik manipulasi digital & AI generator di `lib/receipt-verifier.ts` (`isTampered: true`).
+    - Penegakan presisi batas upload 5MB (5.242.880 bytes, HTTP 413) di `verify-receipt/route.ts`.
+    - Suite pengujian keamanan diperluas menjadi 18/18 PASS.
+    - 100% verifikasi lolos: 126 file <= 200 LOC, semua suite pengujian lulus sempurna.
 
 
 

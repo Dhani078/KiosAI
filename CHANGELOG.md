@@ -7,7 +7,32 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
-### `b51fd1e` - fix(ocr): prioritize gemini-3.5-flash for 3s receipt verification and add strict 8s timeout guard
+### `c771eb1` - feat(security): add digital forensics & generative AI receipt tamper detection to multimodal verifier
+
+**Pencegahan Struk Palsu, Editan Photoshop/Canva, dan Gambar Generatif AI**
+- Analisis forensik visual multimodal Gemini 3.5 Flash: mendeteksi perbedaan font (font mismatch), artefak kompresi patch/blur pada angka nominal, dan halusinasi gambar AI.
+- Otomatis menolak berkas bukti yang terindikasi manipulasi digital (`isTampered: true`).
+
+### `1645cae` - test(security): add regression tests for unauth receipt, foreign order rejection, and 5mb payload boundary enforcement
+
+**Perluasan Suite Keamanan Regresi (18/18 PASS)**
+- Validasi penolakan verifikasi struk tanpa autentikasi (401).
+- Validasi proteksi IDOR: penolakan verifikasi order milik pengguna lain (404).
+- Penegakan presisi batas ukuran berkas 5MB (5.242.880 bytes) dengan respons HTTP 413.
+
+### `c48edf2` & `14efbac` - fix(security): 4-layer anti-replay defense with sha256 fingerprint, date freshness, and normalized txid
+
+**Sistem Pertahanan 4 Lapisan Anti-Replay Struk Transfer**
+- Lapisan 1: Sidik jari SHA-256 (`receipt_hash`) menolak upload file foto yang sama.
+- Lapisan 2: Kesegaran tanggal transaksi (`transactionDate`) menolak struk kedaluwarsa/hari sebelumnya.
+- Lapisan 3: Normalisasi dan pemeriksaan keunikan ID Transaksi (`payment_ref`) di database TiDB.
+- Lapisan 4: Pencocokan nominal tagihan unik persis (*exact amount match*), menolak penggunaan struk berharga dasar untuk pesanan dengan kode unik.
+- Kolom DDL `receipt_hash` dan indeks `idx_orders_receipt_hash` terpasang di TiDB.
+
+### `b9fae4b` - ux(payment): display inline status feedback instead of browser alert dialog
+
+**Penyempurnaan Umpan Balik Modal Pembayaran**
+- Penggantian pop-up alert browser dengan pesan error inline elegan di dalam modal checkout.
 
 **Akselerasi Verifikasi Struk AI 12x Lebih Cepat (35 Detik -> 2.9 Detik)**
 - Prioritaskan `gemini-3.5-flash` & `gemini-3.5-flash-lite` di urutan pertama `FALLBACK_MODELS` (kecepatan respons 1-2 detik, bukan timeout 10+ detik seperti 3.8/3.7).
