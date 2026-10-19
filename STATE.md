@@ -3,11 +3,11 @@
 - **Repository**: `https://github.com/Dhani078/KiosAI.git`
 - **Location**: `E:/Hermesproject/KiosAI`
 - **Live Worker**: `https://kiosai.dhanisepeda.workers.dev` (subdomain `dhanisepeda`, pakai `e`)
-- **Current Status**: Complete & Fully Verified (Phase 0 - 72)
+- **Current Status**: Complete & Fully Verified (Phase 0 - 73)
 - **Upstream Router**: 9Router local (`http://127.0.0.1:20128`) dengan 71 model aktif terverifikasi 5x audit (5 Free, 66 Pro)
 - **Database**: TiDB Cloud Serverless (region Tokyo/Singapore, MySQL-compatible HTTP). Host & kredensial HANYA di `.env` lokal `DATABASE_URL` (jangan ditulis di dokumen repo).
-- **Last Commit**: `feat(ai)` - feat(ai): implement model masking & fallback cloaking engine, eliminate jailbreak blocking
-- **Security Baseline**: Sesi cookie HttpOnly bertanda tangan HMAC-SHA256, IDOR dibasmi, model masking & identity guard, 4-layer anti-replay, deteksi forensik editan/AI, 5MB boundary guard, unverified payment bypass ditutup.
+- **Last Commit**: `57fd5db` - fix(auth): auto-fetch playgroundKey in QuickTestModal, strip masked prefixes, and add raw cookie header fallback in session parser
+- **Security Baseline**: Sesi cookie HttpOnly bertanda tangan HMAC-SHA256, anti-bot register 403 (OAuth only), IDOR dibasmi, model masking & identity guard, 4-layer anti-replay, 5MB boundary guard, unverified payment bypass ditutup.
 
 ## Dokumen Navigasi Cepat
 - Aturan & perintah untuk agent: `AGENT.md`
@@ -361,6 +361,17 @@
     - Penghapusan header pembocor `X-Kios-Model-Used` dan `X-Kios-Failover` pada respon klien.
     - Dukungan failover non-streaming multi-kandidat saat kuota model upstream habis.
     - Unit test suite diperbarui ke 13/13 PASS (`npm run test:defense`).
+  - Phase 67: Model Catalog UI Clean-Up & In-Card Quick Test Engine:
+    - Pembersihan sufiks `-free`, `:free`, `_free`, dan `(max)` dari penamaan model di UI pengguna.
+    - Pembuatan komponen modal uji instan `QuickTestModal.tsx` langsung dari tombol kartu model tanpa navigasi ke playground.
+    - Humanisasi error teknis gateway (HTTP 530, DNS error 1016, 502) menjadi bahasa Indonesia informatif di `lib/model-utils.ts`.
+    - Penghapusan total referensi model usang `Atria-Dawn-Preview` di seluruh rute & UI.
+    - Penguncian pendaftaran manual publik (`/api/auth/register` 403) demi mewajibkan OAuth GitHub/Google anti-bot.
+  - Phase 68: Quick Test Auth Hardening & Cloudflare Session Parser Fallback:
+    - Auto-fetch `playgroundKey` (`kios-pg-...`) langsung di `QuickTestModal` jika key di React state belum terinisialisasi.
+    - Pembersihan prefix sensor (`kios-...`) agar tidak terkirim sebagai Authorization header tidak sah.
+    - Fallback parsing `Cookie` mentah di `lib/session.ts` saat `req.cookies` kosong pada runtime Cloudflare Worker.
+    - 100% verifikasi lolos: 127 file <= 200 LOC, semua suite pengujian lulus sempurna.
 
 
 

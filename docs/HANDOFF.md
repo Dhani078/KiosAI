@@ -9,20 +9,20 @@ Dokumen ini dirancang agar setiap sesi AI atau pengembang dapat melanjutkan peke
 | Komponen | Status | Keterangan |
 |---|---|---|
 | **Repository** | Clean, Up-to-Date | `https://github.com/Dhani078/KiosAI.git` (Branch `main`) |
-| **Commit Terakhir** | `feat(masking)` | feat(ai): implement model masking & fallback cloaking engine, eliminate jailbreak blocking |
+| **Commit Terakhir** | `57fd5db` | fix(auth): auto-fetch playgroundKey in QuickTestModal, strip masked prefixes, and add raw cookie header fallback |
 | **Worker Live** | `healthy` | `https://kiosai.dhanisepeda.workers.dev` (Subdomain `dhanisepeda` dengan huruf 'e') & `https://tokoai.my.id` |
 | **Database** | `connected` | TiDB Cloud Serverless (AWS Tokyo `ap-southeast-1` / `ap-northeast-1`) |
 | **Upstream 9Router** | `connected` | `http://127.0.0.1:20128` (69 model aktif terverifikasi 5x audit, 5 Free, 64 Pro) |
-| **Batas Baris Kode** | 100% Patuh | 126 file sumber `.ts`/`.tsx`/`.mjs` `<= 200` baris |
-| **UI Craft & Design** | Complete | `DESIGN.md`, 0 em-dash, Bento Grid, Hero Terminal, tactile physics |
+| **Batas Baris Kode** | 100% Patuh | 127 file sumber `.ts`/`.tsx`/`.mjs` `<= 200` baris |
+| **UI Craft & Design** | Complete | `DESIGN.md`, 0 em-dash, Bento Grid, Hero Terminal, in-card QuickTestModal |
 | **Dynamic QRIS DANA** | 7/7 Passed | `npm run test:qris` - EMVCo tag 54 nominal lock & CRC16-CCITT |
 | **AI Receipt Verify** | 2/2 Passed | `npm run test:receipt` - Gemini 3.5 Flash Vision OCR, 4-layer anti-replay, digital forensics |
 | **E2E Integration** | 11/11 Passed | `npm run test:e2e` lolos semua skenario |
 | **Trend Analytics** | Complete | 7-day visual activity chart & Input/Output token split ratio |
 | **DOKU Checkout** | 7/7 Passed | `npm run test:doku` — DOKU headers, signature HMAC-SHA256, and webhook verification |
 | **Model Masking** | 13/13 Passed | `npm run test:defense` — Model identity persona guard, JSON & SSE cloaking, zero header leakage |
-| **Security Regression** | 18/18 Passed | `npm run test:security` - IDOR eliminated, 4-layer anti-replay, 5MB boundary, HttpOnly HMAC session |
-| **Pricing Unit Test** | 22/22 Passed | `npm run test:pricing` — rasio directional input vs output + harga $/1M |
+| **Security Regression** | 19/19 Passed | `npm run test:security` - Anti-bot register 403, IDOR eliminated, 4-layer anti-replay, 5MB boundary, HttpOnly HMAC |
+| **Pricing Unit Test** | 21/21 Passed | `npm run test:pricing` — rasio directional input vs output + harga $/1M |
 | **UI Audit** | 16/16 Passed | `npm run audit:ui` (4) + `npm run audit:dashboard` (12) — 0 overflow, 0 copy lama |
 | **Tier Database** | 2 tier bersih | `free: 35`, `pro: 109` — saldo terlindungi non-negatif |
 

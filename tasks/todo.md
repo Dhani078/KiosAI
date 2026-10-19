@@ -468,6 +468,31 @@
 - [x] Task 65.2: Verify production Cloudflare Worker response latency on `verify-receipt` (down to 3.0s)
 - [x] Task 65.3: Sync documentation and test suites (126 source files <= 200 LOC, all tests pass)
 
+## Phase 66 (Anti-Replay Defense, Digital Tamper Forensics & Boundary Hardening - Completed)
+- [x] Task 66.1: Add `receipt_hash` SHA-256 fingerprint column and index to `kiosai.orders` in TiDB
+- [x] Task 66.2: Add transaction date freshness validation to reject stale receipts
+- [x] Task 66.3: Add normalized transaction ID deduplication in TiDB
+- [x] Task 66.4: Enforce exact unique code amount matching on receipt verification
+- [x] Task 66.5: Integrate digital forensics & AI-generation tamper detection (`isTampered: true`)
+- [x] Task 66.6: Precise 5MB boundary guard (5.242.880 bytes, HTTP 413)
+- [x] Task 66.7: Extend security suite to 19/19 PASS (`npm run test:security`)
+
+## Phase 67 (Model Masking, Fallback Cloaking & Jailbreak Freedom - Completed)
+- [x] Task 67.1: Remove all jailbreak/extraction regex filters; unrestrict user prompts 100%
+- [x] Task 67.2: Implement system persona identity injection (`[MODEL IDENTITY: You are ...]`)
+- [x] Task 67.3: Mask model name in JSON and streaming SSE chunks
+- [x] Task 67.4: Strip leaky headers `X-Kios-Model-Used` and `X-Kios-Failover`
+- [x] Task 67.5: Update defense test suite to 13/13 PASS (`npm run test:defense`)
+
+## Phase 68 (In-Card Quick Test Engine, OAuth Enforcement & Session Parser Fallback - Completed)
+- [x] Task 68.1: Clean `-free` suffixes from model display names for users
+- [x] Task 68.2: Build `<QuickTestModal />` directly on model catalog cards
+- [x] Task 68.3: Deprecate `Atria-Dawn-Preview` and route Free Tier to `DeepSeek V4.1 Flash`
+- [x] Task 68.4: Humanize gateway errors (HTTP 530, DNS 1016, 502) in `lib/model-utils.ts`
+- [x] Task 68.5: Remove manual register form and lock registration to verified GitHub & Google OAuth
+- [x] Task 68.6: Auto-fetch `playgroundKey` in `QuickTestModal` and add raw cookie header fallback in session parser
+- [x] Task 68.7: 100% compliance: 127 source files <= 200 LOC, all test suites pass
+
 
 
 

@@ -330,6 +330,20 @@
   - Penggantian browser alert dialog dengan feedback error inline di `PaymentModal.tsx`
   - Validasi kecepatan respons verifikasi struk AI di Worker produksi `tokoai.my.id` (3.0 detik)
   - 100% verifikasi lolos: 126 file <= 200 LOC, semua suite pengujian lulus sempurna
+- [x] Phase 71: Multi-Layer Anti-Replay, Tamper Detection & Security Boundary Hardening
+  - Pertahanan 4 lapisan anti-replay: SHA-256 fingerprint di `receipt_hash` TiDB, kesegaran tanggal, normalisasi ID transaksi, dan kecocokan nominal tagihan unik
+  - Forensik deteksi manipulasi digital dan gambar generator AI (`isTampered: true`)
+  - Penegakan presisi batas upload 5MB (HTTP 413)
+  - Suite pengujian keamanan 19/19 PASS
+- [x] Phase 72: Model Masking, Failover Cloaking & Jailbreak Freedom
+  - Persona identitas model konsisten dengan model pilihan user
+  - Cloaking otomatis pada respon JSON dan stream SSE
+  - Pembebasan prompt jailbreak/ekstraksi (100% unrestricted)
+- [x] Phase 73: In-Card Quick Test Engine, OAuth Enforcement & Session Parser Fallback
+  - Pembersihan sufiks `-free` dari nama model
+  - Komponen `<QuickTestModal />` langsung dari kartu katalog
+  - Pendaftaran manual dikunci ke OAuth GitHub & Google terverifikasi
+  - Auto-fetch `playgroundKey` dan raw cookie header fallback di `lib/session.ts`
 
 
 

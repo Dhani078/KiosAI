@@ -7,6 +7,37 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `57fd5db` & `3d26dcd` - fix(auth): auto-fetch playgroundKey in QuickTestModal, strip masked prefixes, and add raw cookie header fallback
+
+**Penyempurnaan Autentikasi Uji Cepat Model & Fallback Sesi**
+- `QuickTestModal`: Auto-fetch `playgroundKey` via `/api/user` saat key belum terpasang di state, simpan di `sessionStorage`, dan gunakan `Bearer kios-pg-...`.
+- Pembersihan prefix sensor (`kios-...`) agar tidak terkirim sebagai Authorization header tidak sah.
+- Fallback parsing `Cookie` mentah di `lib/session.ts` saat `req.cookies` kosong pada runtime Cloudflare Worker.
+
+### `85bc2dd` - feat(models): clean -free suffix from all user-facing model names and add direct in-card QuickTestModal
+
+**Pembersihan Label Model Pengguna & Modal Uji Cepat Tanpa Playground**
+- Pembersihan akhiran `-free`, `:free`, `_free`, dan `(max)` dari nama tampilan model (`deepseek-v4.1-flash`, `muse-spark-1.3-contributor`, dll).
+- Tombol "Tes Model" membuka `<QuickTestModal />` langsung di kartu katalog tanpa navigasi ke tab Playground.
+
+### `ed2f4f1` - feat(auth): remove manual register tab and lock registration to verified GitHub & Google OAuth
+
+**Pencegahan Pembuatan Akun Bot & Eksploitasi Saldo Free**
+- Penghapusan formulir pendaftaran manual publik di `AuthModal.tsx`.
+- Wajib verifikasi akun baru melalui GitHub atau Google OAuth.
+- Penutupan endpoint `/api/auth/register` untuk publik dengan respon HTTP 403.
+
+### `481ea2d` - feat(models): humanize upstream gateway errors into clean indonesian and remove deprecated atria dawn
+
+**Pesan Error Ramah Pengguna & Penghapusan Model Usang**
+- `humanizeErrorMessage` (`lib/model-utils.ts`): Konversi error teknis mentah (HTTP 530, DNS error 1016, 502) menjadi bahasa Indonesia yang informatif.
+- Penghapusan total model `atria/Atria-Dawn-Preview` dari katalog, toolbar, router, dan tes. Model Free Tier dialihkan penuh ke DeepSeek V4.1 Flash.
+
+### `e66272a` - fix(receipt): support screenshot without explicit tx-id using deterministic image fingerprint fallback
+
+**Dukungan Verifikasi Struk Pop-Up Tanpa Nomor Referensi Panjang**
+- Deteksi otomatis hash foto transfer `IMG-<HASH>` sebagai referensi unik saat tangkapan layar m-banking/DANA tidak memuat ID transaksi detail.
+
 ### `feat(masking)` - feat(ai): implement model masking & fallback cloaking engine, eliminate jailbreak blocking
 
 **Model Masking & Seamless Fallback Cloaking**
