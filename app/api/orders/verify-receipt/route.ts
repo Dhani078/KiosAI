@@ -62,6 +62,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: true, message: "Pesanan ini sudah lunas.", order });
     }
 
+    // 2. Validasi Masa Berlaku Pesanan (Maks 60 menit)
+    const orderAgeMs = Date.now() - new Date(order.created_at).getTime();
+    if (orderAgeMs > 60 * 60 * 1000) {
+      return NextResponse.json({
+        error: "Pesanan ini sudah kedaluwarsa (> 60 menit). Silakan buat pesanan baru.",
+      }, { status: 400 });
+    }
+
     const baseAmount = BASE_AMOUNTS[order.package_tier] || Number(order.amount_idr);
 
     // Verifikasi via AI Multimodal OCR
@@ -76,16 +84,30 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: verification.error || "Bukti transfer tidak valid." }, { status: 400 });
     }
 
-    // 2. Anti-Replay Lapisan 2: Wajib ada ID transaksi unik dari struk
-    if (!verification.transactionId || verification.transactionId.length < 5) {
+    // 3. Validasi Kesegaran Tanggal Transaksi (Anti-Stale Receipt)
+    if (verification.transactionDate) {
+      const orderDate = new Date(order.created_at).toISOString().slice(0, 10);
+      const today = new Date().toISOString().slice(0, 10);
+      const txDate = verification.transactionDate.trim();
+      if (txDate !== orderDate && txDate !== today) {
+        return NextResponse.json({
+          error: `Tanggal pada struk (${txDate}) tidak sesuai dengan waktu pesanan hari ini (${orderDate}). Gunakan bukti transfer terbaru.`,
+        }, { status: 400 });
+      }
+    }
+
+    // 4. Anti-Replay Lapisan 2: Wajib ada ID transaksi unik dari struk & normalisasi
+    const rawTxId = String(verification.transactionId || "").trim();
+    const cleanTxId = rawTxId.replace(/[^a-zA-Z0-9]/g, "").toUpperCase();
+    if (cleanTxId.length < 5) {
       return NextResponse.json({
-        error: "Nomor referensi transaksi tidak terbaca pada struk. Pastikan nomor transaksi terlihat jelas.",
+        error: "Nomor referensi transaksi tidak terdeteksi atau terlalu pendek pada struk. Pastikan nomor transaksi terlihat jelas.",
       }, { status: 400 });
     }
 
     const existing = await db.queryOne<any>(
-      `SELECT id FROM kiosai.orders WHERE payment_ref = ? AND status = 'paid' LIMIT 1`,
-      [verification.transactionId]
+      `SELECT id FROM kiosai.orders WHERE UPPER(REPLACE(REPLACE(REPLACE(COALESCE(payment_ref, ''), '-', ''), ' ', ''), ':', '')) = ? AND status = 'paid' LIMIT 1`,
+      [cleanTxId]
     );
     if (existing) {
       return NextResponse.json({
@@ -96,7 +118,7 @@ export async function POST(req: NextRequest) {
     // Atomic CAS: Kunci pesanan dan simpan nomor referensi serta hash struk
     const updateRes: any = await db.execute(
       `UPDATE kiosai.orders SET status = 'paid', paid_at = NOW(), payment_ref = ?, receipt_hash = ? WHERE id = ? AND status != 'paid'`,
-      [verification.transactionId, receiptHash, orderId],
+      [cleanTxId, receiptHash, orderId],
       { fullResult: true }
     );
 

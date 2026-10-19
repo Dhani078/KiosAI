@@ -22,6 +22,7 @@ export interface ReceiptVerifyResult {
   valid: boolean;
   amount?: number;
   transactionId?: string;
+  transactionDate?: string;
   recipient?: string;
   modelUsed?: string;
   error?: string;
@@ -51,15 +52,18 @@ PANDUAN PEMBACAAN:
    - Bernilai false jika transaksi bertuliskan "Menunggu", "Pending", "Dalam Proses", "Kedaluwarsa", atau "Gagal".
 3. Nomor Transaksi (transactionId):
    - Wajib cari dan ekstrak nomor transaksi: ID Transaksi, No. Referensi, Ref ID, No. Transaksi, atau Order ID. Ambil string alfanumerik lengkap tanpa spasi. Jika tidak ada, isi "".
-4. Penerima (recipient):
+4. Tanggal Transaksi (transactionDate):
+   - Ekstrak tanggal transaksi jika tertera pada struk (format standar YYYY-MM-DD, contoh: "2026-10-19"). Jika tidak tertera, isi "".
+5. Penerima (recipient):
    - Ambil nama pemilik rekening atau merchant tujuan yang tertera (contoh: "Dhani", "TokoAI").
-5. Validitas Dokumen:
+6. Validitas Dokumen:
    - Jika gambar bukan bukti transfer atau teks tidak terbaca/buram, set amount: 0 dan isSuccess: false.
 
 Format JSON:
 {
   "amount": 25143,
   "transactionId": "DN2026101899123",
+  "transactionDate": "2026-10-19",
   "isSuccess": true,
   "recipient": "Dhani"
 }
@@ -131,25 +135,20 @@ Kembalikan HANYA objek JSON tanpa pembungkus markdown dan tanpa teks pembuka/pen
           };
         }
 
-        // Validasi nominal cerdas: cocok dengan tagihan unik ATAU harga dasar paket (hanya paket reguler)
-        const baseAmount = params.expectedBaseAmount || params.expectedAmount;
+        // Validasi nominal presisi: nominal struk wajib cocok persis dengan total tagihan unik
         const matchesExact = extractedAmount === params.expectedAmount;
-        const isMicro = params.expectedBaseAmount === 100;
-        const matchesBase = !isMicro && extractedAmount === baseAmount;
-        const withinTolerance = !isMicro && extractedAmount >= baseAmount && extractedAmount <= params.expectedAmount + 50;
-
-        if (!matchesExact && !matchesBase && !withinTolerance) {
-          if (extractedAmount < baseAmount) {
+        if (!matchesExact) {
+          if (extractedAmount < params.expectedAmount) {
             return {
               valid: false,
               amount: extractedAmount,
-              error: `Nominal pada struk (Rp ${extractedAmount.toLocaleString("id-ID")}) kurang dari harga paket (Rp ${baseAmount.toLocaleString("id-ID")}).`,
+              error: `Nominal pada struk (Rp ${extractedAmount.toLocaleString("id-ID")}) kurang dari total tagihan (Rp ${params.expectedAmount.toLocaleString("id-ID")}).`,
             };
           }
           return {
             valid: false,
             amount: extractedAmount,
-            error: `Nominal pada struk (Rp ${extractedAmount.toLocaleString("id-ID")}) tidak cocok dengan tagihan (Rp ${params.expectedAmount.toLocaleString("id-ID")}).`,
+            error: `Nominal pada struk (Rp ${extractedAmount.toLocaleString("id-ID")}) tidak cocok dengan total tagihan (Rp ${params.expectedAmount.toLocaleString("id-ID")}).`,
           };
         }
 
@@ -157,6 +156,7 @@ Kembalikan HANYA objek JSON tanpa pembungkus markdown dan tanpa teks pembuka/pen
           valid: true,
           amount: extractedAmount,
           transactionId: parsed.transactionId || "",
+          transactionDate: parsed.transactionDate || "",
           recipient: parsed.recipient || "",
           modelUsed: model,
         };
