@@ -83,10 +83,10 @@ export function PaymentModal({
         setPaid(true);
         onPaymentSuccess(Number(userBalance) + Number(data.tokensAdded || tokensGranted));
       } else {
-        alert(data.error || "Gagal memproses pembayaran");
+        setAiError(data.error || "Pembayaran belum terkonfirmasi.");
       }
     } catch (e: any) {
-      alert(e.message || "Network error");
+      setAiError(e.message || "Koneksi terputus saat memeriksa status.");
     } finally {
       setLoading(false);
     }
