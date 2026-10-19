@@ -11,6 +11,8 @@ import { evaluatePriorityAdmission } from "@/lib/priority-scheduler";
 import { recordInferenceTelemetry } from "@/lib/edge-telemetry";
 import { sendLowBalanceWebhook } from "@/lib/balance-alerts";
 import { injectModelMasking, maskModelInJson } from "@/lib/prompt-defense";
+import { readSessionUserId } from "@/lib/session";
+import { createPlaygroundToken } from "@/lib/session-key";
 import {
   isCacheEligible,
   buildCanonicalCacheKey,
@@ -31,7 +33,13 @@ export async function POST(req: NextRequest) {
     return errorResponse("Direct edge bypass forbidden. Request must pass Cloudflare Edge.", 403, "edge_required");
   }
 
-  const rawKey = (req.headers.get("authorization") || "").replace(/^Bearer\s+/i, "").trim();
+  let rawKey = (req.headers.get("authorization") || "").replace(/^Bearer\s+/i, "").trim();
+  if (!rawKey) {
+    const sessionUserId = readSessionUserId(req);
+    if (sessionUserId) {
+      rawKey = createPlaygroundToken(sessionUserId);
+    }
+  }
   if (!rawKey) return errorResponse("Missing Authorization header. Use Bearer kios-...", 401, "missing_key");
 
   const auth = await validateApiKey(rawKey);
