@@ -34,15 +34,15 @@ const FALLBACK_MAP: Record<string, string[]> = {
   ],
   "oc/mimo-v2.6-flash-free": [
     "oc/deepseek-v4.1-flash-free(max)",
-    "atria/Atria-Dawn-Preview",
+    "tokenharbor/deepseek-v4.1-flash:free",
   ],
   "oc/nemotron-3.5-lightning-free": [
     "oc/mimo-v2.6-flash-free",
-    "atria/Atria-Dawn-Preview",
+    "tokenharbor/deepseek-v4.1-flash:free",
   ],
   "oc/muse-spark-1.3-contributor-free": [
     "oc/deepseek-v4.1-flash-free(max)",
-    "atria/Atria-Dawn-Preview",
+    "tokenharbor/deepseek-v4.1-flash:free",
   ],
   "ag/claude-sonnet-4-6": [
     "kr/claude-sonnet-4",

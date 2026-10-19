@@ -78,7 +78,7 @@ export async function POST(req: NextRequest) {
   }
 
   if (!isModelAllowedForTier(auth.user.tier, requestedModel)) {
-    return errorResponse(`Model '${rawModel}' tidak tersedia di tier FREE. Model gratis hanya Atria Dawn.`, 403, "tier_restricted");
+    return errorResponse(`Model '${rawModel}' hanya tersedia untuk paket Pro. Pengguna Free dapat menggunakan DeepSeek V4.1 Flash.`, 403, "tier_restricted");
   }
 
   // Model Identity & Masking Guard: persona model selalu konsisten dengan model yang diminta

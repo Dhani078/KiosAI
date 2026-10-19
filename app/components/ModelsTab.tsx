@@ -11,7 +11,6 @@ import ModelFilters from "./ModelFilters";
 
 function getProvider(id: string): string {
   const s = (id || "").toLowerCase();
-  if (s.includes("atria")) return "Atria";
   if (s.includes("claude") || s.includes("anthropic")) return "Anthropic";
   if (s.includes("deepseek")) return "DeepSeek";
   if (s.includes("gpt") || s.includes("openai") || s.includes("o1") || s.includes("o3")) return "OpenAI";
@@ -45,7 +44,7 @@ export function ModelsTab({
   const [snippetTarget, setSnippetTarget] = useState<{ id: string; name: string } | null>(null);
 
   const isFreeTier = (userTier || "free").toLowerCase() === "free";
-  const getModelTier = (m: any): "free" | "pro" => m.required_tier || ((m.id || "").toLowerCase().includes("atria") ? "free" : "pro");
+  const getModelTier = (m: any): "free" | "pro" => m.required_tier || ((m.id || "").toLowerCase().includes("free") || (m.id || "").toLowerCase().startsWith("oc/") ? "free" : "pro");
   const checkAllowed = (m: any) => (!isFreeTier ? true : getModelTier(m) === "free");
 
   const validModels = models.filter((m) => m.id !== "combomaut");

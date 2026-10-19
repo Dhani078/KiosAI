@@ -17,7 +17,6 @@ export function formatDisplayName(modelId: string): string {
   }
   if (lower === "ag/claude-sonnet-4-6") return "Claude Sonnet 4.6 (Thinking)";
   if (lower === "ag/claude-opus-4-6-thinking") return "Claude Opus 4.6 (Thinking)";
-  if (lower.includes("atria-dawn")) return "Atria-Dawn-Preview";
   if (lower.includes("deepseek-v4.1")) return "deepseek-v4.1-flash";
   const withoutSuffix = modelId.replace(/:(free|batch)$/i, "");
   const parts = withoutSuffix.split("/");

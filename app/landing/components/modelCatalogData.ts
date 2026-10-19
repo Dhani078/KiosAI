@@ -1,7 +1,7 @@
 export interface ModelItem {
   id: string;
   name: string;
-  provider: "Anthropic" | "OpenAI" | "DeepSeek" | "Google" | "Meta" | "Atria" | "OpenCode";
+  provider: "Anthropic" | "OpenAI" | "DeepSeek" | "Google" | "Meta" | "OpenCode";
   context: string;
   tier: "free" | "pro";
   pricing: string;
@@ -11,9 +11,9 @@ export interface ModelItem {
 
 export const MODELS: ModelItem[] = [
   {
-    id: "atria/Atria-Dawn-Preview",
-    name: "Atria Dawn Preview",
-    provider: "Atria",
+    id: "deepseek-v4.1-flash",
+    name: "DeepSeek V4.1 Flash",
+    provider: "DeepSeek",
     context: "128k",
     tier: "free",
     pricing: "Gratis",

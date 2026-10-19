@@ -12,7 +12,7 @@ export interface ModelPricing {
 export function getModelPricing(modelId: string): ModelPricing {
   const m = (modelId || "").toLowerCase();
 
-  if (m.includes("atria") || m.startsWith("oc/")) {
+  if (m.startsWith("oc/")) {
     return { input: "0.00", output: "0.00", cached: "0.00", formatted: "Gratis" };
   }
   if (m.includes("r1") || (m.includes("deepseek") && m.includes("reasoning"))) {

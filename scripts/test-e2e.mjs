@@ -88,7 +88,7 @@ const postChat = (body) =>
 await test("POST /v1/chat/completions (Alias & Non-stream)", async () => {
   assert(testKey, "No test key");
   const res = await postChat({
-    model: "atria", // tests resolveModelAlias: "atria" -> "atria/Atria-Dawn-Preview"
+    model: "deepseek-v4.1-flash",
     messages: [{ role: "user", content: "Halo KiosAI e2e" }],
     max_tokens: 10,
   });
@@ -108,7 +108,7 @@ await test("POST /v1/chat/completions (Alias & Non-stream)", async () => {
 await test("POST /v1/chat/completions (Stream SSE)", async () => {
   assert(testKey, "No test key");
   const res = await postChat({
-    model: "atria/Atria-Dawn-Preview",
+    model: "tokenharbor/deepseek-v4.1-flash:free",
     messages: [{ role: "user", content: "Stream test" }],
     max_tokens: 10,
     stream: true,
@@ -128,7 +128,7 @@ await test("POST /v1/chat/completions (Stream SSE)", async () => {
 await test("Free Tier Gating (403 tier_restricted)", async () => {
   assert(testKey, "No test key");
   const res = await postChat({
-    model: "tokenharbor/deepseek-v4.1-flash:free",
+    model: "ag/claude-sonnet-4-6",
     messages: [{ role: "user", content: "Ping" }],
     max_tokens: 5,
   });

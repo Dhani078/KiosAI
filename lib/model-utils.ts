@@ -20,7 +20,6 @@ export function formatModelName(modelId: string, isAdmin: boolean = false): stri
   }
 
   const lower = modelId.toLowerCase();
-  if (lower.includes("atria-dawn")) return "Atria-Dawn-Preview";
   if (lower.includes("deepseek-v4.1-flash-free(max)")) return "deepseek-v4.1-flash-free(max)";
   if (lower.includes("deepseek-v4.1-flash")) return "deepseek-v4.1-flash";
   if (lower.includes("claude-haiku-4.5")) return "claude-haiku-4.5";
@@ -73,7 +72,7 @@ export function resolveModelAlias(modelId: string): string {
     return "beatapi/deepseek-v4.1-flash-free";
   }
   if (lower === "atria-dawn-preview" || lower === "atria") {
-    return "atria/Atria-Dawn-Preview";
+    return "tokenharbor/deepseek-v4.1-flash:free";
   }
   if (m === "claude-sonnet-4-6" || m === "Claude Sonnet 4.6 (Thinking)") {
     return "ag/claude-sonnet-4-6";
@@ -108,25 +107,29 @@ export function humanizeErrorMessage(msg: string, isAdmin: boolean = false): str
   const resetMatch = msg.match(/reset after\s*([0-9a-z]+)/i) || msg.match(/reset in\s*([0-9a-z]+)/i);
   const resetTime = resetMatch ? resetMatch[1] : null;
 
-  if (lower.includes("token quota exhausted") || lower.includes("insufficient_quota") || lower.includes("quota exceeded")) {
+  if (lower.includes("530") || lower.includes("1016") || lower.includes("origin dns") || lower.includes("dns")) {
+    friendly = "Server model AI upstream sedang mengalami gangguan koneksi atau DNS. Silakan beralih ke model lain seperti DeepSeek atau Gemini.";
+  } else if (lower.includes("upstream_fatal") || lower.includes("upstream error") || lower.includes("upstream (50") || lower.includes("bad_gateway") || lower.includes("502") || lower.includes("504")) {
+    friendly = "Jalur koneksi ke provider model AI sedang terganggu sementara. Silakan coba sesaat lagi atau gunakan model alternatif.";
+  } else if (lower.includes("token quota exhausted") || lower.includes("insufficient_quota") || lower.includes("quota exceeded")) {
     friendly = resetTime
-      ? `Kuota provider untuk model ini sedang habis (reset dalam ${resetTime}). Silakan tunggu sebentar atau beralih ke model lain.`
+      ? `Kuota provider untuk model ini sedang habis (reset dalam ${resetTime}). Silakan beralih ke model lain.`
       : "Kuota provider untuk model ini sedang mencapai batas. Silakan beralih ke model lain atau coba beberapa saat lagi.";
   } else if (lower.includes("rate limit") || lower.includes("429") || lower.includes("too many requests")) {
     friendly = resetTime
       ? `Batas frekuensi permintaan tercapai (reset dalam ${resetTime}). Silakan tunggu ${resetTime} sebelum mencoba lagi.`
       : "Terlalu banyak permintaan dalam waktu singkat. Silakan tunggu beberapa detik sebelum mencoba lagi.";
-  } else if (lower.includes("503") || lower.includes("upstream_error") || lower.includes("bad_gateway") || lower.includes("overloaded") || lower.includes("service unavailable")) {
-    friendly = "Layanan model AI upstream sedang sibuk atau mengalami gangguan sementara. Silakan coba sesaat lagi atau beralih ke model lain.";
+  } else if (lower.includes("503") || lower.includes("overloaded") || lower.includes("service unavailable")) {
+    friendly = "Layanan model AI upstream sedang sibuk atau mengalami gangguan sementara. Silakan beralih ke model lain.";
   } else if (lower.includes("timeout") || lower.includes("timed out") || lower.includes("aborterror")) {
     friendly = "Waktu tunggu permintaan habis (timeout). Silakan ulangi pertanyaan atau gunakan model yang lebih ringan.";
   } else if (lower.includes("tier_restricted") || lower.includes("tier free")) {
-    friendly = "Model ini hanya tersedia di tier Pro. Silakan beli paket Pro untuk membuka akses seluruh model.";
+    friendly = "Model ini hanya tersedia untuk paket Pro. Silakan beli paket Pro untuk membuka akses seluruh model.";
   } else if (lower.includes("balance_exhausted") || lower.includes("saldo tidak cukup") || lower.includes("saldo habis")) {
     friendly = "Saldo token Anda tidak mencukupi untuk permintaan ini. Silakan isi saldo di menu Beli Token.";
   } else {
-    friendly = msg;
+    friendly = msg.replace(/^Upstream error:\s*/i, "").replace(/^UPSTREAM_FATAL_\d+:\s*/i, "");
   }
 
-  return (isAdmin && friendly !== msg) ? `${friendly} [Detail Teknis: ${msg}]` : friendly;
+  return friendly;
 }

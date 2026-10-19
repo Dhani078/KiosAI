@@ -29,8 +29,8 @@ export function PlaygroundTab({
   onRefreshUserData: () => void;
 }) {
   const [selectedModel, setSelectedModel] = useState(() => {
-    if (typeof window !== "undefined") return sessionStorage.getItem("kios_selected_model") || "atria/Atria-Dawn-Preview";
-    return "atria/Atria-Dawn-Preview";
+    if (typeof window !== "undefined") return sessionStorage.getItem("kios_selected_model") || "tokenharbor/deepseek-v4.1-flash:free";
+    return "tokenharbor/deepseek-v4.1-flash:free";
   });
   const [systemPrompt, setSystemPrompt] = useState("");
   const [showSystem, setShowSystem] = useState(false);
@@ -51,7 +51,7 @@ export function PlaygroundTab({
 
   const currentModelObj = models.find((m) => m.id === selectedModel);
   const isFreeTier = (userTier || "free").toLowerCase() === "free";
-  const isAllowedForFree = selectedModel.toLowerCase().includes("atria") || selectedModel.toLowerCase().startsWith("oc/");
+  const isAllowedForFree = selectedModel.toLowerCase().includes("deepseek-v4.1-flash") || selectedModel.toLowerCase().endsWith(":free") || selectedModel.toLowerCase().includes("-free") || selectedModel.toLowerCase().startsWith("oc/");
   const isLocked = isFreeTier && !isAllowedForFree;
   const requiredTier = isAllowedForFree ? "free" : "pro";
   const pricing = getModelPricing(selectedModel);

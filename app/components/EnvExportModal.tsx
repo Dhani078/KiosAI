@@ -9,7 +9,7 @@ export function EnvExportModal({
   onClose,
   baseUrl,
   activeKey,
-  selectedModel = "atria/Atria-Dawn-Preview",
+  selectedModel = "tokenharbor/deepseek-v4.1-flash:free",
   onCopy,
 }: {
   isOpen: boolean;

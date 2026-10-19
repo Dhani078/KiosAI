@@ -7,7 +7,6 @@ import assert from "node:assert/strict";
 import { getModelPricing, getCostRatio, getDirectionalRatios, calculateTokenCost } from "../lib/model-pricing.ts";
 
 const cases = [
-  ["atria/Atria-Dawn-Preview", 0.05],
   ["tokenharbor/deepseek-v4.1-flash:free", 1.0],
   ["deepseek-v4.1-flash", 1.0],
   ["beatapi/deepseek-v4.1-flash-free", 1.0],
@@ -36,7 +35,7 @@ for (const [id, expected] of cases) {
 // 100k tokens on DeepSeek Flash == 100k balance (baseline 1:1).
 assert.equal(Math.round(100000 * getCostRatio("tokenharbor/deepseek-v4.1-flash:free")), 100000);
 // Free tier is cheap, flagship is not.
-assert.ok(getCostRatio("atria/Atria-Dawn-Preview") < getCostRatio("anthropic/claude-opus-4"));
+assert.ok(getCostRatio("oc/mimo-v2.6-flash-free") < getCostRatio("anthropic/claude-opus-4"));
 
 // Directional token cost checks (Input vs Output asymmetry)
 const deepseekRatios = getDirectionalRatios("deepseek-v4.1-flash");

@@ -19,7 +19,7 @@ export function DocsTab({
   onCopy: (t: string) => void;
 }) {
   const [codeTab, setCodeTab] = useState<"cURL" | "Python" | "Node.js" | "Cline / .env">("cURL");
-  const [selectedDocModel, setSelectedDocModel] = useState("atria/Atria-Dawn-Preview");
+  const [selectedDocModel, setSelectedDocModel] = useState("tokenharbor/deepseek-v4.1-flash:free");
   const [search, setSearch] = useState("");
   const [showEnvModal, setShowEnvModal] = useState(false);
   const displayKey = activeKey || "kios-YOUR_API_KEY";
