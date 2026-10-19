@@ -40,7 +40,13 @@ export function verifySessionToken(token: string | undefined | null): string | n
 
 export function readSessionUserId(req: NextRequest): string | null {
   try {
-    return verifySessionToken(req.cookies.get(SESSION_COOKIE)?.value);
+    let token = req.cookies?.get(SESSION_COOKIE)?.value;
+    if (!token) {
+      const rawCookie = req.headers.get("cookie") || "";
+      const match = rawCookie.match(new RegExp(`(?:^|;\\s*)${SESSION_COOKIE}=([^;]+)`));
+      token = match ? decodeURIComponent(match[1]) : undefined;
+    }
+    return verifySessionToken(token);
   } catch {
     return null;
   }

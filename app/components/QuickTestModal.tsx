@@ -32,11 +32,32 @@ export function QuickTestModal({
 
     const start = Date.now();
     try {
+      let keyToUse = activeKey && !activeKey.endsWith("...") ? activeKey : "";
+      if (!keyToUse) {
+        const stored = typeof window !== "undefined"
+          ? (sessionStorage.getItem("kios_last_raw_key") || sessionStorage.getItem("kios_playground_key"))
+          : null;
+        if (stored && !stored.endsWith("...")) {
+          keyToUse = stored;
+        } else {
+          try {
+            const userRes = await fetch("/api/user");
+            if (userRes.ok) {
+              const uData = await userRes.json();
+              if (uData.playgroundKey) {
+                keyToUse = uData.playgroundKey;
+                if (typeof window !== "undefined") sessionStorage.setItem("kios_playground_key", uData.playgroundKey);
+              }
+            }
+          } catch {}
+        }
+      }
+
       const res = await fetch("/v1/chat/completions", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          ...(activeKey ? { Authorization: `Bearer ${activeKey}` } : {}),
+          ...(keyToUse ? { Authorization: `Bearer ${keyToUse}` } : {}),
         },
         body: JSON.stringify({
           model: modelId,
