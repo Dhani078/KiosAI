@@ -31,10 +31,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Ukuran file bukti transfer maksimal 5 MB." }, { status: 413 });
     }
 
-    const safeMime = String(mimeType || "image/jpeg").toLowerCase();
-    if (!["image/jpeg", "image/png", "image/webp"].includes(safeMime)) {
-      return NextResponse.json({ error: "Format gambar harus JPEG, PNG, atau WebP." }, { status: 400 });
-    }
+    let safeMime = String(mimeType || "image/jpeg").toLowerCase().trim();
+    if (safeMime === "image/jpg") safeMime = "image/jpeg";
+    if (!safeMime.startsWith("image/")) safeMime = "image/jpeg";
 
     const order = await db.queryOne<any>(
       `SELECT * FROM kiosai.orders WHERE id = ?`,

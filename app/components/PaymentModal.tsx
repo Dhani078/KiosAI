@@ -97,29 +97,30 @@ export function PaymentModal({
     if (!file || !orderId) return;
     setAiLoading(true);
     setAiError("");
-    try {
-      const reader = new FileReader();
-      reader.onload = async () => {
+    const reader = new FileReader();
+    reader.onload = async () => {
+      try {
         const base64 = reader.result as string;
         const res = await fetch("/api/orders/verify-receipt", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ orderId, imageBase64: base64, mimeType: file.type }),
         });
-        const data = await res.json();
+        const data = await res.json().catch(() => ({}));
         if (res.ok && data.success) {
           setPaid(true);
           onPaymentSuccess(Number(userBalance) + Number(data.tokensAdded || tokensGranted));
         } else {
-          setAiError(data.error || "Bukti transfer tidak valid");
+          setAiError(data.error || "Bukti transfer tidak valid.");
         }
+      } catch (err: any) {
+        setAiError(err.message || "Gagal memverifikasi bukti struk.");
+      } finally {
         setAiLoading(false);
-      };
-      reader.readAsDataURL(file);
-    } catch (err: any) {
-      setAiError(err.message || "Gagal membaca file gambar");
-      setAiLoading(false);
-    }
+      }
+    };
+    reader.onerror = () => { setAiError("Gagal membaca file."); setAiLoading(false); };
+    reader.readAsDataURL(file);
   };
 
   const handlePrintReceipt = () => {
