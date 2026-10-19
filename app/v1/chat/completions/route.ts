@@ -6,11 +6,11 @@ import { UPSTREAM_URL, UPSTREAM_KEY, errorResponse, parseUpstreamJson } from "@/
 import { resolveModelAlias } from "@/lib/model-utils";
 import { createBilledStream } from "@/lib/stream-billing";
 import { buildQuotaExhaustedError } from "@/lib/bonus-vault";
-import { executeResilientStream } from "@/lib/failover-router";
+import { executeResilientStream, getFallbackCandidates } from "@/lib/failover-router";
 import { evaluatePriorityAdmission } from "@/lib/priority-scheduler";
 import { recordInferenceTelemetry } from "@/lib/edge-telemetry";
 import { sendLowBalanceWebhook } from "@/lib/balance-alerts";
-import { hardenSystemPrompt, inspectMessagesForExtraction, DEFENSIVE_BOUNDARY_CLAUSE } from "@/lib/prompt-defense";
+import { injectModelMasking, maskModelInJson } from "@/lib/prompt-defense";
 import {
   isCacheEligible,
   buildCanonicalCacheKey,
@@ -81,15 +81,8 @@ export async function POST(req: NextRequest) {
     return errorResponse(`Model '${rawModel}' tidak tersedia di tier FREE. Model gratis hanya Atria Dawn.`, 403, "tier_restricted");
   }
 
-  // Anti-Prompt-Leak Guard: lindungi instruksi sistem dari serangan ekstraksi prompt
-  if (Array.isArray(body.messages)) {
-    const sysIdx = body.messages.findIndex((m: any) => m?.role === "system");
-    if (sysIdx !== -1) {
-      body.messages[sysIdx].content = hardenSystemPrompt(body.messages[sysIdx].content);
-    } else if (inspectMessagesForExtraction(body.messages).hasExtractionAttempt) {
-      body.messages.unshift({ role: "system", content: DEFENSIVE_BOUNDARY_CLAUSE });
-    }
-  }
+  // Model Identity & Masking Guard: persona model selalu konsisten dengan model yang diminta
+  injectModelMasking(body.messages, requestedModel);
 
   // Priority Scheduler & Edge Micro-Pacing
   const admission = await evaluatePriorityAdmission(auth.key.id, req.headers, Boolean(body.stream), 3);
@@ -135,7 +128,7 @@ export async function POST(req: NextRequest) {
       return new NextResponse(billed, {
         headers: {
           "Content-Type": "text/event-stream; charset=utf-8", "Cache-Control": "no-cache, no-transform", Connection: "keep-alive",
-          ...rateHeaders, "X-Kios-Lane": admission.lane, ...(result.didFailover ? { "X-Kios-Failover": "true", "X-Kios-Model-Used": result.usedModel } : {}),
+          ...rateHeaders, "X-Kios-Lane": admission.lane,
         },
       });
     } catch (err: any) {
@@ -146,27 +139,38 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // Non-Streaming Request
+  // Non-Streaming Request dengan Failover & Model Masking
   try {
-    const upstreamRes = await fetch(`${UPSTREAM_URL}/v1/chat/completions`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", ...(UPSTREAM_KEY ? { Authorization: `Bearer ${UPSTREAM_KEY}` } : {}) },
-      body: JSON.stringify(body),
-    });
+    const candidates = [requestedModel, ...getFallbackCandidates(requestedModel)];
+    let upstreamRes: Response | null = null;
+    let didFailover = false;
 
-    if (!upstreamRes.ok) {
-      const errText = await upstreamRes.text();
-      await logUsage({ apiKeyId: auth.key.id, userId: auth.user.id, model: requestedModel, promptTokens: 0, completionTokens: 0, latencyMs: Date.now() - startTime, statusCode: upstreamRes.status });
-      return errorResponse(`Upstream (${upstreamRes.status}): ${errText.slice(0, 300)}`, upstreamRes.status, "upstream_error");
+    for (let i = 0; i < candidates.length; i++) {
+      didFailover = i > 0;
+      body.model = candidates[i];
+      upstreamRes = await fetch(`${UPSTREAM_URL}/v1/chat/completions`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", ...(UPSTREAM_KEY ? { Authorization: `Bearer ${UPSTREAM_KEY}` } : {}) },
+        body: JSON.stringify(body),
+      });
+      if (upstreamRes.ok) break;
+      if (![408, 429, 500, 502, 503, 504, 522, 524].includes(upstreamRes.status)) break;
     }
 
-    const data = parseUpstreamJson(await upstreamRes.text());
+    if (!upstreamRes || !upstreamRes.ok) {
+      const errText = upstreamRes ? await upstreamRes.text() : "Unknown upstream error";
+      const status = upstreamRes ? upstreamRes.status : 502;
+      await logUsage({ apiKeyId: auth.key.id, userId: auth.user.id, model: requestedModel, promptTokens: 0, completionTokens: 0, latencyMs: Date.now() - startTime, statusCode: status });
+      return errorResponse(`Upstream (${status}): ${errText.slice(0, 300)}`, status, "upstream_error");
+    }
+
+    const data = maskModelInJson(parseUpstreamJson(await upstreamRes.text()), requestedModel);
     const pTokens = data.usage?.prompt_tokens || 15;
     const cTokens = data.usage?.completion_tokens || 35;
     const actualCost = calculateTokenCost(requestedModel, pTokens, cTokens);
     const deducted = await deductTokens(user.id, actualCost, 1.0, key.id);
     await logUsage({ apiKeyId: key.id, userId: user.id, model: requestedModel, promptTokens: pTokens, completionTokens: cTokens, latencyMs: Date.now() - startTime, statusCode: 200 });
-    recordInferenceTelemetry({ modelId: requestedModel, ttfbMs: Date.now() - startTime, statusCode: 200, didFailover: false, cacheHit: false });
+    recordInferenceTelemetry({ modelId: requestedModel, ttfbMs: Date.now() - startTime, statusCode: 200, didFailover, cacheHit: false });
 
     const rem = Number(user.balance_tokens) - deducted;
     if (user.alert_webhook_url && rem < (user.alert_threshold_tokens || 50000)) {

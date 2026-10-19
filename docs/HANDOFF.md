@@ -9,7 +9,7 @@ Dokumen ini dirancang agar setiap sesi AI atau pengembang dapat melanjutkan peke
 | Komponen | Status | Keterangan |
 |---|---|---|
 | **Repository** | Clean, Up-to-Date | `https://github.com/Dhani078/KiosAI.git` (Branch `main`) |
-| **Commit Terakhir** | `c771eb1` | feat(security): add digital forensics & generative AI receipt tamper detection to multimodal verifier |
+| **Commit Terakhir** | `feat(masking)` | feat(ai): implement model masking & fallback cloaking engine, eliminate jailbreak blocking |
 | **Worker Live** | `healthy` | `https://kiosai.dhanisepeda.workers.dev` (Subdomain `dhanisepeda` dengan huruf 'e') & `https://tokoai.my.id` |
 | **Database** | `connected` | TiDB Cloud Serverless (AWS Tokyo `ap-southeast-1` / `ap-northeast-1`) |
 | **Upstream 9Router** | `connected` | `http://127.0.0.1:20128` (69 model aktif terverifikasi 5x audit, 5 Free, 64 Pro) |
@@ -20,7 +20,7 @@ Dokumen ini dirancang agar setiap sesi AI atau pengembang dapat melanjutkan peke
 | **E2E Integration** | 11/11 Passed | `npm run test:e2e` lolos semua skenario |
 | **Trend Analytics** | Complete | 7-day visual activity chart & Input/Output token split ratio |
 | **DOKU Checkout** | 7/7 Passed | `npm run test:doku` — DOKU headers, signature HMAC-SHA256, and webhook verification |
-| **Prompt Defense** | 12/12 Passed | `npm run test:defense` — Anti-prompt-leakage shield & Cursor/Manus presets |
+| **Model Masking** | 13/13 Passed | `npm run test:defense` — Model identity persona guard, JSON & SSE cloaking, zero header leakage |
 | **Security Regression** | 18/18 Passed | `npm run test:security` - IDOR eliminated, 4-layer anti-replay, 5MB boundary, HttpOnly HMAC session |
 | **Pricing Unit Test** | 22/22 Passed | `npm run test:pricing` — rasio directional input vs output + harga $/1M |
 | **UI Audit** | 16/16 Passed | `npm run audit:ui` (4) + `npm run audit:dashboard` (12) — 0 overflow, 0 copy lama |

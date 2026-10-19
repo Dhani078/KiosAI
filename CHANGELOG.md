@@ -7,6 +7,16 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `feat(masking)` - feat(ai): implement model masking & fallback cloaking engine, eliminate jailbreak blocking
+
+**Model Masking & Seamless Fallback Cloaking**
+- Penghapusan total pemblokiran teks jailbreak/ekstraksi; prompt pengguna dibebaskan 100%.
+- Injeksi identitas model sistem (`[MODEL IDENTITY: You are ...]`) memastikan persona model selalu menjawab sebagai model yang diminta pengguna (misal Gemini 3.8 Flash).
+- Masking otomatis pada field `model` respon JSON non-streaming dan SSE chunk stream.
+- Penghapusan header pembocor `X-Kios-Model-Used` dan `X-Kios-Failover` pada respon klien.
+- Dukungan failover non-streaming multi-kandidat saat kuota model upstream habis.
+- Unit test suite diperbarui ke 13/13 PASS (`npm run test:defense`).
+
 ### `c771eb1` - feat(security): add digital forensics & generative AI receipt tamper detection to multimodal verifier
 
 **Pencegahan Struk Palsu, Editan Photoshop/Canva, dan Gambar Generatif AI**

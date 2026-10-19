@@ -1,6 +1,7 @@
 import { deductTokens, logUsage } from "./keys";
 import { calculateTokenCost } from "./model-pricing";
 import { releaseStreamSlot } from "./ratelimit";
+import { maskModelInSseChunk } from "./prompt-defense";
 
 export interface BilledStreamOptions {
   reader: ReadableStreamDefaultReader<Uint8Array>;
@@ -93,7 +94,8 @@ export function createBilledStream(options: BilledStreamOptions): ReadableStream
           return;
         }
 
-        lineBuf += decoder.decode(value, { stream: true });
+        const chunkText = decoder.decode(value, { stream: true });
+        lineBuf += chunkText;
         let newlineIdx = lineBuf.indexOf("\n");
         while (newlineIdx !== -1) {
           const completeLine = lineBuf.slice(0, newlineIdx);
@@ -103,7 +105,8 @@ export function createBilledStream(options: BilledStreamOptions): ReadableStream
         }
 
         if (lineBuf.length > 32768) lineBuf = "";
-        controller.enqueue(value);
+        const masked = maskModelInSseChunk(chunkText, model);
+        controller.enqueue(new TextEncoder().encode(masked));
       } catch (err) {
         controller.error(err);
         await settleBilling(true);

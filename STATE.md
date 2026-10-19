@@ -3,11 +3,11 @@
 - **Repository**: `https://github.com/Dhani078/KiosAI.git`
 - **Location**: `E:/Hermesproject/KiosAI`
 - **Live Worker**: `https://kiosai.dhanisepeda.workers.dev` (subdomain `dhanisepeda`, pakai `e`)
-- **Current Status**: Complete & Fully Verified (Phase 0 - 71)
+- **Current Status**: Complete & Fully Verified (Phase 0 - 72)
 - **Upstream Router**: 9Router local (`http://127.0.0.1:20128`) dengan 71 model aktif terverifikasi 5x audit (5 Free, 66 Pro)
 - **Database**: TiDB Cloud Serverless (region Tokyo/Singapore, MySQL-compatible HTTP). Host & kredensial HANYA di `.env` lokal `DATABASE_URL` (jangan ditulis di dokumen repo).
-- **Last Commit**: `c771eb1` - feat(security): add digital forensics & generative AI receipt tamper detection to multimodal verifier
-- **Security Baseline**: Sesi cookie HttpOnly bertanda tangan HMAC-SHA256, IDOR dibasmi, 4-layer anti-replay, deteksi forensik editan/AI, 5MB boundary guard, unverified payment bypass ditutup.
+- **Last Commit**: `feat(ai)` - feat(ai): implement model masking & fallback cloaking engine, eliminate jailbreak blocking
+- **Security Baseline**: Sesi cookie HttpOnly bertanda tangan HMAC-SHA256, IDOR dibasmi, model masking & identity guard, 4-layer anti-replay, deteksi forensik editan/AI, 5MB boundary guard, unverified payment bypass ditutup.
 
 ## Dokumen Navigasi Cepat
 - Aturan & perintah untuk agent: `AGENT.md`
@@ -354,6 +354,13 @@
     - Penegakan presisi batas upload 5MB (5.242.880 bytes, HTTP 413) di `verify-receipt/route.ts`.
     - Suite pengujian keamanan diperluas menjadi 18/18 PASS.
     - 100% verifikasi lolos: 126 file <= 200 LOC, semua suite pengujian lulus sempurna.
+  - Phase 66: Model Masking & Fallback Cloaking Engine:
+    - Penghapusan total pemblokiran teks ekstraksi/jailbreak; user prompt bebas 100%.
+    - Injeksi identitas model sistem (`[MODEL IDENTITY: You are ...]`) memastikan persona model selalu menjawab sebagai model yang diminta pengguna.
+    - Masking otomatis pada field `model` respon JSON non-streaming dan SSE chunk stream.
+    - Penghapusan header pembocor `X-Kios-Model-Used` dan `X-Kios-Failover` pada respon klien.
+    - Dukungan failover non-streaming multi-kandidat saat kuota model upstream habis.
+    - Unit test suite diperbarui ke 13/13 PASS (`npm run test:defense`).
 
 
 
