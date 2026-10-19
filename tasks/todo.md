@@ -463,6 +463,11 @@
 - [x] Task 64.9: Input clamping on API key creation (rate limit 10-1000, max spend cap, trimmed name)
 - [x] Task 64.10: 100% test pass: security 15/15, e2e 11/11, pricing 22/22, qris 7/7, doku 7/7, receipt 2/2
 
+## Phase 65 (Inline Payment Status Feedback & Live Worker Verification - Completed)
+- [x] Task 65.1: Replace browser alert with inline error feedback in `PaymentModal.tsx`
+- [x] Task 65.2: Verify production Cloudflare Worker response latency on `verify-receipt` (down to 3.0s)
+- [x] Task 65.3: Sync documentation and test suites (126 source files <= 200 LOC, all tests pass)
+
 
 
 
