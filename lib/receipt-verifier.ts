@@ -50,7 +50,7 @@ PANDUAN PEMBACAAN:
    - Bernilai true HANYA jika status tertulis "Berhasil", "Sukses", "Selesai", atau ada ikon centang hijau berhasil.
    - Bernilai false jika transaksi bertuliskan "Menunggu", "Pending", "Dalam Proses", "Kedaluwarsa", atau "Gagal".
 3. Nomor Transaksi (transactionId):
-   - Ambil string ID Transaksi, No. Referensi, Ref ID, atau Order ID jika tertera. Jika tidak ada, isi string kosong "".
+   - Wajib cari dan ekstrak nomor transaksi: ID Transaksi, No. Referensi, Ref ID, No. Transaksi, atau Order ID. Ambil string alfanumerik lengkap tanpa spasi. Jika tidak ada, isi "".
 4. Penerima (recipient):
    - Ambil nama pemilik rekening atau merchant tujuan yang tertera (contoh: "Dhani", "TokoAI").
 5. Validitas Dokumen:
@@ -131,11 +131,12 @@ Kembalikan HANYA objek JSON tanpa pembungkus markdown dan tanpa teks pembuka/pen
           };
         }
 
-        // Validasi nominal cerdas: cocok dengan tagihan unik ATAU harga dasar paket
+        // Validasi nominal cerdas: cocok dengan tagihan unik ATAU harga dasar paket (hanya paket reguler)
         const baseAmount = params.expectedBaseAmount || params.expectedAmount;
         const matchesExact = extractedAmount === params.expectedAmount;
-        const matchesBase = extractedAmount === baseAmount;
-        const withinTolerance = extractedAmount >= baseAmount && extractedAmount <= params.expectedAmount + 50;
+        const isMicro = params.expectedBaseAmount === 100;
+        const matchesBase = !isMicro && extractedAmount === baseAmount;
+        const withinTolerance = !isMicro && extractedAmount >= baseAmount && extractedAmount <= params.expectedAmount + 50;
 
         if (!matchesExact && !matchesBase && !withinTolerance) {
           if (extractedAmount < baseAmount) {

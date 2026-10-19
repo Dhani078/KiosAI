@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { readSessionUserId, unauthorized } from "@/lib/session";
 import { verifyReceiptWithAI } from "@/lib/receipt-verifier";
+import crypto from "crypto";
 
 export const runtime = "nodejs";
 
@@ -35,6 +36,19 @@ export async function POST(req: NextRequest) {
     if (safeMime === "image/jpg") safeMime = "image/jpeg";
     if (!safeMime.startsWith("image/")) safeMime = "image/jpeg";
 
+    // 1. Anti-Replay Lapisan 1: Cek Hash SHA-256 Foto Struk
+    const cleanImg = imageBase64.replace(/^data:[^;]+;base64,/, "").trim();
+    const receiptHash = crypto.createHash("sha256").update(cleanImg).digest("hex");
+    const duplicateImg = await db.queryOne<any>(
+      `SELECT id FROM kiosai.orders WHERE receipt_hash = ? AND status = 'paid' LIMIT 1`,
+      [receiptHash]
+    );
+    if (duplicateImg) {
+      return NextResponse.json({
+        error: "Foto struk transfer ini sudah pernah digunakan sebelumnya (Anti-Duplicate Image Protection).",
+      }, { status: 400 });
+    }
+
     const order = await db.queryOne<any>(
       `SELECT * FROM kiosai.orders WHERE id = ?`,
       [orderId]
@@ -53,7 +67,7 @@ export async function POST(req: NextRequest) {
     // Verifikasi via AI Multimodal OCR
     const verification = await verifyReceiptWithAI({
       imageBase64,
-      mimeType: mimeType || "image/jpeg",
+      mimeType: safeMime,
       expectedAmount: Number(order.amount_idr),
       expectedBaseAmount: baseAmount,
     });
@@ -62,23 +76,27 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: verification.error || "Bukti transfer tidak valid." }, { status: 400 });
     }
 
-    // Anti-Replay: Cek apakah ID transaksi ini sudah pernah digunakan untuk pesanan lain
-    if (verification.transactionId && verification.transactionId.length >= 5) {
-      const existing = await db.queryOne<any>(
-        `SELECT id FROM kiosai.orders WHERE payment_ref = ? AND status = 'paid' LIMIT 1`,
-        [verification.transactionId]
-      );
-      if (existing) {
-        return NextResponse.json({
-          error: "Bukti transfer ini sudah pernah digunakan untuk pesanan lain (Anti-Duplicate Protection).",
-        }, { status: 400 });
-      }
+    // 2. Anti-Replay Lapisan 2: Wajib ada ID transaksi unik dari struk
+    if (!verification.transactionId || verification.transactionId.length < 5) {
+      return NextResponse.json({
+        error: "Nomor referensi transaksi tidak terbaca pada struk. Pastikan nomor transaksi terlihat jelas.",
+      }, { status: 400 });
     }
 
-    // Atomic CAS: Kunci pesanan dan simpan nomor referensi
+    const existing = await db.queryOne<any>(
+      `SELECT id FROM kiosai.orders WHERE payment_ref = ? AND status = 'paid' LIMIT 1`,
+      [verification.transactionId]
+    );
+    if (existing) {
+      return NextResponse.json({
+        error: "Nomor referensi transaksi ini sudah pernah digunakan untuk pesanan lain (Anti-Duplicate Reference Protection).",
+      }, { status: 400 });
+    }
+
+    // Atomic CAS: Kunci pesanan dan simpan nomor referensi serta hash struk
     const updateRes: any = await db.execute(
-      `UPDATE kiosai.orders SET status = 'paid', paid_at = NOW(), payment_ref = ? WHERE id = ? AND status != 'paid'`,
-      [verification.transactionId || null, orderId],
+      `UPDATE kiosai.orders SET status = 'paid', paid_at = NOW(), payment_ref = ?, receipt_hash = ? WHERE id = ? AND status != 'paid'`,
+      [verification.transactionId, receiptHash, orderId],
       { fullResult: true }
     );
 
