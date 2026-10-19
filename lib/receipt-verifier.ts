@@ -51,7 +51,7 @@ PANDUAN PEMBACAAN:
    - Bernilai true HANYA jika status tertulis "Berhasil", "Sukses", "Selesai", atau ada ikon centang hijau berhasil.
    - Bernilai false jika transaksi bertuliskan "Menunggu", "Pending", "Dalam Proses", "Kedaluwarsa", atau "Gagal".
 3. Nomor Transaksi (transactionId):
-   - Wajib cari dan ekstrak nomor transaksi: ID Transaksi, No. Referensi, Ref ID, No. Transaksi, atau Order ID. Ambil string alfanumerik lengkap tanpa spasi. Jika tidak ada, isi "".
+   - Cari dan ekstrak nomor identifikasi transaksi jika ada: ID Transaksi, No. Referensi, Ref ID, No. Transaksi, Nomor Pesanan, Order ID, No. Resi, ID Pembayaran, Kode Transaksi, RRN, atau No. Jurnal. Ambil string alfanumerik lengkap tanpa spasi. Jika tidak ada di tampilan layar, isi string kosong "".
 4. Tanggal Transaksi (transactionDate):
    - Ekstrak tanggal transaksi jika tertera pada struk (format standar YYYY-MM-DD, contoh: "2026-10-19"). Jika tidak tertera, isi "".
 5. Penerima (recipient):

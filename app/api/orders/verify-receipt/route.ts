@@ -96,29 +96,25 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // 4. Anti-Replay Lapisan 2: Wajib ada ID transaksi unik dari struk & normalisasi
+    // 4. Anti-Replay Lapisan 2: Ekstrak nomor transaksi atau gunakan sidik jari unik bukti transfer
     const rawTxId = String(verification.transactionId || "").trim();
     const cleanTxId = rawTxId.replace(/[^a-zA-Z0-9]/g, "").toUpperCase();
-    if (cleanTxId.length < 5) {
-      return NextResponse.json({
-        error: "Nomor referensi transaksi tidak terdeteksi atau terlalu pendek pada struk. Pastikan nomor transaksi terlihat jelas.",
-      }, { status: 400 });
-    }
+    const finalPaymentRef = cleanTxId.length >= 5 ? cleanTxId : `IMG-${receiptHash.slice(0, 24).toUpperCase()}`;
 
     const existing = await db.queryOne<any>(
       `SELECT id FROM kiosai.orders WHERE UPPER(REPLACE(REPLACE(REPLACE(COALESCE(payment_ref, ''), '-', ''), ' ', ''), ':', '')) = ? AND status = 'paid' LIMIT 1`,
-      [cleanTxId]
+      [finalPaymentRef]
     );
     if (existing) {
       return NextResponse.json({
-        error: "Nomor referensi transaksi ini sudah pernah digunakan untuk pesanan lain (Anti-Duplicate Reference Protection).",
+        error: "Bukti transfer ini sudah pernah digunakan untuk pesanan lain (Anti-Duplicate Reference Protection).",
       }, { status: 400 });
     }
 
     // Atomic CAS: Kunci pesanan dan simpan nomor referensi serta hash struk
     const updateRes: any = await db.execute(
       `UPDATE kiosai.orders SET status = 'paid', paid_at = NOW(), payment_ref = ?, receipt_hash = ? WHERE id = ? AND status != 'paid'`,
-      [cleanTxId, receiptHash, orderId],
+      [finalPaymentRef, receiptHash, orderId],
       { fullResult: true }
     );
 
