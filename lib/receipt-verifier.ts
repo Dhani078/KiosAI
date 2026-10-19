@@ -56,7 +56,10 @@ PANDUAN PEMBACAAN:
    - Ekstrak tanggal transaksi jika tertera pada struk (format standar YYYY-MM-DD, contoh: "2026-10-19"). Jika tidak tertera, isi "".
 5. Penerima (recipient):
    - Ambil nama pemilik rekening atau merchant tujuan yang tertera (contoh: "Dhani", "TokoAI").
-6. Validitas Dokumen:
+6. Forensik Keaslian & Anti-Edit (isTampered):
+   - Bernilai true jika ada indikasi manipulasi digital: font nominal berbeda/tempelan (Canva/Photoshop), kotak blur/patch di sekitar angka, atau gambar dibuat oleh generator AI (logo bank cacat/halusinasi).
+   - Bernilai false jika tangkapan layar/struk tampak asli dan wajar.
+7. Validitas Dokumen:
    - Jika gambar bukan bukti transfer atau teks tidak terbaca/buram, set amount: 0 dan isSuccess: false.
 
 Format JSON:
@@ -65,7 +68,8 @@ Format JSON:
   "transactionId": "DN2026101899123",
   "transactionDate": "2026-10-19",
   "isSuccess": true,
-  "recipient": "Dhani"
+  "recipient": "Dhani",
+  "isTampered": false
 }
 Kembalikan HANYA objek JSON tanpa pembungkus markdown dan tanpa teks pembuka/penutup.`;
 
@@ -116,6 +120,10 @@ Kembalikan HANYA objek JSON tanpa pembungkus markdown dan tanpa teks pembuka/pen
 
         if (!parsed.isSuccess) {
           return { valid: false, error: "Status transaksi pada bukti belum berhasil/selesai." };
+        }
+
+        if (parsed.isTampered === true) {
+          return { valid: false, error: "Terdeteksi indikasi manipulasi digital, font tempelan, atau hasil generate AI pada struk." };
         }
 
         if (isNaN(extractedAmount) || extractedAmount <= 0) {
