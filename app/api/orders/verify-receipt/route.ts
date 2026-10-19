@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "orderId dan bukti struk (imageBase64) wajib diisi." }, { status: 400 });
     }
 
-    if (typeof imageBase64 !== "string" || imageBase64.length > 7_000_000) {
+    if (typeof imageBase64 !== "string" || imageBase64.length > 5_242_880) {
       return NextResponse.json({ error: "Ukuran file bukti transfer maksimal 5 MB." }, { status: 413 });
     }
 

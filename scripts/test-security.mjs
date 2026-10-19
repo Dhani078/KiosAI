@@ -98,6 +98,15 @@ if (SECRET) {
   check("webhook signature valid diproses + idempoten", signed.status === 200 && idem.status === 200 && /idempotent/.test(idem.data?.message || ""));
 }
 
+const unauthReceipt = await call("/api/orders/verify-receipt", { method: "POST", body: { orderId: "dummy", imageBase64: "dGVzdA==" } });
+check("verify-receipt tanpa sesi ditolak", unauthReceipt.status === 401, `got ${unauthReceipt.status}`);
+
+const foreignReceipt = await call("/api/orders/verify-receipt", { method: "POST", body: { orderId, imageBase64: "dGVzdA==" }, cookie: b.cookie });
+check("verify-receipt pesanan user lain ditolak", foreignReceipt.status === 404, `got ${foreignReceipt.status}`);
+
+const oversized = await call("/api/orders/verify-receipt", { method: "POST", body: { orderId, imageBase64: "A".repeat(6 * 1024 * 1024) }, cookie: a.cookie });
+check("verify-receipt payload >5MB ditolak", oversized.status === 413, `got ${oversized.status}`);
+
 const logout = await call("/api/auth/logout", { method: "POST", cookie: a.cookie });
 const afterLogout = await call("/api/user", { cookie: logout.cookie });
 check("logout mencabut sesi", afterLogout.status === 401, `got ${afterLogout.status}`);
