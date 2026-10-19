@@ -21,10 +21,8 @@ export function AuthModal({
   onNavigatePackages?: () => void;
   onCopy?: (text: string) => void;
 }) {
-  const [tab, setTab] = useState<"login" | "register">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -33,7 +31,6 @@ export function AuthModal({
   const handleLogout = () => {
     localStorage.removeItem("kiosai_user_id");
     try { localStorage.removeItem("kiosai_is_admin"); } catch {}
-    // Hapus juga cookie sesi server-side, kalau tidak sesi tetap hidup di server.
     fetch("/api/auth/logout", { method: "POST" }).catch(() => {});
     if (onLogout) onLogout();
     window.location.href = "/";
@@ -56,13 +53,13 @@ export function AuthModal({
     setError(null);
     setLoading(true);
     try {
-      const endpoint = tab === "login" ? "/api/auth/login" : "/api/auth/register";
-      const payload = tab === "login" ? { identifier: email, password } : { email, password, fullName: name };
-      const res = await fetch(endpoint, {
-        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload),
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ identifier: email, password }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Gagal autentikasi");
+      if (!res.ok) throw new Error(data.error || "Gagal masuk");
       if (data.user) {
         localStorage.setItem("kiosai_user_id", data.user.id);
         const adm = Boolean(data.user.username === "adminfordhani" || data.user.email === "adminfordhani@kiosai.id");
@@ -83,14 +80,10 @@ export function AuthModal({
 
         <form onSubmit={handleSubmit}>
           <Logo />
-          <h2>{tab === "login" ? "Selamat datang kembali." : "Daftar akun TokoAI."}</h2>
-          <p>{tab === "login" ? "Masuk untuk mengelola saldo token dan API key Anda." : "Daftar sekarang dan dapatkan bonus 2.500.000 token!"}</p>
-          <div style={{ display: "flex", gap: "8px", margin: "16px 0 14px" }}>
-            <button type="button" className={`button ${tab === "login" ? "primary" : "ghost"}`} style={{ flex: 1, height: "36px" }} onClick={() => { setTab("login"); setError(null); }}>Masuk</button>
-            <button type="button" className={`button ${tab === "register" ? "primary" : "ghost"}`} style={{ flex: 1, height: "36px" }} onClick={() => { setTab("register"); setError(null); }}>Daftar Baru</button>
-          </div>
+          <h2>Masuk ke TokoAI.</h2>
+          <p>Gunakan akun GitHub atau Google untuk masuk dan verifikasi akun.</p>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: "8px", margin: "0 0 14px" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px", margin: "16px 0 14px" }}>
             <a href="/api/auth/oauth/github" className="button ghost" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", height: "36px", textDecoration: "none", border: "1px solid var(--border)", fontSize: "12px" }}>
               <Github size={15} /> Lanjutkan dengan GitHub
             </a>
@@ -102,24 +95,19 @@ export function AuthModal({
 
           <div style={{ display: "flex", alignItems: "center", gap: "10px", margin: "0 0 14px", opacity: 0.5 }}>
             <div style={{ flex: 1, height: "1px", background: "var(--border)" }} />
-            <span style={{ fontSize: "10px", color: "var(--text-muted)", textTransform: "uppercase" }}>atau email</span>
+            <span style={{ fontSize: "10px", color: "var(--text-muted)", textTransform: "uppercase" }}>atau password akun</span>
             <div style={{ flex: 1, height: "1px", background: "var(--border)" }} />
           </div>
-          {tab === "register" && (
-            <>
-              <label htmlFor="auth-name">Nama Lengkap</label>
-              <Input id="auth-name" required value={name} onChange={(e) => setName(e.target.value)} placeholder="Nama Anda" />
-            </>
-          )}
-          <label htmlFor="auth-email">{tab === "login" ? "Email atau Username" : "Email"}</label>
-          <Input id="auth-email" type={tab === "login" ? "text" : "email"} required autoFocus value={email} onChange={(e) => setEmail(e.target.value)} placeholder="nama@email.com" autoComplete={tab === "login" ? "username" : "email"} />
+
+          <label htmlFor="auth-email">Email atau Username</label>
+          <Input id="auth-email" type="text" required autoFocus value={email} onChange={(e) => setEmail(e.target.value)} placeholder="adminfordhani atau email" autoComplete="username" />
           <label htmlFor="auth-password">Password</label>
-          <Input id="auth-password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Masukkan password" autoComplete={tab === "login" ? "current-password" : "new-password"} />
+          <Input id="auth-password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Masukkan password" autoComplete="current-password" />
           {error && <p className="field-error" role="alert">{error}</p>}
           <Button kind="primary" type="submit" loading={loading} style={{ width: "100%", marginTop: "20px" }}>
-            {tab === "login" ? "Masuk ke Akun" : "Daftar (250K Instan + 2.25M Bonus)"} <ArrowRight size={16} />
+            Masuk ke Akun <ArrowRight size={16} />
           </Button>
-          <small className="modal-note">Akun langsung tersimpan di database cloud. Bonus token instan untuk pendaftaran baru.</small>
+          <small className="modal-note">Pendaftaran akun baru diverifikasi otomatis melalui GitHub atau Google untuk mencegah akun duplikat.</small>
         </form>
       </section>
     </div>

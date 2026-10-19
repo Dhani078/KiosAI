@@ -36,12 +36,16 @@ async function call(path, { method = "GET", body, cookie, headers = {} } = {}) {
 async function register(tag) {
   const r = await call("/api/auth/register", {
     method: "POST",
+    headers: { "x-test-bypass-secret": SECRET || "" },
     body: { email: `secaudit_${tag}_${Date.now()}@kiosai.id`, password: "SecurityAudit123!", name: "Security Audit" },
   });
   return { userId: r.data?.user?.id, cookie: r.cookie, status: r.status };
 }
 
 console.log(`\n=== Security Regression Suite ===\nTarget: ${BASE}\n`);
+
+const unauthReg = await call("/api/auth/register", { method: "POST", body: { email: "bot@abuse.com", password: "Password123!" } });
+check("register publik tanpa bypass ditolak 403 (anti-abuse)", unauthReg.status === 403, `got ${unauthReg.status}`);
 
 for (const path of ["/api/user", "/api/keys", "/api/orders", "/api/analytics"]) {
   const r = await call(path);

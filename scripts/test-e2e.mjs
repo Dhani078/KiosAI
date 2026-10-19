@@ -50,7 +50,7 @@ await test("POST /api/auth/register", async () => {
   const email = `e2e_${Date.now()}@kiosai.id`;
   const res = await fetch(`${BASE}/api/auth/register`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", "x-test-bypass-secret": process.env.PAYMENT_WEBHOOK_SECRET || process.env.SESSION_SECRET || "" },
     body: JSON.stringify({ email, password: "SecretPassword123!", name: "E2E Tester" }),
   });
   const data = await res.json();

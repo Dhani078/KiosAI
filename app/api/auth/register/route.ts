@@ -6,7 +6,23 @@ import crypto from "crypto";
 
 export const runtime = "nodejs";
 
+const TEST_SECRET = process.env.PAYMENT_WEBHOOK_SECRET || process.env.SESSION_SECRET || "";
+
 export async function POST(req: NextRequest) {
+  // Anti-Abuse Protection: Pendaftaran manual publik dimatikan untuk mencegah bot / akun duplikat.
+  // Pengguna baru wajib mendaftar melalui OAuth resmi (GitHub atau Google).
+  const bypassHeader = req.headers.get("x-test-bypass-secret");
+  const isTestBypass = Boolean(TEST_SECRET && bypassHeader === TEST_SECRET);
+
+  if (!isTestBypass) {
+    return NextResponse.json(
+      {
+        error: "Pendaftaran manual dinonaktifkan untuk mencegah abuse token. Silakan masuk atau daftar menggunakan akun GitHub atau Google.",
+      },
+      { status: 403 }
+    );
+  }
+
   try {
     const body = await req.json();
     const email = body?.email;
@@ -31,8 +47,8 @@ export async function POST(req: NextRequest) {
 
     const userId = `usr_${crypto.randomUUID()}`;
     const passwordHash = hashPassword(password);
-    const initialTokens = 250000; // 250K token instan (Free tier)
-    const lockedBonusTokens = 2250000; // 2.25M bonus brankas terkunci
+    const initialTokens = 250000;
+    const lockedBonusTokens = 2250000;
 
     await db.execute(
       `INSERT INTO kiosai.users (id, email, password_hash, full_name, tier, balance_tokens, locked_bonus_tokens, is_pro_unlocked)
@@ -61,7 +77,7 @@ export async function POST(req: NextRequest) {
       NextResponse.json({
         success: true,
         user,
-        message: "Pendaftaran berhasil! Anda mendapatkan 250.000 token aktif instan + 2.250.000 token di Brankas Bonus (cair saat top-up pertama).",
+        message: "Pendaftaran berhasil! Akun uji internal dibuat.",
       }),
       userId
     );
