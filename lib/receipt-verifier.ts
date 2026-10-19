@@ -120,7 +120,9 @@ Kembalikan HANYA objek JSON tanpa pembungkus markdown dan tanpa teks pembuka/pen
 
         // Cek penerima jika terdeteksi (nama QRIS resmi = 'Dhani')
         const rec = String(parsed.recipient || "").toLowerCase();
-        if (rec && !rec.includes("dhani") && !rec.includes("tokoai") && !rec.includes("qris") && !rec.includes("dana")) {
+        const validRecipients = ["dhani", "tokoai", "kiosai", "dana", "qris", "id1026500560192"];
+        const isRecipientValid = validRecipients.some((r) => rec.includes(r));
+        if (rec && !isRecipientValid) {
           return {
             valid: false,
             amount: extractedAmount,
@@ -166,7 +168,7 @@ Kembalikan HANYA objek JSON tanpa pembungkus markdown dan tanpa teks pembuka/pen
   if (lastStatus === 429 || lastStatus === 503) {
     return {
       valid: false,
-      error: "Antrean verifikasi AI sedang padat. Coba klik tombol verifikasi sekali lagi atau gunakan tombol 'Saya sudah bayar'.",
+      error: "Antrean verifikasi AI sedang padat. Silakan coba unggah kembali struk dalam beberapa saat atau hubungi admin.",
     };
   }
 
