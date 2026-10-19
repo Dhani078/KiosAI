@@ -10,6 +10,7 @@ function isHiddenModel(id: string): boolean {
   const lower = (id || "").toLowerCase();
   if (lower.startsWith("oc/")) return false;
   return (
+    lower.includes("atria") ||
     lower === "combomaut" ||
     lower === "free123" ||
     lower === "tesss" ||

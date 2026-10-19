@@ -7,6 +7,7 @@ import { formatModelName } from "@/lib/model-utils";
 import { getModelPricing } from "@/lib/model-pricing";
 import { getEstimatedModelLatency } from "@/lib/model-latency";
 import ModelSnippetModal from "./ModelSnippetModal";
+import QuickTestModal from "./QuickTestModal";
 import ModelFilters from "./ModelFilters";
 
 function getProvider(id: string): string {
@@ -42,6 +43,7 @@ export function ModelsTab({
   const [tierFilter, setTierFilter] = useState<string>("all");
   const [providerFilter, setProviderFilter] = useState<string>("all");
   const [snippetTarget, setSnippetTarget] = useState<{ id: string; name: string } | null>(null);
+  const [quickTestTarget, setQuickTestTarget] = useState<{ id: string; name: string } | null>(null);
 
   const isFreeTier = (userTier || "free").toLowerCase() === "free";
   const getModelTier = (m: any): "free" | "pro" => m.required_tier || ((m.id || "").toLowerCase().includes("free") || (m.id || "").toLowerCase().startsWith("oc/") ? "free" : "pro");
@@ -141,8 +143,8 @@ export function ModelsTab({
                     <Code2 size={14} />
                   </Button>
                   {isAllowed ? (
-                    <Button kind="primary" style={{ flex: 1, height: "34px", fontSize: "12px" }} onClick={() => onNavigatePlayground(m.id)}>
-                      <Sparkles size={14} /> Coba di Playground
+                    <Button kind="primary" style={{ flex: 1, height: "34px", fontSize: "12px" }} onClick={() => setQuickTestTarget({ id: m.id, name: displayName })}>
+                      <Sparkles size={14} /> Tes Model
                     </Button>
                   ) : (
                     <Button kind="secondary" style={{ flex: 1, height: "34px", fontSize: "12px" }} onClick={onNavigatePackages}>
@@ -163,6 +165,16 @@ export function ModelsTab({
           activeKey={activeKey}
           onClose={() => setSnippetTarget(null)}
           onCopy={(t) => onCopy?.(t)}
+        />
+      )}
+
+      {quickTestTarget && (
+        <QuickTestModal
+          modelId={quickTestTarget.id}
+          displayName={quickTestTarget.name}
+          activeKey={activeKey}
+          onClose={() => setQuickTestTarget(null)}
+          onNavigatePlayground={onNavigatePlayground}
         />
       )}
     </div>

@@ -20,7 +20,6 @@ export function formatModelName(modelId: string, isAdmin: boolean = false): stri
   }
 
   const lower = modelId.toLowerCase();
-  if (lower.includes("deepseek-v4.1-flash-free(max)")) return "deepseek-v4.1-flash-free(max)";
   if (lower.includes("deepseek-v4.1-flash")) return "deepseek-v4.1-flash";
   if (lower.includes("claude-haiku-4.5")) return "claude-haiku-4.5";
   if (lower.includes("claude-sonnet-4.5")) return "claude-sonnet-4.5";
@@ -28,12 +27,19 @@ export function formatModelName(modelId: string, isAdmin: boolean = false): stri
   if (lower === "ag/claude-opus-4-6-thinking") return "Claude Opus 4.6 (Thinking)";
   if (lower.startsWith("ag/gemini-")) return formatAgGemini(lower);
 
-  // Strip trailing :free or :batch
-  const withoutSuffix = modelId.replace(/:(free|batch)$/i, "");
-  // Extract clean model slug by taking the last segment (strips cx/, cl/, xai/, etc.)
+  // Strip trailing :free or :batch, -free, _free, (max)
+  const withoutSuffix = modelId
+    .replace(/:(free|batch)$/i, "")
+    .replace(/-(free|batch)$/i, "")
+    .replace(/_free$/i, "")
+    .replace(/\(max\)$/i, "");
+
   const parts = withoutSuffix.split("/");
-  const slug = parts[parts.length - 1];
-  return slug.replace(/^~/, "");
+  let slug = parts[parts.length - 1].replace(/^~/, "");
+  return slug
+    .replace(/-(free|batch)$/i, "")
+    .replace(/_free$/i, "")
+    .replace(/-free\([^)]*\)$/i, "");
 }
 
 /**
@@ -83,13 +89,13 @@ export function resolveModelAlias(modelId: string): string {
   if (lower === "deepseek-v4.1-flash-free(max)" || lower === "oc/deepseek-v4.1-flash-free(max)") {
     return "oc/deepseek-v4.1-flash-free(max)";
   }
-  if (lower === "muse-spark-1.3-contributor-free" || lower === "oc/muse-spark-1.3-contributor-free") {
+  if (lower === "muse-spark-1.3-contributor-free" || lower === "oc/muse-spark-1.3-contributor-free" || lower === "muse-spark-1.3-contributor") {
     return "oc/muse-spark-1.3-contributor-free";
   }
-  if (lower === "mimo-v2.6-flash-free" || lower === "oc/mimo-v2.6-flash-free") {
+  if (lower === "mimo-v2.6-flash-free" || lower === "oc/mimo-v2.6-flash-free" || lower === "mimo-v2.6-flash") {
     return "oc/mimo-v2.6-flash-free";
   }
-  if (lower === "nemotron-3.5-lightning-free" || lower === "oc/nemotron-3.5-lightning-free") {
+  if (lower === "nemotron-3.5-lightning-free" || lower === "oc/nemotron-3.5-lightning-free" || lower === "nemotron-3.5-lightning") {
     return "oc/nemotron-3.5-lightning-free";
   }
   return m;
