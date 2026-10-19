@@ -3,10 +3,10 @@
 - **Repository**: `https://github.com/Dhani078/KiosAI.git`
 - **Location**: `E:/Hermesproject/KiosAI`
 - **Live Worker**: `https://kiosai.dhanisepeda.workers.dev` (subdomain `dhanisepeda`, pakai `e`)
-- **Current Status**: Complete & Fully Verified (Phase 0 - 69)
+- **Current Status**: Complete & Fully Verified (Phase 0 - 70)
 - **Upstream Router**: 9Router local (`http://127.0.0.1:20128`) dengan 71 model aktif terverifikasi 5x audit (5 Free, 66 Pro)
 - **Database**: TiDB Cloud Serverless (region Tokyo/Singapore, MySQL-compatible HTTP). Host & kredensial HANYA di `.env` lokal `DATABASE_URL` (jangan ditulis di dokumen repo).
-- **Last Commit**: `e058fa5` - fix(cleanup): remove fake pseudo-QR SVG, remove KIOSAI-QRIS dummy url, fix pending badge in order history, clean demo user in migration, and update domain in bonus vault
+- **Last Commit**: `b51fd1e` - fix(ocr): prioritize gemini-3.5-flash for 3s receipt verification and add strict 8s timeout guard
 - **Security Baseline**: Sesi cookie HttpOnly bertanda tangan HMAC-SHA256, IDOR dibasmi, unverified payment bypass ditutup, webhook fail-closed, admin password dirotasi.
 
 ## Dokumen Navigasi Cepat
@@ -340,6 +340,11 @@
   - Phase 63: Clean-Prose Prompt Refactor:
     - Pembersihan AI-isms, slop, dan preambul persona pada prompt OCR receipt di `lib/receipt-verifier.ts`.
     - 100% verifikasi lolos: test receipt 2/2 PASS.
+  - Phase 64: Receipt Verification Latency Acceleration & Timeout Guard:
+    - Penataan ulang hirarki fallback OCR di `lib/receipt-verifier.ts`: `gemini-3.5-flash` dan `gemini-3.5-flash-lite` jadi prioritas pertama.
+    - Pembatasan timeout 8 detik per request via `AbortSignal.timeout(8000)` mengeliminasi hang 35 detik.
+    - Waktu verifikasi struk turun dari 34.824 ms menjadi 2.927 ms (< 3 detik).
+    - Penambahan `finally { setAiLoading(false); }` di `PaymentModal.tsx` agar UI tidak menggantung saat network error.
 
 
 

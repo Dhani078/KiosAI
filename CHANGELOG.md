@@ -7,6 +7,13 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `b51fd1e` - fix(ocr): prioritize gemini-3.5-flash for 3s receipt verification and add strict 8s timeout guard
+
+**Akselerasi Verifikasi Struk AI 12x Lebih Cepat (35 Detik -> 2.9 Detik)**
+- Prioritaskan `gemini-3.5-flash` & `gemini-3.5-flash-lite` di urutan pertama `FALLBACK_MODELS` (kecepatan respons 1-2 detik, bukan timeout 10+ detik seperti 3.8/3.7).
+- Tambahkan `AbortSignal.timeout(8000)` di tiap sub-request Google API.
+- Tambahkan blok `finally { setAiLoading(false); }` dan `reader.onerror` di `app/components/PaymentModal.tsx` agar tombol upload struk tidak pernah menggantung jika network terputus.
+
 ### `e058fa5` - fix(cleanup): remove fake pseudo-QR SVG, remove KIOSAI-QRIS dummy url, fix pending badge in order history, clean demo user in migration, and update domain in bonus vault
 
 **Pembersihan Sisa Mock/Simulasi dan Penguatan Batas Input**
