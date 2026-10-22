@@ -6,7 +6,6 @@ import { Badge, Button } from "./ui";
 import { PACKAGES, getPackages } from "./PackagesTab";
 import { generateInvoiceHtml } from "@/lib/receipt-generator";
 import { PaymentSuccess } from "./PaymentSuccess";
-import { PaymentQrContent } from "./PaymentQrContent";
 
 export function PaymentModal({
   selectedPkgIndex,
@@ -32,18 +31,14 @@ export function PaymentModal({
   const isFree = pkg.price === "0" || pkg.tierKey === "free";
   const [orderId, setOrderId] = useState<string | null>(null);
   const [exactAmount, setExactAmount] = useState<number | null>(null);
-  const [uniqueCode, setUniqueCode] = useState(0);
   const [paymentUrl, setPaymentUrl] = useState<string | null>(null);
-  const [qrisUrl, setQrisUrl] = useState<string | null>(null);
-  const [countdown, setCountdown] = useState(899);
   const [loading, setLoading] = useState(false);
-  const [aiLoading, setAiLoading] = useState(false);
-  const [aiError, setAiError] = useState("");
   const [paid, setPaid] = useState(false);
   const [tokensGranted, setTokensGranted] = useState(0);
 
   useEffect(() => {
     let active = true;
+    setLoading(true);
     fetch("/api/orders", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -54,20 +49,25 @@ export function PaymentModal({
         if (!active || !d.orderId) return;
         setOrderId(d.orderId);
         setExactAmount(d.amountIdr || null);
-        setUniqueCode(d.uniqueCode || 0);
         setTokensGranted(d.tokensPurchased || 0);
-        if (d.paymentUrl) setPaymentUrl(d.paymentUrl);
-        if (d.qrisUrl) setQrisUrl(d.qrisUrl);
+        if (d.paymentUrl) {
+          // Auto-redirect ke DOKU checkout setelah 2 detik
+          setTimeout(() => {
+            if (active) {
+              window.location.href = d.paymentUrl;
+            }
+          }, 2000);
+        }
       })
-      .catch((e) => console.error("Order creation failed", e));
+      .catch((e) => console.error("Order creation failed", e))
+      .finally(() => setLoading(false));
     return () => { active = false; };
   }, [userId, pkg.tierKey]);
 
   useEffect(() => {
-    if (paid || countdown <= 0 || isFree) return;
-    const t = setInterval(() => setCountdown((c) => Math.max(0, c - 1)), 1000);
-    return () => clearInterval(t);
-  }, [paid, countdown, isFree]);
+    if (paid || isFree) return;
+    // Removed countdown logic - not needed for DOKU redirect
+  }, [paid, isFree]);
 
   const handleConfirmPay = async () => {
     if (!orderId || loading) return;
@@ -83,44 +83,13 @@ export function PaymentModal({
         setPaid(true);
         onPaymentSuccess(Number(userBalance) + Number(data.tokensAdded || tokensGranted));
       } else {
-        setAiError(data.error || "Pembayaran belum terkonfirmasi.");
+        console.error("Payment not confirmed:", data.error);
       }
     } catch (e: any) {
-      setAiError(e.message || "Koneksi terputus saat memeriksa status.");
+      console.error("Payment check failed:", e.message);
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleUploadReceipt = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file || !orderId) return;
-    setAiLoading(true);
-    setAiError("");
-    const reader = new FileReader();
-    reader.onload = async () => {
-      try {
-        const base64 = reader.result as string;
-        const res = await fetch("/api/orders/verify-receipt", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ orderId, imageBase64: base64, mimeType: file.type }),
-        });
-        const data = await res.json().catch(() => ({}));
-        if (res.ok && data.success) {
-          setPaid(true);
-          onPaymentSuccess(Number(userBalance) + Number(data.tokensAdded || tokensGranted));
-        } else {
-          setAiError(data.error || "Bukti transfer tidak valid.");
-        }
-      } catch (err: any) {
-        setAiError(err.message || "Gagal memverifikasi bukti struk.");
-      } finally {
-        setAiLoading(false);
-      }
-    };
-    reader.onerror = () => { setAiError("Gagal membaca file."); setAiLoading(false); };
-    reader.readAsDataURL(file);
   };
 
   const handlePrintReceipt = () => {
@@ -169,20 +138,20 @@ export function PaymentModal({
             </Button>
           </>
         ) : (
-          <PaymentQrContent
-            exactAmount={exactAmount}
-            basePrice={pkg.price}
-            uniqueCode={uniqueCode}
-            orderId={orderId}
-            countdown={countdown}
-            aiLoading={aiLoading}
-            aiError={aiError}
-            paymentUrl={paymentUrl}
-            qrisUrl={qrisUrl}
-            loading={loading}
-            onUploadReceipt={handleUploadReceipt}
-            onConfirmPay={handleConfirmPay}
-          />
+          <div style={{ textAlign: "center", padding: "40px 20px" }}>
+            <div style={{ width: "60px", height: "60px", margin: "0 auto 16px", border: "3px solid var(--primary)", borderTop: "3px solid transparent", borderRadius: "50%", animation: "spin 1s linear infinite" }} />
+            <h3 style={{ fontSize: "18px", margin: "0 0 8px", color: "var(--text)" }}>Membuka Halaman Pembayaran</h3>
+            <p style={{ fontSize: "13px", color: "var(--text-muted)", margin: "0 0 16px" }}>
+              Anda akan diarahkan ke DOKU Payment Gateway dalam beberapa saat...
+            </p>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", padding: "8px 16px", background: "var(--surface)", borderRadius: "8px", border: "1px solid var(--border)" }}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0 }}>
+                <rect width="24" height="24" rx="4" fill="#E31E24"/>
+                <path d="M7 12h10M12 7v10" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+              </svg>
+              <span style={{ fontSize: "12px", fontWeight: 600, color: "var(--text-muted)" }}>Powered by DOKU</span>
+            </div>
+          </div>
         )}
       </section>
     </div>

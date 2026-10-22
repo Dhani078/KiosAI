@@ -62,15 +62,11 @@ export async function POST(req: NextRequest) {
     }
 
     const orderId = crypto.randomUUID();
-    const isTest100 = requestedTier === "test_100";
-    const uniqueCode = pkg.amountIdr > 0
-      ? (isTest100 ? Math.floor(Math.random() * 89) + 11 : Math.floor(Math.random() * 800) + 101)
-      : 0;
-    const finalAmount = pkg.amountIdr > 0 ? pkg.amountIdr + uniqueCode : 0;
+    const finalAmount = pkg.amountIdr;
 
     await db.execute(
       `INSERT INTO kiosai.orders (id, user_id, amount_idr, tokens_purchased, package_tier, payment_method, status)
-       VALUES (?, ?, ?, ?, ?, 'qris', 'pending')`,
+       VALUES (?, ?, ?, ?, ?, 'doku', 'pending')`,
       [orderId, userId, finalAmount, pkg.tokens, requestedTier]
     );
 
@@ -91,7 +87,6 @@ export async function POST(req: NextRequest) {
       packageName: pkg.name,
       amountIdr: finalAmount,
       baseAmountIdr: pkg.amountIdr,
-      uniqueCode,
       tokensPurchased: pkg.tokens,
       paymentUrl: dokuPaymentUrl,
       qrisUrl: dokuPaymentUrl || "",
