@@ -89,13 +89,17 @@ export async function createDokuCheckout(params: DokuOrderParams) {
   }
 }
 
-export function verifyDokuNotification(rawBody: string, headers: Headers, targetPath = "/api/payment/webhook"): boolean {
-  const clientId = headers.get("client-id");
-  const requestId = headers.get("request-id");
-  const requestTimestamp = headers.get("request-timestamp");
-  const incomingSignature = headers.get("signature") || "";
+export function verifyDokuNotification(params: {
+  clientId: string;
+  requestId: string;
+  requestTimestamp: string;
+  signature: string;
+  body: string;
+  targetPath?: string;
+}): boolean {
+  const { clientId, requestId, requestTimestamp, signature, body, targetPath = "/api/webhooks/doku-qris" } = params;
 
-  if (!clientId || !requestId || !requestTimestamp || !incomingSignature) {
+  if (!clientId || !requestId || !requestTimestamp || !signature) {
     return false;
   }
 
@@ -103,7 +107,7 @@ export function verifyDokuNotification(rawBody: string, headers: Headers, target
     return false;
   }
 
-  const digest = crypto.createHash("sha256").update(rawBody).digest("base64");
+  const digest = crypto.createHash("sha256").update(body).digest("base64");
   const signatureComponents = [
     `Client-Id:${clientId}`,
     `Request-Id:${requestId}`,
@@ -117,10 +121,7 @@ export function verifyDokuNotification(rawBody: string, headers: Headers, target
     crypto.createHmac("sha256", DOKU_SECRET_KEY).update(signatureComponents).digest("base64");
 
   try {
-    return crypto.timingSafeEqual(
-      Buffer.from(incomingSignature),
-      Buffer.from(expectedSignature)
-    );
+    return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expectedSignature));
   } catch {
     return false;
   }

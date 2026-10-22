@@ -26,7 +26,14 @@ export async function POST(req: NextRequest) {
     const signature = req.headers.get("x-callback-signature") || req.headers.get("x-signature") || "";
 
     const isDoku = Boolean(req.headers.get("client-id") && req.headers.get("signature"));
-    const isDokuValid = isDoku && verifyDokuNotification(rawBody, req.headers, "/api/payment/webhook");
+    const isDokuValid = isDoku && verifyDokuNotification({
+      clientId: req.headers.get("client-id") || "",
+      requestId: req.headers.get("request-id") || "",
+      requestTimestamp: req.headers.get("request-timestamp") || "",
+      signature: req.headers.get("signature") || "",
+      body: rawBody,
+      targetPath: "/api/payment/webhook",
+    });
     const isInternalValid = !isDoku && verifyInternalSignature(rawBody, signature);
 
     if (!isDokuValid && !isInternalValid) {
