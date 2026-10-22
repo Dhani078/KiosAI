@@ -3,6 +3,10 @@ import crypto from "crypto";
 export const DOKU_API_HOST = process.env.DOKU_API_HOST || "https://api.doku.com";
 export const DOKU_CLIENT_ID = process.env.DOKU_CLIENT_ID || "BRN-0225-1792293648186";
 export const DOKU_SECRET_KEY = process.env.DOKU_SECRET_KEY || "SK-RoqScR01WHOTA5jgxqHz";
+export const DOKU_API_KEY = process.env.DOKU_API_KEY || "doku_key_a74478f357344dd28fb7e592abfacd03";
+export const DOKU_PUBLIC_KEY = `-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2Asq8WUrIOkiAXAqp63MptLY55n+P+CPzBQGsmterYS//yqSLBf2rwvSDVUutkV+34xXIpnQ5jlh0MDNK69KgIDUxqMXWmcTH//1LI1cXTvv/HLxaCdKrh6CCWAD6seQdT1Fzk7ep1LQsnVzvanK2nJOWmYqZFcw/fI3g5mZ128zY7B+thHAskr4zbCMM09TZYNbIvT/zQYFw4nuNoGz1YgPOjjOO44HfRFIvQ0YBZ1kWqW/FZIe6ybDVBNKlr/FsNJ2/Nli6rdIHbzaSAHuuhKTc0zarpIPZ5A46oD6GvIzdRm00Akuk1u9X1Qs/AKXO8xYJsi5JzBEjnDl5NcftwIDAQAB
+-----END PUBLIC KEY-----`;
 
 export interface DokuOrderParams {
   orderId: string;

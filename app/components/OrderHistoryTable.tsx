@@ -38,7 +38,7 @@ export function OrderHistoryTable({ orders, isAdmin = false }: { orders: any[]; 
       <div className="panel-heading" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "12px", marginBottom: "16px" }}>
         <div>
           <h2>Riwayat Pembelian & Faktur</h2>
-          <span>Rekam jejak transaksi QRIS resmi dari {isAdmin ? "database TiDB" : "database"}</span>
+          <span>Rekam jejak transaksi resmi dari {isAdmin ? "database TiDB" : "database"}</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
           {list.length > 0 && (

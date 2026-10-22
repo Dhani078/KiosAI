@@ -23,7 +23,7 @@ export function Nav() {
               : "text-slate-400 hover:text-white hover:bg-slate-900"
           }`}
         >
-          <Coins className="h-4 w-4" /> Beli Token (QRIS)
+          <Coins className="h-4 w-4" /> Beli Token (DOKU)
         </button>
         <button
           onClick={() => setActiveTab("playground")}

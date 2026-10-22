@@ -114,7 +114,7 @@ export function PackagesTab({
             </Button>
             <div className="package-foot">
               <CreditCard size={13} />
-              {p.price === "0" ? (isAdmin ? "Langsung aktif ke TiDB" : "Langsung aktif ke akun") : "Bayar dengan QRIS"}
+              {p.price === "0" ? (isAdmin ? "Langsung aktif ke TiDB" : "Langsung aktif ke akun") : "Bayar dengan DOKU"}
             </div>
           </article>
         ))}
@@ -122,7 +122,7 @@ export function PackagesTab({
 
       <div className="purchase-note">
         <ShieldCheck size={15} />
-        <span>Pembayaran instan via QRIS</span>
+        <span>Pembayaran instan via DOKU</span>
         <span className="note-dot">·</span>
         <span>Token langsung masuk setelah pembayaran</span>
         <span className="note-dot">·</span>
@@ -141,7 +141,7 @@ export function PackagesTab({
             {[
               {
                 title: "Pilih & bayar",
-                text: "Pilih paket, lalu scan QRIS dari e-wallet atau mobile banking Anda.",
+                text: "Pilih paket, lalu buka halaman checkout DOKU untuk membayar.",
               },
               {
                 title: "Buat API key",

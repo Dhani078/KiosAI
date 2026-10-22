@@ -42,10 +42,10 @@ export function PaymentQrContent({
 
   return (
     <>
-      <span className="eyebrow">CHECKOUT / QRIS</span>
-      <h2>Scan. Bayar. Mulai.</h2>
+      <span className="eyebrow">CHECKOUT / DOKU</span>
+      <h2>Bayar. Verifikasi. Mulai.</h2>
       <p style={{ margin: "4px 0 12px", fontSize: "12px", color: "var(--text-muted)" }}>
-        Scan dengan aplikasi perbankan atau e-wallet apa saja (BCA, Mandiri, BRI, DANA, GoPay, OVO, ShopeePay).
+        Klik tombol di bawah untuk membuka halaman pembayaran DOKU resmi.
       </p>
 
       <div className="payment-summary" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -74,44 +74,29 @@ export function PaymentQrContent({
       </div>
 
       <div className="qr-wrap">
-        <div className="qris-word">QRIS <span>PEMBAYARAN INSTAN</span></div>
-        {qrisUrl ? (
-          <img
-            src={qrisUrl}
-            alt="QRIS Dhani"
-            style={{ width: "210px", height: "210px", objectFit: "contain", background: "#ffffff", padding: "8px", borderRadius: "10px", margin: "6px auto", display: "block" }}
-          />
+        <div className="qris-word">DOKU <span>PEMBAYARAN AMAN</span></div>
+        {paymentUrl ? (
+          <div style={{ width: "240px", padding: "16px", margin: "12px auto", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "10px", textAlign: "center" }}>
+            <p style={{ fontSize: "13px", color: "var(--text-muted)", marginBottom: "12px" }}>
+              Pembayaran diproses melalui DOKU (Payment Gateway resmi).
+            </p>
+            <a href={paymentUrl} target="_blank" rel="noreferrer" className="button primary" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "6px", textDecoration: "none", width: "100%" }}>
+              Bayar via DOKU Checkout &rarr;
+            </a>
+          </div>
         ) : (
-          <div style={{ width: "210px", height: "210px", display: "grid", placeItems: "center", color: "var(--text-muted)", fontSize: "12px", margin: "6px auto", border: "1px dashed var(--border)", borderRadius: "10px" }}>
-            <span>Menyiapkan QRIS...</span>
+          <div style={{ width: "240px", height: "160px", display: "grid", placeItems: "center", color: "var(--text-muted)", fontSize: "12px", margin: "12px auto", border: "1px dashed var(--border)", borderRadius: "10px" }}>
+            <span>Menyiapkan halaman pembayaran...</span>
           </div>
         )}
-        <small>MERCHANT: DHANI (DANA) · ORDER: {orderId ? orderId.slice(0, 16) : "Membuat order..."}</small>
+        <small>MERCHANT: BRN-0225-1792293648186 · ORDER: {orderId ? orderId.slice(0, 16) : "Membuat order..."}</small>
       </div>
 
       <div className="countdown">
         <Clock3 size={16} /> Selesaikan dalam <code>{Math.floor(countdown / 60).toString().padStart(2, "0")}:{(countdown % 60).toString().padStart(2, "0")}</code>
       </div>
 
-      {/* AI Receipt Upload Card */}
-      <div style={{ margin: "8px 0", padding: "12px", background: "var(--canvas)", border: "1px dashed var(--primary)", borderRadius: "var(--radius-input)", textAlign: "center" }}>
-        <label style={{ cursor: aiLoading ? "wait" : "pointer", display: "inline-flex", alignItems: "center", gap: "6px", fontSize: "12px", color: "var(--primary)", fontWeight: 600 }}>
-          <Camera size={15} /> {aiLoading ? "AI Sedang Memeriksa Struk..." : "Unggah Bukti Struk (AI Auto-Verify)"}
-          <input type="file" accept="image/*" disabled={aiLoading || !orderId} onChange={onUploadReceipt} style={{ display: "none" }} />
-        </label>
-        <p style={{ margin: "4px 0 0", fontSize: "11px", color: "var(--text-muted)" }}>
-          Foto struk transfer Anda. AI memverifikasi nominal & status dalam 1-2 detik.
-        </p>
-        {aiError && <p style={{ color: "var(--danger, #ef4444)", fontSize: "11px", margin: "6px 0 0" }}>{aiError}</p>}
-      </div>
-
-      {paymentUrl && (
-        <a href={paymentUrl} target="_blank" rel="noreferrer" className="button primary" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "6px", marginBottom: "8px", textDecoration: "none" }}>
-          Bayar via DOKU Checkout &rarr;
-        </a>
-      )}
-
-      <Button kind={paymentUrl ? "secondary" : "primary"} loading={loading} disabled={!orderId || countdown <= 0} onClick={onConfirmPay}>
+      <Button kind="secondary" loading={loading} disabled={!orderId || countdown <= 0} onClick={onConfirmPay}>
         Cek Status Pembayaran <CheckCheck size={17} />
       </Button>
     </>

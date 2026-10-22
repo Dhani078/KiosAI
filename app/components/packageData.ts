@@ -3,10 +3,10 @@ export const ADMIN_TEST_PACKAGE = {
   name: "Test Admin",
   price: "100",
   tokens: "1.000.000",
-  desc: "Uji coba QRIS dinamis khusus akun admin (Rp 100 + kode unik acak).",
+  desc: "Uji coba checkout DOKU khusus akun admin (Rp 100 + kode unik acak).",
   features: [
     "Nominal Rp 100 + kode unik acak",
-    "QRIS Dinamis resmi DANA Dhani",
+    "Checkout DOKU Payment Gateway resmi",
     "1 Juta token uji coba",
   ],
 };

@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { readSessionUserId, unauthorized } from "@/lib/session";
 import { createDokuCheckout } from "@/lib/doku";
-import { generateDynamicQris, getQrisRenderUrl } from "@/lib/qris";
 import crypto from "crypto";
 
 export const runtime = "nodejs";
@@ -76,7 +75,7 @@ export async function POST(req: NextRequest) {
     );
 
     let dokuPaymentUrl: string | null = null;
-    if (pkg.amountIdr > 0 && !isTest100) {
+    if (pkg.amountIdr > 0) {
       const doku = await createDokuCheckout({
         orderId,
         amountIdr: finalAmount,
@@ -85,9 +84,6 @@ export async function POST(req: NextRequest) {
         dokuPaymentUrl = doku.paymentUrl;
       }
     }
-
-    const dynamicQris = pkg.amountIdr > 0 ? generateDynamicQris(finalAmount) : "";
-    const qrisUrl = dynamicQris ? getQrisRenderUrl(dynamicQris, 280) : "";
 
     return NextResponse.json({
       orderId,
@@ -98,8 +94,8 @@ export async function POST(req: NextRequest) {
       uniqueCode,
       tokensPurchased: pkg.tokens,
       paymentUrl: dokuPaymentUrl,
-      qrisUrl: qrisUrl || dokuPaymentUrl || "",
-      qrisString: dynamicQris,
+      qrisUrl: dokuPaymentUrl || "",
+      qrisString: "",
       status: "pending",
     });
   } catch (err: any) {
