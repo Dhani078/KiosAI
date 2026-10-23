@@ -117,7 +117,7 @@ export function PaymentModal(props: ModalProps) {
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <section role="dialog" aria-modal="true" className="modal" style={{ maxWidth: isFree ? "480px" : "560px", width: "95%", padding: "20px" }} onClick={(e) => e.stopPropagation()}>
+      <section role="dialog" aria-modal="true" className="modal" style={{ maxWidth: isFree ? "480px" : "580px", width: "95%", maxHeight: "95vh", overflowY: "auto", padding: "20px" }} onClick={(e) => e.stopPropagation()}>
         <button aria-label="Tutup" className="modal-close" onClick={onClose}><X size={20} /></button>
         {paid ? (
           <PaymentSuccess tokensGranted={tokensGranted} userBalance={userBalance} isAdmin={isAdmin} tierKey={pkg.tierKey} isFree={isFree} onNavigateKeys={props.onNavigateKeys} onNavigateStatistik={props.onNavigateStatistik} onPrintReceipt={handlePrintReceipt} />
@@ -152,7 +152,7 @@ export function PaymentModal(props: ModalProps) {
               </div>
             ) : (
               <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                <iframe src={iframeSrc} style={{ width: "100%", height: "480px", border: "1px solid var(--border)", borderRadius: "10px", background: "#ffffff" }} title="DOKU QRIS Checkout" />
+                <iframe src={iframeSrc} style={{ width: "100%", height: "540px", border: "1px solid var(--border)", borderRadius: "10px", background: "#ffffff" }} title="DOKU QRIS Checkout" />
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "11px", color: "var(--text-muted)" }}>
                   <span>Scan via BCA, Mandiri, BRI, GoPay, DANA, OVO</span>
                   <a href={paymentUrl} target="_blank" rel="noopener noreferrer" style={{ color: "var(--primary)", display: "inline-flex", alignItems: "center", gap: "4px", textDecoration: "underline" }}>
