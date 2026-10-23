@@ -62,12 +62,12 @@ export async function POST(req: NextRequest) {
 
     if (requestedTier === "free") {
       const existing = await db.queryOne<any>(
-        `SELECT id FROM kiosai.orders WHERE user_id = ? AND package_tier = 'free' AND status = 'paid' LIMIT 1`,
+        `SELECT id FROM kiosai.orders WHERE user_id = ? AND package_tier = 'free' LIMIT 1`,
         [userId]
       );
       if (existing) {
         return NextResponse.json(
-          { error: "Paket Free sudah pernah diklaim pada akun ini. Silakan beli paket Pro." },
+          { error: "Paket Free sudah pernah diambil atau diklaim pada akun ini. Silakan beli paket Pro." },
           { status: 400 }
         );
       }

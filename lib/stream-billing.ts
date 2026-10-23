@@ -13,11 +13,7 @@ export interface BilledStreamOptions {
   onSettled?: (cost: number) => void;
 }
 
-/**
- * Creates an SSE stream that tracks token usage and protects against
- * premature client stream disconnection without counting raw SSE framing overhead.
- * Handles TCP chunk boundary splits and extracts delta.content, reasoning_content, and tool_calls.
- */
+// SSE stream parser with token metering, chunk boundary buffering, and usage settlement
 export function createBilledStream(options: BilledStreamOptions): ReadableStream {
   const { reader, userId, keyId, model, startTime, rawPromptEstimate = 15, onSettled } = options;
   const decoder = new TextDecoder();

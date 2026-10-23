@@ -6,8 +6,7 @@
  * DAN keselarasan env lokal vs secret Worker Cloudflare (drift yang bikin
  * Worker balas "DATABASE_URL environment variable is not defined").
  */
-import { readFileSync, existsSync } from "node:fs";
-import { readdirSync, statSync } from "node:fs";
+import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
 import { connect } from "@tidbcloud/serverless";

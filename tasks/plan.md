@@ -350,6 +350,13 @@
   - Polling realtime pesanan setiap 2.5 detik via `/api/orders?orderId=...`
   - Penanganan transisi sukses otomatis dan pembaruan saldo instan
   - 100% verifikasi lolos: 128 file <= 200 LOC, semua suite pengujian lulus sempurna
+- [x] Phase 75: Full Spectrum Audit Remediation & Hardening
+  - Penutupan celah race condition free tier di `/api/orders` dan `/api/orders/pay`
+  - Penonaktifkan permanen rute verifikasi struk AI OCR `/api/orders/verify-receipt` (410 Gone)
+  - Eliminasi celah Reflected XSS di OAuth callback
+  - Pembersihan kredensial produksi hardcoded dari fallback `lib/doku.ts`
+  - Penghapusan dead code `PaymentQrContent.tsx` dan folder eksternal `KiosAI Token Marketplace Design` (-2.800+ baris)
+  - 100% verifikasi lolos: 127 file sumber <= 200 LOC, semua suite pengujian lulus sempurna
 
 
 

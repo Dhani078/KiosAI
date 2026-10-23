@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { X, Copy, Check, Download, ExternalLink, Terminal } from "lucide-react";
+import { X, Copy, Check, Download, Terminal } from "lucide-react";
 import { Button } from "./ui";
 
 export function EnvExportModal({

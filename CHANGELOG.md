@@ -7,6 +7,17 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `refactor(audit)` - refactor(audit): eliminate slop, close free-tier race condition, disable legacy receipt backdoor, and clean dead code
+
+**Full Spectrum Audit Remediation & Hardening**
+- Penutupan celah race condition klaim berulang paket Free di `/api/orders` dan `/api/orders/pay`.
+- Penonaktifkan permanen endpoint verifikasi struk AI OCR `/api/orders/verify-receipt` (status 410 Gone) untuk menutup potensi bypass gateway pembayaran.
+- Pencegahan celah Reflected XSS pada halaman callback OAuth dengan pesan kesalahan statis aman.
+- Penghapusan nilai fallback kredensial DOKU produksi di `lib/doku.ts` untuk mewajibkan pembacaan dari environment variable murni.
+- Penghapusan komponen dead code `PaymentQrContent.tsx` dan artefak Figma `KiosAI Token Marketplace Design` (-2.800+ baris).
+- Pembersihan impor simbol tidak terpakai pada komponen modal dan perapian komentar naratif.
+
+
 ### `feat(payment)` - feat(payment): implement in-app DOKU QRIS iframe checkout, direct QRIS locking, and realtime polling cascade
 
 **In-App DOKU QRIS Modal, Direct QRIS Locking & Realtime Auto-Close**

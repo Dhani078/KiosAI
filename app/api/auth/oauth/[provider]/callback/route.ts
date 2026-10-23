@@ -41,7 +41,9 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ prov
     try {
       localStorage.setItem("kiosai_user_id", ${JSON.stringify(user.id)});
       localStorage.setItem("kiosai_is_admin", "${isAdmin ? "1" : "0"}");
-    } catch (e) {}
+    } catch {
+      // LocalStorage might be restricted in some iframe or sandbox contexts
+    }
     window.location.href = "/dashboard";
   </script>
 </body>
@@ -55,12 +57,13 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ prov
       user.id
     );
   } catch (err: any) {
+    console.error("[OAuth Callback Error]", err?.message || err);
     const htmlErr = `<!DOCTYPE html>
 <html>
 <head><title>Gagal Masuk</title></head>
 <body style="background:#0b0d10;color:#fff;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;">
   <div style="text-align:center;">
-    <p style="color:#ef4444;">Autentikasi Gagal: ${err.message}</p>
+    <p style="color:#ef4444;">Autentikasi gagal. Silakan coba kembali atau hubungi admin.</p>
     <a href="/" style="color:#f28c38;text-decoration:none;">&larr; Kembali ke Beranda</a>
   </div>
 </body>

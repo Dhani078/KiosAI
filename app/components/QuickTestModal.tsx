@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { X, Sparkles, Send, ArrowRight, CheckCircle2, AlertCircle } from "lucide-react";
+import { X, Send, ArrowRight, CheckCircle2, AlertCircle } from "lucide-react";
 import { Button, Input } from "./ui";
 
 export function QuickTestModal({

@@ -37,6 +37,19 @@ export async function POST(req: NextRequest) {
     const bypassHeader = req.headers.get("x-test-bypass-secret");
     const isTestBypass = Boolean(TEST_SECRET && bypassHeader === TEST_SECRET);
 
+    if (isFree) {
+      const alreadyClaimed = await db.queryOne<any>(
+        `SELECT id FROM kiosai.orders WHERE user_id = ? AND package_tier = 'free' AND status = 'paid' LIMIT 1`,
+        [sessionUserId]
+      );
+      if (alreadyClaimed) {
+        return NextResponse.json(
+          { error: "Paket Free sudah pernah diklaim pada akun ini. Silakan beli paket Pro." },
+          { status: 400 }
+        );
+      }
+    }
+
     // Keamanan produksi: Pesanan berbayar DILARANG dilunasi langsung tanpa bukti struk atau webhook
     if (!isFree && !isTestBypass) {
       return NextResponse.json(

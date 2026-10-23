@@ -24,7 +24,7 @@ const row = (await client.execute("SELECT password_hash FROM kiosai.users WHERE 
 if (!row || row.password_hash !== hash) throw new Error("Update gagal diverifikasi (id admin salah?)");
 
 let env = existsSync(ENV) ? readFileSync(ENV, "utf8") : "";
-env = env.split(/\r?\n/).filter((l) => !/^ADMIN_PASSWORD=/.test(l)).join("\n").replace(/\n*$/, "\n");
+env = env.split(/\r?\n/).filter((l) => !l.startsWith("ADMIN_PASSWORD=")).join("\n").replace(/\n*$/, "\n");
 env += `ADMIN_PASSWORD=${password}\n`;
 writeFileSync(ENV, env, "utf8");
 

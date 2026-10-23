@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { X, Copy, Check, Terminal } from "lucide-react";
+import { X, Copy, Check } from "lucide-react";
 import { Button } from "./ui";
 
 export function ModelSnippetModal({

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { X, Copy, Check, Bell, LogOut, Zap, Github, ShieldCheck, Sparkles, Send } from "lucide-react";
+import { X, Copy, Check, Bell, LogOut, Zap, Github, ShieldCheck, Send } from "lucide-react";
 import { Button } from "./ui";
 
 export function UserProfileModal({

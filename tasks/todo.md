@@ -501,6 +501,16 @@
 - [x] Task 69.5: Support dual-mode signature verification in `verifyDokuNotification`
 - [x] Task 69.6: 100% compliance: 128 source files <= 200 LOC, all test suites pass
 
+## Phase 70 (Full Spectrum Audit Remediation & Hardening - Completed)
+- [x] Task 70.1: Prevent concurrent duplicate free package claims in `/api/orders` & `/api/orders/pay`
+- [x] Task 70.2: Disable legacy `/api/orders/verify-receipt` with 410 Gone to enforce DOKU QRIS exclusivity
+- [x] Task 70.3: Sanitize error rendering in OAuth callback to prevent Reflected XSS
+- [x] Task 70.4: Remove production secrets fallback in `lib/doku.ts`
+- [x] Task 70.5: Delete unused component `app/components/PaymentQrContent.tsx`
+- [x] Task 70.6: Delete legacy Vite design artifact directory `KiosAI Token Marketplace Design` (-2.800+ LOC)
+- [x] Task 70.7: Clean unused imports (`Sparkles`, `Terminal`, `ExternalLink`) and narrative comments
+- [x] Task 70.8: 100% compliance: 127 source files <= 200 LOC, all test suites pass
+
 
 
 
