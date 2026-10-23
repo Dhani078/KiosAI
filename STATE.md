@@ -372,6 +372,13 @@
     - Pembersihan prefix sensor (`kios-...`) agar tidak terkirim sebagai Authorization header tidak sah.
     - Fallback parsing `Cookie` mentah di `lib/session.ts` saat `req.cookies` kosong pada runtime Cloudflare Worker.
     - 100% verifikasi lolos: 127 file <= 200 LOC, semua suite pengujian lulus sempurna.
+  - Phase 69: Direct QRIS Locking, In-App Iframe Checkout & Realtime Settlement Polling:
+    - Penguncian metode pembayaran ke QRIS murni (`payment_method_types: ["QRIS"]`) pada request DOKU.
+    - Penyajian antarmuka checkout DOKU langsung di dalam modal aplikasi melalui view iframe (`?view=iframe`), pengguna tidak meninggalkan domain `tokoai.my.id`.
+    - Polling otomatis status pesanan setiap 2.5 detik via endpoint `/api/orders?orderId=...`.
+    - Deteksi lunas otomatis: pembaruan saldo instan dan transisi otomatis ke layar sukses tanpa refresh halaman.
+    - Dukungan fallback tombol buka tab penuh untuk fleksibilitas perbankan seluler.
+    - 100% verifikasi lolos: 128 file <= 200 LOC, semua suite pengujian lulus sempurna.
 
 
 

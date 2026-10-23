@@ -344,6 +344,12 @@
   - Komponen `<QuickTestModal />` langsung dari kartu katalog
   - Pendaftaran manual dikunci ke OAuth GitHub & Google terverifikasi
   - Auto-fetch `playgroundKey` dan raw cookie header fallback di `lib/session.ts`
+- [x] Phase 74: Direct QRIS Locking, In-App Iframe Checkout & Realtime Settlement Polling
+  - Penguncian metode pembayaran ke QRIS murni (`payment_method_types: ["QRIS"]`)
+  - Penyajian iframe terintegrasi langsung di dalam `PaymentModal.tsx`
+  - Polling realtime pesanan setiap 2.5 detik via `/api/orders?orderId=...`
+  - Penanganan transisi sukses otomatis dan pembaruan saldo instan
+  - 100% verifikasi lolos: 128 file <= 200 LOC, semua suite pengujian lulus sempurna
 
 
 

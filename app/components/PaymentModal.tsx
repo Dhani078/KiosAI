@@ -1,34 +1,28 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { X, Gift, CheckCheck } from "lucide-react";
+import { X, Gift, CheckCheck, ExternalLink, Loader2 } from "lucide-react";
 import { Badge, Button } from "./ui";
-import { PACKAGES, getPackages } from "./PackagesTab";
+import { getPackages } from "./PackagesTab";
 import { generateInvoiceHtml } from "@/lib/receipt-generator";
 import { PaymentSuccess } from "./PaymentSuccess";
 
-export function PaymentModal({
-  selectedPkgIndex,
-  userId,
-  userBalance,
-  isAdmin = false,
-  onClose,
-  onPaymentSuccess,
-  onNavigateKeys,
-  onNavigateStatistik,
-}: {
+interface ModalProps {
   selectedPkgIndex: number;
   userId: string;
   userBalance: number;
   isAdmin?: boolean;
   onClose: () => void;
-  onPaymentSuccess: (newBalance: number) => void;
+  onPaymentSuccess: (b: number) => void;
   onNavigateKeys: () => void;
   onNavigateStatistik: () => void;
-}) {
-  const packages = getPackages(isAdmin);
-  const pkg = packages[selectedPkgIndex] || packages[0];
+}
+
+export function PaymentModal(props: ModalProps) {
+  const { selectedPkgIndex, userId, userBalance, isAdmin, onClose, onPaymentSuccess } = props;
+  const pkg = getPackages(isAdmin)[selectedPkgIndex] || getPackages(isAdmin)[0];
   const isFree = pkg.price === "0" || pkg.tierKey === "free";
+
   const [orderId, setOrderId] = useState<string | null>(null);
   const [exactAmount, setExactAmount] = useState<number | null>(null);
   const [paymentUrl, setPaymentUrl] = useState<string | null>(null);
@@ -50,26 +44,39 @@ export function PaymentModal({
         setOrderId(d.orderId);
         setExactAmount(d.amountIdr || null);
         setTokensGranted(d.tokensPurchased || 0);
-        if (d.paymentUrl) {
-          // Auto-redirect ke DOKU checkout setelah 2 detik
-          setTimeout(() => {
-            if (active) {
-              window.location.href = d.paymentUrl;
-            }
-          }, 2000);
-        }
+        if (d.paymentUrl) setPaymentUrl(d.paymentUrl);
       })
-      .catch((e) => console.error("Order creation failed", e))
+      .catch((e) => console.error("Order init error", e))
       .finally(() => setLoading(false));
     return () => { active = false; };
   }, [userId, pkg.tierKey]);
 
   useEffect(() => {
-    if (paid || isFree) return;
-    // Removed countdown logic - not needed for DOKU redirect
-  }, [paid, isFree]);
+    if (!orderId || paid || isFree) return;
+    const t = setInterval(async () => {
+      try {
+        const res = await fetch(`/api/orders?orderId=${encodeURIComponent(orderId)}`);
+        const data = await res.json();
+        if (data.status === "paid" || data.order?.status === "paid") {
+          setPaid(true);
+          onPaymentSuccess(Number(userBalance) + Number(data.order?.tokens_purchased || tokensGranted));
+        }
+      } catch (err) {
+        console.error("Poll err", err);
+      }
+    }, 2500);
+    return () => clearInterval(t);
+  }, [orderId, paid, isFree, userBalance, tokensGranted, onPaymentSuccess]);
 
-  const handleConfirmPay = async () => {
+  useEffect(() => {
+    const handleMsg = (e: MessageEvent) => {
+      if (["https://checkout.doku.com", "https://jokul.doku.com"].includes(e.origin) && e.data?.func === "closeJokul") onClose();
+    };
+    window.addEventListener("message", handleMsg);
+    return () => window.removeEventListener("message", handleMsg);
+  }, [onClose]);
+
+  const handleConfirmFree = async () => {
     if (!orderId || loading) return;
     setLoading(true);
     try {
@@ -82,11 +89,9 @@ export function PaymentModal({
       if (res.ok && data.success) {
         setPaid(true);
         onPaymentSuccess(Number(userBalance) + Number(data.tokensAdded || tokensGranted));
-      } else {
-        console.error("Payment not confirmed:", data.error);
       }
     } catch (e: any) {
-      console.error("Payment check failed:", e.message);
+      console.error("Free err", e.message);
     } finally {
       setLoading(false);
     }
@@ -106,22 +111,16 @@ export function PaymentModal({
     if (w) { w.document.write(html); w.document.close(); }
   };
 
+  const iframeSrc = paymentUrl
+    ? (paymentUrl.includes("?") ? `${paymentUrl}&view=iframe` : `${paymentUrl}?view=iframe`)
+    : "";
+
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <section role="dialog" aria-modal="true" className="modal" onClick={(e) => e.stopPropagation()}>
+      <section role="dialog" aria-modal="true" className="modal" style={{ maxWidth: isFree ? "480px" : "560px", width: "95%", padding: "20px" }} onClick={(e) => e.stopPropagation()}>
         <button aria-label="Tutup" className="modal-close" onClick={onClose}><X size={20} /></button>
-
         {paid ? (
-          <PaymentSuccess
-            tokensGranted={tokensGranted}
-            userBalance={userBalance}
-            isAdmin={isAdmin}
-            tierKey={pkg.tierKey}
-            isFree={isFree}
-            onNavigateKeys={onNavigateKeys}
-            onNavigateStatistik={onNavigateStatistik}
-            onPrintReceipt={handlePrintReceipt}
-          />
+          <PaymentSuccess tokensGranted={tokensGranted} userBalance={userBalance} isAdmin={isAdmin} tierKey={pkg.tierKey} isFree={isFree} onNavigateKeys={props.onNavigateKeys} onNavigateStatistik={props.onNavigateStatistik} onPrintReceipt={handlePrintReceipt} />
         ) : isFree ? (
           <>
             <span className="eyebrow">FREE TIER</span>
@@ -133,24 +132,35 @@ export function PaymentModal({
               <h3 style={{ fontSize: "15px", margin: "0 0 4px" }}>{pkg.tokens} Token Siap Pakai</h3>
               <p style={{ fontSize: "12px", color: "var(--text-muted)", margin: 0 }}>Akses model Atria Dawn.</p>
             </div>
-            <Button kind="primary" loading={loading} disabled={!orderId} onClick={handleConfirmPay}>
+            <Button kind="primary" loading={loading} disabled={!orderId} onClick={handleConfirmFree}>
               Klaim {pkg.name} <CheckCheck size={17} />
             </Button>
           </>
         ) : (
-          <div style={{ textAlign: "center", padding: "40px 20px" }}>
-            <div style={{ width: "60px", height: "60px", margin: "0 auto 16px", border: "3px solid var(--primary)", borderTop: "3px solid transparent", borderRadius: "50%", animation: "spin 1s linear infinite" }} />
-            <h3 style={{ fontSize: "18px", margin: "0 0 8px", color: "var(--text)" }}>Membuka Halaman Pembayaran</h3>
-            <p style={{ fontSize: "13px", color: "var(--text-muted)", margin: "0 0 16px" }}>
-              Anda akan diarahkan ke DOKU Payment Gateway dalam beberapa saat...
-            </p>
-            <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", padding: "8px 16px", background: "var(--surface)", borderRadius: "8px", border: "1px solid var(--border)" }}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0 }}>
-                <rect width="24" height="24" rx="4" fill="#E31E24"/>
-                <path d="M7 12h10M12 7v10" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-              </svg>
-              <span style={{ fontSize: "12px", fontWeight: 600, color: "var(--text-muted)" }}>Powered by DOKU</span>
+          <div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px" }}>
+              <div>
+                <span className="eyebrow" style={{ display: "block", marginBottom: "2px" }}>CHECKOUT / QRIS DOKU</span>
+                <h2 style={{ fontSize: "18px", margin: 0 }}>{pkg.name} · Rp {Number(pkg.price.replace(/\D/g, "")).toLocaleString("id-ID")}</h2>
+              </div>
+              <Badge tier="PRO" />
             </div>
+            {loading || !paymentUrl ? (
+              <div style={{ textAlign: "center", padding: "60px 20px", background: "var(--canvas)", borderRadius: "10px", border: "1px solid var(--border)" }}>
+                <Loader2 size={32} className="spin" style={{ color: "var(--primary)", margin: "0 auto 12px" }} />
+                <p style={{ margin: 0, fontSize: "13px", color: "var(--text-muted)" }}>Menyiapkan QRIS DOKU...</p>
+              </div>
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                <iframe src={iframeSrc} style={{ width: "100%", height: "480px", border: "1px solid var(--border)", borderRadius: "10px", background: "#ffffff" }} title="DOKU QRIS Checkout" />
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "11px", color: "var(--text-muted)" }}>
+                  <span>Scan via BCA, Mandiri, BRI, GoPay, DANA, OVO</span>
+                  <a href={paymentUrl} target="_blank" rel="noopener noreferrer" style={{ color: "var(--primary)", display: "inline-flex", alignItems: "center", gap: "4px", textDecoration: "underline" }}>
+                    Buka Tab Penuh <ExternalLink size={12} />
+                  </a>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </section>

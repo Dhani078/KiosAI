@@ -9,11 +9,11 @@ Dokumen ini dirancang agar setiap sesi AI atau pengembang dapat melanjutkan peke
 | Komponen | Status | Keterangan |
 |---|---|---|
 | **Repository** | Clean, Up-to-Date | `https://github.com/Dhani078/KiosAI.git` (Branch `main`) |
-| **Commit Terakhir** | `57fd5db` | fix(auth): auto-fetch playgroundKey in QuickTestModal, strip masked prefixes, and add raw cookie header fallback |
+| **Commit Terakhir** | `feat(payment)` | feat(payment): implement in-app DOKU QRIS iframe checkout, direct QRIS locking, and realtime polling cascade |
 | **Worker Live** | `healthy` | `https://kiosai.dhanisepeda.workers.dev` (Subdomain `dhanisepeda` dengan huruf 'e') & `https://tokoai.my.id` |
 | **Database** | `connected` | TiDB Cloud Serverless (AWS Tokyo `ap-southeast-1` / `ap-northeast-1`) |
 | **Upstream 9Router** | `connected` | `http://127.0.0.1:20128` (69 model aktif terverifikasi 5x audit, 5 Free, 64 Pro) |
-| **Batas Baris Kode** | 100% Patuh | 127 file sumber `.ts`/`.tsx`/`.mjs` `<= 200` baris |
+| **Batas Baris Kode** | 100% Patuh | 128 file sumber `.ts`/`.tsx`/`.mjs` `<= 200` baris |
 | **UI Craft & Design** | Complete | `DESIGN.md`, 0 em-dash, Bento Grid, Hero Terminal, in-card QuickTestModal |
 | **Dynamic QRIS DANA** | 7/7 Passed | `npm run test:qris` - EMVCo tag 54 nominal lock & CRC16-CCITT |
 | **AI Receipt Verify** | 2/2 Passed | `npm run test:receipt` - Gemini 3.5 Flash Vision OCR, 4-layer anti-replay, digital forensics |

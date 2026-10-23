@@ -48,11 +48,12 @@ export async function createDokuCheckout(params: DokuOrderParams) {
       amount: params.amountIdr,
       invoice_number: params.orderId,
       currency: "IDR",
-      callback_url: params.callbackUrl || "https://tokoai.my.id/api/payment/webhook",
+      callback_url: params.callbackUrl || "https://tokoai.my.id/api/webhooks/doku-qris",
       callback_url_result: params.resultUrl || "https://tokoai.my.id/dashboard",
     },
     payment: {
       payment_due_date: 60,
+      payment_method_types: ["QRIS"],
     },
   };
 
@@ -89,15 +90,33 @@ export async function createDokuCheckout(params: DokuOrderParams) {
   }
 }
 
-export function verifyDokuNotification(params: {
-  clientId: string;
-  requestId: string;
-  requestTimestamp: string;
-  signature: string;
-  body: string;
-  targetPath?: string;
-}): boolean {
-  const { clientId, requestId, requestTimestamp, signature, body, targetPath = "/api/webhooks/doku-qris" } = params;
+export function verifyDokuNotification(
+  arg1: string | { clientId: string; requestId: string; requestTimestamp: string; signature: string; body: string; targetPath?: string },
+  arg2?: Headers,
+  arg3 = "/api/payment/webhook"
+): boolean {
+  let clientId = "";
+  let requestId = "";
+  let requestTimestamp = "";
+  let signature = "";
+  let body = "";
+  let targetPath = "/api/webhooks/doku-qris";
+
+  if (typeof arg1 === "object" && arg1 !== null) {
+    clientId = arg1.clientId;
+    requestId = arg1.requestId;
+    requestTimestamp = arg1.requestTimestamp;
+    signature = arg1.signature;
+    body = arg1.body;
+    if (arg1.targetPath) targetPath = arg1.targetPath;
+  } else if (typeof arg1 === "string" && arg2) {
+    body = arg1;
+    clientId = arg2.get("client-id") || "";
+    requestId = arg2.get("request-id") || "";
+    requestTimestamp = arg2.get("request-timestamp") || "";
+    signature = arg2.get("signature") || "";
+    targetPath = arg3;
+  }
 
   if (!clientId || !requestId || !requestTimestamp || !signature) {
     return false;
@@ -121,7 +140,9 @@ export function verifyDokuNotification(params: {
     crypto.createHmac("sha256", DOKU_SECRET_KEY).update(signatureComponents).digest("base64");
 
   try {
-    return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expectedSignature));
+    const a = Buffer.from(signature);
+    const b = Buffer.from(expectedSignature);
+    return a.length === b.length && crypto.timingSafeEqual(a, b);
   } catch {
     return false;
   }

@@ -7,6 +7,16 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `feat(payment)` - feat(payment): implement in-app DOKU QRIS iframe checkout, direct QRIS locking, and realtime polling cascade
+
+**In-App DOKU QRIS Modal, Direct QRIS Locking & Realtime Auto-Close**
+- Penguncian metode pembayaran ke QRIS murni (`payment_method_types: ["QRIS"]`) di DOKU Checkout backend.
+- Penyajian antarmuka checkout DOKU langsung di dalam modal aplikasi melalui view iframe (`?view=iframe`), pengguna tidak meninggalkan domain.
+- Polling otomatis status pesanan setiap 2.5 detik via endpoint `/api/orders?orderId=...`.
+- Deteksi lunas otomatis: pembaruan saldo instan dan transisi otomatis ke layar sukses tanpa refresh halaman.
+- Dukungan fallback tombol buka tab penuh untuk fleksibilitas perbankan seluler.
+
+
 ### `57fd5db` & `3d26dcd` - fix(auth): auto-fetch playgroundKey in QuickTestModal, strip masked prefixes, and add raw cookie header fallback
 
 **Penyempurnaan Autentikasi Uji Cepat Model & Fallback Sesi**

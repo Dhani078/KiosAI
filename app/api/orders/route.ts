@@ -23,6 +23,18 @@ export async function GET(req: NextRequest) {
   if (!userId) return unauthorized();
 
   try {
+    const orderId = req.nextUrl.searchParams.get("orderId");
+    if (orderId) {
+      const order = await db.queryOne<any>(
+        `SELECT id, user_id, amount_idr, tokens_purchased, package_tier, payment_method, status, paid_at, created_at
+         FROM kiosai.orders
+         WHERE id = ? AND user_id = ? LIMIT 1`,
+        [orderId, userId]
+      );
+      if (!order) return NextResponse.json({ error: "Order not found" }, { status: 404 });
+      return NextResponse.json({ order, status: order.status });
+    }
+
     const orders = await db.query(
       `SELECT id, user_id, amount_idr, tokens_purchased, package_tier, payment_method, status, paid_at, created_at
        FROM kiosai.orders

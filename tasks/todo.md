@@ -493,6 +493,14 @@
 - [x] Task 68.6: Auto-fetch `playgroundKey` in `QuickTestModal` and add raw cookie header fallback in session parser
 - [x] Task 68.7: 100% compliance: 127 source files <= 200 LOC, all test suites pass
 
+## Phase 69 (Direct QRIS Locking, In-App Iframe Checkout & Realtime Settlement Polling - Completed)
+- [x] Task 69.1: Lock DOKU checkout payload to QRIS only via `payment_method_types: ["QRIS"]`
+- [x] Task 69.2: Implement integrated in-app iframe checkout inside `PaymentModal.tsx`
+- [x] Task 69.3: Add single order status endpoint query `GET /api/orders?orderId=...`
+- [x] Task 69.4: Add realtime polling cascade (every 2.5s) for instant settlement and auto-close
+- [x] Task 69.5: Support dual-mode signature verification in `verifyDokuNotification`
+- [x] Task 69.6: 100% compliance: 128 source files <= 200 LOC, all test suites pass
+
 
 
 
