@@ -46,7 +46,7 @@ export function parseUpstreamJson(rawText: string): any {
     try {
       return JSON.parse(text);
     } catch {
-      // Glued whatever-the-upstream-appended — salvage the leading JSON object.
+      // Glued whatever-the-upstream-appended: salvage the leading JSON object.
       const end = lastBalancedObjectEnd(text);
       if (end > 0) {
         try {
@@ -58,7 +58,7 @@ export function parseUpstreamJson(rawText: string): any {
     }
   }
 
-  // Shape 3: SSE chunks — stitch them into one chat.completion object.
+  // Shape 3: SSE chunks: stitch them into one chat.completion object.
   let id = "chatcmpl-kiosai";
   let model = "";
   let created = Math.floor(Date.now() / 1000);
@@ -91,7 +91,7 @@ export function parseUpstreamJson(rawText: string): any {
   }
 
   if (!content && !reasoning && !usage) {
-    // Nothing recognised — rethrow the raw JSON error so upstreamMessage reaches the client.
+    // Nothing recognised: rethrow the raw JSON error so upstreamMessage reaches the client.
     return JSON.parse(text);
   }
 
