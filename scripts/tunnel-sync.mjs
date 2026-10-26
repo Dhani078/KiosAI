@@ -60,7 +60,7 @@ async function wranglerOauthToken() {
 }
 
 async function pushSecret(name, value) {
-  const token = await wranglerOauthToken();
+  const token = process.env.CLOUDFLARE_API_TOKEN || (await wranglerOauthToken());
   const res = await fetch(
     `https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/workers/scripts/${WORKER}/secrets`,
     {

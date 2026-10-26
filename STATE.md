@@ -407,6 +407,11 @@
     - Eliminasi bug penjumlahan ganda token (`userBalance + tokensGranted`) di `PaymentSuccess.tsx`.
     - Penyelarasan angka saldo modal dengan saldo nyata TiDB.
     - 100% verifikasi lolos: 128 file sumber <= 200 LOC, semua suite pengujian lulus sempurna.
+  - Phase 75: Permanent Cloudflare Token Integration & Live Gateway Online:
+    - Integrasi token permanen `CLOUDFLARE_API_TOKEN` ke `.env` dan script push secret.
+    - Eliminasi ketergantungan OAuth token wrangler kedaluwarsa.
+    - Pemulihan status health upstream 9Router (HTTP 200) dan pengujian live API Key baru `forcoding` (200 OK).
+    - 100% verifikasi lolos: 128 file sumber <= 200 LOC, semua suite pengujian lulus sempurna.
 
 
 

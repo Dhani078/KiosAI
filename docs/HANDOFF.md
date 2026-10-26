@@ -9,10 +9,10 @@ Dokumen ini dirancang agar setiap sesi AI atau pengembang dapat melanjutkan peke
 | Komponen | Status | Keterangan |
 |---|---|---|
 | **Repository** | Clean, Up-to-Date | `https://github.com/Dhani078/KiosAI.git` (Branch `main`) |
-| **Commit Terakhir** | `fix(payment)` | fix(payment): eliminate double-counting of tokensGranted in PaymentSuccess modal |
+| **Commit Terakhir** | `feat(tunnel)` | feat(tunnel): integrate permanent Cloudflare API token and restore live gateway health |
 | **Worker Live** | `healthy` | `https://kiosai.dhanisepeda.workers.dev` (Subdomain `dhanisepeda` dengan huruf 'e') & `https://tokoai.my.id` |
 | **Database** | `connected` | TiDB Cloud Serverless (AWS Tokyo `ap-southeast-1` / `ap-northeast-1`) |
-| **Upstream 9Router** | `connected` | `http://127.0.0.1:20128` (69 model aktif terverifikasi 5x audit, 5 Free, 64 Pro) |
+| **Upstream 9Router** | `connected` | `http://127.0.0.1:20128` (859 model aktif terverifikasi 5x audit, 5 Free, 64+ Pro) |
 | **Batas Baris Kode** | 100% Patuh | 128 file sumber `.ts`/`.tsx`/`.mjs` `<= 200` baris |
 | **Chrome Full Audit** | 14/14 Passed | `npm run audit:chrome` - PC (1440px) & Mobile (390px), 0 horizontal overflow |
 | **UI Craft & Design** | Complete | `DESIGN.md`, 0 em-dash, Bento Grid, Hero Terminal, in-card QuickTestModal |

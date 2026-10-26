@@ -44,7 +44,7 @@ function wranglerOauthToken() {
 }
 
 async function workerSecrets() {
-  const token = wranglerOauthToken();
+  const token = process.env.CLOUDFLARE_API_TOKEN || wranglerOauthToken();
   if (!token) return null;
   try {
     const res = await fetch(

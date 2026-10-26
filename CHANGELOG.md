@@ -7,6 +7,16 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `feat(tunnel)` - feat(tunnel): integrate permanent Cloudflare API token and restore live gateway health
+
+**Permanent Cloudflare API Token & Gateway Online**
+- Integrasi token permanen Cloudflare API (`CLOUDFLARE_API_TOKEN`) ke file `.env` dan script sinkronisasi (`tunnel-sync.mjs`, `sync-worker-secrets.mjs`, `verify-deployment.mjs`).
+- Otomatisasi pengunggahan secret `NINEROUTER_URL` ke Cloudflare Worker tanpa ketergantungan OAuth `wrangler login` yang kedaluwarsa.
+- Pemulihan status gateway upstream 9Router ke `healthy` (HTTP 200).
+- Verifikasi live API Key pengguna `forcoding` (`kios-fee3fb...`): prapengujian `/v1/chat/completions` lulus 200 OK dengan respon langsung.
+- 14/14 audit visual Chrome lulus 100%.
+
+
 ### `fix(payment)` - fix(payment): eliminate double-counting of tokensGranted in PaymentSuccess modal
 
 **Accurate Balance Synchronization in Payment Success Screen**

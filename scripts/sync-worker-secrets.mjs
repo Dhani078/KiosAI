@@ -85,7 +85,7 @@ async function putSecret(token, name, value) {
   return res.status;
 }
 
-const token = await wranglerOauthToken();
+const token = process.env.CLOUDFLARE_API_TOKEN || (await wranglerOauthToken());
 let pushed = 0;
 
 for (const key of KEYS) {

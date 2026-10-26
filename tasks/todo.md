@@ -541,6 +541,14 @@
 - [x] Task 74.3: Verify TiDB records for order `539cdc29-...` and confirm exact `225793781` balance
 - [x] Task 74.4: 100% compliance: 128 source files <= 200 LOC, all test suites pass
 
+## Phase 75 (Permanent Cloudflare Token Integration & Live Gateway Online - Completed)
+- [x] Task 75.1: Inject permanent `CLOUDFLARE_API_TOKEN` to `.env`
+- [x] Task 75.2: Support `CLOUDFLARE_API_TOKEN` in `tunnel-sync.mjs`, `sync-worker-secrets.mjs`, and `verify-deployment.mjs`
+- [x] Task 75.3: Launch persistent tunnel with PTY background process
+- [x] Task 75.4: Verify `/api/health`: 200 OK, database connected, upstream connected
+- [x] Task 75.5: Test live completions with newly generated user key `kios-fee3fb...`: 200 OK ("ONLINE")
+- [x] Task 75.6: 100% compliance: 128 source files <= 200 LOC, all test suites pass
+
 
 
 
