@@ -535,6 +535,12 @@
 - [x] Task 73.5: Run database atomic simulation test and verify 100% success
 - [x] Task 73.6: 100% compliance: 128 source files <= 200 LOC, all test suites pass
 
+## Phase 74 (Payment Success Balance Double-Count Elimination - Completed)
+- [x] Task 74.1: Identify visual double-count bug in `PaymentSuccess.tsx` line 33
+- [x] Task 74.2: Replace `userBalance + tokensGranted` with live `userBalance` synchronized from TiDB
+- [x] Task 74.3: Verify TiDB records for order `539cdc29-...` and confirm exact `225793781` balance
+- [x] Task 74.4: 100% compliance: 128 source files <= 200 LOC, all test suites pass
+
 
 
 

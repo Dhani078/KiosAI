@@ -374,6 +374,10 @@
   - Perbaikan kolom `balance_tokens` pada webhook DOKU QRIS dan auto-unlock bonus vesting
   - Integrasi whitelist `test_1` di seluruh route pelunasan
   - 100% verifikasi lolos: 128 file sumber <= 200 LOC, semua suite pengujian lulus sempurna
+- [x] Phase 79: Payment Success Balance Double-Count Elimination
+  - Eliminasi bug penjumlahan ganda token (`userBalance + tokensGranted`) di `PaymentSuccess.tsx`
+  - Penyelarasan angka saldo modal dengan saldo nyata TiDB
+  - 100% verifikasi lolos: 128 file sumber <= 200 LOC, semua suite pengujian lulus sempurna
 
 
 

@@ -30,7 +30,7 @@ export function PaymentSuccess({
       <p><strong>{tokensGranted.toLocaleString("id-ID")} token</strong> berhasil ditambahkan{isAdmin ? " ke TiDB" : ""}.</p>
       <div className="success-summary">
         <span>Saldo sekarang</span>
-        <code>{(Number(userBalance) + Number(tokensGranted)).toLocaleString("id-ID")} token</code>
+        <code>{Number(userBalance).toLocaleString("id-ID")} token</code>
       </div>
       <div className="success-summary">
         <span>Tier aktif</span>

@@ -7,6 +7,13 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `fix(payment)` - fix(payment): eliminate double-counting of tokensGranted in PaymentSuccess modal
+
+**Accurate Balance Synchronization in Payment Success Screen**
+- Perbaikan bug tampilan visual pada `PaymentSuccess.tsx`: nilai `userBalance` yang sudah di-refresh secara real-time dari database TiDB sebelumnya ditambahkan lagi dengan `tokensGranted`, menyebabkan angka di pop-up modal bertambah ganda (+1 Juta) dibanding saldo nyata di background dashboard.
+- Saldo sekarang pada modal langsung menampilkan `Number(userBalance)` terverifikasi database, 100% konsisten sebelum dan sesudah refresh browser.
+
+
 ### `feat(admin)` - feat(admin): set test admin package to 1 rupiah and fix backend webhook user balance column
 
 **1-Rupiah Admin Test Package & Webhook Backend Fix**
