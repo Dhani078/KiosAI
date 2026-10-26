@@ -7,6 +7,14 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `fix(ui)` - fix(ui): format token balance with id-ID locale number parsing and update free model references
+
+**Thorough UI Polish & Model Metadata Synchronization**
+- Perbaikan parsing format angka saldo token (`Number(balance).toLocaleString("id-ID")`) pada `PackagesTab.tsx`, `DashboardApp.tsx`, dan `AnalyticsCards.tsx` agar string BigInt dari TiDB diformat rapi dengan pemisah titik (misal `200.230.674` token).
+- Pembaruan nama model gratis usang `Atria Dawn Preview` menjadi `DeepSeek V4.1 Flash (Free)` pada `PackageComparison.tsx`, `packageData.ts`, `PaymentModal.tsx`, dan `PlaygroundLocked.tsx`.
+- 100% verifikasi lolos: 128 file sumber patuh <= 200 baris, 14/14 Chrome visual tests PASS.
+
+
 ### `feat(tunnel)` - feat(tunnel): integrate permanent Cloudflare API token and restore live gateway health
 
 **Permanent Cloudflare API Token & Gateway Online**

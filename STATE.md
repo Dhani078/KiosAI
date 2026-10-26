@@ -412,6 +412,10 @@
     - Eliminasi ketergantungan OAuth token wrangler kedaluwarsa.
     - Pemulihan status health upstream 9Router (HTTP 200) dan pengujian live API Key baru `forcoding` (200 OK).
     - 100% verifikasi lolos: 128 file sumber <= 200 LOC, semua suite pengujian lulus sempurna.
+  - Phase 76: Balance Number Formatting & Model Reference Cleanup:
+    - Format ribuan rapi (`id-ID`) untuk saldo token BigInt TiDB di seluruh dashboard (`200.230.674`).
+    - Pembersihan residu teks `Atria Dawn` ke `DeepSeek V4.1 Flash (Free)`.
+    - 100% verifikasi lolos: 128 file sumber <= 200 LOC, semua suite pengujian lulus sempurna.
 
 
 

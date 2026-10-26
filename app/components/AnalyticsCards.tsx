@@ -40,11 +40,11 @@ export function AnalyticsCards({
           <Zap size={15} style={{ color: "var(--primary)" }} />
         </div>
         <div className="stat-number" style={{ fontSize: "28px", fontWeight: 700 }}>
-          {balance.toLocaleString("id-ID")}
+          {Number(balance).toLocaleString("id-ID")}
         </div>
         {lockedBonus > 0 ? (
           <div style={{ fontSize: "11px", color: "var(--primary)", background: "rgba(242, 140, 56, 0.08)", padding: "4px 8px", borderRadius: "4px", border: "1px dashed rgba(242, 140, 56, 0.3)" }}>
-            🔒 +{lockedBonus.toLocaleString("id-ID")} di Brankas Bonus
+            🔒 +{Number(lockedBonus).toLocaleString("id-ID")} di Brankas Bonus
           </div>
         ) : (
           <span className="muted" style={{ fontSize: "11px" }}>token tersedia di {isAdmin ? "TiDB" : "akun"}</span>
@@ -62,18 +62,18 @@ export function AnalyticsCards({
           <Activity size={15} style={{ color: "var(--primary)" }} />
         </div>
         <div className="stat-number" style={{ fontSize: "28px", fontWeight: 700 }}>
-          {totalTokens.toLocaleString("id-ID")}
+          {Number(totalTokens).toLocaleString("id-ID")}
         </div>
         <div style={{ width: "100%", height: "4px", background: "var(--border)", borderRadius: "2px", overflow: "hidden", display: "flex", margin: "2px 0 4px" }}>
-          <div style={{ width: `${totalTokens > 0 ? Math.round((promptTokens / totalTokens) * 100) : 50}%`, background: "#4DA8DA" }} title={`Input: ${promptTokens.toLocaleString("id-ID")}`} />
-          <div style={{ width: `${totalTokens > 0 ? Math.round((completionTokens / totalTokens) * 100) : 50}%`, background: "var(--primary)" }} title={`Output: ${completionTokens.toLocaleString("id-ID")}`} />
+          <div style={{ width: `${totalTokens > 0 ? Math.round((promptTokens / totalTokens) * 100) : 50}%`, background: "#4DA8DA" }} title={`Input: ${Number(promptTokens).toLocaleString("id-ID")}`} />
+          <div style={{ width: `${totalTokens > 0 ? Math.round((completionTokens / totalTokens) * 100) : 50}%`, background: "var(--primary)" }} title={`Output: ${Number(completionTokens).toLocaleString("id-ID")}`} />
         </div>
         <div style={{ fontSize: "11px", color: "var(--text-muted)", display: "flex", justifyContent: "space-between" }}>
-          <span>In: {promptTokens.toLocaleString("id-ID")}</span>
-          <span>Out: {completionTokens.toLocaleString("id-ID")}</span>
+          <span>In: {Number(promptTokens).toLocaleString("id-ID")}</span>
+          <span>Out: {Number(completionTokens).toLocaleString("id-ID")}</span>
         </div>
         <div className="stat-bottom" style={{ marginTop: "auto", fontSize: "11px" }}>
-          Total {requests.toLocaleString("id-ID")} request AI
+          Total {Number(requests).toLocaleString("id-ID")} request AI
         </div>
       </section>
 

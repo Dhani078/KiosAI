@@ -130,7 +130,7 @@ export function PaymentModal(props: ModalProps) {
             <div style={{ textAlign: "center", padding: "20px 16px", background: "var(--canvas)", borderRadius: "var(--radius-card)", border: "1px solid var(--border)", margin: "14px 0" }}>
               <Gift size={32} style={{ color: "var(--primary)", margin: "0 auto 6px" }} />
               <h3 style={{ fontSize: "15px", margin: "0 0 4px" }}>{pkg.tokens} Token Siap Pakai</h3>
-              <p style={{ fontSize: "12px", color: "var(--text-muted)", margin: 0 }}>Akses model Atria Dawn.</p>
+              <p style={{ fontSize: "12px", color: "var(--text-muted)", margin: 0 }}>Akses model DeepSeek & OpenCode Free.</p>
             </div>
             <Button kind="primary" loading={loading} disabled={!orderId} onClick={handleConfirmFree}>
               Klaim {pkg.name} <CheckCheck size={17} />

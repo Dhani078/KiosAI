@@ -9,9 +9,9 @@ export function PackageComparison({
 }) {
   const comparisonModels = [
     {
-      name: "Atria Dawn Preview",
-      sub: "Atria · Gratis ($0)",
-      use: "Uji coba gratis, eksperimen prompt & bot",
+      name: "DeepSeek V4.1 Flash (Free)",
+      sub: "DeepSeek · Gratis ($0)",
+      use: "Uji coba gratis, eksplorasi prompt & coding",
       tier: 0,
     },
     {

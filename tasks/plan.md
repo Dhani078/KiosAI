@@ -383,6 +383,10 @@
   - Eliminasi ketergantungan OAuth wrangler token kedaluwarsa
   - Pemulihan status health upstream 9Router dan endpoint completions live 200 OK
   - 100% verifikasi lolos: 128 file sumber <= 200 LOC, semua suite pengujian lulus sempurna
+- [x] Phase 81: Balance Number Formatting & Model Reference Cleanup
+  - Format ribuan rapi (`id-ID`) untuk saldo token BigInt TiDB di seluruh dashboard
+  - Pembersihan residu teks `Atria Dawn` ke `DeepSeek V4.1 Flash (Free)`
+  - 100% verifikasi lolos: 128 file sumber <= 200 LOC, semua suite pengujian lulus sempurna
 
 
 

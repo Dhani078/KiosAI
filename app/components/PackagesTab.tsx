@@ -45,7 +45,7 @@ export function PackagesTab({
           <div>
             <span className="small-label">Saldo token Anda</span>
             <div className="balance-number">
-              {balance.toLocaleString("id-ID")} <span>token</span>
+              {Number(balance).toLocaleString("id-ID")} <span>token</span>
             </div>
           </div>
         </div>

@@ -549,6 +549,13 @@
 - [x] Task 75.5: Test live completions with newly generated user key `kios-fee3fb...`: 200 OK ("ONLINE")
 - [x] Task 75.6: 100% compliance: 128 source files <= 200 LOC, all test suites pass
 
+## Phase 76 (Balance Number Formatting & Model Reference Cleanup - Completed)
+- [x] Task 76.1: Wrap `Number(balance)` before `toLocaleString("id-ID")` across `PackagesTab.tsx`, `DashboardApp.tsx`, and `AnalyticsCards.tsx`
+- [x] Task 76.2: Replace outdated `Atria Dawn` with `DeepSeek V4.1 Flash (Free)` in `PackageComparison.tsx`
+- [x] Task 76.3: Sync Free tier feature copy in `packageData.ts`, `PaymentModal.tsx`, and `PlaygroundLocked.tsx`
+- [x] Task 76.4: Execute `npm run audit:chrome`: 14/14 PASS (0 horizontal overflow)
+- [x] Task 76.5: 100% compliance: 128 source files <= 200 LOC, all test suites pass
+
 
 
 

@@ -60,7 +60,7 @@ export default function Dashboard() {
         <main id="main-content" tabIndex={-1}>
           {user.balance_tokens < 50000 && (
             <div className="warning-banner" role="alert" style={{ marginBottom: "20px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <span>⚠️ Saldo token menipis ({user.balance_tokens.toLocaleString("id-ID")} token). Isi ulang agar API bot & aplikasi Anda tidak terputus.</span>
+              <span>⚠️ Saldo token menipis ({Number(user.balance_tokens).toLocaleString("id-ID")} token). Isi ulang agar API bot & aplikasi Anda tidak terputus.</span>
               <button className="button primary" style={{ height: "28px", fontSize: "11px", padding: "0 10px" }} onClick={() => setPage("Beli Token")}>Isi Ulang</button>
             </div>
           )}
