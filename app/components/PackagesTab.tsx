@@ -79,7 +79,7 @@ export function PackagesTab({
           >
             <div className="package-top">
               <Badge tier={p.tierKey === "free" ? "FREE" : "PRO"} />
-              {p.tierKey === "test_100" && <span className="popular" style={{ color: "var(--warning)" }}>TEST ADMIN</span>}
+              {(p.tierKey === "test_1" || p.tierKey === "test_100") && <span className="popular" style={{ color: "var(--warning)" }}>TEST ADMIN</span>}
               {p.tierKey === "pro_25k" && <span className="popular">PALING POPULER</span>}
               {p.tierKey === "free" && <span className="popular">GRATIS</span>}
             </div>

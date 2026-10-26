@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
     }
 
     const order = await db.queryOne<any>(
-      `SELECT id, user_id, amount_idr, tokens_purchased, status FROM kiosai.orders WHERE id = ? LIMIT 1`,
+      `SELECT id, user_id, amount_idr, tokens_purchased, package_tier, status FROM kiosai.orders WHERE id = ? LIMIT 1`,
       [orderId]
     );
 
@@ -65,8 +65,16 @@ export async function POST(req: NextRequest) {
     }
 
     await db.execute(
-      `UPDATE kiosai.users SET balance = balance + ? WHERE id = ?`,
-      [order.tokens_purchased, order.user_id]
+      `UPDATE kiosai.users 
+       SET balance_tokens = balance_tokens + ? + LEAST(locked_bonus_tokens, ?),
+           locked_bonus_tokens = GREATEST(0, locked_bonus_tokens - ?),
+           is_pro_unlocked = 1,
+           tier = CASE 
+             WHEN ? IN ('pro', 'pro_25k', 'pro_100k', 'pro_150k', 'bronze', 'silver', 'gold', 'test_1', 'test_100') THEN 'pro'
+             ELSE tier
+           END
+       WHERE id = ?`,
+      [order.tokens_purchased, order.tokens_purchased, order.tokens_purchased, order.package_tier, order.user_id]
     );
 
     return NextResponse.json({ success: true, orderId });

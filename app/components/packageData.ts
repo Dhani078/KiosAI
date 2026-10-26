@@ -1,13 +1,13 @@
 export const ADMIN_TEST_PACKAGE = {
-  tierKey: "test_100",
+  tierKey: "test_1",
   name: "Test Admin",
-  price: "100",
+  price: "1",
   tokens: "1.000.000",
-  desc: "Uji coba checkout DOKU khusus akun admin (Rp 100 + kode unik acak).",
+  desc: "Uji coba transaksi DOKU QRIS khusus admin seharga Rp 1 (settlement real-time).",
   features: [
-    "Nominal Rp 100 + kode unik acak",
-    "Checkout DOKU Payment Gateway resmi",
-    "1 Juta token uji coba",
+    "Nominal tepat Rp 1",
+    "Checkout DOKU QRIS resmi in-app",
+    "1 Juta token uji coba instan",
   ],
 };
 

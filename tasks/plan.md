@@ -369,6 +369,11 @@
   - Penghapusan `as any` di `lib/edge-cache.ts` dan `PlaygroundChat.tsx`
   - Integrasi parameter `isAdmin` pada `lib/model-utils.ts` untuk error reporting
   - 100% verifikasi lolos: 128 file sumber <= 200 LOC, semua suite pengujian lulus sempurna
+- [x] Phase 78: Admin 1-Rupiah Test Package & Webhook Schema Audit
+  - Penyesuaian paket uji coba admin ke nominal tepat Rp 1 (`test_1` & `test_100`)
+  - Perbaikan kolom `balance_tokens` pada webhook DOKU QRIS dan auto-unlock bonus vesting
+  - Integrasi whitelist `test_1` di seluruh route pelunasan
+  - 100% verifikasi lolos: 128 file sumber <= 200 LOC, semua suite pengujian lulus sempurna
 
 
 

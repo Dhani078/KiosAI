@@ -527,6 +527,14 @@
 - [x] Task 72.4: Execute `npm run audit:chrome` across 14 viewports/tabs: 0 overflow, 100% PASS
 - [x] Task 72.5: 100% compliance: 128 source files <= 200 LOC, all test suites pass
 
+## Phase 73 (Admin 1-Rupiah Test Package & Webhook Schema Audit - Completed)
+- [x] Task 73.1: Adjust admin test package to exact Rp 1 (`test_1` & `test_100`)
+- [x] Task 73.2: Fix `balance_tokens` column name and bonus vesting in `/api/webhooks/doku-qris/route.ts`
+- [x] Task 73.3: Whitelist `test_1` across all settlement routes (`/api/orders`, `/api/orders/pay`, `/api/payment/webhook`, `/api/webhooks/doku-qris`)
+- [x] Task 73.4: Fix edge-cache TypeScript type checking for `globalCaches.default?.put`
+- [x] Task 73.5: Run database atomic simulation test and verify 100% success
+- [x] Task 73.6: 100% compliance: 128 source files <= 200 LOC, all test suites pass
+
 
 
 

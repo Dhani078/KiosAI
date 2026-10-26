@@ -130,7 +130,7 @@ export function wrapStreamForEdgeCaching(
           "X-Kios-Cache": "MISS",
         },
       });
-      globalCaches.default.put(new Request(cacheKeyUrl, { method: "GET" }), resToCache).catch(() => {});
+      globalCaches.default?.put(new Request(cacheKeyUrl, { method: "GET" }), resToCache).catch(() => {});
     },
   });
 

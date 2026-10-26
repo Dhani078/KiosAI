@@ -7,6 +7,15 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `feat(admin)` - feat(admin): set test admin package to 1 rupiah and fix backend webhook user balance column
+
+**1-Rupiah Admin Test Package & Webhook Backend Fix**
+- Penyesuaian paket uji coba admin (`test_1` & `test_100`) ke nominal tepat Rp 1 untuk pengujian DOKU QRIS riil.
+- Perbaikan bug kritis query pada webhook DOKU QRIS (`app/api/webhooks/doku-qris/route.ts`): pembaharuan saldo pengguna menggunakan nama kolom yang benar `balance_tokens` (bukan `balance`), membuka vesting bonus, serta auto-upgrade status tier ke `pro`.
+- Dukungan tier `test_1` pada seluruh endpoint settlement (`/api/orders`, `/api/orders/pay`, `/api/payment/webhook`, dan `/api/webhooks/doku-qris`).
+- Verifikasi kompilasi build Next.js (20/20 halaman) dan audit visual Chrome lolos 100%.
+
+
 ### `refactor(quality)` - refactor(quality): cleanup unused variables, eliminate any casts, and polish code quality
 
 **Comprehensive Code Quality & Slop Elimination**
