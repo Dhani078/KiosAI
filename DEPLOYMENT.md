@@ -84,7 +84,7 @@ Script `scripts/tunnel-sync.mjs` akan:
 1. Menjalankan `cloudflared tunnel --url http://localhost:20128`
 2. Menunggu URL `https://<acak>.trycloudflare.com` muncul
 3. Memverifikasi tunnel benar-benar menembus ke 9Router
-4. Memasang URL itu ke secret `NINEROUTER_URL` milik Worker `kiosai`
+4. Memasang URL itu ke secret `NINEROUTER_URL` milik Worker `kiosai` secara otomatis via `CLOUDFLARE_API_TOKEN` permanen di `.env` (tanpa perlu `npx wrangler login` berkala).
 
 Biarkan proses ini berjalan. **URL quick tunnel berubah setiap restart**, jadi kalau
 komputer reboot, jalankan `npm run tunnel` lagi (bukan `secrets:sync` saja).

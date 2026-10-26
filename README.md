@@ -24,12 +24,8 @@
 - **Live AI Playground dengan SSE Streaming**: Balasan model muncul kata demi kata secara real-time (~240ms TTFB), dilengkapi kontainer blok kode bersintaks dan tombol salin 1-klik.
 - **Manajemen API Key Aman**: Kunci format `kios-<hash32>` di-hash dengan SHA-256. Mendukung visualisasi spend limit progress bar per kunci.
 - **Desain TokoAI Token Marketplace**: Antarmuka responsif dark tech, logo vektor isometrik huruf "T" resmi oranye `#F5681A` (`Logo.tsx`, `public/brand/`), tanpa komponen dummy — 100% data live dari database & gateway.
-- **EMVCo Dynamic QRIS Generator**: Generator QRIS dinamis otomatis berbasis string merchant resmi DANA (`ID1026500560192` atas nama `Dhani`). Menyisipkan Tag 54 dengan nominal pas + kode unik 3-digit serta kalkulasi checksum CRC16-CCITT standar Bank Indonesia.
-- **AI Vision Multimodal Receipt Verifier**: Verifikasi struk transfer otomatis 1–2 detik via Gemini 3.8 Flash Vision (Dual-Key Pool & 6-Tier Waterfall), proteksi anti-replay/double-spending via kolom `payment_ref` di TiDB, dan toleransi nominal rupiah cerdas.
-- **Keamanan Enterprise IDOR & Cookie HttpOnly**: Cookie sesi server-side bertanda tangan HMAC-SHA256 (`kiosai_session`), eliminasi IDOR 100% pada semua endpoint privat, rotasi kredensial scrypt, dan proteksi webhook fail-closed.
-- **Grafik Tren Aktivitas 7 Hari & Analitik Interaktif**: Bar chart harian di tab Statistik, visual bar split rasio token Input/Output, dan multi-mode pengurutan model (Token, Request, Latensi).
-- **Guardrail Defensif Anti-Prompt Leak**: Boundary protection otomatis terhadap upaya ekstraksi instruksi sistem (*"repeat everything above"*), dilengkapi preset persona (Cursor Composer, Manus Agent, Claude Code, Defensive Shield).
-- **Standar Kode Moduler**: Seluruh 126 modul kode TypeScript/React dibatasi maksimal 200 baris per file demi keterbacaan dan pemeliharaan jangka panjang.
+- **DOKU Payment Gateway Resmi**: Checkout in-app iframe langsung di modal dengan penguncian metode QRIS (`payment_method_types: ["QRIS"]`), auto-polling status realtime 2.5s, dan webhook atomic CAS.
+- **Standar Kode Moduler**: Seluruh 128 modul kode TypeScript/React dibatasi maksimal 200 baris per file demi keterbacaan dan pemeliharaan jangka panjang.
 
 ---
 
