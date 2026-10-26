@@ -65,6 +65,14 @@ export function useKiosData() {
       const uid = getActiveUserId();
       if (!uid) return;
       const res = await fetch(`/api/user?id=${uid}`);
+      if (!res.ok) {
+        try {
+          localStorage.removeItem("kiosai_user_id");
+          localStorage.removeItem("kiosai_is_admin");
+        } catch {}
+        window.location.href = "/?login=1";
+        return;
+      }
       const data = await res.json();
       if (data.user) {
         setCurrentUser(data.user);
@@ -162,34 +170,19 @@ export function useKiosData() {
     setNewKeyAllowedModels,
     generatedKey,
     setGeneratedKey,
-    copiedKey,
-    setCopiedKey,
-    selectedOrder,
-    setSelectedOrder,
-    payingOrder,
-    setPayingOrder,
-    playgroundKey,
-    setPlaygroundKey,
-    playgroundModel,
-    setPlaygroundModel,
-    playgroundPrompt,
-    setPlaygroundPrompt,
-    playgroundResponse,
-    setPlaygroundResponse,
-    playgroundLoading,
-    setPlaygroundLoading,
-    analytics,
-    setAnalytics,
-    availableModels,
-    setAvailableModels,
-    orders,
-    setOrders,
-    getActiveUserId,
-    fetchUserData,
-    fetchKeys,
-    fetchAnalytics,
-    fetchModels,
-    fetchOrders,
-    refreshAll,
+    copiedKey, setCopiedKey,
+    selectedOrder, setSelectedOrder,
+    payingOrder, setPayingOrder,
+    playgroundKey, setPlaygroundKey,
+    playgroundModel, setPlaygroundModel,
+    playgroundPrompt, setPlaygroundPrompt,
+    playgroundResponse, setPlaygroundResponse,
+    playgroundLoading, setPlaygroundLoading,
+    analytics, setAnalytics,
+    availableModels, setAvailableModels,
+    orders, setOrders,
+    getActiveUserId, fetchUserData,
+    fetchKeys, fetchAnalytics,
+    fetchModels, fetchOrders, refreshAll,
   };
 }

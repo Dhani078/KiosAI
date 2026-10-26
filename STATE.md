@@ -386,6 +386,13 @@
     - Pembersihan kredensial produksi hardcoded dari fallback `lib/doku.ts`.
     - Penghapusan dead code `PaymentQrContent.tsx` dan folder eksternal `KiosAI Token Marketplace Design` (-2.800+ baris).
     - 100% verifikasi lolos: 127 file sumber <= 200 LOC, semua suite pengujian lulus sempurna.
+  - Phase 71: Session Auto-Recovery & Full Chrome Browser Audit:
+    - Diagnosis akar masalah kanvas hitam `/dashboard` (stale localStorage id vs cookie sesi kosong).
+    - Proactive validation server session di `AuthGuard.tsx` dengan auto-redirect ke `/?login=1`.
+    - Auto-wipe stale credential di `useKiosData.ts` saat server membalas 401.
+    - Runner audit live Chrome `scripts/full-chrome-audit.mjs` (`npm run audit:chrome`).
+    - 14/14 pengujian visual browser Chrome (PC 1440px & Mobile 390px, 0 overflow) PASS 100%.
+    - 100% verifikasi lolos: 128 file sumber <= 200 LOC, semua suite pengujian lulus sempurna.
 
 
 

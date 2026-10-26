@@ -21,6 +21,7 @@
     "migrate:tiers": "node --env-file=.env scripts/migrate-tiers.mjs",
     "audit:ui": "node scripts/audit-ui.mjs",
     "audit:dashboard": "node --env-file=.env scripts/audit-dashboard.mjs",
+    "audit:chrome": "node --env-file=.env scripts/full-chrome-audit.mjs",
     "test:chaos": "node --env-file=.env scripts/chaos-load-test.mjs",
     "tunnel": "node scripts/tunnel-sync.mjs"
   },
@@ -40,6 +41,7 @@
     "@types/react-dom": "^19.0.0",
     "postcss": "^8.5.0",
     "tailwindcss": "^4.0.0",
-    "typescript": "^5.7.0"
+    "typescript": "^5.7.0",
+    "wrangler": "^4.152.0"
   }
 }

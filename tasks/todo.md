@@ -511,6 +511,15 @@
 - [x] Task 70.7: Clean unused imports (`Sparkles`, `Terminal`, `ExternalLink`) and narrative comments
 - [x] Task 70.8: 100% compliance: 127 source files <= 200 LOC, all test suites pass
 
+## Phase 71 (Session Auto-Recovery & Full Chrome Browser Audit - Completed)
+- [x] Task 71.1: Root cause diagnosis of `/dashboard` black screen (stale localStorage vs missing session cookie)
+- [x] Task 71.2: Implement proactive server session check in `AuthGuard.tsx` with auto-redirect to `/?login=1`
+- [x] Task 71.3: Handle 401/403 responses in `useKiosData.ts` to wipe stale IDs and bounce cleanly
+- [x] Task 71.4: Compact return keys in `useKiosData.ts` to stay well under 200 LOC (187 LOC)
+- [x] Task 71.5: Build `scripts/full-chrome-audit.mjs` and register `npm run audit:chrome`
+- [x] Task 71.6: Execute full Chrome audit across PC (1440px) and Mobile (390px): 14/14 PASS (0 horizontal overflow)
+- [x] Task 71.7: 100% compliance: 128 source files <= 200 LOC, all test suites pass
+
 
 
 

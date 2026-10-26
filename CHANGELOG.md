@@ -7,6 +7,16 @@ Format: `[commit-hash] tipe(scope): deskripsi`.
 
 ## [Unreleased]
 
+### `fix(auth)` - fix(auth): auto-recover invalid session in AuthGuard and useKiosData, eliminate stuck skeleton freeze
+
+**Session Auto-Recovery & Full Chrome Browser Audit**
+- Perbaikan freeze kanvas hitam pada rute `/dashboard` saat cookie sesi tidak sinkron dengan `localStorage`.
+- `AuthGuard` memvalidasi sesi aktif secara asinkron ke `/api/user` dan otomatis mengarahkan ke `/?login=1` bila cookie invalid/expired.
+- `useKiosData` membersihkan `kiosai_user_id` yang basi dan auto-redirect ke form login bila server membalas status 401.
+- Penambahan runner audit komprehensif Chrome `scripts/full-chrome-audit.mjs` (`npm run audit:chrome`).
+- 14/14 pengujian audit visual browser Chrome (PC 1440px & Mobile 390px, 0 overflow) PASS 100%.
+
+
 ### `refactor(audit)` - refactor(audit): eliminate slop, close free-tier race condition, disable legacy receipt backdoor, and clean dead code
 
 **Full Spectrum Audit Remediation & Hardening**

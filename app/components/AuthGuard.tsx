@@ -8,21 +8,40 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    const check = () => {
-      if (!localStorage.getItem("kiosai_user_id")) {
+    let mounted = true;
+    const check = async () => {
+      const uid = localStorage.getItem("kiosai_user_id");
+      if (!uid) {
         router.replace("/?login=1");
-        return false;
+        return;
       }
-      return true;
+      try {
+        const res = await fetch(`/api/user?id=${uid}`);
+        if (!res.ok) {
+          localStorage.removeItem("kiosai_user_id");
+          localStorage.removeItem("kiosai_is_admin");
+          router.replace("/?login=1");
+          return;
+        }
+        if (mounted) setReady(true);
+      } catch {
+        if (mounted) setReady(true);
+      }
     };
 
-    if (check()) setReady(true);
+    check();
 
     // Re-check on tab focus / bfcache restore (covers logout in another tab)
-    const recheck = () => { if (!check()) setReady(false); };
+    const recheck = () => {
+      if (!localStorage.getItem("kiosai_user_id")) {
+        setReady(false);
+        router.replace("/?login=1");
+      }
+    };
     window.addEventListener("focus", recheck);
     window.addEventListener("pageshow", recheck);
     return () => {
+      mounted = false;
       window.removeEventListener("focus", recheck);
       window.removeEventListener("pageshow", recheck);
     };
