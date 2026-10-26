@@ -49,7 +49,6 @@ export function PlaygroundTab({
     }
   }, [messages]);
 
-  const currentModelObj = models.find((m) => m.id === selectedModel);
   const isFreeTier = (userTier || "free").toLowerCase() === "free";
   const isAllowedForFree = selectedModel.toLowerCase().includes("deepseek-v4.1-flash") || selectedModel.toLowerCase().endsWith(":free") || selectedModel.toLowerCase().includes("-free") || selectedModel.toLowerCase().startsWith("oc/");
   const isLocked = isFreeTier && !isAllowedForFree;

@@ -32,8 +32,15 @@ export function buildCanonicalCacheKey(userId: string, body: Record<string, unkn
   return `https://cache.kiosai.internal/v1/exact/${tenantHash}/${safeModel}/${payloadHash}`;
 }
 
+interface CacheStorageWithDefault {
+  default?: {
+    match: (req: Request) => Promise<Response | undefined>;
+    put: (req: Request, res: Response) => Promise<void>;
+  };
+}
+
 export async function lookupEdgeCache(cacheKeyUrl: string): Promise<{ response: Response; meta: CacheMeta } | null> {
-  const globalCaches = (globalThis as any).caches;
+  const globalCaches = (globalThis as { caches?: CacheStorageWithDefault }).caches;
   if (!globalCaches || !globalCaches.default) return null;
 
   try {
@@ -62,7 +69,7 @@ export function wrapStreamForEdgeCaching(
   cacheKeyUrl: string,
   ttlSeconds = DEFAULT_TTL_SECONDS
 ): ReadableStream<Uint8Array> {
-  const globalCaches = (globalThis as any).caches;
+  const globalCaches = (globalThis as { caches?: CacheStorageWithDefault }).caches;
   if (!globalCaches || !globalCaches.default) return sourceStream;
 
   const chunks: Uint8Array[] = [];

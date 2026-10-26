@@ -4,7 +4,7 @@
  * multiplier/bansos copy.
  * Run: npm run audit:ui   (server must be on :3000)
  */
-import { launch, connect, sleep, REPORT_EXPR } from "./cdp.mjs";
+import { launch, connect, REPORT_EXPR } from "./cdp.mjs";
 
 const BASE = process.env.AUDIT_BASE || "http://127.0.0.1:3000";
 const PORT = 9333;

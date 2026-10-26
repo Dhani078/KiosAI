@@ -68,7 +68,7 @@ export function Header({
           type="button"
           onClick={() => setShowHealthModal(true)}
           style={{ display: "inline-flex", alignItems: "center", gap: "8px", background: "none", border: "none", padding: "4px 8px", cursor: "pointer", borderRadius: "999px" }}
-          title="Klik untuk melihat diagnostik latensi gateway"
+          title={healthTooltip}
         >
           <span
             className="status-dot"

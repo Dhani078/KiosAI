@@ -137,5 +137,5 @@ export function humanizeErrorMessage(msg: string, isAdmin: boolean = false): str
     friendly = msg.replace(/^Upstream error:\s*/i, "").replace(/^UPSTREAM_FATAL_\d+:\s*/i, "");
   }
 
-  return friendly;
+  return isAdmin && msg && msg !== friendly ? `${friendly} [Detail Teknis: ${msg}]` : friendly;
 }

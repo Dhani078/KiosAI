@@ -5,7 +5,7 @@ import { Button } from "./ui";
 
 export function PlaygroundLocked({
   model,
-  requiredTier,
+  requiredTier: _requiredTier,
   onNavigatePackages,
 }: {
   model: string;

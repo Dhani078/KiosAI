@@ -1,7 +1,15 @@
 import type { useKiosData } from "./useKiosData";
 
 export function useKiosActions(d: ReturnType<typeof useKiosData>) {
-  const { currentUser, setCurrentUser, keys, setShowAuthModal, authMode, authEmail, setAuthEmail, authPassword, setAuthPassword, authName, setAuthName, setAuthError, newKeyName, setNewKeyName, newKeyRateLimit, newKeyAllowedModels, setNewKeyAllowedModels, setGeneratedKey, selectedOrder, setSelectedOrder, setPayingOrder, playgroundKey, setPlaygroundKey, playgroundModel, playgroundPrompt, setPlaygroundResponse, setPlaygroundLoading, orders, fetchUserData, fetchKeys, refreshAll } = d;
+  const {
+    currentUser, setCurrentUser, setShowAuthModal, authMode,
+    authEmail, setAuthEmail, authPassword, setAuthPassword,
+    authName, setAuthName, setAuthError, newKeyName, setNewKeyName,
+    newKeyRateLimit, newKeyAllowedModels, setNewKeyAllowedModels,
+    setGeneratedKey, playgroundKey, setPlaygroundKey, playgroundModel,
+    playgroundPrompt, setPlaygroundResponse, setPlaygroundLoading,
+    fetchKeys, refreshAll,
+  } = d;
 
   const handleAuthSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -72,7 +80,7 @@ export function useKiosActions(d: ReturnType<typeof useKiosData>) {
         setNewKeyAllowedModels("");
         await fetchKeys();
       }
-    } catch (e) {
+    } catch {
       alert("Gagal membuat key");
     }
   };
@@ -82,7 +90,7 @@ export function useKiosActions(d: ReturnType<typeof useKiosData>) {
     try {
       await fetch(`/api/keys/${id}`, { method: "DELETE" });
       await fetchKeys();
-    } catch (e) {
+    } catch {
       alert("Gagal menghapus key");
     }
   };

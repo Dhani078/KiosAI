@@ -35,7 +35,7 @@ export function PlaygroundChat({
   return (
     <div
       className="chat-area"
-      ref={chatRef as any}
+      ref={chatRef}
       role="log"
       aria-label="Percakapan Playground"
       aria-live="polite"
